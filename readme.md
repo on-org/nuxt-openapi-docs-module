@@ -50,7 +50,7 @@ The default folder structure for your OpenAPI specification files should look li
 docs/
     openapi/
         api1.yaml
-        api2.json
+[//]: # (        api2.json)
         Components
 ```
 This module provides several reusable Vue.js components to render your OpenAPI documentation:
@@ -60,6 +60,7 @@ This module provides several reusable Vue.js components to render your OpenAPI d
 - OpenApiInfo: the component used to render the OpenAPI specification information.
 - OpenApiComponents: the component used to render the OpenAPI components.
 - OpenApiRoute: the component used to render a single OpenAPI route.
+- componentsPath: the component url for docs.
 You can customize these components by modifying the corresponding .vue files in the components/ folder.
 
 ### License
