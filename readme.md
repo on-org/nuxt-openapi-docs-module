@@ -1,5 +1,5 @@
 # OpenApiDocs Nuxt Module
-This module provides a simple way to display OpenAPI documentation in a Nuxt.js application. It allows you to define an OpenAPI specification file and renders it using a set of reusable Vue.js components.
+This module provides a simple way to display OpenAPI documentation in a Nuxt.js 2 application. It allows you to define an OpenAPI specification file and renders it using a set of reusable Vue.js components.
 
 Installation
 ```bash
@@ -50,10 +50,9 @@ The default folder structure for your OpenAPI specification files should look li
 docs/
     openapi/
         api1.yaml
-[//]: # (        api2.json)
         Components
 ```
-This module provides several reusable Vue.js components to render your OpenAPI documentation:
+This module provides several reusable Nuxt.js components to render your OpenAPI documentation:
 
 - OpenApiDocs: the main component used to render the OpenAPI documentation.
 - OpenApiHeader: the component used to render the header section of the OpenAPI documentation.
