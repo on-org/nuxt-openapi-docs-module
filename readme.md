@@ -1,6 +1,9 @@
 # OpenApiDocs Nuxt Module
 This module provides a simple way to display OpenAPI documentation in a Nuxt.js 2 application. It allows you to define an OpenAPI specification file and renders it using a set of reusable Vue.js components.
 
+![alt text](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/desktop.png)
+![alt text](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/mobile.png)
+
 Installation
 ```bash
 npm install nuxt-openapi-docs-module
