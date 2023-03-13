@@ -16,9 +16,17 @@ export default {
 </script>
 
 <style scoped>
-aside {
+.left-menu {
   transition: transform .3s ease-out;
   height: 100%;
   border-color: #e1e1e1;
+}
+
+@media screen and (max-width: 640px) {
+  .left-menu {
+    font-size: 24px;
+    width: 100%;
+  }
+
 }
 </style>

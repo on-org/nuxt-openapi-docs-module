@@ -6,6 +6,12 @@
 <style scoped>
   .content {
     overflow-x: scroll;
-    padding-left: 16rem;
+
+  }
+
+  @media screen and (min-width: 640px) {
+    .content {
+      padding-left: 16rem;
+    }
   }
 </style>
