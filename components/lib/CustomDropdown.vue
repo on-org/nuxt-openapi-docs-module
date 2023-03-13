@@ -8,8 +8,8 @@
       </svg>
     </div>
     <div class="dropdown-menu absolute top-full left-0 z-50 py-2 bg-white rounded-md shadow-lg" v-if="isOpen">
-      <div v-for="(option, index) in options" :key="index" class="dropdown-item px-4 py-2 hover:bg-gray-100" @click="selectOption(option)">
-        <slot v-bind:option="option" v-bind:index="index" v-bind:isSelected="option === selectedOption">{{ option }}</slot>
+      <div v-for="(option, index) in options" :key="index" class="dropdown-item px-4 py-2 hover:bg-gray-100" :class="{selected: option === selectedOption}" @click="selectOption(option)">
+        <slot v-bind:option="option" v-bind:index="index">{{ option }}</slot>
       </div>
     </div>
   </div>
@@ -48,24 +48,12 @@ export default {
 };
 </script>
 <style scoped>
-.dropdown-toggle {
-  @apply inline-flex items-center justify-between px-4 py-2 border border-gray-300 rounded-md cursor-pointer text-gray-500;
-}
-
-.dropdown-item {
-  @apply px-4 py-2 hover:bg-gray-100;
-}
-
 .dropdown-menu {
-  @apply absolute top-full left-0 z-50 py-2 bg-white rounded-md shadow-lg;
+  z-index: 999;
+  margin-top: 4px;
 }
 
-.dropdown-menu.hidden {
-  @apply hidden;
+.selected {
+  background-color: #ccc;
 }
-
-.dropdown-menu.visible {
-  @apply block;
-}
-
 </style>
