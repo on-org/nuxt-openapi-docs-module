@@ -250,6 +250,13 @@ export default {
         param.postData = { mimeType: this.mimeType, params: JSON.parse(JSON.stringify(this.postData)) };
       }
 
+      const append = this.$openapidoc_simples(this);
+      for (let i in append) {
+        param[append[i].in].push({
+          name: append[i].name, value: append[i].value
+        })
+      }
+
       const snippet = new HTTPSnippet(param);
       return snippet.convert(this.lang, this.client) || '';
     }

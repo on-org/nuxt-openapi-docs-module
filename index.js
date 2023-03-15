@@ -6,13 +6,12 @@ import express from "express";
 export default function OpenApiDocsModule(moduleOptions) {
     const options = {
         ...moduleOptions,
-        openApiDocsFolder: moduleOptions.openApiDocsFolder || './docs/openapi',
-        componentName: moduleOptions.componentName || 'OpenApiDocs',
-        infoComponentName: moduleOptions.infoComponentName || 'OpenApiInfo',
-        componentsComponentName: moduleOptions.componentsComponentName || 'OpenApiComponents',
-        componentsPath: moduleOptions.componentsPath || 'docs',
+        folder: moduleOptions.folder || './docs/openapi',
+        name: moduleOptions.name || 'OpenApiDocs',
+        path: moduleOptions.path || 'docs',
         locales: moduleOptions.locales ?? {en: 'English'},
-        files: moduleOptions.files ?? function (ctx) { return {} },
+        files: moduleOptions.files ?? function (ctx) { return { 'API': 'api' } },
+        params: moduleOptions.params ?? function (ctx) { return {} },
     };
 
     this.addPlugin({
@@ -22,13 +21,13 @@ export default function OpenApiDocsModule(moduleOptions) {
     })
 
     this.nuxt.hook('components:extend', (components) => {
-        components.OpenApiDocs = { path: options.componentName, component: path.resolve(__dirname, 'components/OpenApiDocs.vue') };
+        components.OpenApiDocs = { path: options.name, component: path.resolve(__dirname, 'components/OpenApiDocs.vue') };
     });
 
     // Проходимся по каждому файлу YAML и создаем маршрут
     this.options.router.extendRoutes = (routes, resolve) => {
         routes.push({
-            path: `/${options.componentsPath}/:file/:locale/:type/:path`,
+            path: `/${options.path}/:file/:locale/:type/:path`,
             component: resolve(__dirname, './components/OpenApiDocs.vue'),
             name: 'nuxt-openapi-docs-route',
         });
@@ -39,7 +38,7 @@ export default function OpenApiDocsModule(moduleOptions) {
     app.get('/', (req, res) => {
         const { name } = req.query;
         const files = moduleOptions.files(this.nuxt)
-        const absolutePath = path.join(options.openApiDocsFolder, name + '.yaml');
+        const absolutePath = path.join(options.folder, name + '.yaml');
         if (fs.existsSync(absolutePath)) {
             const yamlData = fs.readFileSync(absolutePath, 'utf8');
             const openApiSpec = yaml.parse(yamlData);
@@ -51,7 +50,7 @@ export default function OpenApiDocsModule(moduleOptions) {
 
     // Регистрация middleware в Nuxt
     this.addServerMiddleware({
-        path: `${options.componentsPath}/api`,
+        path: `${options.path}/api`,
         handler: app,
     })
 

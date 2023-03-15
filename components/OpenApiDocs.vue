@@ -4,7 +4,7 @@
       <template #logo>
         <svg xmlns="http://www.w3.org/2000/svg" width="100" height="30">
           <rect width="100" height="30" rx="5" fill="#1A202C" />
-          <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#FFFFFF" font-size="16">API Docs</text>
+          <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#FFFFFF" font-size="16" v-text="name"></text>
         </svg>
       </template>
       <div slot="button">
@@ -120,6 +120,9 @@ export default {
     },
   },
   computed: {
+    name() {
+      return this.$openapidoc.name;
+    },
     isInfo() {
       return this.path === 'info'
     },
