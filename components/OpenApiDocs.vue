@@ -60,7 +60,6 @@ export default {
       if (process.server || process.static) {
         const protocol = ctx.req.headers['x-forwarded-proto'] || ctx.req.protocol || (ctx.req.connection.encrypted ? 'https:' : 'http:');
         const host = ctx.req.headers.host;
-        console.log(`${protocol}//${host}/docs/api?name=${ctx.route.params.file}`)
         const response = await fetch(`${protocol}//${host}/docs/api?name=${ctx.route.params.file}`);
         doc = await response.json();
       } else if (process.client) {
