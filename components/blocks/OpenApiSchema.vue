@@ -24,7 +24,7 @@
     </div>
     <div class="schema-row flex items-center" v-if="schema.items">
       <div class="schema-row-label font-bold mr-2">Items:</div>
-      <div class="schema-row-value"><open-api-schema :schema="schema.items" /></div>
+      <div class="schema-row-value"><open-api-schema :components="components" :current-locale="currentLocale" :schema="schema.items" /></div>
     </div>
     <div class="schema-row flex items-center" v-if="schema.properties">
       <div class="schema-row-label font-bold mr-2">Properties:</div>
@@ -47,17 +47,17 @@
         </table>
       </div>
     </div>
-    <div class="schema-row flex items-center" v-if="schema.additionalProperties">
+    <div class="schema-row flex items-center" v-if="additionalPropertiesRef">
       <div class="schema-row-label font-bold mr-2">Additional Properties:</div>
       <div class="schema-row-value">
-        <open-api-schema :current-locale="currentLocale" :schema="schema.additionalProperties" />
+        <open-api-schema :components="components" :current-locale="currentLocale" :schema="additionalPropertiesRef" />
       </div>
     </div>
     <div class="schema-row flex items-center" v-if="schema.allOf">
       <div class="schema-row-label font-bold mr-2">All Of:</div>
       <div class="schema-row-value">
         <div v-for="(allOf, index) in schema.allOf" :key="index">
-          <open-api-schema :schema="allOf" :current-locale="currentLocale" />
+          <open-api-schema :components="components" :schema="allOf" :current-locale="currentLocale" />
         </div>
       </div>
     </div>
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import {tr} from "../helpers";
+import {getSchemaValsFromPath, tr} from "../helpers";
 
 export default {
   name: 'OpenApiSchema',
@@ -78,9 +78,34 @@ export default {
       type: String,
       required: true,
     },
+    components: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
+  computed: {
+    additionalPropertiesRef() {
+      if(this.schema.additionalProperties) {
+        return []
+      }
+      let res = [];
+      for (let i in this.schema.additionalProperties) {
+        let param = this.schema.additionalProperties[i]
+        if (param.$ref) {
+          const link = getSchemaValsFromPath(param.$ref)
+          if(this.components[link.path] && this.components[link.path][link.name]) {
+            param = this.components[link.path][link.name];
+          }
+        }
+        param.path = i;
+
+        res.push(param);
+      }
+      return res;
+    }
   },
   methods: {
-    tr
+    tr,
   }
 };
 </script>

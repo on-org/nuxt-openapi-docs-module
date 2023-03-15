@@ -5,7 +5,7 @@
         <span class="font-bold mr-2">{{ scheme }}</span>
         <ul class="list-disc ml-8">
           <li v-for="scope in scopes" :key="scope">
-            <span class="inline-block bg-gray-300 px-2 py-1 rounded-md mr-2">{{ scope }}</span>
+            <span class="inline-block bg-gray-300 px-2 py-1 rounded-md mr-2 dark:bg-blue-200 dark:text-black">{{ scope }}</span>
           </li>
         </ul>
       </li>

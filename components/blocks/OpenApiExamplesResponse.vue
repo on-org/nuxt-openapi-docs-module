@@ -11,7 +11,7 @@
           <p class="mb-1"><strong>Description:</strong> {{ tr(example, 'description', currentLocale) }}</p>
         </template>
         <template v-if="example.value">
-          <open-api-schema :schema="example.schema" :current-locale="currentLocale" />
+          <open-api-schema :schema="example.schema" :current-locale="currentLocale" :components="components" />
           <template v-if="isJsonMediaType(mediaType)">
             <pre class="mt-2"><code :class="'language-json'">{{ example.value }}</code></pre>
           </template>
@@ -45,6 +45,10 @@ export default {
     currentLocale: {
       type: String,
       required: true,
+    },
+    components: {
+      type: Object,
+      default: () => ({}),
     },
   },
   methods: {

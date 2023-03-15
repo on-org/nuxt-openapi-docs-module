@@ -5,7 +5,7 @@
     <p class="text-gray-600 mb-2">{{ method }}</p>
     <p class="mb-2">
       <span v-for="(tag, index) in tags" :key="index"
-            class="inline-block bg-gray-300 px-2 py-1 rounded mr-2">
+            class="inline-block bg-gray-300 dark:bg-blue-200 dark:text-black px-2 py-1 rounded mr-2">
         {{ tag }}
       </span>
     </p>

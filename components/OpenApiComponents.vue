@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="components.schema">
-      <open-api-schema :schema="components.schema" :current-locale="currentLocale"></open-api-schema>
+      <open-api-schema :components="components" :schema="components.schema" :current-locale="currentLocale"></open-api-schema>
     </div>
     <div v-if="components.examples">
       <open-api-examples :examples="components.examples" :current-locale="currentLocale"></open-api-examples>

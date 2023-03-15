@@ -4,27 +4,27 @@
     <p class="mb-4">Select a route from the list below:</p>
     <ul class="menu list-none mb-4">
       <li>
-        <nuxt-link :to="{ name: 'nuxt-openapi-docs-route', params: { locale: currentLocale, file: file, type: 'get', path: 'info' }, props: {locales: locales}}" class="block px-2 py-1 rounded-md hover:bg-gray-200">
+        <nuxt-link :to="{ name: 'nuxt-openapi-docs-route', params: { locale: currentLocale, file: file, type: 'get', path: 'info' }, props: {locales: locales}}" class="block px-2 py-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
           OpenAPI Info
         </nuxt-link>
       </li>
       <li>
-        <nuxt-link :to="{ name: 'nuxt-openapi-docs-route', params: { locale: currentLocale, file: file, type: 'get', path: 'components' }, props: {locales: locales}}" class="block px-2 py-1 rounded-md hover:bg-gray-200">
+        <nuxt-link :to="{ name: 'nuxt-openapi-docs-route', params: { locale: currentLocale, file: file, type: 'get', path: 'components' }, props: {locales: locales}}" class="block px-2 py-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
           OpenAPI Components
         </nuxt-link>
       </li>
       <li v-for="(routes, tag) in pathsByTags" :key="tag" class="sub-menu">
-        <a @click="toggleOpen(tag)" :class="{ 'selected': open === tag }" class="block px-2 py-1 rounded-md hover:bg-gray-200">
+        <a @click="toggleOpen(tag)" :class="{ 'selected': open === tag }" class="block px-2 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-900">
           <div class="menu-title flex justify-between items-center">
             <span class="font-bold">{{ tag }}</span>
             <span class="menu-item__icon">{{ open !== tag ? '▼' : '▲' }}</span>
           </div>
           <ul v-if="open === tag" v-cloak class="pl-2">
-            <li v-for="(route) in routes" class="menu-item" :class="`menu-item-${route.type}`">
-              <a @click.stop.prevent="goToPage(route)" class="block-btn py-2 px-4 rounded-md hover:bg-gray-200">
+            <li v-for="(route) in routes" class="menu-item hover:bg-gray-200 dark:hover:bg-gray-700" :class="`menu-item-${route.type}`">
+              <a @click.stop.prevent="goToPage(route)" class="block-btn py-2 px-4 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
                 <div class="flex flex-col">
                   <div class="font-bold item-path">{{ getRouteType(route.type) }} {{ route.path }}</div>
-                  <div class="description text-sm text-gray-600 overflow-hidden overflow-ellipsis whitespace-nowrap">{{ route.description }}</div>
+                  <div class="description text-sm text-gray-600 dark:text-gray-300/75 overflow-hidden overflow-ellipsis whitespace-nowrap">{{ route.description }}</div>
                 </div>
               </a>
             </li>
@@ -39,7 +39,7 @@
 .block-btn {
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
-  color: #374151;
+  //color: #374151;
   cursor: pointer;
   width: 50px;
   display: contents;
@@ -76,16 +76,13 @@
 
 .openapi-menu a.block {
   display: block;
-  padding-left: 0.5rem; /* аналогично px-2 */
-  padding-right: 0.5rem; /* аналогично px-2 */
-  padding-top: 0.25rem; /* аналогично py-1 */
-  padding-bottom: 0.25rem; /* аналогично py-1 */
+  padding: 0.25rem 0.5rem;
   border-radius: 0.25rem; /* аналогично rounded-md */
-  color: #374151; /* цвет ссылок по умолчанию в TailwindCSS */
+  //color: #374151; /* цвет ссылок по умолчанию в TailwindCSS */
 }
 
 .openapi-menu a.block:hover {
-  background-color: #edf2f7; /* аналогично hover:bg-gray-200 */
+  //background-color: #edf2f7; /* аналогично hover:bg-gray-200 */
 }
 
 .openapi-menu li.sub-menu > a.block {

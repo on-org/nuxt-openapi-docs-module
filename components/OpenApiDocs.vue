@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col h-screen">
-    <MainHeader :isMenuOpen="isMenuOpen" @toggleMenu="toggleMenu">
+  <div class="flex flex-col h-screen dark:bg-gray-900 dark:text-gray-300/75">
+    <MainHeader :isMenuOpen="isMenuOpen" @toggleMenu="toggleMenu" class="dark:bg-black dark:text-gray-300/75">
       <template #logo>
         <svg xmlns="http://www.w3.org/2000/svg" width="100" height="30">
           <rect width="100" height="30" rx="5" fill="#1A202C" />
@@ -8,7 +8,14 @@
         </svg>
       </template>
       <div slot="button">
-        <OpenApiHeader :locales="locales" :current-locale="currentLocale" :files="files" :file="file" />
+        <OpenApiHeader
+            :locales="locales"
+            :current-locale="currentLocale"
+            :files="files"
+            :file="file"
+            :is-dark-mode="isDarkMode"
+            @toggleDarkMode="toggleDarkMode"
+        />
       </div>
     </MainHeader>
     <div class="flex flex-1 overflow-hidden">
@@ -92,11 +99,26 @@ export default {
       path: '',
       doc: {},
       files: {},
+      isDarkMode: false,
     };
   },
   methods: {
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
+    },
+    toggleDarkMode(val) {
+      if(process.client) {
+        this.isDarkMode = val
+        localStorage.setItem('isDarkMode', val)
+        if(val) document.querySelector('html').classList.add('dark')
+        else document.querySelector('html').classList.remove('dark');
+      }
+    },
+    handleResize() {
+      this.isDesktop = window.innerWidth >= 768 // set breakpoint here
+      if (!this.isDesktop) {
+        this.isMenuOpen = false
+      }
     },
   },
   computed: {
@@ -116,12 +138,20 @@ export default {
         return null;
       }
       return this.doc.servers[0].url ?? null
-    }
+    },
   },
   mounted() {
     if(process.client) {
       this.isMobile = window.innerWidth < 640;
       this.isMenuOpen = window.innerWidth > 640;
+      window.addEventListener('resize', this.handleResize)
+      this.isDarkMode = localStorage.getItem('isDarkMode') === 'true'
+      if(this.isDarkMode) document.querySelector('html').classList.add('dark')
+    }
+  },
+  beforeDestroy() {
+    if(process.client) {
+      window.removeEventListener('resize', this.handleResize)
     }
   },
 };
@@ -130,10 +160,10 @@ export default {
 p {
   font-size: 18px;
   line-height: 1.5;
-  color: #333;
+  //color: #333;
 }
 h2, h3, h4 {
-  color: #666;
+  //color: #666;
   margin-top: 20px;
   margin-bottom: 10px;
 }
@@ -167,7 +197,7 @@ td {
 
 th {
   font-weight: bold;
-  background-color: #f2f2f2;
+  //background-color: #f2f2f2;
 }
 
 tbody tr:nth-of-type(even) {

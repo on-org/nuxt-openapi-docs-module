@@ -6,17 +6,18 @@
   "license": "MIT",
   "dependencies": {
     "@nuxt/markdown": "^0.0.21",
-    "autoprefixer": "^10.4.14",
-    "dompurify": "^2.3.10",
     "express": "^4.18.2",
+    "flowbite": "^1.6.4",
     "httpsnippet": "^2.0.0",
-    "isomorphic-dompurify": "^1.1.0",
+    "isomorphic-dompurify": "^1.2.0",
     "marked": "^4.2.12",
-    "postcss": "^8.4.21",
     "prismjs": "^1.29.0",
-    "tailwindcss": "^3.2.7",
     "vue": "^2.7.14",
-    "yaml": "^2.2.1",
-    "yamljs": "^0.3.0"
+    "yaml": "^2.2.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.7"
   }
 }

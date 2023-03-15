@@ -11,10 +11,10 @@
     />
     <OpenApiParameters v-if="route.parameters" :server="server" :url="url" :parameters="route.parameters" :current-locale="currentLocale" :method="method" :components="components" />
 
-    <OpenApiRequestBody v-if="route.requestBody" :requestBody="route.requestBody" :current-locale="currentLocale" />
+    <OpenApiRequestBody v-if="route.requestBody" :requestBody="route.requestBody" :current-locale="currentLocale" :components="components" />
     <OpenApiSecurity v-if="route.security" :security="route.security" :current-locale="currentLocale" />
 
-    <OpenApiResponses v-if="route.responses" :responses="route.responses" :current-locale="currentLocale" />
+    <OpenApiResponses v-if="route.responses" :responses="route.responses" :current-locale="currentLocale" :components="components" />
     <OpenApiExamples v-if="route.examples" :examples="route.examples" :current-locale="currentLocale" />
   </div>
 </template>

@@ -1,20 +1,19 @@
 <template>
   <div class="right flex items-center">
     <div class="files pr-4">
-      <CustomDropdown :options="files" v-model="file">
+      <DarkModeToggle :value="isDarkMode" @change="() => $emit('toggleDarkMode', !isDarkMode)" />
+    </div>
+    <div class="files pr-4">
+      <CustomDropdown :options="files" :value="file" @input="changeDoc">
         <template v-slot:default="{ option, index, isSelected }">
-          <nuxt-link :class="{ 'selected': isSelected }" :to="{ name: 'nuxt-openapi-docs-route', params: { locale: currentLocale, file: file, type: 'get', path: 'info' }, props: {locales: locales}}" class="font-medium hover:text-gray-900">
-            {{ option }}
-          </nuxt-link>
+          {{ option }}
         </template>
       </CustomDropdown>
     </div>
     <div class="locales">
-      <CustomDropdown :options="locales" v-model="currentLocale">
+      <CustomDropdown :options="locales" :value="currentLocale" @input="changeLocale">
         <template v-slot:default="{ option, index, isSelected }">
-          <nuxt-link :class="{ 'selected': isSelected }" :to="{ name: 'nuxt-openapi-docs-route', params: { locale: option, file: file, type: 'get', path: 'info' }, props: {locales: locales}}" class="font-medium hover:text-gray-900">
-            {{ option }}
-          </nuxt-link>
+          {{ option }}
         </template>
       </CustomDropdown>
     </div>
@@ -22,9 +21,11 @@
 </template>
 <script>
 import CustomDropdown from './lib/CustomDropdown.vue'
+import DarkModeToggle from './lib/DarkModeToggle.vue'
 export default {
   components: {
-    CustomDropdown
+    CustomDropdown,
+    DarkModeToggle
   },
   props: {
     currentLocale: {
@@ -42,9 +43,24 @@ export default {
     files: {
       required: true,
     },
+    isDarkMode: {
+      type: Boolean,
+      required: true,
+    },
   },
   methods: {
-
+    changeDoc(option) {
+      this.$router.push({
+        name: 'nuxt-openapi-docs-route',
+        params: { locale: this.currentLocale, file: option, type: 'get', path: 'info' }, props: {locales: this.locales}
+      })
+    },
+    changeLocale(option) {
+      this.$router.push({
+        name: 'nuxt-openapi-docs-route',
+        params: { locale: option, file: this.file, type: 'get', path: 'info' }, props: {locales: this.locales}
+      })
+    }
   },
 };
 </script>

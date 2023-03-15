@@ -1,9 +1,9 @@
 <template>
   <div>
-    <h2 v-if="noRefParam.length" class="text-lg font-bold mb-2">Parameters:</h2>
-    <table v-if="noRefParam.length" class="table-auto w-full">
+    <h2 v-if="parametersRef.length" class="text-lg font-bold mb-2">Parameters:</h2>
+    <table v-if="parametersRef.length" class="table-auto w-full">
       <thead>
-      <tr class="bg-gray-100">
+      <tr>
         <th class="border px-4 py-2">Parameter Name</th>
         <th class="border px-4 py-2">Description</th>
         <th class="border px-4 py-2">In</th>
@@ -15,7 +15,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(param, index) in noRefParam" :key="index" class="open-api-param bg-white">
+      <tr v-for="(param, index) in parametersRef" :key="index" class="open-api-param">
         <td class="border px-4 py-2 font-semibold">{{ tr(param, 'name', currentLocale) }}</td>
         <td class="border px-4 py-2" v-html="tr(param, 'description', currentLocale)"></td>
         <td class="border px-4 py-2">{{ param.in ? param.in : '-' }}</td>
@@ -28,10 +28,10 @@
       </tbody>
     </table>
 
-    <h2 v-if="noRefParam.length" class="text-lg font-bold mb-2">Code simples:</h2>
+    <h2 v-if="parametersRef.length" class="text-lg font-bold mb-2">Code simples:</h2>
     <client-only>
       <code-simples
-          v-if="noRefParam.length"
+          v-if="parametersRef.length"
           :url="url"
           :baseUrl="server"
           :method="method"
@@ -90,7 +90,10 @@ export default {
     }
   },
   computed: {
-    noRefParam() {
+    parametersRef() {
+      if(!this.parameters) {
+        return []
+      }
       let res = [];
       for (let i in this.parameters) {
         let param = this.parameters[i]
