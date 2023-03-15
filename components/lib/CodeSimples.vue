@@ -326,7 +326,7 @@ pre[class*="language-"] {
   padding: 1em;
   margin: 0.5em 0;
   overflow: auto;
-  border-radius: 0.3em;
+  //border-radius: 0.3em;
 }
 :not(pre) > code[class*="language-"], pre[class*="language-"] {
   background: #001529;
@@ -334,7 +334,7 @@ pre[class*="language-"] {
 /* Inline code */
 :not(pre) > code[class*="language-"] {
   padding: 0.1em;
-  border-radius: 0.3em;
+  //border-radius: 0.3em;
   white-space: normal;
 }
 .token.comment, .token.prolog, .token.doctype, .token.cdata {
@@ -380,7 +380,7 @@ pre[class*="language-"] {
   cursor: pointer;
 }
 .code-panel {
-  border-radius: 5px;
+  //border-radius: 5px;
   min-height: 300px;
   outline: 2px solid rgba(0, 0, 0, 0);
   outline-offset: 2px;
@@ -410,7 +410,7 @@ pre[class*="language-"] {
 .code-popup {
   background-color: #fff;
   border: 1px solid #ccd0d1;
-  border-radius: 2px;
+  //border-radius: 2px;
   box-sizing: border-box;
   left: 19px;
   padding-bottom: 8px;
@@ -434,7 +434,7 @@ pre[class*="language-"] {
 .code-popup-sublist {
   background-color: #fff;
   border: 1px solid #ccd0d1;
-  border-radius: 2px;
+  //border-radius: 2px;
   left: 271px;
   position: absolute;
   z-index: 10;
@@ -446,7 +446,7 @@ pre[class*="language-"] {
   font-size: 12px;
   min-width: 50px;
   color: #fff;
-  border-radius: 2px;
+  //border-radius: 2px;
   border: none;
   background-color: #00a2fb;
 }
