@@ -32,7 +32,7 @@ modules: [
     [
         'nuxt-openapi-docs-module',
         {
-            openApiDocsFolder: './docs/openapi',
+            folder: './docs/openapi',
             name: 'OpenApiDocs',
             locales: {en: 'English'},
             files: function(ctx) {return { 'News-API': 'News API'}},
