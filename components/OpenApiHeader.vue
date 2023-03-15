@@ -4,14 +4,14 @@
       <DarkModeToggle :value="isDarkMode" @change="() => $emit('toggleDarkMode', !isDarkMode)" />
     </div>
     <div class="files pr-4">
-      <CustomDropdown :options="files" :value="file" @input="changeDoc">
+      <CustomDropdown :placeholder="files[file]" :options="files" :value="file" :route-function="changeDoc">
         <template v-slot:default="{ option, index, isSelected }">
           {{ option }}
         </template>
       </CustomDropdown>
     </div>
     <div class="locales">
-      <CustomDropdown :options="locales" :value="currentLocale" @input="changeLocale">
+      <CustomDropdown :placeholder="locales[currentLocale]" :options="locales" :value="currentLocale" :route-function="changeLocale">
         <template v-slot:default="{ option, index, isSelected }">
           {{ option }}
         </template>
@@ -32,15 +32,8 @@ export default {
       type: String,
       required: true,
     },
-    locales: {
-      type: Array,
-      required: true,
-    },
     file: {
       type: String,
-      required: true,
-    },
-    files: {
       required: true,
     },
     isDarkMode: {
@@ -48,18 +41,26 @@ export default {
       required: true,
     },
   },
+  computed: {
+    locales() {
+      return this.$openapidoc.locales;
+    },
+    files() {
+      return this.$openapidoc_files(this);
+    }
+  },
   methods: {
     changeDoc(option) {
-      this.$router.push({
+      return {
         name: 'nuxt-openapi-docs-route',
-        params: { locale: this.currentLocale, file: option, type: 'get', path: 'info' }, props: {locales: this.locales}
-      })
+        params: { locale: this.currentLocale, file: option, type: 'get', path: 'info' }
+      }
     },
     changeLocale(option) {
-      this.$router.push({
+      return {
         name: 'nuxt-openapi-docs-route',
-        params: { locale: option, file: this.file, type: 'get', path: 'info' }, props: {locales: this.locales}
-      })
+        params: { locale: option, file: this.file, type: 'get', path: 'info' }
+      }
     }
   },
 };

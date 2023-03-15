@@ -250,8 +250,6 @@ export default {
         param.postData = { mimeType: this.mimeType, params: JSON.parse(JSON.stringify(this.postData)) };
       }
 
-      console.log(22222, param);
-
       const snippet = new HTTPSnippet(param);
       return snippet.convert(this.lang, this.client) || '';
     }

@@ -42,10 +42,10 @@ modules: [
 // ...
 }
 ```
-- openApiDocsFolder (default: ./docs/openapi): the folder where your OpenAPI specification files are located.
-- componentName (default: OpenApiDocs): the name of the main component used to render the OpenAPI documentation.
-- infoComponentName (default: OpenApiInfo): the name of the component used to render the OpenAPI specification information.
-- componentsComponentName (default: OpenApiComponents): the name of the component used to render the OpenAPI components.
+- `openApiDocsFolder` (default: ./docs/openapi): the folder where your OpenAPI specification files are located.
+- `componentName` (default: OpenApiDocs): the name of the main component used to render the OpenAPI documentation.
+- `infoComponentName` (default: OpenApiInfo): the name of the component used to render the OpenAPI specification information.
+- `componentsComponentName` (default: OpenApiComponents): the name of the component used to render the OpenAPI components.
 
 ### Folder Structure
 The default folder structure for your OpenAPI specification files should look like this:
@@ -58,13 +58,18 @@ docs/
 ```
 This module provides several reusable Nuxt.js components to render your OpenAPI documentation:
 
-- OpenApiDocs: the main component used to render the OpenAPI documentation.
-- OpenApiHeader: the component used to render the header section of the OpenAPI documentation.
-- OpenApiInfo: the component used to render the OpenAPI specification information.
-- OpenApiComponents: the component used to render the OpenAPI components.
-- OpenApiRoute: the component used to render a single OpenAPI route.
-- componentsPath: the component url for docs.
+- `OpenApiDocs`: the main component used to render the OpenAPI documentation.
+- `OpenApiHeader`: the component used to render the header section of the OpenAPI documentation.
+- `OpenApiInfo`: the component used to render the OpenAPI specification information.
+- `OpenApiComponents`: the component used to render the OpenAPI components.
+- `OpenApiRoute`: the component used to render a single OpenAPI route.
+- `componentsPath`: the component url for docs.
+- `locales`: object with locales, {en: 'English'}.
+- `files`: function with files list in OpenApiDocs folder, files: function(ctx) {return { 'News-API': 'News API'}}.
 You can customize these components by modifying the corresponding .vue files in the components/ folder.
+
+locales: moduleOptions.locales ?? {en: 'English'},
+files: moduleOptions.files ?? function (ctx) { return {} },
 
 ### License
 MIT

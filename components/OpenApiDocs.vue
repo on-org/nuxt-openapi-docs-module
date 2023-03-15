@@ -9,7 +9,6 @@
       </template>
       <div slot="button">
         <OpenApiHeader
-            :locales="locales"
             :current-locale="currentLocale"
             :files="files"
             :file="file"
@@ -20,7 +19,7 @@
     </MainHeader>
     <div class="flex flex-1 overflow-hidden">
       <MainLeftMenu :isMenuOpen="isMenuOpen" :isMobile="isMobile">
-        <OpenApiMenu :routes="doc.paths" :locales="locales" :current-locale="currentLocale" :file="file" />
+        <OpenApiMenu :routes="doc.paths" :current-locale="currentLocale" :file="file" />
       </MainLeftMenu>
       <MainContent>
         <OpenApiInfo v-if="isInfo" :info="doc.info" :current-locale="currentLocale"></OpenApiInfo>
@@ -55,31 +54,31 @@ export default {
     OpenApiMenu,
     NotFound,
   },
-  props: {
-    locales: {
-      type: Array,
-      required: false,
-      default: ['en', 'ru']
-    },
-  },
   async asyncData(ctx) {
     try {
-      const protocol = process.server ? (ctx.req.headers['x-forwarded-proto'] || ctx.req.protocol || (ctx.req.connection.encrypted ? 'https:' : 'http:')) : window.location.protocol;
-      const host = process.server ? ctx.req.headers.host : window.location.host;
+      let doc = {};
+      if (process.server || process.static) {
+        const protocol = ctx.req.headers['x-forwarded-proto'] || ctx.req.protocol || (ctx.req.connection.encrypted ? 'https:' : 'http:');
+        const host = ctx.req.headers.host;
+        console.log(`${protocol}//${host}/docs/api?name=${ctx.route.params.file}`)
+        const response = await fetch(`${protocol}//${host}/docs/api?name=${ctx.route.params.file}`);
+        doc = await response.json();
+      } else if (process.client) {
+        const protocol = window.location.protocol;
+        const host = window.location.host;
+        const response = await fetch(`${protocol}//${host}/docs/api?name=${ctx.route.params.file}`);
+        doc = await response.json();
+      }
 
-      const response = await fetch(`${protocol}//${host}/docs/api?name=${ctx.route.params.file}`)
-      const post = await response.json();
       return {
-        doc: post.doc,
-        files: post.files,
+        doc,
         currentLocale: ctx.route.params.locale,
         file: ctx.route.params.file,
         type: ctx.route.params.type,
         path: decodeURI(ctx.route.params.path),
       }
-
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
 
     return {
