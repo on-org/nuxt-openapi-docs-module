@@ -23,7 +23,7 @@
             <li v-for="(route) in routes" class="menu-item hover:bg-gray-200 dark:hover:bg-gray-700" :class="`menu-item-${route.type}`">
               <nuxt-link :to="getSubRoute(route)" @click.native.stop.prevent class="block-btn py-2 px-4 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
                 <div class="flex flex-col">
-                  <div class="font-bold item-path">{{ getRouteType(route.type) }} {{ route.path }}</div>
+                  <div class="font-bold item-path">{{ getRouteType(route.type) }} {{ route.name }}</div>
                   <div class="description text-sm text-gray-600 dark:text-gray-300/75 overflow-hidden overflow-ellipsis whitespace-nowrap">{{ route.description }}</div>
                 </div>
               </nuxt-link>
@@ -110,6 +110,7 @@ export default {
                 pathsByTags[tag] = [];
               }
               pathsByTags[tag].push({
+                name: path.path,
                 path: route_path,
                 type: type,
                 description: path.description,

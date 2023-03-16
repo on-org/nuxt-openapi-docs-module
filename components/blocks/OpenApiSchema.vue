@@ -24,7 +24,9 @@
     </div>
     <div class="schema-row flex items-center" v-if="schema.items">
       <div class="schema-row-label font-bold mr-2">Items:</div>
-      <div class="schema-row-value"><open-api-schema :components="components" :current-locale="currentLocale" :schema="schema.items" /></div>
+      <div class="schema-row-value">
+        <open-api-schema :components="components" :current-locale="currentLocale" :schema="schema.items" />
+      </div>
     </div>
     <div class="schema-row flex items-center" v-if="schema.properties">
       <div class="schema-row-label font-bold mr-2">Properties:</div>
@@ -33,21 +35,21 @@
           <thead>
           <tr>
             <th class="px-4 py-2">Name</th>
-            <th v-if="schema.properties[key].type !== 'array'" class="px-4 py-2">Type</th>
+            <th class="px-4 py-2">Type</th>
             <th class="px-4 py-2">Description</th>
           </tr>
           </thead>
           <tbody>
           <tr v-for="(property, key) in schema.properties" :key="key">
             <td class="border px-4 py-2">{{ key }}</td>
-            <td v-if="property.type !== 'array'" class="border px-4 py-2">{{ property.type }}</td>
+            <td class="border px-4 py-2">{{ property.type }}</td>
             <td class="border px-4 py-2">{{ tr(property, 'description', currentLocale) }}</td>
           </tr>
           </tbody>
         </table>
       </div>
     </div>
-    <div class="schema-row flex items-center" v-if="additionalPropertiesRef">
+    <div class="schema-row flex items-center" v-if="additionalPropertiesRef.length">
       <div class="schema-row-label font-bold mr-2">Additional Properties:</div>
       <div class="schema-row-value">
         <open-api-schema :components="components" :current-locale="currentLocale" :schema="additionalPropertiesRef" />

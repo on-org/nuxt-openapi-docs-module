@@ -2,7 +2,11 @@
   <div>
     <h3 class="text-lg font-medium">Request Body:</h3>
     <pre class="mt-2 bg-gray-100 p-2 rounded-md">{{ tr(requestBody, 'description', currentLocale) }}</pre>
-    <OpenApiSchema :schema="requestBody.content['application/json'].schema" :current-locale="currentLocale" :components="components" class="mt-4" />
+    <div v-for="(val, key) in requestBody.content">
+      <pre class="mt-2 bg-gray-100 p-2 rounded-md" v-text="key"></pre>
+      <OpenApiSchema :schema="val.schema" :current-locale="currentLocale" :components="components" class="mt-4" />
+    </div>
+
   </div>
 </template>
 <style>

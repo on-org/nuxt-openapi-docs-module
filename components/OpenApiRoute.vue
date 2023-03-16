@@ -1,7 +1,7 @@
 <template>
   <div>
     <OpenApiRouteHeader
-        :path="url"
+        :path="route.path"
         :method="route.method"
         :tags="route.tags"
         :summary="tr(route, 'summary', currentLocale)"

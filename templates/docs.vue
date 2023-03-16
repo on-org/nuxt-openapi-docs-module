@@ -32,16 +32,15 @@
 </template>
 
 <script>
-import MainHeader from './lib/MainHeader.vue';
-import MainLeftMenu from './lib/MainLeftMenu.vue';
-import MainContent from './lib/MainContent.vue';
-import OpenApiHeader from './OpenApiHeader.vue';
-import OpenApiMenu from './OpenApiMenu.vue';
-import OpenApiInfo from './OpenApiInfo.vue';
-import OpenApiComponents from './OpenApiComponents.vue';
-import OpenApiRoute from './OpenApiRoute.vue';
-import NotFound from './NotFound.vue';
-
+import MainHeader from '../components/lib/MainHeader.vue';
+import MainLeftMenu from '../components/lib/MainLeftMenu.vue';
+import MainContent from '../components/lib/MainContent.vue';
+import OpenApiHeader from '../components/OpenApiHeader.vue';
+import OpenApiMenu from '../components/OpenApiMenu.vue';
+import OpenApiInfo from '../components/OpenApiInfo.vue';
+import OpenApiComponents from '../components/OpenApiComponents.vue';
+import OpenApiRoute from '../components/OpenApiRoute.vue';
+import NotFound from '../components/NotFound.vue';
 export default {
   components: {
     MainHeader,
@@ -56,35 +55,21 @@ export default {
   },
   async asyncData(ctx) {
     try {
-      let doc = {};
-      if (process.server || process.static) {
-        const protocol = ctx.req.headers['x-forwarded-proto'] || ctx.req.protocol || (ctx.req.connection.encrypted ? 'https:' : 'http:');
-        const host = ctx.req.headers.host;
-        const response = await fetch(`${protocol}//${host}/docs/api?name=${ctx.route.params.file}`);
-        doc = await response.json();
-      } else if (process.client) {
-        const protocol = window.location.protocol;
-        const host = window.location.host;
-        const response = await fetch(`${protocol}//${host}/docs/api?name=${ctx.route.params.file}`);
-        doc = await response.json();
-      }
-
+      const file = ctx.route.params.file ?? ctx.route.meta[0].file;
+      const locale = ctx.route.params.locale ?? ctx.route.meta[0].locale;
+      const type = ctx.route.params.type ?? ctx.route.meta[0].type;
+      const path = ctx.route.params.path ?? ctx.route.meta[0].path;
       return {
-        doc,
-        currentLocale: ctx.route.params.locale,
-        file: ctx.route.params.file,
-        type: ctx.route.params.type,
-        path: decodeURI(ctx.route.params.path),
+        name: ctx.$openapidoc.name,
+        doc: ctx.$openapidoc.docs[file],
+        currentLocale: locale,
+        file: file,
+        type: type,
+        path: path,
       }
     } catch (e) {
-      console.error(e);
-    }
-
-    return {
-      currentLocale: ctx.route.params.locale,
-      file: ctx.route.params.file,
-      type: ctx.route.params.type,
-      path: decodeURI(ctx.route.params.path),
+      console.error(e)
+      console.error(ctx.route)
     }
   },
   data() {
@@ -92,6 +77,7 @@ export default {
       isMenuOpen: true,
       isMobile: false,
       currentLocale: 'en',
+      name: '',
       file: '',
       type: '',
       path: '',
@@ -120,9 +106,6 @@ export default {
     },
   },
   computed: {
-    name() {
-      return this.$openapidoc.name;
-    },
     isInfo() {
       return this.path === 'info'
     },
@@ -157,14 +140,16 @@ export default {
   },
 };
 </script>
+
 <style>
+@import "../tailwindcss.css";
 p {
   font-size: 18px;
   line-height: 1.5;
-  //color: #333;
+//color: #333;
 }
 h2, h3, h4 {
-  //color: #666;
+//color: #666;
   margin-top: 20px;
   margin-bottom: 10px;
 }
@@ -198,7 +183,7 @@ td {
 
 th {
   font-weight: bold;
-  //background-color: #f2f2f2;
+//background-color: #f2f2f2;
 }
 
 tbody tr:nth-of-type(even) {
@@ -213,28 +198,5 @@ tfoot {
 tfoot td {
   border-top: none;
 }
-
-
-.content {
-  @apply pt-60 pl-340;
-}
-table {
-  @apply w-full mb-4 bg-transparent border-collapse;
-}
-th,
-td {
-  @apply py-2 border-t border-gray-300;
-}
-th {
-  @apply font-bold bg-gray-200;
-}
-tbody tr:nth-of-type(odd) {
-  @apply bg-gray-100;
-}
-tfoot {
-  @apply font-bold border-t-2 border-gray-300;
-}
-tfoot td {
-  @apply border-t-0;
-}
 </style>
+
