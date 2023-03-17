@@ -47,13 +47,9 @@ export default {
         name: 'Api Docs',
         locales: {en: 'English', ru: 'Русский'},
         files: function(ctx) {
-          var docs = {
-            'petstore_extended': 'Petstore Extended Api',
-          };
-          if (ctx.$auth) {
-            docs['News-API'] = 'News API'
-          }
-           return docs
+           return {
+             'petstore_extended': 'Petstore Extended Api',
+           }
         },
         params: function(ctx) {
           return [{ in: 'queryString', name: 'apikey', value: '1111'}]
