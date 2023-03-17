@@ -1,7 +1,7 @@
 <template>
   <div class="openapi-security-requirement">
     <ul>
-      <li v-for="(scopes, scheme) in securityRequirement" class="openapi-security-requirement__item" :key="scheme">
+      <li v-for="(scopes, scheme) in props.securityRequirement" class="openapi-security-requirement__item" :key="scheme">
         <span class="font-bold mr-2">{{ scheme }}</span>
         <ul class="list-disc ml-8">
           <li v-for="scope in scopes" :key="scope">
@@ -34,23 +34,15 @@
 }
 </style>
 
-<script>
-import {tr} from "../helpers";
-
-export default {
-  name: 'OpenApiSecurityRequirement',
-  props: {
-    securityRequirement: {
-      type: Object,
-      required: true,
-    },
-    currentLocale: {
-      type: String,
-      required: true,
-    },
+<script setup>
+const props = defineProps({
+  securityRequirement: {
+    type: Object,
+    required: true,
   },
-  methods: {
-    tr
-  }
-};
+  currentLocale: {
+    type: String,
+    required: true,
+  },
+})
 </script>

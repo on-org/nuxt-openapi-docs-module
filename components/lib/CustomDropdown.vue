@@ -2,7 +2,7 @@
   <div class="relative inline-block">
     <div class="dropdown-toggle flex items-center justify-between px-4 py-2 border border-gray-300 rounded-md cursor-pointer" @click="isOpen = !isOpen">
       <span class="text-gray-500 dark:text-gray-300/75">
-        {{ placeholder ?? selectedOption }}
+        {{ props.placeholder ?? selectedOption }}
       </span>
       <svg class="w-4 h-4 ml-2 fill-current dark:fill-white/50" viewBox="0 0 20 20">
         <path v-if="!isOpen" d="M5 8h10l-5 7z" />
@@ -10,48 +10,42 @@
       </svg>
     </div>
     <div class="dropdown-menu absolute top-full left-0 z-50 py-2 bg-white rounded-md shadow-lg dark:bg-black dark:text-gray-300/75" v-if="isOpen">
-      <nuxt-link v-for="(option, index) in options" :key="index" class="dropdown-item px-4 py-2 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-gray-900" :class="{'bg-gray-300 dark:text-gray-900': index === selectedOption}" :to="routeFunction(index)" @click="selectOption(index)">
+      <nuxt-link v-for="(option, index) in props.options" :key="index" class="dropdown-item px-4 py-2 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-gray-900" :class="{'bg-gray-300 dark:text-gray-900': index === selectedOption}" :to="props.routeFunction(index)" @click="selectOption(index)">
         <slot v-bind:option="option" v-bind:index="index">{{ option }}</slot>
       </nuxt-link>
     </div>
   </div>
 </template>
-<script>
-export default {
-  props: {
-    options: {
-      required: true,
-    },
-    placeholder: {
-      type: String,
-      default: 'Select an option',
-    },
-    value: {
-      type: String,
-      default: '',
-    },
-    routeFunction: {
-      type: Function,
-      default: () => {},
-    },
+<script setup>
+const emit = defineEmits(['input'])
+
+const props = defineProps({
+  options: {
+    required: true,
   },
-  data() {
-    return {
-      isOpen: false,
-      selectedOption: '',
-    };
+  placeholder: {
+    type: String,
+    default: 'Select an option',
   },
-  created() {
-    this.selectedOption = this.value;
+  value: {
+    type: String,
+    default: '',
   },
-  methods: {
-    selectOption(option) {
-      this.selectedOption = option;
-      this.isOpen = false;
-      this.$emit('input', option);
-    },
+  routeFunction: {
+    type: Function,
+    default: () => {},
   },
-};
+})
+
+
+let isOpen = ref(false);
+let selectedOption = props.value;
+
+function selectOption(option) {
+  selectedOption = option;
+  isOpen = false;
+  emit('input', option);
+}
 </script>
 <style scoped>
 .dropdown-menu {

@@ -16,8 +16,8 @@
       </thead>
       <tbody>
       <tr v-for="(param, index) in parametersRef" :key="index" class="open-api-param">
-        <td class="border px-4 py-2 font-semibold">{{ tr(param, 'name', currentLocale) }}</td>
-        <td class="border px-4 py-2" v-html="tr(param, 'description', currentLocale)"></td>
+        <td class="border px-4 py-2 font-semibold">{{ tr(param, 'name', props.currentLocale) }}</td>
+        <td class="border px-4 py-2" v-html="tr(param, 'description', props.currentLocale)"></td>
         <td class="border px-4 py-2">{{ param.in ? param.in : '-' }}</td>
         <td class="border px-4 py-2">{{ param.required ? 'Yes' : 'No' }}</td>
         <td class="border px-4 py-2">{{ param.schema ? param.schema.type : '-' }}</td>
@@ -31,48 +31,41 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import {getSchemaValsFromPath, tr} from "../helpers";
 
-export default {
-  props: {
-    parameters: [Object, Array],
-    currentLocale: {
-      type: String,
-      required: true,
-    },
-    components: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
-  computed: {
-    parametersRef() {
-      if(!this.parameters) {
-        return []
-      }
-      let res = [];
-      for (let i in this.parameters) {
-        let param = this.parameters[i]
-        if (param.$ref) {
-          const link = getSchemaValsFromPath(param.$ref)
-          if(this.components[link.path] && this.components[link.path][link.name]) {
-            param = this.components[link.path][link.name];
-          }
-        }
-        param.path = i;
 
-        res.push(param);
+const props = defineProps({
+  parameters: [Object, Array],
+  currentLocale: {
+    type: String,
+    required: true,
+  },
+  components: {
+    type: Object,
+    default: () => ({}),
+  },
+})
+
+const parametersRef = computed(() => {
+  if(!props.parameters) {
+    return []
+  }
+  let res = [];
+  for (let i in props.parameters) {
+    let param = props.parameters[i]
+    if (param.$ref) {
+      const link = getSchemaValsFromPath(param.$ref)
+      if(props.components[link.path] && props.components[link.path][link.name]) {
+        param = props.components[link.path][link.name];
       }
-      return res;
     }
-  },
-  methods: {
-    tr,
+    param.path = i;
 
-  },
-
-};
+    res.push(param);
+  }
+  return res;
+})
 </script>
 
 <style scoped>

@@ -9,11 +9,11 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(response, status) in responses" :key="status" class="border-b border-gray-300">
+      <tr v-for="(response, status) in props.responses" :key="status" class="border-b border-gray-300">
         <td class="border p-3">{{ status }}</td>
         <td class="border p-3">
-          <p class="mb-2">{{ tr(response, 'description', currentLocale) }}</p>
-          <OpenApiExamples v-if="response.examples" :examples="response.examples" :current-locale="currentLocale" :components="components" />
+          <p class="mb-2">{{ tr(response, 'description', props.currentLocale) }}</p>
+          <OpenApiExamples v-if="response.examples" :examples="response.examples" :current-locale="props.currentLocale" :components="props.components" />
         </td>
       </tr>
       </tbody>
@@ -21,31 +21,22 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import OpenApiExamples from './OpenApiExamplesResponse.vue';
 import {tr} from "../helpers";
 
-export default {
-  name: 'OpenApiResponses',
-  props: {
-    responses: {
-      type: Object,
-      required: true,
-    },
-    currentLocale: {
-      type: String,
-      required: true,
-    },
-    components: {
-      type: Object,
-      default: () => ({}),
-    },
+const props = defineProps({
+  responses: {
+    type: Object,
+    required: true,
+  },
+  currentLocale: {
+    type: String,
+    required: true,
   },
   components: {
-    OpenApiExamples,
+    type: Object,
+    default: () => ({}),
   },
-  methods: {
-    tr
-  }
-};
+})
 </script>

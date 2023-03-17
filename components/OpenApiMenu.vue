@@ -20,11 +20,11 @@
             <span class="menu-item__icon">{{ open !== tag ? '▼' : '▲' }}</span>
           </div>
           <ul v-if="open === tag" v-cloak class="pl-2">
-            <li v-for="(route) in routes" class="menu-item hover:bg-gray-200 dark:hover:bg-gray-700" :class="`menu-item-${route.type}`">
-              <nuxt-link :to="getSubRoute(route)" @click.native.stop.prevent class="block-btn py-2 px-4 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
+            <li v-for="(item) in routes" class="menu-item hover:bg-gray-200 dark:hover:bg-gray-700" :class="`menu-item-${item.type}`">
+              <nuxt-link :to="getSubRoute(item)" @click.native.stop.prevent class="block-btn py-2 px-4 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
                 <div class="flex flex-col">
-                  <div class="font-bold item-path">{{ getRouteType(route.type) }} {{ route.name }}</div>
-                  <div class="description text-sm text-gray-600 dark:text-gray-300/75 overflow-hidden overflow-ellipsis whitespace-nowrap">{{ route.description }}</div>
+                  <div class="font-bold item-path">{{ getRouteType(item.type) }} {{ item.name }}</div>
+                  <div class="description text-sm text-gray-600 dark:text-gray-300/75 overflow-hidden overflow-ellipsis whitespace-nowrap">{{ item.description }}</div>
                 </div>
               </nuxt-link>
             </li>
@@ -36,6 +36,8 @@
 </template>
 
 <script>
+import { ref } from 'vue'
+
 export default {
   props: {
     routes: {
@@ -50,13 +52,25 @@ export default {
       type: String,
       required: true,
     },
+    path: {
+      type: String,
+      required: true,
+    },
   },
-  data() {
+  setup() {
+    const open = ref(null)
+
+    // expose to template and other options API hooks
     return {
-      open: null,
-    };
+      open
+    }
   },
+
   methods: {
+    toggleOpen(tag) {
+      this.open = this.open === tag ? null : tag;
+      localStorage.setItem('menu_open', this.open)
+    },
     getRouteType(method) {
       switch (method.toUpperCase()) {
         case 'GET':
@@ -73,18 +87,11 @@ export default {
           return '';
       }
     },
-    genUrl(path) {
-      return encodeURI(path)
-    },
-    toggleOpen(tag) {
-      this.open = this.open === tag ? null : tag;
-      localStorage.setItem('menu_open', this.open)
-    },
     getRoute(path) {
-      return '/' + this.$openapidoc.path + '/' + this.file + '/' + this.currentLocale + '/get/' + path;
+      return '/' + this.path + '/' + this.file + '/' + this.currentLocale + '/get/' + path;
     },
     getSubRoute(route) {
-      return '/' + this.$openapidoc.path + '/' + this.file + '/' + this.currentLocale + '/' + route.type + '/' + this.genUrl(route.path);
+      return '/' + this.path + '/' + this.file + '/' + this.currentLocale + '/' + route.type + '/' + encodeURI(route.path);
     }
   },
   computed: {
@@ -116,14 +123,13 @@ export default {
       });
 
       return pathsByTags;
-    },
-  },
-  mounted() {
-    if(process.client) {
-      this.open = localStorage.getItem('menu_open') ?? null
     }
   },
-};
+  mounted() {
+    this.open = localStorage.getItem('menu_open') ?? null
+    console.log(this.open) // 0
+  }
+}
 </script>
 
 <style scoped>

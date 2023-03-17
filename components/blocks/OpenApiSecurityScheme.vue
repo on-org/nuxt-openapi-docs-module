@@ -1,31 +1,31 @@
 <template>
   <div class="security-scheme border border-gray-300 p-4 mb-8">
     <h4 class="security-scheme__name text-xl font-bold mb-4" style="margin-top: 0">
-      {{ tr(securityScheme, 'name', currentLocale) }}
+      {{ tr(props.securityScheme, 'name', props.currentLocale) }}
     </h4>
-    <div v-if="securityScheme.type === 'http'" class="security-scheme__details">
-      <p><strong>Type:</strong> {{ securityScheme.type }}</p>
-      <p><strong>Scheme:</strong> {{ securityScheme.scheme }}</p>
-      <p v-if="securityScheme.bearerFormat">
-        <strong>Bearer format:</strong> {{ securityScheme.bearerFormat }}
+    <div v-if="props.securityScheme.type === 'http'" class="security-scheme__details">
+      <p><strong>Type:</strong> {{ props.securityScheme.type }}</p>
+      <p><strong>Scheme:</strong> {{ props.securityScheme.scheme }}</p>
+      <p v-if="props.securityScheme.bearerFormat">
+        <strong>Bearer format:</strong> {{ props.securityScheme.bearerFormat }}
       </p>
-      <p v-if="securityScheme.description">
-        <strong>Description:</strong> {{ tr(securityScheme, 'description', currentLocale) }}
-      </p>
-    </div>
-    <div v-else-if="securityScheme.type === 'apiKey'" class="security-scheme__details">
-      <p><strong>Type:</strong> {{ securityScheme.type }}</p>
-      <p><strong>Name:</strong> {{ securityScheme.name }}</p>
-      <p><strong>In:</strong> {{ securityScheme.in }}</p>
-      <p v-if="securityScheme.description">
-        <strong>Description:</strong> {{ tr(securityScheme, 'description', currentLocale) }}
+      <p v-if="props.securityScheme.description">
+        <strong>Description:</strong> {{ tr(props.securityScheme, 'description', props.currentLocale) }}
       </p>
     </div>
-    <div v-else-if="securityScheme.type === 'oauth2'" class="security-scheme__details">
-      <p><strong>Type:</strong> {{ securityScheme.type }}</p>
-      <p v-if="securityScheme.flows"><strong>Flows:</strong></p>
+    <div v-else-if="props.securityScheme.type === 'apiKey'" class="security-scheme__details">
+      <p><strong>Type:</strong> {{ props.securityScheme.type }}</p>
+      <p><strong>Name:</strong> {{ props.securityScheme.name }}</p>
+      <p><strong>In:</strong> {{ props.securityScheme.in }}</p>
+      <p v-if="props.securityScheme.description">
+        <strong>Description:</strong> {{ tr(props.securityScheme, 'description', props.currentLocale) }}
+      </p>
+    </div>
+    <div v-else-if="props.securityScheme.type === 'oauth2'" class="security-scheme__details">
+      <p><strong>Type:</strong> {{ props.securityScheme.type }}</p>
+      <p v-if="props.securityScheme.flows"><strong>Flows:</strong></p>
       <ul>
-        <li v-for="(flow, index) in securityScheme.flows" :key="index">
+        <li v-for="(flow, index) in props.securityScheme.flows" :key="index">
           <p><strong>{{ index }}:</strong></p>
           <ul>
             <li v-if="flow.authorizationUrl">
@@ -48,8 +48,8 @@
           </ul>
         </li>
       </ul>
-      <p v-if="securityScheme.description">
-        <strong>Description:</strong> {{ tr(securityScheme, 'description', currentLocale) }}
+      <p v-if="props.securityScheme.description">
+        <strong>Description:</strong> {{ tr(props.securityScheme, 'description', props.currentLocale) }}
       </p>
     </div>
   </div>
@@ -73,22 +73,17 @@
 }
 </style>
 
-<script>
+<script setup>
 import {tr} from "../helpers";
 
-export default {
-  props: {
-    securityScheme: {
-      type: Object,
-      required: true,
-    },
-    currentLocale: {
-      type: String,
-      required: true,
-    },
+const props = defineProps({
+  securityScheme: {
+    type: Object,
+    required: true,
   },
-  methods: {
-    tr
-  }
-};
+  currentLocale: {
+    type: String,
+    required: true,
+  },
+})
 </script>

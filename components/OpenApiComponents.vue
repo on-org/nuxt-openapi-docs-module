@@ -24,7 +24,7 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import OpenApiSchema from './blocks/OpenApiSchema.vue';
 import OpenApiExamples from './blocks/OpenApiExamples.vue';
 import OpenApiRequestBodies from './blocks/OpenApiRequestBodies.vue';
@@ -32,24 +32,14 @@ import OpenApiResponses from './blocks/OpenApiResponses.vue';
 import OpenApiParameters from './blocks/OpenApiParameters.vue';
 import OpenApiSecuritySchemes from './blocks/OpenApiSecuritySchemes.vue';
 
-export default {
+const props = defineProps({
   components: {
-    OpenApiSchema,
-    OpenApiExamples,
-    OpenApiRequestBodies,
-    OpenApiResponses,
-    OpenApiParameters,
-    OpenApiSecuritySchemes,
+    type: Object,
+    default: () => ({}),
   },
-  props: {
-    components: {
-      type: Object,
-      default: () => ({}),
-    },
-    currentLocale: {
-      type: String,
-      required: true,
-    },
+  currentLocale: {
+    type: String,
+    required: true,
   },
-};
+})
 </script>

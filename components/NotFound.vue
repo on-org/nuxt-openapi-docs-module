@@ -4,9 +4,3 @@
     <p class="text-lg text-gray-700 text-center">Not found</p>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'NotFound',
-};
-</script>

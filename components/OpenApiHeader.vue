@@ -1,17 +1,17 @@
 <template>
   <div class="right flex items-center">
     <div class="files pr-4">
-      <DarkModeToggle :value="isDarkMode" @change="() => $emit('toggleDarkMode')" />
+      <DarkModeToggle :value="props.isDarkMode" @change="() => emit('toggleDarkMode')" />
     </div>
     <div class="files pr-4">
-      <CustomDropdown :placeholder="files[file]" :options="files" :value="file" :route-function="changeDoc">
+      <CustomDropdown :placeholder="props.files[file]" :options="props.files" :value="props.file" :route-function="changeDoc">
         <template v-slot:default="{ option, index, isSelected }">
           {{ option }}
         </template>
       </CustomDropdown>
     </div>
     <div class="locales">
-      <CustomDropdown :placeholder="locales[currentLocale]" :options="locales" :value="currentLocale" :route-function="changeLocale">
+      <CustomDropdown :placeholder="props.locales[currentLocale]" :options="props.locales" :value="props.currentLocale" :route-function="changeLocale">
         <template v-slot:default="{ option, index, isSelected }">
           {{ option }}
         </template>
@@ -19,45 +19,45 @@
     </div>
   </div>
 </template>
-<script>
+<script setup>
 import CustomDropdown from './lib/CustomDropdown.vue'
 import DarkModeToggle from './lib/DarkModeToggle.vue'
-export default {
-  components: {
-    CustomDropdown,
-    DarkModeToggle
+
+const emit = defineEmits(['toggleDarkMode'])
+
+const props = defineProps({
+  currentLocale: {
+    type: String,
+    required: true,
   },
-  props: {
-    currentLocale: {
-      type: String,
-      required: true,
-    },
-    file: {
-      type: String,
-      required: true,
-    },
-    isDarkMode: {
-      type: Boolean,
-      required: true,
-    },
+  file: {
+    type: String,
+    required: true,
   },
-  computed: {
-    locales() {
-      return this.$openapidoc.locales;
-    },
-    files() {
-      return this.$openapidoc_files(this);
-    }
+  isDarkMode: {
+    type: Boolean,
+    required: true,
   },
-  methods: {
-    changeDoc(option) {
-      return '/' + this.$openapidoc.path + '/' + option + '/' + this.currentLocale + '/get/info';
-    },
-    changeLocale(option) {
-      return '/' + this.$openapidoc.path + '/' + this.file + '/' + option + '/get/info';
-    }
+  locales: {
+    type: Object,
+    required: true
   },
-};
+  files: {
+    type: Object,
+    required: true
+  },
+  path: {
+    type: String,
+    required: true
+  },
+})
+
+function changeDoc(option) {
+  return '/' + props.path + '/' + option + '/' + props.currentLocale + '/get/info';
+}
+function changeLocale(option) {
+  return '/' + props.path + '/' + props.file + '/' + option + '/get/info';
+}
 </script>
 <style scoped>
 .fixed-nav {

@@ -7,31 +7,33 @@
           <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#FFFFFF" font-size="16" v-text="name"></text>
         </svg>
       </template>
-      <div slot="button">
+      <template #button>
         <OpenApiHeader
-            :current-locale="currentLocale"
+            :current-locale="locale"
             :files="files"
             :file="file"
+            :locales="locales"
+            :path="route_path"
             :is-dark-mode="isDarkMode"
             @toggleDarkMode="toggleDarkMode"
         />
-      </div>
+      </template>
     </MainHeader>
     <div class="flex flex-1 overflow-hidden">
       <MainLeftMenu :isMenuOpen="isMenuOpen" :isMobile="isMobile">
-        <OpenApiMenu :routes="doc.paths" :current-locale="currentLocale" :file="file" />
+        <OpenApiMenu :routes="doc.paths" :current-locale="locale" :file="file" :path="route_path" />
       </MainLeftMenu>
       <MainContent>
-        <OpenApiInfo v-if="isInfo" :info="doc.info" :current-locale="currentLocale"></OpenApiInfo>
-        <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="currentLocale"></OpenApiComponents>
-        <OpenApiRoute v-else-if="getActiveRoute" :route="getActiveRoute" :current-locale="currentLocale" :method="type" :components="doc.components" :url="path" :server="server" />
+        <OpenApiInfo v-if="isInfo" :info="doc.info" :current-locale="locale"></OpenApiInfo>
+        <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="locale"></OpenApiComponents>
+        <OpenApiRoute v-else-if="getActiveRoute" :route="getActiveRoute" :current-locale="locale" :method="type" :components="doc.components" :url="path" :server="server" />
         <NotFound v-else />
       </MainContent>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import MainHeader from '../components/lib/MainHeader.vue';
 import MainLeftMenu from '../components/lib/MainLeftMenu.vue';
 import MainContent from '../components/lib/MainContent.vue';
@@ -41,104 +43,73 @@ import OpenApiInfo from '../components/OpenApiInfo.vue';
 import OpenApiComponents from '../components/OpenApiComponents.vue';
 import OpenApiRoute from '../components/OpenApiRoute.vue';
 import NotFound from '../components/NotFound.vue';
-export default {
-  components: {
-    MainHeader,
-    MainLeftMenu,
-    MainContent,
-    OpenApiHeader,
-    OpenApiInfo,
-    OpenApiComponents,
-    OpenApiRoute,
-    OpenApiMenu,
-    NotFound,
-  },
-  async asyncData(ctx) {
-    try {
-      const file = ctx.route.params.file ?? ctx.route.meta[0].file;
-      const locale = ctx.route.params.locale ?? ctx.route.meta[0].locale;
-      const type = ctx.route.params.type ?? ctx.route.meta[0].type;
-      const path = ctx.route.params.path ?? ctx.route.meta[0].path;
-      return {
-        name: ctx.$openapidoc.name,
-        doc: ctx.$openapidoc.docs[file],
-        currentLocale: locale,
-        file: file,
-        type: type,
-        path: path,
-      }
-    } catch (e) {
-      console.error(e)
-      console.error(ctx.route)
-    }
-  },
-  data() {
-    return {
-      isMenuOpen: true,
-      isMobile: false,
-      currentLocale: 'en',
-      name: '',
-      file: '',
-      type: '',
-      path: '',
-      doc: {},
-      files: {},
-      isDarkMode: false,
-    };
-  },
-  methods: {
-    toggleMenu() {
-      this.isMenuOpen = !this.isMenuOpen;
-    },
-    toggleDarkMode() {
-      if(process.client) {
-        this.isDarkMode = !this.isDarkMode
-        localStorage.setItem('isDarkMode', this.isDarkMode)
-        if(this.isDarkMode) document.querySelector('html').classList.add('dark')
-        else document.querySelector('html').classList.remove('dark');
-      }
-    },
-    handleResize() {
-      this.isDesktop = window.innerWidth >= 768 // set breakpoint here
-      if (!this.isDesktop) {
-        this.isMenuOpen = false
-      }
-    },
-  },
-  computed: {
-    isInfo() {
-      return this.path === 'info'
-    },
-    isComponents() {
-      return this.path === 'components'
-    },
-    getActiveRoute() {
-      if(!this.doc.paths) return null;
-      if(!this.doc.paths[this.path]) return null;
-      return this.doc.paths[this.path][this.type] ?? null
-    },
-    server() {
-      if (!this.doc.servers || !this.doc.servers[0]) {
-        return null;
-      }
-      return this.doc.servers[0].url ?? null
-    },
-  },
-  mounted() {
-    if(process.client) {
-      this.isMobile = window.innerWidth < 640;
-      this.isMenuOpen = window.innerWidth > 640;
-      window.addEventListener('resize', this.handleResize)
-      this.isDarkMode = localStorage.getItem('isDarkMode') === 'true'
-      if(this.isDarkMode) document.querySelector('html').classList.add('dark')
-    }
-  },
-  beforeDestroy() {
-    if(process.client) {
-      window.removeEventListener('resize', this.handleResize)
-    }
-  },
-};
+
+const { $openapidoc, $openapidoc_files, $openapidoc_simples} = useNuxtApp()
+const route = useRoute()
+
+console.log(route.params, route.meta)
+
+const file = route.params.file ?? route.meta.file;
+const locale = route.params.locale ?? route.meta.locale;
+const type = route.params.type ?? route.meta.type
+const path = route.params.path ?? route.meta.path;
+
+let isMenuOpen = true;
+let isDarkMode = false;
+let isDesktop = true;
+
+const doc = computed(() => $openapidoc.docs[file])
+const locales = computed(() => $openapidoc.locales)
+const name = computed(() => $openapidoc.name)
+const route_path = computed(() => $openapidoc.path)
+const isMobile = computed(() => process.client ? window.innerWidth >= 768 : false)
+
+const isInfo = computed(() => path === 'info')
+const files = computed(() => $openapidoc_files(useNuxtApp()))
+const isComponents = computed(() => path === 'components')
+const getActiveRoute = computed(() => {
+  if(!doc.value.paths) return null;
+  if(!doc.value.paths[path]) return null;
+  return doc.value.paths[path][type] ?? null
+})
+const server = computed(() => {
+  if (!doc.value.servers || !doc.value.servers[0]) {
+    return null;
+  }
+  return doc.value.servers[0].url ?? null
+})
+
+if(process.client) {
+  isDarkMode = localStorage.getItem('isDarkMode') === 'true'
+  if(isDarkMode) document.querySelector('html').classList.add('dark')
+}
+
+function toggleMenu() {
+  isMenuOpen = !isMenuOpen;
+}
+
+function toggleDarkMode() {
+  if(process.client) {
+    isDarkMode = !isDarkMode
+    // localStorage.setItem('isDarkMode', isDarkMode)
+    if(isDarkMode) document.querySelector('html').classList.add('dark')
+    else document.querySelector('html').classList.remove('dark');
+  }
+}
+
+function handleResize() {
+  isDesktop = window.innerWidth >= 768 // set breakpoint here
+  if (!isDesktop) {
+    isMenuOpen = false
+  }
+}
+
+if(process.client) {
+  isMenuOpen = window.innerWidth > 640;
+  window.addEventListener('resize', handleResize)
+  // isDarkMode = localStorage.getItem('isDarkMode') === 'true'
+  if(isDarkMode) document.querySelector('html').classList.add('dark')
+}
 </script>
 
 <style>

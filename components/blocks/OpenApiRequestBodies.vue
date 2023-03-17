@@ -1,9 +1,9 @@
 <template>
   <div>
     <h3 class="text-lg font-bold mb-2">Request Bodies: </h3>
-    <div v-for="(requestBody, name) in requestBodies" :key="name" class="mt-4">
+    <div v-for="(requestBody, name) in props.requestBodies" :key="name" class="mt-4">
       <h3 class="text-lg font-medium">{{ name }}</h3>
-      <OpenApiRequestBody :requestBody="requestBody" :current-locale="currentLocale" />
+      <OpenApiRequestBody :requestBody="requestBody" :current-locale="props.currentLocale" />
     </div>
   </div>
 </template>
@@ -18,27 +18,17 @@
   font-weight: 500;
 }
 </style>
-<script>
+<script setup>
 import OpenApiRequestBody from './OpenApiRequestBody.vue';
-import {tr} from "../helpers";
 
-export default {
-  name: 'OpenApiRequestBodies',
-  props: {
-    requestBodies: {
-      type: Object,
-      required: true,
-    },
-    currentLocale: {
-      type: String,
-      required: true,
-    },
+const props = defineProps({
+  requestBodies: {
+    type: Object,
+    required: true,
   },
-  components: {
-    OpenApiRequestBody,
+  currentLocale: {
+    type: String,
+    required: true,
   },
-  methods: {
-    tr
-  }
-};
+})
 </script>

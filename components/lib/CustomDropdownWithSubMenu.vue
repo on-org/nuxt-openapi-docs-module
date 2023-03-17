@@ -69,50 +69,44 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    items: {
-      type: Array,
-      required: true,
-    },
+<script setup>
+const emit = defineEmits(['select'])
+
+const props = defineProps({
+  items: {
+    type: Array,
+    required: true
   },
-  data() {
-    return {
-      isOpen: false,
-      selectedSnippet: 1,
-      selectedLibrary: 'XMLHttpRequest',
-    };
-  },
-  computed: {
-    selectedText() {
-      if(!this.selectedSnippet || !this.items[this.selectedSnippet]) {
-        return null;
-      } else {
-        if(!this.items[this.selectedSnippet].libraries) {
-          return this.items[this.selectedSnippet].snippet
-        } else if(!this.selectedLibrary) {
-          return null;
-        } else {
-          return this.items[this.selectedSnippet].snippet + ' / ' + this.items[this.selectedSnippet].libraries[this.selectedLibrary];
-        }
-      }
+})
+let isOpen = false;
+let selectedSnippet = 1;
+let selectedLibrary = 'XMLHttpRequest';
+
+const selectedText = computed(() => {
+  if(!selectedSnippet || !props.items[selectedSnippet]) {
+    return null;
+  } else {
+    if(!props.items[selectedSnippet].libraries) {
+      return props.items[selectedSnippet].snippet
+    } else if(!selectedLibrary) {
+      return null;
+    } else {
+      return props.items[selectedSnippet].snippet + ' / ' + props.items[selectedSnippet].libraries[selectedLibrary];
     }
-  },
-  methods: {
-    handleItemClick(item, snippet, library = null) {
-      if (item.libraries && !library) {
-        this.selectedSnippet = snippet;
-        this.selectedLibrary = null;
-      } else {
-        this.selectedSnippet = snippet;
-        this.selectedLibrary = library;
-        this.$emit('select', snippet, library);
-        this.isOpen = false;
-      }
-    },
-  },
-};
+  }
+})
+
+function handleItemClick(item, snippet, library = null) {
+  if (item.libraries && !library) {
+    selectedSnippet = snippet;
+    selectedLibrary = null;
+  } else {
+    selectedSnippet = snippet;
+    selectedLibrary = library;
+    emit('select', snippet, library);
+    isOpen = false;
+  }
+}
 </script>
 
 <style scoped>

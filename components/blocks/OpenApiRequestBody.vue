@@ -1,10 +1,10 @@
 <template>
   <div>
     <h3 class="text-lg font-medium">Request Body:</h3>
-    <pre class="mt-2 p-2 rounded-md">{{ tr(requestBody, 'description', currentLocale) }}</pre>
-    <div v-for="(val, key) in requestBody.content">
+    <pre class="mt-2 p-2 rounded-md">{{ tr(props.requestBody, 'description', props.currentLocale) }}</pre>
+    <div v-for="(val, key) in props.requestBody.content">
       <pre class="mt-2 p-2 rounded-md" v-text="key"></pre>
-      <OpenApiSchema :schema="val.schema" :current-locale="currentLocale" :components="components" class="mt-4" />
+      <OpenApiSchema :schema="val.schema" :current-locale="props.currentLocale" :components="props.components" class="mt-4" />
     </div>
 
   </div>
@@ -33,31 +33,22 @@
 }
 </style>
 
-<script>
+<script setup>
 import OpenApiSchema from './OpenApiSchema.vue';
 import {tr} from "../helpers";
 
-export default {
-  name: 'OpenApiRequestBody',
-  props: {
-    requestBody: {
-      type: Object,
-      required: true,
-    },
-    currentLocale: {
-      type: String,
-      required: true,
-    },
-    components: {
-      type: Object,
-      default: () => ({}),
-    },
+const props = defineProps({
+  requestBody: {
+    type: Object,
+    required: true,
+  },
+  currentLocale: {
+    type: String,
+    required: true,
   },
   components: {
-    OpenApiSchema,
+    type: Object,
+    default: () => ({}),
   },
-  methods: {
-    tr
-  }
-};
+})
 </script>

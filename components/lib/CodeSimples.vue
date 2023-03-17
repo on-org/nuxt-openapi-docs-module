@@ -14,7 +14,6 @@
 </template>
 
 <script>
-/** Mode */
 import Prism from 'prismjs';
 /** Addons */
 import 'prismjs/components/prism-jsx';
@@ -40,247 +39,231 @@ import 'prismjs/components/prism-php';
 import 'prismjs/plugins/line-numbers/prism-line-numbers'
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
 import 'prismjs/plugins/keep-markup/prism-keep-markup.js';
+</script>
+
+<script setup>
+const {$openapidoc_simples} = useNuxtApp()
+/** Mode */
+
 
 import {copyToClipboard} from '../helpers';
 import HTTPSnippet from 'httpsnippet';
 
 import CustomDropdownWithSubMenu from '../lib/CustomDropdownWithSubMenu.vue';
 
-
-export default {
-  name: 'code-simples',
-  components: {
-    CustomDropdownWithSubMenu
+const props = defineProps({
+  baseUrl: {
+    type: String,
+    required: false,
+    default: ''
   },
-  props: {
-    baseUrl: {
-      type: String,
-      required: false,
-      default: ''
-    },
-    url: {
-      type: String,
-      required: true,
-    },
-    method: {
-      type: String,
-      required: false,
-      default: 'GET'
-    },
-    cookies: {
-      type: Array,
-      required: false,
-      default: () => ([]),
-    },
-    headers: {
-      type: Array,
-      required: false,
-      default: () => ([]),
-    },
-    query: {
-      type: Array,
-      required: false,
-      default: () => ([]),
-    },
-    path: {
-      type: Array,
-      required: false,
-      default: () => ([]),
-    },
-    postData: {
-      type: Array,
-      required: false,
-      default: () => ([]),
-    },
-    mimeType: {
-      type: String,
-      required: false,
-      default: 'application/x-www-form-urlencoded'
-    },
-    configs: {
-      type: Array,
-      required: false,
-      default: function () {
-        return [
-          {
-            snippet: 'shell',
-            libraries: {
-              cURL: 'curl',
-              HTTPie: 'httpie',
-              Wget: 'wget',
-            },
-          },
-          {
-            snippet: 'javascript',
-            libraries: {
-              XMLHttpRequest: 'xmlhttprequest',
-              jQuery: 'jquery',
-              Fetch: 'fetch',
-              Axios: 'axios',
-            },
-          },
-          // {
-          //   snippet: 'node',
-          //   libraries: {
-          //     Native: 'native',
-          //     Request: 'request',
-          //     Unirest: 'unirest',
-          //   },
-          // },
-          {
-            snippet: 'python',
-            libraries: {
-              'Python 3': 'python3',
-              Requests: 'requests',
-            },
-          },
-          {
-            snippet: 'go',
-          },
-          {
-            snippet: 'c',
-          },
-          // 'Objective-C': {
-          //     snippet: 'objectivec',
-          // },
-          {
-            snippet: 'ocaml',
-          },
-          {
-            snippet: 'csharp',
-            libraries: {
-              HttpClient: 'httpclient',
-              RestSharp: 'restsharp',
-            },
-          },
-          {
-            snippet: 'java',
-            libraries: {
-              AsyncHttp: 'asynchttp',
-              NetHttp: 'nethttp',
-              OkHttp: 'okhttp',
-              Unirest: 'unirest',
-            },
-          },
-          {
-            snippet: 'http',
-          },
-          {
-            snippet: 'clojure',
-          },
-          {
-            snippet: 'kotlin',
-          },
-          {
-            snippet: 'php',
-            libraries: {
-              'pecl/http 1': 'http1',
-              'pecl/http 2': 'http2',
-              cURL: 'curl',
-            },
-          },
-          {
-            snippet: 'powershell',
-            libraries: {
-              WebRequest: 'webrequest',
-              RestMethod: 'restmethod',
-            },
-          },
-          {
-            snippet: 'r',
-          },
-          {
-            snippet: 'ruby',
-          },
-          {
-            snippet: 'swift',
-          },
-        ];
-      }
-    }
+  url: {
+    type: String,
+    required: true,
   },
-
-  data() {
-    return {
-      snippetIndex: 1,
-      snippetLibraryIndex: 'XMLHttpRequest',
-      showPopup: false,
-      onPopupIndex: null,
-      vals: [],
-    }
+  method: {
+    type: String,
+    required: false,
+    default: 'GET'
   },
+  cookies: {
+    type: Array,
+    required: false,
+    default: () => ([]),
+  },
+  headers: {
+    type: Array,
+    required: false,
+    default: () => ([]),
+  },
+  query: {
+    type: Array,
+    required: false,
+    default: () => ([]),
+  },
+  path: {
+    type: Array,
+    required: false,
+    default: () => ([]),
+  },
+  postData: {
+    type: Array,
+    required: false,
+    default: () => ([]),
+  },
+  mimeType: {
+    type: String,
+    required: false,
+    default: 'application/x-www-form-urlencoded'
+  }
+})
 
-  watch: {},
-
-  methods: {
-    onLangClick(snippet, library = null) {
-      this.snippetIndex = snippet;
-      this.snippetLibraryIndex = library;
-    },
-    copyToClipboard(e) {
-      copyToClipboard(this.genCode, e)
+let snippetIndex = 1;
+let snippetLibraryIndex = 'XMLHttpRequest';
+let showPopup = false;
+let onPopupIndex = null;
+let vals = [];
+const config = [
+  {
+    snippet: 'shell',
+    libraries: {
+      cURL: 'curl',
+      HTTPie: 'httpie',
+      Wget: 'wget',
     },
   },
-
-  computed: {
-    snippet() {
-      if(this.snippetIndex === null || !this.configs[this.snippetIndex]) return null
-      return this.configs[this.snippetIndex].snippet
+  {
+    snippet: 'javascript',
+    libraries: {
+      XMLHttpRequest: 'xmlhttprequest',
+      jQuery: 'jquery',
+      Fetch: 'fetch',
+      Axios: 'axios',
     },
-    snippetLibrary() {
-      if(this.snippetIndex === null || !this.configs[this.snippetIndex]) return null
-      if(this.snippetLibraryIndex === null)  return null;
-      if(!this.configs[this.snippetIndex].libraries) return null;
-
-      return this.configs[this.snippetIndex].libraries[this.snippetLibraryIndex]
-    },
-    htmlCode() {
-      if (Prism.languages[this.snippet]) {
-        Prism.highlightAll()
-        const htmlCode = Prism.highlight(this.genCode, Prism.languages[this.snippet], this.snippet);
-        return `<pre class="prism ${this.snippet} language-${this.snippet}">${htmlCode}</pre>`;
-      }
-      return this.genCode;
-    },
-
-    genCode() {
-      const method = this.method.toUpperCase();
-      let baseUrl = this.baseUrl || `${location.protocol}//${location.host}/`;
-      if (!baseUrl.endsWith('/')) {
-        baseUrl += '/';
-      }
-      const fxurl = this.url.startsWith('/') ? this.url.substring(1) : this.url;
-      let url = baseUrl + fxurl;
-
-      for (const [name, value] of Object.entries(this.path)) {
-        url = url.replaceAll(`{${value.name}}`, value.value);
-      }
-
-      const param = {
-        method,
-        url,
-        headers: JSON.parse(JSON.stringify(this.headers)),
-        queryString: JSON.parse(JSON.stringify(this.query)),
-        cookies: JSON.parse(JSON.stringify(this.cookies)),
-      };
-
-      if (method === 'POST' && this.postData.length > 0) {
-        param.postData = { mimeType: this.mimeType, params: JSON.parse(JSON.stringify(this.postData)) };
-      }
-
-      const append = this.$openapidoc_simples(this);
-      for (let i in append) {
-        param[append[i].in].push({
-          name: append[i].name, value: append[i].value
-        })
-      }
-
-
-      const snippet = new HTTPSnippet(param);
-      return snippet.convert(this.snippet, this.snippetLibrary) || '';
-    }
   },
+  // {
+  //   snippet: 'node',
+  //   libraries: {
+  //     Native: 'native',
+  //     Request: 'request',
+  //     Unirest: 'unirest',
+  //   },
+  // },
+  {
+    snippet: 'python',
+    libraries: {
+      'Python 3': 'python3',
+      Requests: 'requests',
+    },
+  },
+  {
+    snippet: 'go',
+  },
+  {
+    snippet: 'c',
+  },
+  // 'Objective-C': {
+  //     snippet: 'objectivec',
+  // },
+  {
+    snippet: 'ocaml',
+  },
+  {
+    snippet: 'csharp',
+    libraries: {
+      HttpClient: 'httpclient',
+      RestSharp: 'restsharp',
+    },
+  },
+  {
+    snippet: 'java',
+    libraries: {
+      AsyncHttp: 'asynchttp',
+      NetHttp: 'nethttp',
+      OkHttp: 'okhttp',
+      Unirest: 'unirest',
+    },
+  },
+  {
+    snippet: 'http',
+  },
+  {
+    snippet: 'clojure',
+  },
+  {
+    snippet: 'kotlin',
+  },
+  {
+    snippet: 'php',
+    libraries: {
+      'pecl/http 1': 'http1',
+      'pecl/http 2': 'http2',
+      cURL: 'curl',
+    },
+  },
+  {
+    snippet: 'powershell',
+    libraries: {
+      WebRequest: 'webrequest',
+      RestMethod: 'restmethod',
+    },
+  },
+  {
+    snippet: 'r',
+  },
+  {
+    snippet: 'ruby',
+  },
+  {
+    snippet: 'swift',
+  },
+];
+
+
+function onLangClick(snippet, library = null) {
+  snippetIndex = snippet;
+  snippetLibraryIndex = library;
 }
+
+const snippet = computed(() => {
+  if(snippetIndex === null || !config[snippetIndex]) return null
+  return config[snippetIndex].snippet
+})
+
+const snippetLibrary = computed(() => {
+  if(snippetIndex === null || !config[snippetIndex]) return null
+  if(snippetLibraryIndex === null)  return null;
+  if(!config[snippetIndex].libraries) return null;
+
+  return config[snippetIndex].libraries[snippetLibraryIndex]
+})
+
+const htmlCode = computed(() => {
+  if (Prism.languages[snippet.value]) {
+    Prism.highlightAll()
+    const htmlCode = Prism.highlight(genCode, Prism.languages[snippet.value], snippet.value);
+    return `<pre class="prism ${snippet.value} language-${snippet.value}">${htmlCode}</pre>`;
+  }
+  return genCode;
+})
+
+const genCode = computed(() => {
+  const method = props.method.toUpperCase();
+  let baseUrl = props.baseUrl || `${location.protocol}//${location.host}/`;
+  if (!baseUrl.endsWith('/')) {
+    baseUrl += '/';
+  }
+  const fxurl = props.url.startsWith('/') ? props.url.substring(1) : props.url;
+  let url = baseUrl + fxurl;
+
+  for (const [name, value] of Object.entries(props.path)) {
+    url = url.replaceAll(`{${value.name}}`, value.value);
+  }
+
+  const param = {
+    method,
+    url,
+    headers: JSON.parse(JSON.stringify(props.headers)),
+    queryString: JSON.parse(JSON.stringify(props.query)),
+    cookies: JSON.parse(JSON.stringify(props.cookies)),
+  };
+
+  if (method === 'POST' && props.postData.length > 0) {
+    param.postData = { mimeType: props.mimeType, params: JSON.parse(JSON.stringify(props.postData)) };
+  }
+
+  const append = $openapidoc_simples(useNuxtApp());
+  for (let i in append) {
+    param[append[i].in].push({
+      name: append[i].name, value: append[i].value
+    })
+  }
+
+
+  const snippet = new HTTPSnippet(param);
+  return snippet.convert(snippet.value, snippetLibrary.value) || '';
+})
+
 </script>
 
 <style>

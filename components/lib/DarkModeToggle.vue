@@ -4,13 +4,11 @@
   </button>
 </template>
 
-<script>
-export default {
-  props: {
-    value: {
-      type: Boolean,
-      default: false,
-    },
+<script setup>
+const props = defineProps({
+  value: {
+    type: Boolean,
+    required: true
   },
-}
+})
 </script>

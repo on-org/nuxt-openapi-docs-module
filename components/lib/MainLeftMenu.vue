@@ -6,13 +6,19 @@
   </aside>
 </template>
 
-<script>
-export default {
-  props: {
-    isMenuOpen: Boolean,
-    isMobile: Boolean,
+<script setup>
+const props = defineProps({
+  isMenuOpen: {
+    type: Boolean,
+    required: true
   },
-};
+  isMobile: {
+    type: Boolean,
+    default() {
+      return [];
+    }
+  }
+})
 </script>
 
 <style scoped>

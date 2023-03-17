@@ -1,7 +1,7 @@
 <template>
   <div class="openapi-examples">
     <h3 class="text-lg font-bold mb-2">Examples: </h3>
-    <div v-for="(example, name) in examples" :key="name">
+    <div v-for="(example, name) in props.examples" :key="name">
       <h4 class="text-lg font-medium">{{ name }}</h4>
       <table class="w-full mt-2">
         <thead>
@@ -14,7 +14,7 @@
         <tbody>
         <tr v-for="(value, mediaType) in example" :key="mediaType">
           <td class="px-4 py-2 border-b border-gray-300">{{ mediaType }}</td>
-          <td class="px-4 py-2 border-b border-gray-300">{{ tr(value, 'summary', currentLocale) }}</td>
+          <td class="px-4 py-2 border-b border-gray-300">{{ tr(value, 'summary', props.currentLocale) }}</td>
           <td class="px-4 py-2 border-b border-gray-300">
             <pre class="m-0 whitespace-pre-wrap">{{ value.value }}</pre>
           </td>
@@ -25,24 +25,19 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import {tr} from "../helpers";
 
-export default {
-  props: {
-    examples: {
-      type: Object,
-      required: true,
-    },
-    currentLocale: {
-      type: String,
-      required: true,
-    },
+const props = defineProps({
+  examples: {
+    type: Object,
+    required: true,
   },
-  methods: {
-    tr
-  }
-};
+  currentLocale: {
+    type: String,
+    required: true,
+  },
+})
 </script>
 
 <style scoped>

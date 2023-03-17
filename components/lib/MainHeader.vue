@@ -11,30 +11,21 @@
 
     <!-- Left part of header (logo slot) -->
     <div class="flex-shrink-0">
-      <slot name="logo">
-        <!-- Default logo here -->
-      </slot>
+      <slot name="logo"></slot>
     </div>
     <!-- Right part of header (button slot) -->
     <div class="flex-shrink-0">
-      <slot name="button">
-        <!-- Default button here -->
-      </slot>
+      <slot name="button"></slot>
     </div>
   </header>
 </template>
 
-<script>
-export default {
-  props: {
-    isMenuOpen: Boolean,
-  },
-  methods: {
-    toggleMenu() {
-      this.$emit('toggleMenu');
-    },
-  },
-};
+<script setup>
+const emit = defineEmits(['toggleMenu'])
+
+function toggleMenu() {
+  emit('toggleMenu');
+}
 </script>
 <style scoped>
 .menu-icon {
