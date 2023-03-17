@@ -219,4 +219,24 @@ export default {
   border-left: 0.25rem solid #38a169; /* аналогично border-l-4 и соответствует зеленому цвету для GET-запросов в TailwindCSS */
 }
 
+.openapi-menu li.menu-item-post {
+  border-left: 0.25rem solid #3856a1; /* аналогично border-l-4 и соответствует зеленому цвету для GET-запросов в TailwindCSS */
+}
+
+.openapi-menu li.menu-item-delete {
+  border-left: 0.25rem solid #a13838; /* аналогично border-l-4 и соответствует зеленому цвету для GET-запросов в TailwindCSS */
+}
+
+.openapi-menu li.menu-item-options {
+  border-left: 0.25rem solid #a13838; /* аналогично border-l-4 и соответствует зеленому цвету для GET-запросов в TailwindCSS */
+}
+
+.openapi-menu li.menu-item-put {
+  border-left: 0.25rem solid #5b38a1; /* аналогично border-l-4 и соответствует зеленому цвету для GET-запросов в TailwindCSS */
+}
+
+.openapi-menu li.menu-item-patch {
+  border-left: 0.25rem solid #a19338; /* аналогично border-l-4 и соответствует зеленому цвету для GET-запросов в TailwindCSS */
+}
+
 </style>

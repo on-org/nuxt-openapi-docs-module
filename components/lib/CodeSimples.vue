@@ -1,3 +1,18 @@
+
+<template>
+  <div class="col regular-font request-panel code-simple">
+
+    <CustomDropdownWithSubMenu :items="configs" @select="onLangClick"></CustomDropdownWithSubMenu>
+
+    <div class="code-panel">
+      <div class="code-panel-body relative">
+        <button class="toolbar-btn absolute top-2 right-2" @click.stop.prevent='copyToClipboard'>Copy</button>
+        <pre class="prism p-4" :class="[snippet, `language-${snippet}`]" v-html="htmlCode"></pre>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script>
 /** Mode */
 import Prism from 'prismjs';
@@ -18,12 +33,25 @@ import 'prismjs/components/prism-ocaml';
 import 'prismjs/components/prism-python';
 import 'prismjs/components/prism-json';
 import 'prismjs/components/prism-textile';
-import './reprism-php';
+import 'prismjs/components/prism-go';
+import "prismjs/components/prism-markup-templating.js";
+import 'prismjs/components/prism-php';
+
+import 'prismjs/plugins/line-numbers/prism-line-numbers'
+import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
+import 'prismjs/plugins/keep-markup/prism-keep-markup.js';
+
 import {copyToClipboard} from '../helpers';
 import HTTPSnippet from 'httpsnippet';
 
+import CustomDropdownWithSubMenu from '../lib/CustomDropdownWithSubMenu.vue';
+
+
 export default {
   name: 'code-simples',
+  components: {
+    CustomDropdownWithSubMenu
+  },
   props: {
     baseUrl: {
       type: String,
@@ -85,9 +113,9 @@ export default {
           {
             snippet: 'javascript',
             libraries: {
-              Fetch: 'fetch',
               XMLHttpRequest: 'xmlhttprequest',
               jQuery: 'jquery',
+              Fetch: 'fetch',
               Axios: 'axios',
             },
           },
@@ -97,8 +125,6 @@ export default {
           //     Native: 'native',
           //     Request: 'request',
           //     Unirest: 'unirest',
-          //     Fetch: 'fetch',
-          //     Axios: 'axios',
           //   },
           // },
           {
@@ -176,40 +202,20 @@ export default {
 
   data() {
     return {
-      lang: 'javascript',
-      client: 'xmlhttprequest',
+      snippetIndex: 1,
+      snippetLibraryIndex: 'XMLHttpRequest',
       showPopup: false,
       onPopupIndex: null,
       vals: [],
-
     }
   },
 
   watch: {},
 
   methods: {
-    onOpenPopupClick() {
-      this.showPopup = !this.showPopup;
-    },
-    onLangHover(index) {
-      const select = this.configs[index];
-      if (!select || !select.libraries) return;
-      this.onPopupIndex = parseInt(index, 10);
-    },
-    onLangClick(index) {
-      const select = this.configs[index];
-      if (!select || select.libraries) return;
-      this.lang = select.snippet;
-      this.showPopup = false;
-      this.onPopupIndex = null;
-    },
-    onClientClick(index, client) {
-      const select = this.configs[index];
-      if (!select || !select.libraries) return;
-      this.lang = select.snippet;
-      this.client = client;
-      this.showPopup = false;
-      this.onPopupIndex = null;
+    onLangClick(snippet, library = null) {
+      this.snippetIndex = snippet;
+      this.snippetLibraryIndex = library;
     },
     copyToClipboard(e) {
       copyToClipboard(this.genCode, e)
@@ -217,10 +223,22 @@ export default {
   },
 
   computed: {
+    snippet() {
+      if(this.snippetIndex === null || !this.configs[this.snippetIndex]) return null
+      return this.configs[this.snippetIndex].snippet
+    },
+    snippetLibrary() {
+      if(this.snippetIndex === null || !this.configs[this.snippetIndex]) return null
+      if(this.snippetLibraryIndex === null)  return null;
+      if(!this.configs[this.snippetIndex].libraries) return null;
+
+      return this.configs[this.snippetIndex].libraries[this.snippetLibraryIndex]
+    },
     htmlCode() {
-      if (Prism.languages[this.lang]) {
-        const htmlCode = Prism.highlight(this.genCode, Prism.languages[this.lang], this.lang);
-        return `<pre class="prism ${this.lang} language-${this.lang}">${htmlCode}</pre>`;
+      if (Prism.languages[this.snippet]) {
+        Prism.highlightAll()
+        const htmlCode = Prism.highlight(this.genCode, Prism.languages[this.snippet], this.snippet);
+        return `<pre class="prism ${this.snippet} language-${this.snippet}">${htmlCode}</pre>`;
       }
       return this.genCode;
     },
@@ -235,7 +253,7 @@ export default {
       let url = baseUrl + fxurl;
 
       for (const [name, value] of Object.entries(this.path)) {
-        url = url.replaceAll(`{${name}}`, value);
+        url = url.replaceAll(`{${value.name}}`, value.value);
       }
 
       const param = {
@@ -257,49 +275,56 @@ export default {
         })
       }
 
+
       const snippet = new HTTPSnippet(param);
-      return snippet.convert(this.lang, this.client) || '';
+      return snippet.convert(this.snippet, this.snippetLibrary) || '';
     }
   },
 }
 </script>
 
-<template>
-  <div class="col regular-font request-panel code-simple">
-    <div class="code-panel">
-      <div class="code-panel-header">
-        <div @click="onOpenPopupClick" class="selector">
-          Request Sample Language <span v-text="lang"></span>
-          <span v-if="client">/ <span v-text="client"></span></span>
-          <span>&#709;</span>
-        </div>
-
-        <div v-if="showPopup" class="code-popup">
-          <div v-for="(v, i) in configs" class="code-popup-item" :class="{active: i === onPopupIndex}"
-               @mouseover.stop.prevent="() => onLangHover(i)">
-            <a class="code-selector" href="#" @click.stop.prevent="() => onLangClick(i)" v-html="v.snippet"></a>
-            <span v-if="v.libraries" class="code-popup-item-icon">&#62;</span>
-
-            <div v-if="onPopupIndex === i" class="code-popup-sublist">
-              <div v-for="(name, id) in v.libraries" class="code-popup-item">
-                <a class="code-selector" href="#" @click.stop.prevent="() => onClientClick(onPopupIndex, id)"
-                   v-text="name"></a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="code-panel-body">
-        <button class="toolbar-btn" style="position:absolute;top: 26px;right: 17px;"
-                @click.stop.prevent='copyToClipboard'> Copy
-        </button>
-        <pre class="prism" :class="[lang, `language-${lang}`]" v-html="htmlCode"></pre>
-      </div>
-    </div>
-  </div>
-</template>
-
 <style>
+pre[class*="language-"].line-numbers {
+  position: relative;
+  padding-left: 3.8em;
+  counter-reset: linenumber;
+}
+
+pre[class*="language-"].line-numbers > code {
+  position: relative;
+  white-space: inherit;
+}
+
+.line-numbers .line-numbers-rows {
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  font-size: 100%;
+  left: -3.8em;
+  width: 3em; /* works for line-numbers below 1000 lines */
+  letter-spacing: -1px;
+  border-right: 1px solid #999;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+}
+
+.line-numbers-rows > span {
+  display: block;
+  counter-increment: linenumber;
+}
+
+.line-numbers-rows > span:before {
+  content: counter(linenumber);
+  color: #999;
+  display: block;
+  padding-right: 0.8em;
+  text-align: right;
+}
+
 code[class*="language-"], pre[class*="language-"] {
   color: #f8f8f2;
   background: none;
@@ -419,6 +444,9 @@ pre[class*="language-"] {
   top: 27px;
   width: 273px;
   z-index: 100000;
+
+  //height: 300px;
+  //overflow: scroll;
 }
 .code-popup-item {
   align-items: center;
@@ -449,6 +477,8 @@ pre[class*="language-"] {
   //border-radius: 2px;
   border: none;
   background-color: #00a2fb;
+  top: 10px;
+  right: 10px;
 }
 .code-selector {
   color: black;

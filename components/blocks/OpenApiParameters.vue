@@ -28,66 +28,23 @@
       </tbody>
     </table>
 
-    <h2 v-if="parametersRef.length" class="text-lg font-bold mb-2">Code simples:</h2>
-    <client-only>
-      <code-simples
-          v-if="parametersRef.length"
-          :url="url"
-          :baseUrl="server"
-          :method="method"
-          :cookies="cookies"
-          :headers="headers"
-          :query="query"
-          :path="path"
-          :postData="postData"
-      ></code-simples>
-    </client-only>
   </div>
 </template>
 
 <script>
 import {getSchemaValsFromPath, tr} from "../helpers";
-import CodeSimples from "../lib/CodeSimples.vue";
 
 export default {
-  components: {
-    CodeSimples
-  },
   props: {
     parameters: [Object, Array],
     currentLocale: {
       type: String,
       required: true,
     },
-    server: {
-      type: String,
-      required: false,
-      default: ''
-    },
-    url: {
-      type: String,
-      required: false,
-      default: ''
-    },
-    method: {
-      type: String,
-      required: false,
-      default: 'GET'
-    },
     components: {
       type: Object,
       default: () => ({}),
     },
-  },
-  data() {
-    return {
-      lang: 'javascript',
-      cookies: [],
-      headers: [],
-      query: [],
-      path: [],
-      postData: [],
-    }
   },
   computed: {
     parametersRef() {
@@ -112,64 +69,9 @@ export default {
   },
   methods: {
     tr,
-    genParamsToSimple() {
-      for (let i in this.parameters) {
-        const param = this.parameters[i]
 
-        if (param.$ref) {
-          continue;
-        }
-
-        const p_name = param.name ?? '';
-        const p_in = param.in ?? '';
-
-        let def = '';
-        if(param.schema) {
-          def = param.schema.default ?? ''
-        } else {
-          def = param.default ?? '';
-        }
-
-
-
-        if (def === '' && param.schema && param.schema.type) {
-          def = this.convertStringFormatToMd(param.schema.type);
-        }
-
-        if(this[p_in] && Array.isArray(this[p_in])) {
-          this[p_in].push({
-            name: p_name,
-            value: def.toString()
-          })
-        }
-      }
-    },
-    convertStringFormatToMd(format) {
-      switch (format) {
-        case 'date':
-          return 'YYYY-MM-DD';
-        case 'date-time':
-          return 'YYYY-MM-DDTHH:MM:SSZ';
-        case 'email':
-          return 'example@example.com';
-        case 'hostname':
-          return 'example.com';
-        case 'ipv4':
-          return '192.0.2.0';
-        case 'ipv6':
-          return '2001:0db8:85a3:0000:0000:8a2e:0370:7334';
-        case 'uri':
-          return 'https://example.com';
-        case 'integer':
-          return '1';
-        default:
-          return format;
-      }
-    }
   },
-  mounted() {
-    this.genParamsToSimple();
-  }
+
 };
 </script>
 

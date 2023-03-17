@@ -1,0 +1,22 @@
+{
+  "name": "nuxt-text-docs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate --max_old_space_size=12192 --optimize_for_size"
+  },
+  "dependencies": {
+    "core-js": "^3.25.3",
+    "isomorphic-dompurify": "^1.1.0",
+    "nuxt-openapi-docs-module": "file:../",
+    "vue": "^2.7.10",
+    "vue-server-renderer": "^2.7.10",
+    "vue-template-compiler": "^2.7.10"
+  },
+  "devDependencies": {
+    "nuxt": "^2.16.2"
+  }
+}

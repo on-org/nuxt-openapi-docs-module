@@ -1,5 +1,5 @@
 <template>
-  <div class="schema bg-gray-100 border border-gray-300 rounded p-5 mb-10">
+  <div class="schema border border-gray-300 rounded p-5 mb-10">
     <div class="schema-row flex items-center">
       <div class="schema-row-label font-bold mr-2">Type:</div>
       <div class="schema-row-value">{{ schema.type }}</div>

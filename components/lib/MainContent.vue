@@ -1,5 +1,5 @@
 <template>
-  <main class="content flex-1 p-4">
+  <main class="content flex-1 p-4 dark:bg-black dark:text-gray-300/75">
     <slot />
   </main>
 </template>

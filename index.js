@@ -49,7 +49,7 @@ module.exports = async function (moduleOptions) {
         for (let i in openApiSpec.paths) {
             let reUrl = i
             if (reUrl.startsWith('/')) reUrl = reUrl.substring(1);
-            reUrl = reUrl.replace(/[\/\\.?+=&]/gumi, '_')
+            reUrl = reUrl.replace(/[\/\\.?+=&{}]/gumi, '_')
 
             openApiSpec.paths[reUrl] = openApiSpec.paths[i]
             for (let j in openApiSpec.paths[reUrl]) {
