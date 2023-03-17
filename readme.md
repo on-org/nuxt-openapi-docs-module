@@ -1,3 +1,10 @@
+[![npm version](https://badge.fury.io/js/nuxt-openapi-docs-module.svg)](https://badge.fury.io/js/nuxt-openapi-docs-module)
+[![npm downloads](https://img.shields.io/npm/dw/nuxt-openapi-docs-module)](https://badge.fury.io/js/nuxt-openapi-docs-module)
+[![NPM license](https://img.shields.io/npm/l/nuxt-openapi-docs-module)](https://github.com/on-org/nuxt-openapi-docs-module/blob/master/LICENSE)
+[![npm type definitions](https://img.shields.io/npm/types/nuxt-openapi-docs-module)](https://github.com/on-org/nuxt-openapi-docs-module)
+[![donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.me/s00d)
+[![GitHub Repo stars](https://img.shields.io/github/stars/on-org/nuxt-openapi-docs-module?style=social)](https://github.com/on-org/nuxt-openapi-docs-module)
+
 # OpenApiDocs Nuxt Module
 This module provides a simple way to display OpenAPI documentation in a Nuxt.js 2 application. It allows you to define an OpenAPI specification file and renders it using a set of reusable Vue.js components.
 
@@ -7,7 +14,11 @@ work with static and server target
 ![alt text](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/black.png)
 ![alt text](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/mobile.png)
 
-Installation
+# Example
+
+[Show](https://on-org.github.io/nuxt-openapi-docs-module/)
+
+# Installation
 ```bash
 npm install nuxt-openapi-docs-module
 ```
@@ -71,6 +82,3 @@ You can customize these components by modifying the corresponding .vue files in 
 
 locales: moduleOptions.locales ?? {en: 'English'},
 files: moduleOptions.files ?? function (ctx) { return {} },
-
-### License
-MIT
