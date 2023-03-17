@@ -28,7 +28,7 @@
         <open-api-schema :components="components" :current-locale="currentLocale" :schema="schema.items" />
       </div>
     </div>
-    <div class="schema-row flex items-center" v-if="schema.properties">
+    <div class="schema-row items-center" v-if="schema.properties">
       <div class="schema-row-label font-bold mr-2">Properties:</div>
       <div class="schema-row-value">
         <table class="table-auto">

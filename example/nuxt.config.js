@@ -1,3 +1,4 @@
+const isDev = process.env.NODE_ENV !== 'production';
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   target: 'universal',
@@ -34,7 +35,7 @@ export default {
   ],
 
   router: {
-    base: '/nuxt-openapi-docs-module'
+    base: isDev ? '/' : '/nuxt-openapi-docs-module'
   },
 
 
