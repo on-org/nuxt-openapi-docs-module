@@ -90,11 +90,11 @@ export default {
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
     },
-    toggleDarkMode(val) {
+    toggleDarkMode() {
       if(process.client) {
-        this.isDarkMode = val
-        localStorage.setItem('isDarkMode', val)
-        if(val) document.querySelector('html').classList.add('dark')
+        this.isDarkMode = !this.isDarkMode
+        localStorage.setItem('isDarkMode', this.isDarkMode)
+        if(this.isDarkMode) document.querySelector('html').classList.add('dark')
         else document.querySelector('html').classList.remove('dark');
       }
     },

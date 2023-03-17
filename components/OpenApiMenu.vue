@@ -4,12 +4,12 @@
     <p class="mb-4">Select a route from the list below:</p>
     <ul class="menu list-none mb-4">
       <li>
-        <nuxt-link :to="{ name: 'nuxt-openapi-docs-route', params: { locale: currentLocale, file: file, type: 'get', path: 'info' }}" class="block px-2 py-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
+        <nuxt-link :to="getRoute('info')" class="block px-2 py-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
           OpenAPI Info
         </nuxt-link>
       </li>
       <li>
-        <nuxt-link :to="{ name: 'nuxt-openapi-docs-route', params: { locale: currentLocale, file: file, type: 'get', path: 'components' }}" class="block px-2 py-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
+        <nuxt-link :to="getRoute('components')" class="block px-2 py-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
           OpenAPI Components
         </nuxt-link>
       </li>
@@ -80,16 +80,11 @@ export default {
       this.open = this.open === tag ? null : tag;
       localStorage.setItem('menu_open', this.open)
     },
+    getRoute(path) {
+      return '/' + this.$openapidoc.path + '/' + this.file + '/' + this.currentLocale + '/get/' + path;
+    },
     getSubRoute(route) {
-      return {
-        name: 'nuxt-openapi-docs-route',
-        params: {
-          locale: this.currentLocale,
-          file: this.file,
-          type: route.type,
-          path: this.genUrl(route.path)
-        },
-      };
+      return '/' + this.$openapidoc.path + '/' + this.file + '/' + this.currentLocale + '/' + route.type + '/' + this.genUrl(route.path);
     }
   },
   computed: {

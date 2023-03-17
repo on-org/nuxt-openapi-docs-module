@@ -1,7 +1,7 @@
 <template>
   <div class="right flex items-center">
     <div class="files pr-4">
-      <DarkModeToggle :value="isDarkMode" @change="() => $emit('toggleDarkMode', !isDarkMode)" />
+      <DarkModeToggle :value="isDarkMode" @change="() => $emit('toggleDarkMode')" />
     </div>
     <div class="files pr-4">
       <CustomDropdown :placeholder="files[file]" :options="files" :value="file" :route-function="changeDoc">
@@ -51,16 +51,10 @@ export default {
   },
   methods: {
     changeDoc(option) {
-      return {
-        name: 'nuxt-openapi-docs-route',
-        params: { locale: this.currentLocale, file: option, type: 'get', path: 'info' }
-      }
+      return '/' + this.$openapidoc.path + '/' + option + '/' + this.currentLocale + '/get/info';
     },
     changeLocale(option) {
-      return {
-        name: 'nuxt-openapi-docs-route',
-        params: { locale: option, file: this.file, type: 'get', path: 'info' }
-      }
+      return '/' + this.$openapidoc.path + '/' + this.file + '/' + option + '/get/info';
     }
   },
 };
