@@ -1,6 +1,6 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
-  // target: 'static',
+  target: 'universal',
   head: {
     title: 'nuxt-text-docs',
     htmlAttrs: {
