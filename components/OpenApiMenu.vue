@@ -14,8 +14,8 @@
         </nuxt-link>
       </li>
       <li v-for="(routes, tag) in pathsByTags" :key="tag" class="sub-menu">
-        <div @click="toggleOpen(tag)" :class="{ 'selected': open === tag }" class="block px-2 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-900">
-          <div class="menu-title flex justify-between items-center">
+        <div :class="{ 'selected': open === tag }" class="block px-2 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-900">
+          <div class="menu-title flex justify-between items-center" @click="toggleOpen(tag)">
             <span class="font-bold">{{ tag }}</span>
             <span class="menu-item__icon">{{ open !== tag ? '▼' : '▲' }}</span>
           </div>
@@ -180,10 +180,11 @@ export default {
   position: relative;
 }
 
-.openapi-menu li.sub-menu > a.block .menu-title {
+.menu-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
 }
 
 .openapi-menu li.sub-menu > a.block .menu-title .menu-item__icon {
@@ -201,7 +202,8 @@ export default {
 }
 
 .openapi-menu ul.pl-2 {
-  padding-left: 0.5rem; /* аналогично pl-2 */
+  padding-left: 0.3rem; /* аналогично pl-2 */
+  margin-left: 4px;
 }
 
 .openapi-menu li.menu-item {

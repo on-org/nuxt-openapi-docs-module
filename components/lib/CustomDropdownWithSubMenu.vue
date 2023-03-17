@@ -7,7 +7,7 @@
       aria-haspopup="true"
       :aria-expanded="isOpen"
     >
-      <span>{{ selectedText ? selectedText : 'Select Library' }}</span>
+      <b>{{ selectedText ? selectedText : 'Select Library' }}</b>
       <svg
         class="-mr-1 ml-2 h-5 w-5"
         :class="isOpen ? '-rotate-180' : 'rotate-0'"
@@ -37,13 +37,18 @@
           :key="index"
           @click="handleItemClick(item, index)"
           role="menuitem"
-          class="border block px-4 py-2 text-sm text-gray-700 hover:bg-white hover:text-gray-800 dark:bg-black dark:hover:bg-gray-800 dark:text-gray-300/75"
+          class="border block px-4 py-2 m-0 text-sm text-gray-700 hover:bg-white hover:text-gray-800 dark:bg-black dark:hover:bg-gray-800 dark:text-gray-300/75"
         >
-          <template class="flex justify-between cursor-pointer" v-if="item.libraries">
-            <span class="flex-grow">{{ item.snippet }} {{ index }}</span>
-            <svg class="h-4 w-4 ml-2 self-center" style="display: initial;" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
-            </svg>
+          <template v-if="item.libraries">
+            <div class="flex justify-between cursor-pointer">
+              <span class="flex flex-grow">{{ item.snippet }}</span>
+                <span class="flex flex-grow" style="justify-content: end;">
+                <svg class="h-4 w-4 ml-2 self-center" style="display: initial;" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </span>
+            </div>
+
             <ul class="sub-menu" v-if="selectedSnippet === index">
               <li
                 v-for="(library, libraryKey) in item.libraries"

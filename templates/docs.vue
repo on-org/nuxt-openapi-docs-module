@@ -154,7 +154,7 @@ h2, h3, h4 {
   margin-bottom: 10px;
 }
 ul, ol {
-  margin-left: 20px;
+  margin-left: 5px;
 }
 li {
   margin-bottom: 5px;
