@@ -4,6 +4,9 @@
   "description": "A plugin for Nuxt.js to generate pages from OpenAPI specifications",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "example": "cd example && npm run generate && cd .. && mv example/dist docs"
+  },
   "dependencies": {
     "flowbite": "^1.6.4",
     "glob": "^9.3.0",
