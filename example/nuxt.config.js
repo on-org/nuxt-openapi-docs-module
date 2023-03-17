@@ -33,6 +33,10 @@ export default {
 
   ],
 
+  router: {
+    base: '/nuxt-openapi-docs-module'
+  },
+
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
