@@ -50,6 +50,10 @@ export default {
       type: String,
       required: true,
     },
+    path: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -81,10 +85,10 @@ export default {
       localStorage.setItem('menu_open', this.open)
     },
     getRoute(path) {
-      return '/' + this.$openapidoc.path + '/' + this.file + '/' + this.currentLocale + '/get/' + path;
+      return '/' + this.path + '/' + this.file + '/' + this.currentLocale + '/get/' + path;
     },
     getSubRoute(route) {
-      return '/' + this.$openapidoc.path + '/' + this.file + '/' + this.currentLocale + '/' + route.type + '/' + this.genUrl(route.path);
+      return '/' + this.path + '/' + this.file + '/' + this.currentLocale + '/' + route.type + '/' + this.genUrl(route.path);
     }
   },
   computed: {
@@ -130,7 +134,6 @@ export default {
 .block-btn {
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
-//color: #374151;
   cursor: pointer;
   width: 50px;
   display: contents;
@@ -169,11 +172,6 @@ export default {
   display: block;
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem; /* аналогично rounded-md */
-//color: #374151; /* цвет ссылок по умолчанию в TailwindCSS */
-}
-
-.openapi-menu a.block:hover {
-//background-color: #edf2f7; /* аналогично hover:bg-gray-200 */
 }
 
 .openapi-menu li.sub-menu > a.block {
@@ -208,8 +206,6 @@ export default {
 
 .openapi-menu li.menu-item {
   padding: 3px;
-//padding-top: 0.5rem;
-//padding-bottom: 0.5rem;
 }
 
 .openapi-menu li.menu-item-get {

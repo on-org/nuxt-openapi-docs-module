@@ -7,7 +7,7 @@
     <div class="code-panel">
       <div class="code-panel-body relative">
         <button class="toolbar-btn absolute top-2 right-2" @click.stop.prevent='copyToClipboard'>Copy</button>
-        <pre class="prism p-4" :class="[snippet, `language-${snippet}`]" v-html="htmlCode"></pre>
+        <pre class="language line-numbers" :class="`language-${this.snippet}`"><code class="language" v-html="htmlCode"></code></pre>
       </div>
     </div>
   </div>
@@ -39,7 +39,6 @@ import 'prismjs/components/prism-php';
 
 import 'prismjs/plugins/line-numbers/prism-line-numbers'
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
-import 'prismjs/plugins/keep-markup/prism-keep-markup.js';
 
 import {copyToClipboard} from '../helpers';
 import HTTPSnippet from 'httpsnippet';
@@ -53,6 +52,10 @@ export default {
     CustomDropdownWithSubMenu
   },
   props: {
+    simples: {
+      type: [Object, Array],
+      required: false,
+    },
     baseUrl: {
       type: String,
       required: false,
@@ -119,14 +122,6 @@ export default {
               Axios: 'axios',
             },
           },
-          // {
-          //   snippet: 'node',
-          //   libraries: {
-          //     Native: 'native',
-          //     Request: 'request',
-          //     Unirest: 'unirest',
-          //   },
-          // },
           {
             snippet: 'python',
             libraries: {
@@ -140,9 +135,6 @@ export default {
           {
             snippet: 'c',
           },
-          // 'Objective-C': {
-          //     snippet: 'objectivec',
-          // },
           {
             snippet: 'ocaml',
           },
@@ -235,12 +227,12 @@ export default {
       return this.configs[this.snippetIndex].libraries[this.snippetLibraryIndex]
     },
     htmlCode() {
-      if (Prism.languages[this.snippet]) {
-        Prism.highlightAll()
-        const htmlCode = Prism.highlight(this.genCode, Prism.languages[this.snippet], this.snippet);
-        return `<pre class="prism ${this.snippet} language-${this.snippet}">${htmlCode}</pre>`;
+      const grammar = Prism.languages[this.snippet];
+      if (!grammar) {
+        return this.genCode
       }
-      return this.genCode;
+      const highlightedCode = Prism.highlight(this.genCode, grammar, this.snippet);
+      return highlightedCode
     },
 
     genCode() {
@@ -268,7 +260,7 @@ export default {
         param.postData = { mimeType: this.mimeType, params: JSON.parse(JSON.stringify(this.postData)) };
       }
 
-      const append = this.$openapidoc_simples(this);
+      const append = this.simples;
       for (let i in append) {
         param[append[i].in].push({
           name: append[i].name, value: append[i].value
@@ -299,7 +291,6 @@ pre[class*="language-"].line-numbers > code {
   position: absolute;
   pointer-events: none;
   top: 0;
-  font-size: 100%;
   left: -3.8em;
   width: 3em; /* works for line-numbers below 1000 lines */
   letter-spacing: -1px;
@@ -309,7 +300,7 @@ pre[class*="language-"].line-numbers > code {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-
+  font-size: 1.1em;
 }
 
 .line-numbers-rows > span {
@@ -336,7 +327,6 @@ code[class*="language-"], pre[class*="language-"] {
   word-spacing: normal;
   word-break: normal;
   word-wrap: normal;
-  line-height: 1.5;
   -moz-tab-size: 4;
   -o-tab-size: 4;
   tab-size: 4;
@@ -351,7 +341,6 @@ pre[class*="language-"] {
   padding: 1em;
   margin: 0.5em 0;
   overflow: auto;
-  //border-radius: 0.3em;
 }
 :not(pre) > code[class*="language-"], pre[class*="language-"] {
   background: #001529;
@@ -359,7 +348,6 @@ pre[class*="language-"] {
 /* Inline code */
 :not(pre) > code[class*="language-"] {
   padding: 0.1em;
-  //border-radius: 0.3em;
   white-space: normal;
 }
 .token.comment, .token.prolog, .token.doctype, .token.cdata {
@@ -405,7 +393,6 @@ pre[class*="language-"] {
   cursor: pointer;
 }
 .code-panel {
-  //border-radius: 5px;
   min-height: 300px;
   outline: 2px solid rgba(0, 0, 0, 0);
   outline-offset: 2px;
@@ -435,7 +422,6 @@ pre[class*="language-"] {
 .code-popup {
   background-color: #fff;
   border: 1px solid #ccd0d1;
-  //border-radius: 2px;
   box-sizing: border-box;
   left: 19px;
   padding-bottom: 8px;
@@ -444,9 +430,6 @@ pre[class*="language-"] {
   top: 27px;
   width: 273px;
   z-index: 100000;
-
-  //height: 300px;
-  //overflow: scroll;
 }
 .code-popup-item {
   align-items: center;
@@ -462,7 +445,6 @@ pre[class*="language-"] {
 .code-popup-sublist {
   background-color: #fff;
   border: 1px solid #ccd0d1;
-  //border-radius: 2px;
   left: 271px;
   position: absolute;
   z-index: 10;
@@ -474,11 +456,11 @@ pre[class*="language-"] {
   font-size: 12px;
   min-width: 50px;
   color: #fff;
-  //border-radius: 2px;
   border: none;
   background-color: #00a2fb;
   top: 10px;
   right: 10px;
+  z-index: 99;
 }
 .code-selector {
   color: black;

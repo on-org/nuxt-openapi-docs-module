@@ -36,25 +36,32 @@ export default {
       type: String,
       required: true,
     },
+    path: {
+      type: String,
+      required: true,
+    },
+    files: {
+      type: Object,
+      required: true,
+    },
     isDarkMode: {
       type: Boolean,
       required: true,
     },
+    locales: {
+      type: Object,
+      required: true,
+    },
   },
   computed: {
-    locales() {
-      return this.$openapidoc.locales;
-    },
-    files() {
-      return this.$openapidoc_files(this);
-    }
+
   },
   methods: {
     changeDoc(option) {
-      return '/' + this.$openapidoc.path + '/' + option + '/' + this.currentLocale + '/get/info';
+      return '/' + this.path + '/' + option + '/' + this.currentLocale + '/get/info';
     },
     changeLocale(option) {
-      return '/' + this.$openapidoc.path + '/' + this.file + '/' + option + '/get/info';
+      return '/' + this.path + '/' + this.file + '/' + option + '/get/info';
     }
   },
 };

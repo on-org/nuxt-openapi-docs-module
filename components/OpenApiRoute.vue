@@ -58,6 +58,10 @@ export default {
     CodeSimples
   },
   props: {
+    simples: {
+      type: [Object, Array],
+      required: true,
+    },
     route: {
       type: Object,
       required: true,

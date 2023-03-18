@@ -9,14 +9,14 @@
         {{ tag }}
       </span>
     </p>
-    <p class="mb-2" v-html="html(description)"></p>
+    <p class="mb-2" v-html="description"></p>
     <p class="text-red-600 font-bold mb-2" v-if="deprecated">Deprecated</p>
   </div>
 </template>
 
 
 <script>
-import {html, tr} from "../helpers";
+import {tr} from "../helpers";
 
 export default {
   props: {
@@ -32,7 +32,7 @@ export default {
     },
   },
   methods: {
-    html, tr
+    tr
   }
 };
 </script>

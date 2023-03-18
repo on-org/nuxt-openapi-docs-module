@@ -9,22 +9,24 @@
       </template>
       <div slot="button">
         <OpenApiHeader
-            :current-locale="currentLocale"
-            :files="files"
-            :file="file"
-            :is-dark-mode="isDarkMode"
-            @toggleDarkMode="toggleDarkMode"
+          :current-locale="currentLocale"
+          :files="files"
+          :locales="options.locales"
+          :file="file"
+          :path="options.path"
+          :is-dark-mode="isDarkMode"
+          @toggleDarkMode="toggleDarkMode"
         />
       </div>
     </MainHeader>
     <div class="flex flex-1 overflow-hidden">
       <MainLeftMenu :isMenuOpen="isMenuOpen" :isMobile="isMobile">
-        <OpenApiMenu :routes="doc.paths" :current-locale="currentLocale" :file="file" />
+        <OpenApiMenu v-if="doc.paths" :routes="doc.paths" :current-locale="currentLocale" :file="file" :path="options.path" />
       </MainLeftMenu>
       <MainContent>
-        <OpenApiInfo v-if="isInfo" :info="doc.info" :current-locale="currentLocale"></OpenApiInfo>
+        <OpenApiInfo v-if="isInfo" :info="doc.info" :servers="doc.servers" :current-locale="currentLocale"></OpenApiInfo>
         <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="currentLocale"></OpenApiComponents>
-        <OpenApiRoute v-else-if="getActiveRoute" :route="getActiveRoute" :current-locale="currentLocale" :method="type" :components="doc.components" :url="path" :server="server" />
+        <OpenApiRoute v-else-if="getActiveRoute" :route="getActiveRoute" :current-locale="currentLocale" :method="type" :components="doc.components" :url="path" :simples="simples" :server="server" />
         <NotFound v-else />
       </MainContent>
     </div>
@@ -41,7 +43,12 @@ import OpenApiInfo from '../components/OpenApiInfo.vue';
 import OpenApiComponents from '../components/OpenApiComponents.vue';
 import OpenApiRoute from '../components/OpenApiRoute.vue';
 import NotFound from '../components/NotFound.vue';
+
+const files = <%= options.files %>;
+const simples = <%= options.params %>;
+
 export default {
+  name: 'AppDocs',
   components: {
     MainHeader,
     MainLeftMenu,
@@ -60,8 +67,6 @@ export default {
       const type = ctx.route.params.type ?? ctx.route.meta[0].type;
       const path = ctx.route.params.path ?? ctx.route.meta[0].path;
       return {
-        name: ctx.$openapidoc.name,
-        doc: ctx.$openapidoc.docs[file],
         currentLocale: locale,
         file: file,
         type: type,
@@ -74,15 +79,13 @@ export default {
   },
   data() {
     return {
+      options: <%= JSON.stringify(options) %>,
       isMenuOpen: true,
       isMobile: false,
       currentLocale: 'en',
-      name: '',
       file: '',
       type: '',
       path: '',
-      doc: {},
-      files: {},
       isDarkMode: false,
     };
   },
@@ -106,6 +109,18 @@ export default {
     },
   },
   computed: {
+    doc() {
+      return this.options.doc
+    },
+    name() {
+      return this.options.name
+    },
+    files() {
+      return files(this)
+    },
+    simples() {
+      return simples(this)
+    },
     isInfo() {
       return this.path === 'info'
     },
@@ -113,15 +128,15 @@ export default {
       return this.path === 'components'
     },
     getActiveRoute() {
-      if(!this.doc.paths) return null;
-      if(!this.doc.paths[this.path]) return null;
-      return this.doc.paths[this.path][this.type] ?? null
+      if(!this.options.doc.paths) return null;
+      if(!this.options.doc.paths[this.path]) return null;
+      return this.options.doc.paths[this.path][this.type] ?? null
     },
     server() {
-      if (!this.doc.servers || !this.doc.servers[0]) {
+      if (!this.options.doc.servers || !this.options.doc.servers[0]) {
         return null;
       }
-      return this.doc.servers[0].url ?? null
+      return this.options.doc.servers[0].url ?? null
     },
   },
   mounted() {
@@ -138,7 +153,7 @@ export default {
       window.removeEventListener('resize', this.handleResize)
     }
   },
-};
+}
 </script>
 
 <style>
@@ -146,10 +161,8 @@ export default {
 p {
   font-size: 18px;
   line-height: 1.5;
-//color: #333;
 }
 h2, h3, h4 {
-//color: #666;
   margin-top: 20px;
   margin-bottom: 10px;
 }
@@ -183,7 +196,6 @@ td {
 
 th {
   font-weight: bold;
-//background-color: #f2f2f2;
 }
 
 tbody tr:nth-of-type(even) {
@@ -199,4 +211,3 @@ tfoot td {
   border-top: none;
 }
 </style>
-

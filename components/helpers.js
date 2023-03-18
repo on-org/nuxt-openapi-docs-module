@@ -1,9 +1,3 @@
-import DOMPurify from "isomorphic-dompurify";
-import {marked} from "marked";
-
-export function html(val) {
-    return DOMPurify.sanitize(marked(val));
-}
 export function tr(data, param, locale) {
     return data[`x-${param}-${locale}`] ?? data[param] ?? ''
 }
