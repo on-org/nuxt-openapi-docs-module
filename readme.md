@@ -10,9 +10,9 @@ This module provides a simple way to display OpenAPI documentation in a Nuxt.js 
 
 work with static and server target
 
-![alt text](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/desktop.png)
-![alt text](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/black.png)
-![alt text](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/mobile.png)
+![desktop image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/desktop.png)
+![black image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/black.png)
+![mobile image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/mobile.png)
 
 # Example
 

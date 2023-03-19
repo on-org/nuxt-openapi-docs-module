@@ -3,17 +3,34 @@ import yaml from "yaml";
 import path from "path";
 import fs from "fs";
 import {marked} from "marked";
-function validateHTML(htmlString) {
-  // Создаем виртуальный документ из переданной строки с помощью jsdom
-  return htmlString.replace(/[*+?^${}()|\[\]\\]/g, '\\$&').replace(/>/, '&#62;').replace(/</, '&#60;');
+
+const renderer = new marked.Renderer();
+renderer.text = function(text) {
+  const replacedText = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return replacedText;
+};
+
+function sanitizeText(text) {
+  const map = {
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '\\': '&#x5C;',
+    '|': '&#x7C;'
+  };
+  const reg = /[<>"'\\|]/gi;
+  return text.replace(reg, function(match) {
+    return map[match];
+  });
 }
 
 function replaceMarkdown(obj) {
   if (typeof obj === 'string') {
     if (obj.match(/\[.*?\]\(.*?\)|^>/)) {
-      return validateHTML(marked(obj));
+      return marked(obj, { renderer: renderer });
     } else {
-      return validateHTML(obj);
+      return sanitizeText(obj);
     }
   } else if (Array.isArray(obj)) {
     return obj.map(replaceMarkdown);

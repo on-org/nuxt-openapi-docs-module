@@ -15,7 +15,7 @@
 
     <client-only>
       <h2 class="text-lg font-bold mb-2">Code simples:</h2>
-      <code-simples
+      <CodeSimples
         :url="route.path"
         :baseUrl="server"
         :method="method"
@@ -25,7 +25,7 @@
         :query="query"
         :path="path"
         :postData="postData"
-      ></code-simples>
+      ></CodeSimples>
     </client-only>
 
     <OpenApiSecurity v-if="route.security" :security="route.security" :current-locale="currentLocale" />
@@ -42,7 +42,6 @@ import OpenApiSecurity from './blocks/OpenApiSecurity.vue';
 import OpenApiParameters from './blocks/OpenApiParameters.vue';
 import OpenApiResponses from './blocks/OpenApiResponses.vue';
 import OpenApiExamples from './blocks/OpenApiExamples.vue';
-import CodeSimples from "./lib/CodeSimples.vue";
 
 import { tr} from "./helpers";
 
@@ -55,7 +54,7 @@ export default {
     OpenApiParameters,
     OpenApiResponses,
     OpenApiExamples,
-    CodeSimples
+    CodeSimples: () => import('./lib/CodeSimples.vue')
   },
   props: {
     simples: {

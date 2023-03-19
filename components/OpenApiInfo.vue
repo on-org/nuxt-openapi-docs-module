@@ -41,6 +41,9 @@ export default {
 <style>
 .description > pre {
   background: #001529;
+  color: #9b9b9b;
+  padding: 12px;
+  font-size: 12px;
 }
 
 .description > h1, .description > h2 {
