@@ -60,7 +60,7 @@ modules: [
 - `path`: the component url for docs.
 - `locales`: object with locales, {en: 'English'}.
 - `files`: function with files list in OpenApiDocs folder, files: function(ctx) {return { 'News-API': 'News API'}}.
-- `params`: function with files list in OpenApiDocs folder, params: function(ctx) {return [{ in: 'queryString', name: 'key', value: '1111'}]}.
+- `params`: function with params list add to code block, params: function(ctx) {return [{ in: 'queryString', name: 'key', value: '1111'}]}.
 - 
 ### Folder Structure
 The default folder structure for your OpenAPI specification files should look like this:
@@ -80,5 +80,4 @@ This module provides several reusable Nuxt.js components to render your OpenAPI 
 - `OpenApiRoute`: the component used to render a single OpenAPI route.
 You can customize these components by modifying the corresponding .vue files in the components/ folder.
 
-locales: moduleOptions.locales ?? {en: 'English'},
 files: moduleOptions.files ?? function (ctx) { return {} },
