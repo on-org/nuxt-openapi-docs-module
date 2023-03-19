@@ -18,6 +18,7 @@
       <CodeSimples
         :url="route.path"
         :baseUrl="server"
+        :simples="simples"
         :method="method"
         :mime-type="mimeType"
         :cookies="cookies"
