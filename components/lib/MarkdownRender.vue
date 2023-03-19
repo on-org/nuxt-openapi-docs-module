@@ -1,7 +1,5 @@
 <script>
-import { marked } from 'marked'
-import { ref, onMounted, h } from 'vue'
-import DOMPurify from "isomorphic-dompurify";
+import { ref, h } from 'vue'
 
 export default {
   props: {
@@ -11,7 +9,7 @@ export default {
     },
   },
   setup(props, { refs }) {
-    const html = ref(DOMPurify.sanitize(marked(props.markdown)))
+    const html = ref(props.markdown)
 
     return {
       html,
