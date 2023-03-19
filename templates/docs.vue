@@ -9,11 +9,11 @@
       </template>
       <template #button>
         <OpenApiHeader
-            :current-locale="locale"
+            :current-locale="currentLocale"
             :files="files"
             :file="file"
             :locales="locales"
-            :path="route_path"
+            :path="options.path"
             :is-dark-mode="isDarkMode"
             @toggleDarkMode="toggleDarkMode"
         />
@@ -21,12 +21,12 @@
     </MainHeader>
     <div class="flex flex-1 overflow-hidden">
       <MainLeftMenu :isMenuOpen="isMenuOpen" :isMobile="isMobile">
-        <OpenApiMenu :routes="doc.paths" :current-locale="locale" :file="file" :path="route_path" />
+        <OpenApiMenu v-if="doc.paths" :routes="doc.paths" :current-locale="currentLocale" :file="file" :path="options.path" />
       </MainLeftMenu>
       <MainContent>
-        <OpenApiInfo v-if="isInfo" :info="doc.info" :current-locale="locale"></OpenApiInfo>
-        <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="locale"></OpenApiComponents>
-        <OpenApiRoute v-else-if="getActiveRoute" :route="getActiveRoute" :current-locale="locale" :method="type" :components="doc.components" :url="path" :server="server" />
+        <OpenApiInfo v-if="isInfo" :info="doc.info" :servers="doc.servers" :current-locale="currentLocale"></OpenApiInfo>
+        <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="currentLocale"></OpenApiComponents>
+        <OpenApiRoute v-else-if="getActiveRoute" :route="getActiveRoute" :current-locale="currentLocale" :method="type" :components="doc.components" :url="path" :simples="simples" :server="server" />
         <NotFound v-else />
       </MainContent>
     </div>
@@ -44,28 +44,29 @@ import OpenApiComponents from '../components/OpenApiComponents.vue';
 import OpenApiRoute from '../components/OpenApiRoute.vue';
 import NotFound from '../components/NotFound.vue';
 
-const { $openapidoc, $openapidoc_files, $openapidoc_simples} = useNuxtApp()
+const files = <%= options.files %>;
+const simples = <%= options.params %>;
+const options = <%= JSON.stringify(options) %>;
+
 const route = useRoute()
 
-console.log(route.params, route.meta)
-
-const file = route.params.file ?? route.meta.file;
-const locale = route.params.locale ?? route.meta.locale;
-const type = route.params.type ?? route.meta.type
-const path = route.params.path ?? route.meta.path;
+const file = ctx.route.params.file ?? ctx.route.meta[0].file;
+const currentLocale = ctx.route.params.locale ?? ctx.route.meta[0].locale;
+const type = ctx.route.params.type ?? ctx.route.meta[0].type;
+const path = ctx.route.params.path ?? ctx.route.meta[0].path;
 
 let isMenuOpen = true;
 let isDarkMode = false;
 let isDesktop = true;
 
-const doc = computed(() => $openapidoc.docs[file])
-const locales = computed(() => $openapidoc.locales)
-const name = computed(() => $openapidoc.name)
-const route_path = computed(() => $openapidoc.path)
+const doc = computed(() => options.doc)
+const locales = computed(() => options.locales)
+const name = computed(() => options.name)
+
 const isMobile = computed(() => process.client ? window.innerWidth >= 768 : false)
 
 const isInfo = computed(() => path === 'info')
-const files = computed(() => $openapidoc_files(useNuxtApp()))
+const files = computed(() => files(useNuxtApp()))
 const isComponents = computed(() => path === 'components')
 const getActiveRoute = computed(() => {
   if(!doc.value.paths) return null;
@@ -117,10 +118,8 @@ if(process.client) {
 p {
   font-size: 18px;
   line-height: 1.5;
-//color: #333;
 }
 h2, h3, h4 {
-//color: #666;
   margin-top: 20px;
   margin-bottom: 10px;
 }

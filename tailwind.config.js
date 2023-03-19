@@ -4,6 +4,7 @@ module.exports = {
   content: [
     './pages/**/*.{html,js,vue}',
     './components/**/*.{html,js,vue}',
+    './templates/**/*.{html,js,vue}',
   ],
   darkMode: 'class',
   plugins: [

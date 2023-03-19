@@ -7,13 +7,14 @@
     <div class="code-panel">
       <div class="code-panel-body relative">
         <button class="toolbar-btn absolute top-2 right-2" @click.stop.prevent='copyToClipboard'>Copy</button>
-        <pre class="prism p-4" :class="[snippet, `language-${snippet}`]" v-html="htmlCode"></pre>
+        <pre class="language line-numbers" :class="`language-${this.snippet}`"><code class="language" v-html="htmlCode"></code></pre>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+/** Mode */
 import Prism from 'prismjs';
 /** Addons */
 import 'prismjs/components/prism-jsx';
@@ -38,11 +39,9 @@ import 'prismjs/components/prism-php';
 
 import 'prismjs/plugins/line-numbers/prism-line-numbers'
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
-import 'prismjs/plugins/keep-markup/prism-keep-markup.js';
 </script>
 
 <script setup>
-const {$openapidoc_simples} = useNuxtApp()
 /** Mode */
 
 
@@ -52,6 +51,10 @@ import HTTPSnippet from 'httpsnippet';
 import CustomDropdownWithSubMenu from '../lib/CustomDropdownWithSubMenu.vue';
 
 const props = defineProps({
+  simples: {
+    type: [Object, Array],
+    required: false,
+  },
   baseUrl: {
     type: String,
     required: false,
@@ -100,8 +103,7 @@ const props = defineProps({
 
 let snippetIndex = 1;
 let snippetLibraryIndex = 'XMLHttpRequest';
-let showPopup = false;
-let onPopupIndex = null;
+
 let vals = [];
 const config = [
   {
@@ -121,14 +123,6 @@ const config = [
       Axios: 'axios',
     },
   },
-  // {
-  //   snippet: 'node',
-  //   libraries: {
-  //     Native: 'native',
-  //     Request: 'request',
-  //     Unirest: 'unirest',
-  //   },
-  // },
   {
     snippet: 'python',
     libraries: {
@@ -142,9 +136,6 @@ const config = [
   {
     snippet: 'c',
   },
-  // 'Objective-C': {
-  //     snippet: 'objectivec',
-  // },
   {
     snippet: 'ocaml',
   },
@@ -219,12 +210,12 @@ const snippetLibrary = computed(() => {
 })
 
 const htmlCode = computed(() => {
-  if (Prism.languages[snippet.value]) {
-    Prism.highlightAll()
-    const htmlCode = Prism.highlight(genCode, Prism.languages[snippet.value], snippet.value);
-    return `<pre class="prism ${snippet.value} language-${snippet.value}">${htmlCode}</pre>`;
+  const grammar = Prism.languages[this.snippet];
+  if (!grammar) {
+    return genCode
   }
-  return genCode;
+  const highlightedCode = Prism.highlight(genCode, grammar, this.snippet);
+  return highlightedCode
 })
 
 const genCode = computed(() => {
@@ -251,8 +242,7 @@ const genCode = computed(() => {
   if (method === 'POST' && props.postData.length > 0) {
     param.postData = { mimeType: props.mimeType, params: JSON.parse(JSON.stringify(props.postData)) };
   }
-
-  const append = $openapidoc_simples(useNuxtApp());
+  const append = props.simples;
   for (let i in append) {
     param[append[i].in].push({
       name: append[i].name, value: append[i].value
@@ -282,7 +272,6 @@ pre[class*="language-"].line-numbers > code {
   position: absolute;
   pointer-events: none;
   top: 0;
-  font-size: 100%;
   left: -3.8em;
   width: 3em; /* works for line-numbers below 1000 lines */
   letter-spacing: -1px;
@@ -292,7 +281,7 @@ pre[class*="language-"].line-numbers > code {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-
+  font-size: 1.1em;
 }
 
 .line-numbers-rows > span {
@@ -319,7 +308,6 @@ code[class*="language-"], pre[class*="language-"] {
   word-spacing: normal;
   word-break: normal;
   word-wrap: normal;
-  line-height: 1.5;
   -moz-tab-size: 4;
   -o-tab-size: 4;
   tab-size: 4;
@@ -334,7 +322,6 @@ pre[class*="language-"] {
   padding: 1em;
   margin: 0.5em 0;
   overflow: auto;
-  //border-radius: 0.3em;
 }
 :not(pre) > code[class*="language-"], pre[class*="language-"] {
   background: #001529;
@@ -342,7 +329,6 @@ pre[class*="language-"] {
 /* Inline code */
 :not(pre) > code[class*="language-"] {
   padding: 0.1em;
-  //border-radius: 0.3em;
   white-space: normal;
 }
 .token.comment, .token.prolog, .token.doctype, .token.cdata {
@@ -388,7 +374,6 @@ pre[class*="language-"] {
   cursor: pointer;
 }
 .code-panel {
-  //border-radius: 5px;
   min-height: 300px;
   outline: 2px solid rgba(0, 0, 0, 0);
   outline-offset: 2px;
@@ -418,7 +403,6 @@ pre[class*="language-"] {
 .code-popup {
   background-color: #fff;
   border: 1px solid #ccd0d1;
-  //border-radius: 2px;
   box-sizing: border-box;
   left: 19px;
   padding-bottom: 8px;
@@ -427,9 +411,6 @@ pre[class*="language-"] {
   top: 27px;
   width: 273px;
   z-index: 100000;
-
-  //height: 300px;
-  //overflow: scroll;
 }
 .code-popup-item {
   align-items: center;
@@ -445,7 +426,6 @@ pre[class*="language-"] {
 .code-popup-sublist {
   background-color: #fff;
   border: 1px solid #ccd0d1;
-  //border-radius: 2px;
   left: 271px;
   position: absolute;
   z-index: 10;
@@ -457,11 +437,11 @@ pre[class*="language-"] {
   font-size: 12px;
   min-width: 50px;
   color: #fff;
-  //border-radius: 2px;
   border: none;
   background-color: #00a2fb;
   top: 10px;
   right: 10px;
+  z-index: 99;
 }
 .code-selector {
   color: black;

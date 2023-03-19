@@ -25,3 +25,6 @@ Homestead.json
 /input_1
 /output
 .idea
+
+.cache/*.vue
+/templates/.docs.*

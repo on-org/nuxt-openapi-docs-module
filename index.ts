@@ -63,31 +63,6 @@ export default defineNuxtModule<OpenApiDocsOptions>({
     },
   },
   async setup(options, nuxt) {
-    await addComponentsDir({
-      path: resolve(__dirname,  "components"),
-      pathPrefix: false,
-      pattern: "*.vue",
-      transpile: 'auto',
-      global: true
-    });
-
-    await addComponentsDir({
-      path: resolve(__dirname,  "components/blocks"),
-      pathPrefix: false,
-      pattern: "*.vue",
-      transpile: 'auto',
-      global: true
-    });
-
-    await addComponentsDir({
-      path: resolve(__dirname,  "components/lib"),
-      pathPrefix: false,
-      pattern: "*.vue",
-      transpile: 'auto',
-      global: true
-    });
-
-
     Object.keys(options.files(this)).forEach((fileName) => {
       const openApiSpec = parseYamlFile(options, fileName)
 
@@ -115,11 +90,17 @@ export default defineNuxtModule<OpenApiDocsOptions>({
       Object.keys(options.docs).forEach((fileName) => {
         const openApiSpec = options.docs[fileName];
 
+        // Добавляем шаблон для каждого файла
+        addTemplate({
+          src: resolve(__dirname, 'templates/docs.vue'),
+          fileName: resolve(__dirname, `.cache/docs.${fileName}.vue`),
+        })
+
         Object.keys(options.locales!).forEach((locale) => {
           pages.push({
             name: `openapi-${options.path}/${fileName}/${locale}-info`,
             path: `/${options.path}/${fileName}/${locale}/get/info`,
-            file: resolve(__dirname, 'templates/docs.vue'),
+            component: resolve(__dirname, `.cache/docs.${fileName}.vue`),
             meta: {
               file: fileName,
               locale: locale,
@@ -131,7 +112,7 @@ export default defineNuxtModule<OpenApiDocsOptions>({
           pages.push({
             name: `openapi-${options.path}/${fileName}/${locale}-components`,
             path: `/${options.path}/${fileName}/${locale}/get/components`,
-            file: resolve(__dirname, 'templates/docs.vue'),
+            component: resolve(__dirname, `.cache/docs.${fileName}.vue`),
             meta: {
               file: fileName,
               locale: locale,
@@ -146,7 +127,7 @@ export default defineNuxtModule<OpenApiDocsOptions>({
               pages.push({
                 name: `openapi-${options.path}/${fileName}/${locale}-${type}=${i}`,
                 path: `/${options.path}/${fileName}/${locale}/${type}/${i}`,
-                file: resolve(__dirname, 'templates/docs.vue'),
+                component: resolve(__dirname, `.cache/docs.${fileName}.vue`),
                 meta: {
                   file: fileName,
                   locale: locale,
@@ -159,19 +140,6 @@ export default defineNuxtModule<OpenApiDocsOptions>({
         })
 
       })
-    })
-
-    // Добавляем шаблон для каждого файла
-    addTemplate({
-      src: resolve(__dirname, 'templates/docs.vue'),
-      filename: `docs.html`,
-    })
-
-
-    // Добавляем плагин
-    addPluginTemplate({
-      src: resolve(__dirname, './plugin.ts'),
-      options
     })
   },
 })

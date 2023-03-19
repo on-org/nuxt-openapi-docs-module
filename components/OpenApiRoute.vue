@@ -15,8 +15,9 @@
 
     <client-only>
       <h2 class="text-lg font-bold mb-2">Code simples:</h2>
-<!--      <code-simples-->
+<!--      <CodeSimples-->
 <!--        :url="props.route.path"-->
+<!--        :simples="props.simples"-->
 <!--        :baseUrl="props.server"-->
 <!--        :method="props.method"-->
 <!--        :mime-type="mimeType"-->
@@ -25,7 +26,7 @@
 <!--        :query="params.query"-->
 <!--        :path="params.path"-->
 <!--        :postData="params.postData"-->
-<!--      ></code-simples>-->
+<!--      ></CodeSimples>-->
     </client-only>
 
     <OpenApiSecurity v-if="props.route.security" :security="props.route.security" :current-locale="props.currentLocale" />
@@ -47,6 +48,10 @@ import OpenApiExamples from './blocks/OpenApiExamples.vue';
 import {tr} from "./helpers";
 
 const props = defineProps({
+  simples: {
+    type: [Object, Array],
+    required: true,
+  },
   route: {
     type: Object,
     required: true,
