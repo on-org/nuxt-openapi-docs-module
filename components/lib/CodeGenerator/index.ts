@@ -193,7 +193,7 @@ export class CodeGenerator {
         return (new RustGenerator(this.convertParams())).generateCode();
       case 'swift':
         return (new SwiftGenerator(this.convertParams())).generateCode();
-      case 'objectc':
+      case 'objectivec':
         return (new ObjectCGenerator(this.convertParams())).generateCode();
       case 'cpp':
         switch (this._library) {

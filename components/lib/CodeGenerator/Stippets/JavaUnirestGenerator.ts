@@ -2,18 +2,18 @@ import CodeGenerator from "./_CodeGenerator";
 
 export class JavaUnirestGenerator extends CodeGenerator {
   protected generateHeaderFile(url: string): string {
-    return `HttpResponse<String> response = Unirest.${this.method.toLowerCase()}("${this.baseUrl}${url}")`;
+    return `HttpResponse<String> response = Unirest.${this.method.toLowerCase()}("${this.baseUrl}${url}")\n`;
   }
 
   protected generateFooterFile(url: string): string {
-    return `HttpResponse<String> response = request.asString();`;
+    return `HttpResponse<String> response = request.asString();\n`;
   }
 
   protected generateMimeTypeHeader(): string {
     if (this.mimeType === 'application/json') {
-      return `header("Content-Type", "application/json")`;
+      return `header("Content-Type", "application/json")\n`;
     } else if (this.mimeType === 'multipart/form-data') {
-      return `Not supported in Unirest`;
+      return `Not supported in Unirest\n`;
     } else {
       return '';
     }
@@ -25,7 +25,7 @@ export class JavaUnirestGenerator extends CodeGenerator {
     this.params
       .filter(param => param.in === 'headers')
       .forEach(param => {
-        headers += `.header("${param.name}", "${param.value}")`;
+        headers += `.header("${param.name}", "${param.value}")\n`;
       });
 
     return headers;
@@ -37,7 +37,7 @@ export class JavaUnirestGenerator extends CodeGenerator {
     this.params
       .filter(param => param.in === 'query')
       .forEach(param => {
-        queryParams += `.queryString("${param.name}", "${param.value}")`;
+        queryParams += `.queryString("${param.name}", "${param.value}")\n`;
       });
 
     return queryParams;
@@ -49,11 +49,11 @@ export class JavaUnirestGenerator extends CodeGenerator {
       return obj;
     }, {}));
 
-    return `.body("${postData}")`;
+    return `.body("${postData}")\n`;
   }
 
   protected generateMultipartPostData(): string {
-    return 'Not supported in Unirest';
+    return 'Not supported in Unirest\n';
   }
 
   protected generateOtherPostData(): string {
@@ -67,7 +67,7 @@ export class JavaUnirestGenerator extends CodeGenerator {
 
     postData = postData.slice(0, -1);
 
-    return `.body("${postData}")`;
+    return `.body("${postData}")\n`;
   }
 
   protected generateCookie(): string {
@@ -76,11 +76,11 @@ export class JavaUnirestGenerator extends CodeGenerator {
     this.params
       .filter(param => param.in === 'cookie')
       .forEach(param => {
-        cookieHeader += `${param.value}; `;
+        cookieHeader += `${param.value}; \n`;
       });
 
     if (cookieHeader !== '') {
-      cookieHeader = `.header("Cookie", "${cookieHeader}")`;
+      cookieHeader = `.header("Cookie", "${cookieHeader}")\n`;
     }
 
     return cookieHeader;

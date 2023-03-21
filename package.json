@@ -11,9 +11,9 @@
   "dependencies": {
     "@nuxt/content": "^2.5.2",
     "flowbite": "^1.6.4",
+    "highlight.js": "^11.7.0",
     "isomorphic-dompurify": "^1.2.0",
     "marked": "^4.2.12",
-    "prismjs": "^1.29.0",
     "url": "^0.11.0",
     "vue": "^2.7.14",
     "yaml": "^2.2.1"

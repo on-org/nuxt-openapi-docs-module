@@ -13,7 +13,7 @@ class CSharpHttpClientGenerator extends CodeGenerator {
 
             static void Main()
             {
-                var url = "${url}";
+                var url = "${this.baseUrl}${url}";
                 `;
   }
 

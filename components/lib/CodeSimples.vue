@@ -3,18 +3,14 @@
 
     <CustomDropdownWithSubMenu :items="configs" @select="onLangClick"></CustomDropdownWithSubMenu>
 
-    <ClientOnly fallback-tag="span" fallback="Loading comments...">
-      <CodeView :lang="snippet" :code="code"></CodeView>
-    </ClientOnly>
+    <CodeView :lang="snippet" :code="code"></CodeView>
   </div>
 </template>
 
 <script setup>
 import CustomDropdownWithSubMenu from '../lib/CustomDropdownWithSubMenu.vue';
 import {CodeGenerator} from "./CodeGenerator";
-const CodeView = defineAsyncComponent(
-  () => import('./CodeView.vue')
-)
+import CodeView from './CodeView.vue'
 
 const props = defineProps({
   simples: {
@@ -140,7 +136,7 @@ const configs = [
     snippet: 'swift',
   },
   {
-    snippet: 'objectc',
+    snippet: 'objectivec',
   },
   {
     snippet: 'cpp',
@@ -207,5 +203,35 @@ genCode();
 
 <style>
 
+
+
+pre {
+  font-family: monospace;
+  background-color: #f7f7f7;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+code {
+  font-family: monospace;
+}
+
+.keyword {
+  font-weight: bold;
+  color: #0077c2;
+}
+
+.operator {
+  color: #a90d91;
+}
+
+.string {
+  color: #2a9d8f;
+}
+
+.punctuation {
+  color: #a90d91;
+}
 
 </style>

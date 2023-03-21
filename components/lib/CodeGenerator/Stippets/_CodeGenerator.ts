@@ -95,8 +95,10 @@ abstract class CodeGenerator {
     return this.params.some(param => param.in === 'cookie');
   }
 
-  protected getHost(): boolean {
-    return this.params.some(param => param.in === 'cookie');
+  protected getHost(): string {
+    const regex = /^https?:\/\/([^\/]+)/i;
+    const match = this.baseUrl.match(regex);
+    return match ? match[1] : '';
   }
   protected abstract generateHeaderFile(url): string;
   protected abstract generateFooterFile(url): string;

@@ -6,63 +6,70 @@
     </div>
   </div>
 </template>
+<script> /** Mode */
+import hljs from 'highlight.js/lib/core'; /** Languages */
+import javascript from 'highlight.js/lib/languages/javascript';
+import java from 'highlight.js/lib/languages/java';
+import clojure from 'highlight.js/lib/languages/clojure';
+import csharp from 'highlight.js/lib/languages/csharp';
+import http from 'highlight.js/lib/languages/http';
+import kotlin from 'highlight.js/lib/languages/kotlin';
+import powershell from 'highlight.js/lib/languages/powershell';
+import r from 'highlight.js/lib/languages/r';
+import ruby from 'highlight.js/lib/languages/ruby';
+import rust from 'highlight.js/lib/languages/rust';
+import swift from 'highlight.js/lib/languages/swift';
+import bash from 'highlight.js/lib/languages/bash';
+import ocaml from 'highlight.js/lib/languages/ocaml';
+import python from 'highlight.js/lib/languages/python';
+import json from 'highlight.js/lib/languages/json';
+import go from 'highlight.js/lib/languages/go';
+import php from 'highlight.js/lib/languages/php';
+import c from 'highlight.js/lib/languages/c';
+import brainfuck from 'highlight.js/lib/languages/brainfuck';
+import lua from 'highlight.js/lib/languages/lua';
+import perl from 'highlight.js/lib/languages/perl';
+import cpp from 'highlight.js/lib/languages/cpp';
+import scala from 'highlight.js/lib/languages/scala';
+import dart from 'highlight.js/lib/languages/dart';
+import objectivec from 'highlight.js/lib/languages/objectivec';
 
-<script>
-/** Mode */
-import Prism from 'prismjs';
-/** Addons */
-import 'prismjs/components/prism-jsx';
-import 'prismjs/components/prism-java';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-clojure';
-import 'prismjs/components/prism-csharp';
-import 'prismjs/components/prism-http';
-import 'prismjs/components/prism-kotlin';
-import 'prismjs/components/prism-powershell';
-import 'prismjs/components/prism-r';
-import 'prismjs/components/prism-ruby';
-import 'prismjs/components/prism-rust';
-import 'prismjs/components/prism-swift';
-import 'prismjs/components/prism-bash';
-import 'prismjs/components/prism-ocaml';
-import 'prismjs/components/prism-python';
-import 'prismjs/components/prism-json';
-import 'prismjs/components/prism-textile';
-import 'prismjs/components/prism-go';
-import "prismjs/components/prism-markup-templating.js";
-import 'prismjs/components/prism-php';
-import 'prismjs/components/prism-c';
-import 'prismjs/components/prism-brainfuck';
-import 'prismjs/components/prism-lua';
-import 'prismjs/components/prism-perl';
-import 'prismjs/components/prism-cpp';
-import 'prismjs/components/prism-scala';
-import 'prismjs/components/prism-dart';
-import 'prismjs/components/prism-objectivec';
-import 'prismjs/components/prism-objectivec';
-
-import 'prismjs/plugins/line-numbers/prism-line-numbers'
-import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('java', java);
+hljs.registerLanguage('clojure', clojure);
+hljs.registerLanguage('csharp', csharp);
+hljs.registerLanguage('http', http);
+hljs.registerLanguage('kotlin', kotlin);
+hljs.registerLanguage('powershell', powershell);
+hljs.registerLanguage('r', r);
+hljs.registerLanguage('ruby', ruby);
+hljs.registerLanguage('rust', rust);
+hljs.registerLanguage('swift', swift);
+hljs.registerLanguage('bash', bash);
+hljs.registerLanguage('ocaml', ocaml);
+hljs.registerLanguage('python', python);
+hljs.registerLanguage('json', json);
+hljs.registerLanguage('go', go);
+hljs.registerLanguage('php', php);
+hljs.registerLanguage('c', c);
+hljs.registerLanguage('brainfuck', brainfuck);
+hljs.registerLanguage('lua', lua);
+hljs.registerLanguage('perl', perl);
+hljs.registerLanguage('cpp', cpp);
+hljs.registerLanguage('scala', scala);
+hljs.registerLanguage('dart', dart);
+hljs.registerLanguage('objectivec', objectivec);
 
 import {copyToClipboard} from '../helpers';
 
 export default {
   name: 'code-view',
   props: {
-    code: {
-      type: String,
-      required: true,
-    },
-    lang: {
-      type: String,
-      required: false,
-      default: ''
-    },
+    code: {type: String, required: true,},
+    lang: {type: String, required: false, default: ''},
   },
   data() {
-    return {
-      html: 'javascript',
-    }
+    return {html: 'javascript'}
   },
   watch: {
     code() {
@@ -74,150 +81,42 @@ export default {
   },
   methods: {
     copyToClipboard(e) {
-      copyToClipboard(this.genCode, e)
+      copyToClipboard(this.code, e)
     },
     toHtml() {
-      const grammar = Prism.languages[this.lang];
+      const language = this.lang || 'javascript';
+      const grammar = hljs.getLanguage(language);
       if (!grammar) {
         this.html = this.code
       }
-      this.html = Prism.highlight(this.code, grammar, this.lang);
+      this.html = hljs.highlight(this.code, {language, ignoreIllegals: true}).value;
     }
   },
   mounted() {
     this.toHtml()
   }
-}
-</script>
+} </script>
 
 <style>
-pre[class*="language-"].line-numbers {
-  position: relative;
-  padding-left: 3.8em;
-  counter-reset: linenumber;
-}
+@import 'highlight.js/styles/tokyo-night-dark.css';
 
-pre[class*="language-"].line-numbers > code {
-  position: relative;
-  white-space: inherit;
-}
-
-.line-numbers .line-numbers-rows {
-  position: absolute;
-  pointer-events: none;
-  top: 0;
-  left: -3.8em;
-  width: 3em; /* works for line-numbers below 1000 lines */
-  letter-spacing: -1px;
-  border-right: 1px solid #999;
-
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  font-size: 1.1em;
-}
-
-.line-numbers-rows > span {
-  display: block;
-  counter-increment: linenumber;
-}
-
-.line-numbers-rows > span:before {
-  content: counter(linenumber);
-  color: #999;
-  display: block;
-  padding-right: 0.8em;
-  text-align: right;
-}
-
-code[class*="language-"], pre[class*="language-"] {
-  color: #f8f8f2;
-  background: none;
-  text-shadow: 0 1px rgba(0, 0, 0, 0.3);
-  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-  font-size: 0.9em;
-  text-align: left;
-  white-space: pre;
-  word-spacing: normal;
-  word-break: normal;
-  word-wrap: normal;
-  -moz-tab-size: 4;
-  -o-tab-size: 4;
-  tab-size: 4;
-  -webkit-hyphens: none;
-  -moz-hyphens: none;
-  -ms-hyphens: none;
-  hyphens: none;
-  border: 0;
-}
-/* Code blocks */
-pre[class*="language-"] {
-  padding: 1em;
-  margin: 0.5em 0;
-  overflow: auto;
-}
 :not(pre) > code[class*="language-"], pre[class*="language-"] {
   background: #001529;
+  color: #d3d3d3;
 }
-/* Inline code */
-:not(pre) > code[class*="language-"] {
-  padding: 0.1em;
-  white-space: normal;
-}
-.token.comment, .token.prolog, .token.doctype, .token.cdata {
-  color: #8292a2;
-}
-.token.punctuation {
-  color: #f8f8f2;
-}
-.token.namespace {
-  opacity: 0.7;
-}
-.token.property, .token.tag, .token.constant, .token.symbol, .token.deleted {
-  color: #f92672;
-}
-.token.boolean, .token.number {
-  color: #ae81ff;
-}
-.token.selector, .token.attr-name, .token.string, .token.char, .token.builtin, .token.inserted {
-  color: #a6e22e;
-}
-.token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string, .token.variable {
-  color: #f8f8f2;
-}
-.token.atrule, .token.attr-value, .token.function, .token.class-name {
-  color: #e6db74;
-}
-.token.keyword {
-  color: #66d9ef;
-}
-.token.regex, .token.important {
-  color: #fd971f;
-}
-.token.important, .token.bold {
-  font-weight: bold;
-}
-.token.italic {
-  font-style: italic;
-}
-.token.entity {
-  cursor: help;
-}
-.selector {
+
+.toolbar-btn {
   cursor: pointer;
+  padding: 4px;
+  margin: 0px 2px;
+  font-size: 12px;
+  min-width: 50px;
+  color: #fff;
+  border: none;
+  background-color: #00a2fb;
+  top: 10px;
+  right: 10px;
+  z-index: 99;
 }
-.code-panel {
-  min-height: 100px;
-  outline: 2px solid rgba(0, 0, 0, 0);
-  outline-offset: 2px;
-  overflow: hidden;
-  width: 100%;
-  margin-bottom: 20px;
-}
-.code-panel-body {
-  background-color: #f2f5fb;
-  padding: 0;
-  position: relative;
-}
+
 </style>
