@@ -11,6 +11,7 @@
         <OpenApiHeader
             :current-locale="currentLocale"
             :files="files"
+            :doc="doc"
             :file="file"
             :locales="locales"
             :path="options.path"
@@ -44,16 +45,16 @@ import OpenApiComponents from '../components/OpenApiComponents.vue';
 import OpenApiRoute from '../components/OpenApiRoute.vue';
 import NotFound from '../components/NotFound.vue';
 
-const files = <%= options.files %>;
-const simples = <%= options.params %>;
+const files_getter = <%= options.files %>;
+const simples_getter = <%= options.params %>;
 const options = <%= JSON.stringify(options) %>;
 
 const route = useRoute()
 
-const file = ctx.route.params.file ?? ctx.route.meta[0].file;
-const currentLocale = ctx.route.params.locale ?? ctx.route.meta[0].locale;
-const type = ctx.route.params.type ?? ctx.route.meta[0].type;
-const path = ctx.route.params.path ?? ctx.route.meta[0].path;
+const file = route.params.file ?? route.meta.file;
+const currentLocale = route.params.locale ?? route.meta.locale;
+const type = route.params.type ?? route.meta.type
+const path = route.params.path ?? route.meta.path;
 
 let isMenuOpen = true;
 let isDarkMode = false;
@@ -66,7 +67,8 @@ const name = computed(() => options.name)
 const isMobile = computed(() => process.client ? window.innerWidth >= 768 : false)
 
 const isInfo = computed(() => path === 'info')
-const files = computed(() => files(useNuxtApp()))
+const files = computed(() => files_getter(useNuxtApp()))
+const simples = computed(() => simples_getter(useNuxtApp()))
 const isComponents = computed(() => path === 'components')
 const getActiveRoute = computed(() => {
   if(!doc.value.paths) return null;

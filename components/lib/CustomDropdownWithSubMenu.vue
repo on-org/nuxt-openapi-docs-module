@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <button
-      @click="isOpen = !isOpen"
+      @click="() => isOpen = !isOpen"
       type="button"
       class="inline-flex justify-center items-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-black dark:text-gray-300/75"
       aria-haspopup="true"
@@ -35,7 +35,7 @@
         <li
           v-for="(item, index) in items"
           :key="index"
-          @click="handleItemClick(item, index)"
+          @click.stop.prevent="handleItemClick(item, index)"
           role="menuitem"
           class="border block px-4 py-2 m-0 text-sm text-gray-700 hover:bg-white hover:text-gray-800 dark:bg-black dark:hover:bg-gray-800 dark:text-gray-300/75"
         >
@@ -53,7 +53,7 @@
               <li
                 v-for="(library, libraryKey) in item.libraries"
                 :key="libraryKey"
-                @click="handleItemClick(item, index, libraryKey)"
+                @click.stop.prevent="handleItemClick(item, index, libraryKey)"
                 class="bg-gray-100 hover:bg-gray-200 dark:bg-black dark:hover:bg-gray-800 dark:text-gray-300/75 block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
               >
                 {{ library }}
@@ -78,33 +78,33 @@ const props = defineProps({
     required: true
   },
 })
-let isOpen = false;
-let selectedSnippet = 1;
-let selectedLibrary = 'XMLHttpRequest';
+let isOpen = ref(false);
+let selectedSnippet = ref(1);
+let selectedLibrary = ref('XMLHttpRequest');
 
 const selectedText = computed(() => {
-  if(!selectedSnippet || !props.items[selectedSnippet]) {
+  if(!selectedSnippet.value || !props.items[selectedSnippet.value]) {
     return null;
   } else {
-    if(!props.items[selectedSnippet].libraries) {
-      return props.items[selectedSnippet].snippet
-    } else if(!selectedLibrary) {
+    if(!props.items[selectedSnippet.value].libraries) {
+      return props.items[selectedSnippet.value].snippet
+    } else if(!selectedLibrary.value) {
       return null;
     } else {
-      return props.items[selectedSnippet].snippet + ' / ' + props.items[selectedSnippet].libraries[selectedLibrary];
+      return props.items[selectedSnippet.value].snippet + ' / ' + props.items[selectedSnippet.value].libraries[selectedLibrary.value];
     }
   }
 })
 
 function handleItemClick(item, snippet, library = null) {
   if (item.libraries && !library) {
-    selectedSnippet = snippet;
-    selectedLibrary = null;
+    selectedSnippet.value = snippet;
+    selectedLibrary.value = null;
   } else {
-    selectedSnippet = snippet;
-    selectedLibrary = library;
+    selectedSnippet.value = snippet;
+    selectedLibrary.value = library;
     emit('select', snippet, library);
-    isOpen = false;
+    isOpen.value = false;
   }
 }
 </script>

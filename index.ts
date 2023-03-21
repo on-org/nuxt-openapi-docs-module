@@ -2,6 +2,7 @@ import {resolve} from "path";
 import * as yaml from "yaml";
 import * as path from "path";
 import * as fs from "fs";
+import {marked} from "marked";
 
 import {
   addComponent,
@@ -10,11 +11,54 @@ import {
   addComponentsDir,
   addPrerenderRoutes,
   addTemplate,
+  addLayout,
   createResolver,
   extendRouteRules,
   defineNuxtModule,
   extendPages
 } from '@nuxt/kit'
+
+
+function sanitizeText(text: string) {
+  const map = {
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '\\': '&#x5C;',
+    '|': '&#x7C;'
+  };
+  const reg = /[<>"'\\|]/gi;
+  return text.replace(reg, function (match) {
+    // @ts-ignore
+    return map[match];
+  });
+}
+
+const renderer = new marked.Renderer();
+renderer.text = function (text: string) {
+  return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+};
+
+function replaceMarkdown(obj: { [key: string]: any } | any): any {
+  if (typeof obj === 'string') {
+    if (obj.match(/\[.*?\]\(.*?\)|^>/)) {
+      return marked(obj, {renderer: renderer});
+    } else {
+      return sanitizeText(obj);
+    }
+  } else if (Array.isArray(obj)) {
+    return obj.map(replaceMarkdown);
+  } else if (typeof obj === 'object' && obj !== null) {
+    return Object.entries(obj).reduce((acc, [key, value]) => {
+      // @ts-ignore
+      acc[key] = replaceMarkdown(value);
+      return acc;
+    }, {});
+  } else {
+    return obj;
+  }
+}
 
 export interface OpenApiDocsOptions {
   folder: string
@@ -23,7 +67,7 @@ export interface OpenApiDocsOptions {
   locales?: Record<string, string>
   files?: (ctx: { nuxt: any }) => Record<string, string>
   params?: (ctx: { route: any }) => Record<string, string>
-  docs?: Record<string, any>
+  doc?: any
 }
 
 // Функция для парсинга YAML-файла
@@ -33,7 +77,7 @@ function parseYamlFile(options: OpenApiDocsOptions, fileName: string) {
   //   `${fileName}.yaml`
   // )
 
-  const filePath =  path.join(options.folder, fileName + '.yaml')
+  const filePath = path.join(options.folder, fileName + '.yaml')
   // const yamlData = this.nuxt.readContent(filePath)
   const yamlData = fs.readFileSync(filePath, 'utf8');
   const openApiSpec = yaml.parse(yamlData)
@@ -53,10 +97,10 @@ export default defineNuxtModule<OpenApiDocsOptions>({
     folder: './docs/openapi',
     name: 'OpenApiDocs',
     path: 'docs',
-    locales: { en: 'English' },
-    docs: {},
+    locales: {en: 'English'},
+    doc: {},
     files: function (ctx) {
-      return { API: 'api' }
+      return {API: 'api'}
     },
     params: function (ctx) {
       return {}
@@ -80,27 +124,23 @@ export default defineNuxtModule<OpenApiDocsOptions>({
         delete openApiSpec.paths[i];
       }
 
-      options.docs[fileName] = openApiSpec;
-    });
-
-    nuxt.options.$openApiDocs = options.docs;
-
-
-    extendPages((pages) => {
-      Object.keys(options.docs).forEach((fileName) => {
-        const openApiSpec = options.docs[fileName];
+      options.doc = replaceMarkdown(openApiSpec);
 
         // Добавляем шаблон для каждого файла
-        addTemplate({
-          src: resolve(__dirname, 'templates/docs.vue'),
-          fileName: resolve(__dirname, `.cache/docs.${fileName}.vue`),
-        })
+      addTemplate({
+        src: resolve(__dirname, 'templates/docs.vue'),
+        filename: `apidocs.${fileName}.vue`,
+        dst: resolve(__dirname, `.cache/apidocs.${fileName}.vue`),
+        write: true,
+        options,
+      })
 
+      extendPages((pages) => {
         Object.keys(options.locales!).forEach((locale) => {
           pages.push({
             name: `openapi-${options.path}/${fileName}/${locale}-info`,
             path: `/${options.path}/${fileName}/${locale}/get/info`,
-            component: resolve(__dirname, `.cache/docs.${fileName}.vue`),
+            file: resolve(__dirname, `.cache/apidocs.${fileName}.vue`),
             meta: {
               file: fileName,
               locale: locale,
@@ -112,7 +152,7 @@ export default defineNuxtModule<OpenApiDocsOptions>({
           pages.push({
             name: `openapi-${options.path}/${fileName}/${locale}-components`,
             path: `/${options.path}/${fileName}/${locale}/get/components`,
-            component: resolve(__dirname, `.cache/docs.${fileName}.vue`),
+            file: resolve(__dirname, `.cache/apidocs.${fileName}.vue`),
             meta: {
               file: fileName,
               locale: locale,
@@ -127,7 +167,7 @@ export default defineNuxtModule<OpenApiDocsOptions>({
               pages.push({
                 name: `openapi-${options.path}/${fileName}/${locale}-${type}=${i}`,
                 path: `/${options.path}/${fileName}/${locale}/${type}/${i}`,
-                component: resolve(__dirname, `.cache/docs.${fileName}.vue`),
+                file: resolve(__dirname, `.cache/apidocs.${fileName}.vue`),
                 meta: {
                   file: fileName,
                   locale: locale,
@@ -142,7 +182,7 @@ export default defineNuxtModule<OpenApiDocsOptions>({
       })
     })
   },
-})
+});
 
 
 module.exports.meta = require('./package.json')

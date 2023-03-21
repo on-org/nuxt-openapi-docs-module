@@ -17,6 +17,16 @@
         </template>
       </CustomDropdown>
     </div>
+    <div class="locales">
+      <button
+        @click="downloadYaml"
+        type="button"
+        class="inline-flex justify-center items-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-black dark:text-gray-300/75"
+        aria-haspopup="true"
+      >
+        Yaml
+      </button>
+    </div>
   </div>
 </template>
 <script setup>
@@ -46,6 +56,10 @@ const props = defineProps({
     type: Object,
     required: true
   },
+  doc: {
+    type: Object,
+    required: true
+  },
   path: {
     type: String,
     required: true
@@ -57,6 +71,23 @@ function changeDoc(option) {
 }
 function changeLocale(option) {
   return '/' + props.path + '/' + props.file + '/' + option + '/get/info';
+}
+
+function downloadYaml() {
+  const json = JSON.stringify(props.doc);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = props.file + '.yaml';
+  document.body.appendChild(link);
+
+  link.click();
+
+  // Очистить ссылку и объект URL после скачивания файла
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
 </script>
 <style scoped>

@@ -127,7 +127,6 @@ export default {
   },
   mounted() {
     this.open = localStorage.getItem('menu_open') ?? null
-    console.log(this.open) // 0
   }
 }
 </script>
