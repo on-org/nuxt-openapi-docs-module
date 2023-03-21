@@ -12,6 +12,7 @@
           :current-locale="currentLocale"
           :files="files"
           :locales="options.locales"
+          :doc="doc"
           :file="file"
           :path="options.path"
           :is-dark-mode="isDarkMode"

@@ -17,6 +17,16 @@
         </template>
       </CustomDropdown>
     </div>
+    <div class="locales">
+      <button
+        @click="downloadYaml"
+        type="button"
+        class="inline-flex justify-center items-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-black dark:text-gray-300/75"
+        aria-haspopup="true"
+      >
+        Yaml
+      </button>
+    </div>
   </div>
 </template>
 <script>
@@ -44,6 +54,10 @@ export default {
       type: Object,
       required: true,
     },
+    doc: {
+      type: Object,
+      required: true
+    },
     isDarkMode: {
       type: Boolean,
       required: true,
@@ -62,6 +76,22 @@ export default {
     },
     changeLocale(option) {
       return '/' + this.path + '/' + this.file + '/' + option + '/get/info';
+    },
+    downloadYaml() {
+      const json = JSON.stringify(this.doc);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = this.file + '.yaml';
+      document.body.appendChild(link);
+
+      link.click();
+
+      // Очистить ссылку и объект URL после скачивания файла
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
     }
   },
 };

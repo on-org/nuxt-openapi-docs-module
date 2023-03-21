@@ -6,9 +6,18 @@
 [![GitHub Repo stars](https://img.shields.io/github/stars/on-org/nuxt-openapi-docs-module?style=social)](https://github.com/on-org/nuxt-openapi-docs-module)
 
 # OpenApiDocs Nuxt Module
-This module provides a simple way to display OpenAPI documentation in a Nuxt.js 2 application. It allows you to define an OpenAPI specification file and renders it using a set of reusable Vue.js components.
+This module provides a simple way to display OpenAPI documentation in a Nuxt.js 2 & 3 application. It allows you to define an OpenAPI specification file and renders it using a set of reusable Vue.js components.
 
 work with static and server target
+
+# Package Version Information
+
+| Version | 	Supported Nuxt Version |
+|---------|-------------------------|
+| 1.0     | 	1.x                    |
+| 2.0     | 	2.x                    |
+
+You can use this table to determine which version of the package supports which versions of Nuxt. Version 1.0.0 supports only Nuxt 1.x, while version 2.0.0 supports only Nuxt 2.x. Note that a newer version of the package may not work with an older version of Nuxt.
 
 ![desktop image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/desktop.png)
 ![black image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/black.png)
