@@ -17,7 +17,20 @@ class JavaScriptXMLHttpRequestGenerator extends CodeGenerator {
     return cookieHeader;
   }
   generateHeaderFile(url) {
-    return `var xhr = new XMLHttpRequest();\nxhr.open('${this.method}', '${this.baseUrl}${url}');\n`;
+
+    let queryParams = '';
+
+    this.params
+      .filter(param => param.in === 'query')
+      .forEach(param => {
+        queryParams += `${param.name}=${param.value}&`;
+      });
+
+    if (queryParams !== '') {
+      return `var xhr = new XMLHttpRequest();\nxhr.open('${this.method}', '${this.baseUrl}${this.url}?${queryParams.slice(0, -1)}');\n`;
+    } else {
+      return `var xhr = new XMLHttpRequest();\nxhr.open('${this.method}', '${this.baseUrl}${url}');\n`;
+    }
   }
 
   generateFooterFile(url) {
@@ -47,19 +60,9 @@ class JavaScriptXMLHttpRequestGenerator extends CodeGenerator {
   }
 
   generateQueryParams() {
-    let queryParams = '';
 
-    this.params
-      .filter(param => param.in === 'query')
-      .forEach(param => {
-        queryParams += `${param.name}=${param.value}&`;
-      });
 
-    if (queryParams !== '') {
-      queryParams = `xhr.open('${this.method}', '${this.baseUrl}${this.url}?${queryParams.slice(0, -1)}');\n`;
-    }
-
-    return queryParams;
+    return '';
   }
 
   generateJsonPostData() {

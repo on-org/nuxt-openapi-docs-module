@@ -13,7 +13,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
   }
 
   generateFooterFile(url) {
-    return `    let response = client.${this.method.toLowerCase()}(&url)
+    return `\n    let response = client.${this.method.toLowerCase()}(&url)
         .headers(headers)
         .send()?;
     println!("Status: {{}}", response.status());

@@ -116,7 +116,7 @@ export default {
 
 
               if (def === '' && property.type) {
-                def = this.convertStringFormatToMd(property.type);
+                def = this.convertStringFormatToMd(property.type, propertyName);
               }
 
               this.params.push({
@@ -149,7 +149,7 @@ export default {
         }
 
         if (def === '' && param.schema && param.schema.type) {
-          def = this.convertStringFormatToMd(param.schema.type);
+          def = this.convertStringFormatToMd(param.schema.type, p_name);
         }
 
         this.params.push({
@@ -168,7 +168,7 @@ export default {
         })
       }
     },
-    convertStringFormatToMd(format) {
+    convertStringFormatToMd(format, name) {
       switch (format) {
         case 'date':
           return 'YYYY-MM-DD';
@@ -186,6 +186,8 @@ export default {
           return 'https://example.com';
         case 'integer':
           return '1';
+        case 'string':
+          return `{${name}}`;
         default:
           return format;
       }

@@ -1,88 +1,99 @@
 import CodeGenerator from "./_CodeGenerator";
 
-class ScalaGenerator extends CodeGenerator {
+export class ScalaGenerator extends CodeGenerator {
   generateHeaderFile(url) {
-    return `val url = "${this.baseUrl}${url}"\n\n`;
+    return `import scalaj.http.Http
+import scalaj.http.HttpResponse
+
+object Main {
+def main(args: Array[String]): Unit = {
+val response: HttpResponse[String] = Http("${this.baseUrl}${url}")`;
   }
 
   generateFooterFile(url) {
-    return '';
+    return `\n     .asString     \nprintln(response.body)\n   } \n}`;
   }
 
   generateMimeTypeHeader() {
-    switch (this.mimeType) {
-      case 'application/json':
-        return 'val contentType = "application/json"\n';
-      case 'multipart/form-data':
-        return 'val contentType = "multipart/form-data"\n';
-      default:
-        return '';
+    if (this.mimeType === 'application/json') {
+      return `\n     .header("Content-Type", "application/json")`;
+    } else if (this.mimeType === 'multipart/form-data') {
+      return `\n     .header("Content-Type", "multipart/form-data")`;
+    } else {
+      return `\n     .header("Content-Type", "application/x-www-form-urlencoded")`;
     }
   }
 
   generateHeaders() {
-    const headers = this.params.filter(param => param.in === 'headers');
-    if (headers.length === 0) {
-      return '';
-    }
-
-    const headerStrings = headers.map(header => {
-      return `"${header.name}" -> "${header.value}"`;
-    });
-
-    return `val headers = Map(${headerStrings.join(', ')})\n`;
+    let headersCode = '';
+    this.params
+      .filter(param => param.in === 'headers')
+      .forEach(param => {
+        headersCode += `\n     .header("${param.name}", "${param.value}")\n`;
+      });
+    return headersCode;
   }
 
   generateQueryParams() {
-    const queryParams = this.params.filter(param => param.in === 'query');
-    if (queryParams.length === 0) {
-      return '';
-    }
-
-    const paramStrings = queryParams.map(param => {
-      return `"${param.name}" -> "${param.value}"`;
-    });
-
-    return `val queryParams = Map(${paramStrings.join(', ')})\n`;
+    let queryParamsCode = '';
+    this.params
+      .filter(param => param.in === 'query')
+      .forEach(param => {
+        queryParamsCode += `\n     .param('${param.name}', '${param.value}')\n`;
+      });
+    return queryParamsCode;
   }
 
   generateJsonPostData() {
-    const postData = this.params.find(param => param.in === 'postData');
-    return `val postData = Json.toJson(Map("${postData.name}" -> "${postData.value}")).toString\n`;
+    let postData = '';
+    this.params
+      .filter(param => param.in === 'postData')
+      .forEach(param => {
+        if (param.type === 'file') {
+          postData += `${param.name}=@${param.path}`
+        } else {
+          postData += `${param.name}=${param.value}`
+        }
+      });
+    return `\n     .postData(${postData})`;
   }
 
   generateMultipartPostData() {
-    const postData = this.params.find(param => param.in === 'postData');
-    const fileParam = this.params.find(param => param.type === 'file');
-
-    if (!fileParam) {
-      return '';
-    }
-
-    return `val file = new java.io.File("${fileParam.path}")
-val filePart = MultipartFormData.FilePart("${fileParam.name}", "${fileParam.path}", None, None)
-val postData = MultipartFormData.DataPart("${postData.name}", "${postData.value}")
-val multipartData = MultipartFormData(Seq(filePart), Seq(postData))
-val body = multipartData.toEntity(HttpCharsets.\`UTF-8\`).data.utf8String\n`;
+    let postData = '';
+    this.params
+      .filter(param => param.in === 'postData')
+      .forEach(param => {
+        if (param.type === 'file') {
+          postData += `\n     .postMulti(MultiPart("${param.name}", "${param.path}"))`
+        } else {
+          postData += `\n     .postMulti(MultiPart("${param.name}", "${param.value}"))`
+        }
+      });
+    return postData;
   }
 
   generateOtherPostData() {
-    const postData = this.params.find(param => param.in === 'postData');
-    return `val postData = "${postData.value}"\n`;
+    let postData = '';
+    this.params
+      .filter(param => param.in === 'postData')
+      .forEach(param => {
+        if (param.type === 'file') {
+          postData += `\n     .postData(("${param.name}", "${param.path}"))`
+        } else {
+          postData += `\n     .postData(("${param.name}", "${param.value}"))`
+        }
+      });
+    return postData;
   }
 
   generateCookie() {
-    const cookieParams = this.params.filter(param => param.in === 'cookie');
-    if (cookieParams.length === 0) {
-      return '';
-    }
-
-    const cookieStrings = cookieParams.map(cookie => {
-      return `""""${cookie.name}" -> "${cookie.value}""""`;
-    });
-
-    return `val cookies = Seq(${cookieStrings.join(', ')})
-val cookieHeader = headers.Cookie(cookies:_*)\n`;
+    let cookieCode = '';
+    this.params
+      .filter(param => param.in === 'cookie')
+      .forEach(param => {
+        cookieCode += `\n     .cookie("${param.name}", "${param.value}")\n`;
+      });
+    return cookieCode;
   }
 }
 

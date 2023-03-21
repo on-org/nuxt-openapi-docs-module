@@ -2,170 +2,123 @@ import CodeGenerator from "./_CodeGenerator";
 
 class GoGenerator extends CodeGenerator {
   generateHeaderFile(url) {
-    return `package main
+    let code = `package main\n\nimport (\n\t"fmt"\n\t"net/http"\n\t"net/url"\n)\n\nfunc main() {\n`;
 
-import (
-	"fmt"
-	"net/http"
-	"net/url"
-	"strings"
-)
+    code += `\turl, err := url.Parse("${this.baseUrl}${url}")\n`;
+    code += `\tif err != nil {\n\t\tfmt.Println(err)\n\t\treturn\n\t}\n\n`;
+    code += `\tclient := &http.Client{}\n`;
+    code += `\treq, err := http.NewRequest("${this.method}", url.String(), nil)\n`;
+    code += `\tif err != nil {\n\t\tfmt.Println(err)\n\t\treturn\n\t}\n\n`;
 
-func main() {
-	url := "${url}"
-`;
+    return code;
   }
 
   generateFooterFile(url) {
-    return `
-}
-`;
+    let code = `\tresp, err := client.Do(req)\n`;
+    code += `\tif err != nil {\n\t\tfmt.Println(err)\n\t\treturn\n\t}\n\tdefer resp.Body.Close()\n\n`;
+    code += `\t// TODO: process response\n}\n`;
+
+    return code;
   }
 
   generateMimeTypeHeader() {
-    let mimeTypeHeader = '';
+    let code = '';
 
-    switch (this.mimeType) {
-      case 'application/json':
-        mimeTypeHeader = 'req.Header.Set("Content-Type", "application/json")\n';
-        break;
-      case 'multipart/form-data':
-        mimeTypeHeader = 'req.Header.Set("Content-Type", "multipart/form-data")\n';
-        break;
-      case 'application/x-www-form-urlencoded':
-        mimeTypeHeader = 'req.Header.Set("Content-Type", "application/x-www-form-urlencoded")\n';
-        break;
-      default:
-        break;
+    if (this.mimeType === 'application/json') {
+      code += `\treq.Header.Set("Content-Type", "application/json")\n`;
+    } else if (this.mimeType === 'multipart/form-data') {
+      code += `\treq.Header.Set("Content-Type", "multipart/form-data")\n`;
+    } else {
+      code += `\treq.Header.Set("Content-Type", "application/x-www-form-urlencoded")\n`;
     }
 
-    return mimeTypeHeader;
+    return code;
   }
 
   generateHeaders() {
-    let headers = '';
+    let code = '';
 
     this.params
-      .filter((param) => param.in === 'headers')
-      .forEach((param) => {
-        headers += `req.Header.Set("${param.name}", "${param.value}")\n`;
+      .filter(param => param.in === 'headers')
+      .forEach(param => {
+        code += `\treq.Header.Set("${param.name}", "${param.value}")\n`;
       });
 
-    return headers;
+    return code;
   }
 
   generateQueryParams() {
-    let queryParams = '';
-    let firstParam = true;
+    let code = '';
 
-    this.params
-      .filter((param) => param.in === 'query')
-      .forEach((param) => {
-        if (firstParam) {
-          queryParams += '?';
-          firstParam = false;
-        } else {
-          queryParams += '&';
-        }
+    const queryParams = this.params.filter(param => param.in === 'query');
 
-        queryParams += `${param.name}=${encodeURIComponent(param.value)}`;
+    if (queryParams.length > 0) {
+      code += `\tquery := url.Query()\n`;
+
+      queryParams.forEach(param => {
+        code += `\tquery.Add("${param.name}", "${param.value}")\n`;
       });
 
-    return `url += "${queryParams}"\n`;
+      code += `\turl.RawQuery = query.Encode()\n\n`;
+    }
+
+    return code;
   }
 
   generateJsonPostData() {
-    let postData = '';
+    let code = '';
 
-    this.params
-      .filter((param) => param.in === 'postData')
-      .forEach((param) => {
-        postData += `"${param.name}": "${param.value}",\n`;
-      });
+    const postDataParams = this.params.filter(param => param.in === 'postData');
 
-    return `postData := strings.NewReader("{${postData}}")\n`;
+    if (postDataParams.length > 0) {
+      code += `\t// TODO: implement JSON post data\n`;
+    }
+
+    return code;
   }
 
   generateMultipartPostData() {
-    let postData = '';
+    let code = '';
 
-    this.params
-      .filter((param) => param.in === 'postData')
-      .forEach((param) => {
-        postData += `writer.WriteField("${param.name}", "${param.value}")\n`;
-      });
+    const postDataParams = this.params.filter(param => param.in === 'postData');
 
-    return `body := &bytes.Buffer{}
-	writer := multipart.NewWriter(body)\n${postData}err := writer.Close()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}\npostData := body\n`;
+    if (postDataParams.length > 0) {
+      code += `\t// TODO: implement multipart post data\n`;
+    }
+
+    return code;
   }
 
   generateOtherPostData() {
-    let postData = '';
+    let code = '';
 
-    this.params
-      .filter((param) => param.in === 'postData')
-      .forEach((param) => {
-        postData += `"${param.name}=${param.value}&"\n`;
-      });
+    const postDataParams = this.params.filter(param => param.in === 'postData');
 
-    return `postData := strings.NewReader("${postData}")\n`;
+    if (postDataParams.length > 0) {
+      code += `\t// TODO: implement other post data\n`;
+    }
+
+    return code;
   }
 
   generateCookie() {
-    let cookie = '';
+    let code = '';
 
-    this.params
-      .filter((param) => param.in === 'cookie')
-      .forEach((param) => {
-        cookie += `req.AddCookie(&http.Cookie{Name: "${param.name}", Value: "${param.value}"})\n`;
+    const cookieParams = this.params.filter(param => param.in === 'cookie');
+
+    if (cookieParams.length > 0) {
+      code += '\tcookies := []*http.Cookie{}\n';
+
+      cookieParams.forEach(param => {
+        code += `\tcookies = append(cookies, &http.Cookie{Name: "${param.name}", Value: "${param.value}"})\n`;
       });
 
-    return cookie;
-  }
-
-  generateCode() {
-    let url = this.url;
-
-    this.params
-      .filter((param) => param.in === 'path')
-      .forEach((param) => {
-        url = url.replace(`{${param.name}}`, param.value);
-      });
-
-    let fetchCode = this.generateHeaderFile(url);
-
-    if (this.hasCookieParams()) {
-      fetchCode += this.generateCookie();
+      code += '\tcookieJar, _ := cookiejar.New(nil)\n';
+      code += '\tcookieJar.SetCookies(url, cookies)\n';
+      code += '\tclient.Jar = cookieJar\n\n';
     }
 
-    if (this.hasMimeType()) {
-      fetchCode += this.generateMimeTypeHeader();
-    }
-
-    if (this.hasHeadersParams()) {
-      fetchCode += this.generateHeaders();
-    }
-
-    if (this.hasQueryParams()) {
-      fetchCode += this.generateQueryParams();
-    } else if (this.hasPostDataParams()) {
-      if (this.mimeType === 'application/json') {
-        fetchCode += this.generateJsonPostData();
-      } else if (this.mimeType === 'multipart/form-data') {
-        fetchCode += this.generateMultipartPostData();
-      } else {
-        fetchCode += this.generateOtherPostData();
-      }
-    }
-
-    fetchCode += this.generateFooterFile(url);
-
-    return fetchCode;
+    return code;
   }
 }
-
 export default GoGenerator;

@@ -1,89 +1,90 @@
 import CodeGenerator from "./_CodeGenerator";
 
-class PerlGenerator extends CodeGenerator {
+export class PerlGenerator extends CodeGenerator {
   generateHeaderFile(url) {
-    // Генерация заголовка Perl-скрипта
-    return "#!/usr/bin/perl\nuse strict;\n\n";
+    let code = '#!/usr/bin/perl\n';
+    code += 'use LWP::UserAgent;\n';
+    code += `my $url = "${this.baseUrl}${url}";\n`;
+    code += `my $method = "${this.method.toLowerCase()}";\n`;
+    code += 'my $ua = LWP::UserAgent->new();\n';
+    return code;
   }
 
   generateFooterFile(url) {
-    // Генерация завершающей части Perl-скрипта
-    return "\nprint $response->content;\n";
+    let code = '';
+    code += 'my $response = $ua->request($request);\n';
+    code += 'print $response->content();\n';
+    return code;
   }
 
   generateMimeTypeHeader() {
-    // Генерация заголовка Content-Type для Perl-скрипта
-    return "my $headers = HTTP::Headers->new(Content_Type => '" + this.mimeType + "');\n\n";
+    return '';
   }
 
   generateHeaders() {
-    // Генерация заголовков запроса для Perl-скрипта
-    let headers = this.params.filter(param => param.in === 'headers')
-      .map(param => "    '" + param.name + "' => '" + param.value + "',\n")
-      .join("");
-    return "my $headers = HTTP::Headers->new(\n" + headers + ");\n\n";
+    let code = '';
+    this.params
+      .filter(param => param.in === 'headers')
+      .forEach(param => {
+        code += `$request->header("${param.name}" => "${param.value}");\n`;
+      });
+    return code;
   }
 
   generateQueryParams() {
-    // Генерация параметров запроса для Perl-скрипта
-    let queryParams = this.params.filter(param => param.in === 'query')
-      .map(param => "'" + param.name + "' => '" + param.value + "',\n")
-      .join("");
-    return "my $query = {\n" + queryParams + "};\n\n";
+    let code = '';
+    this.params
+      .filter(param => param.in === 'query')
+      .forEach(param => {
+        code += `$url .= '?' if ($url !~ /\\?/);\n`;
+        code += `$url .= '${param.name}=${param.value}&';\n`;
+      });
+    return code;
   }
 
   generateJsonPostData() {
-    // Генерация JSON-данных для POST-запроса в Perl-скрипте
-    let postData = this.params.filter(param => param.in === 'postData')[0];
-    return "my $data = " + postData.value + ";\n\n";
+    let code = '';
+    const postData = this.params.find(param => param.in === 'postData');
+    code += `$request->header('Content-Type' => 'application/json');\n`;
+    code += `my $json = '${postData.value}';\n`;
+    code += 'my $data = decode_json($json);\n';
+    code += '$request->content($json);\n';
+    return code;
   }
 
   generateMultipartPostData() {
-    // Генерация Multipart-данных для POST-запроса в Perl-скрипте
-    let boundary = "------------------------" + Math.random().toString(36).substring(2);
-    let postData = this.params.filter(param => param.in === 'postData')[0];
-    let body = "";
-
-    // Генерация тела запроса с Multipart-данными
-    if (postData.type === 'file') {
-      // Загрузка файлов
-      let filePath = postData.path;
-      let fileName = filePath.split('/').pop();
-      body += "--" + boundary + "\n";
-      body += "Content-Disposition: form-data; name=\"" + postData.name + "\"; filename=\"" + fileName + "\"\n";
-      body += "Content-Type: application/octet-stream\n\n";
-      body += " file content\n";
-    } else {
-      // Обычные поля
-      body += "--" + boundary + "\n";
-      body += "Content-Disposition: form-data; name=\"" + postData.name + "\"\n\n";
-      body += postData.value + "\n";
-    }
-
-    body += "--" + boundary + "--\n\n";
-
-    // Генерация заголовков запроса с Multipart-данными
-    let headers = this.params.filter(param => param.in === 'headers')
-      .map(param => "    '" + param.name + "' => '" + param.value + "',\n")
-      .join("");
-    headers += "    'Content-Type' => 'multipart/form-data; boundary=" + boundary + "'\n";
-    return "my $headers = HTTP::Headers->new(\n" + headers + ");\n\n" +
-      "my $data = \"" + body + "\";\n\n";
+    let code = '';
+    const postData = this.params.find(param => param.in === 'postData');
+    code += '$request->header(\'Content-Type\' => \'multipart/form-data\');\n';
+    code += `my $filename = '${postData.path}';\n`;
+    code += 'open(my $fh, '<', $filename) or die "Can\'t open $filename: $!";\n';
+    code += 'binmode($fh);\n';
+    code += 'my $data;\n';
+    code += 'while(<$fh>) {\n';
+    code += ' $data .= $_;\n';
+    code += '}\n';
+    code += 'close($fh);\n';
+    code += '$request->content($data);\n';
+    return code;
   }
 
   generateOtherPostData() {
-    // Генерация обычных POST-данных для Perl-скрипта
-    let postData = this.params.filter(param => param.in === 'postData')[0];
-    return "my $data = '" + postData.value + "';\n\n";
+    let code = '';
+    const postData = this.params.find(param => param.in === 'postData');
+    code += '$request->header(\'Content-Type\' => \'${this.mimeType}\');\n';
+    code += `my $data = '${postData.value}';\n`;
+    code += '$request->content($data);\n';
+    return code;
   }
 
   generateCookie() {
-    // Генерация Cookie-данных для Perl-скрипта
-    let cookieParams = this.params.filter(param => param.in === 'cookie')
-      .map(param => '"' + param.name + '=' + param.value + '"')
-      .join('; ');
-    return "my $cookies = HTTP::Cookies->new(cookie_jar => {});\n" +
-      "$cookies->set_cookie(0, '" + this.baseUrl + "', '" + cookieParams + "', '/', '', '', 0, 0, 86400, 0);\n\n";
+    let code = '';
+    this.params
+      .filter(param => param.in === 'cookie')
+      .forEach(param => {
+        code += `$request->header('Cookie', '${param.name}=${param.value}');\n`;
+      });
+    return code;
   }
 }
 

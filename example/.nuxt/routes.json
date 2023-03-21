@@ -1,0 +1,561 @@
+[
+  {
+    "name": "index",
+    "path": "/",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/example/pages/index.vue",
+    "chunkName": "pages/index",
+    "_name": "_1727f85d"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-info",
+    "path": "/docs/petstore_extended/en/get/info",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "get",
+      "path": "info"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-components",
+    "path": "/docs/petstore_extended/en/get/components",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "get",
+      "path": "components"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-parameters=pet",
+    "path": "/docs/petstore_extended/en/parameters/pet",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "parameters",
+      "path": "pet"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-post=pet",
+    "path": "/docs/petstore_extended/en/post/pet",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "post",
+      "path": "pet"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-put=pet",
+    "path": "/docs/petstore_extended/en/put/pet",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "put",
+      "path": "pet"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-get=pet__petId_",
+    "path": "/docs/petstore_extended/en/get/pet__petId_",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "get",
+      "path": "pet__petId_"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-post=pet__petId_",
+    "path": "/docs/petstore_extended/en/post/pet__petId_",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "post",
+      "path": "pet__petId_"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-delete=pet__petId_",
+    "path": "/docs/petstore_extended/en/delete/pet__petId_",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "delete",
+      "path": "pet__petId_"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-post=pet__petId__uploadImage",
+    "path": "/docs/petstore_extended/en/post/pet__petId__uploadImage",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "post",
+      "path": "pet__petId__uploadImage"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-get=pet_findByStatus",
+    "path": "/docs/petstore_extended/en/get/pet_findByStatus",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "get",
+      "path": "pet_findByStatus"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-get=pet_findByTags",
+    "path": "/docs/petstore_extended/en/get/pet_findByTags",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "get",
+      "path": "pet_findByTags"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-get=store_inventory",
+    "path": "/docs/petstore_extended/en/get/store_inventory",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "get",
+      "path": "store_inventory"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-post=store_order",
+    "path": "/docs/petstore_extended/en/post/store_order",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "post",
+      "path": "store_order"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-get=store_order__orderId_",
+    "path": "/docs/petstore_extended/en/get/store_order__orderId_",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "get",
+      "path": "store_order__orderId_"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-delete=store_order__orderId_",
+    "path": "/docs/petstore_extended/en/delete/store_order__orderId_",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "delete",
+      "path": "store_order__orderId_"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-post=user",
+    "path": "/docs/petstore_extended/en/post/user",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "post",
+      "path": "user"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-get=user__username_",
+    "path": "/docs/petstore_extended/en/get/user__username_",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "get",
+      "path": "user__username_"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-put=user__username_",
+    "path": "/docs/petstore_extended/en/put/user__username_",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "put",
+      "path": "user__username_"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-delete=user__username_",
+    "path": "/docs/petstore_extended/en/delete/user__username_",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "delete",
+      "path": "user__username_"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-post=user_createWithArray",
+    "path": "/docs/petstore_extended/en/post/user_createWithArray",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "post",
+      "path": "user_createWithArray"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-post=user_createWithList",
+    "path": "/docs/petstore_extended/en/post/user_createWithList",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "post",
+      "path": "user_createWithList"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-get=user_login",
+    "path": "/docs/petstore_extended/en/get/user_login",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "get",
+      "path": "user_login"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/en-get=user_logout",
+    "path": "/docs/petstore_extended/en/get/user_logout",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "en",
+      "type": "get",
+      "path": "user_logout"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-info",
+    "path": "/docs/petstore_extended/ru/get/info",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "get",
+      "path": "info"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-components",
+    "path": "/docs/petstore_extended/ru/get/components",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "get",
+      "path": "components"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-parameters=pet",
+    "path": "/docs/petstore_extended/ru/parameters/pet",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "parameters",
+      "path": "pet"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-post=pet",
+    "path": "/docs/petstore_extended/ru/post/pet",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "post",
+      "path": "pet"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-put=pet",
+    "path": "/docs/petstore_extended/ru/put/pet",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "put",
+      "path": "pet"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-get=pet__petId_",
+    "path": "/docs/petstore_extended/ru/get/pet__petId_",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "get",
+      "path": "pet__petId_"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-post=pet__petId_",
+    "path": "/docs/petstore_extended/ru/post/pet__petId_",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "post",
+      "path": "pet__petId_"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-delete=pet__petId_",
+    "path": "/docs/petstore_extended/ru/delete/pet__petId_",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "delete",
+      "path": "pet__petId_"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-post=pet__petId__uploadImage",
+    "path": "/docs/petstore_extended/ru/post/pet__petId__uploadImage",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "post",
+      "path": "pet__petId__uploadImage"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-get=pet_findByStatus",
+    "path": "/docs/petstore_extended/ru/get/pet_findByStatus",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "get",
+      "path": "pet_findByStatus"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-get=pet_findByTags",
+    "path": "/docs/petstore_extended/ru/get/pet_findByTags",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "get",
+      "path": "pet_findByTags"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-get=store_inventory",
+    "path": "/docs/petstore_extended/ru/get/store_inventory",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "get",
+      "path": "store_inventory"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-post=store_order",
+    "path": "/docs/petstore_extended/ru/post/store_order",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "post",
+      "path": "store_order"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-get=store_order__orderId_",
+    "path": "/docs/petstore_extended/ru/get/store_order__orderId_",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "get",
+      "path": "store_order__orderId_"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-delete=store_order__orderId_",
+    "path": "/docs/petstore_extended/ru/delete/store_order__orderId_",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "delete",
+      "path": "store_order__orderId_"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-post=user",
+    "path": "/docs/petstore_extended/ru/post/user",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "post",
+      "path": "user"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-get=user__username_",
+    "path": "/docs/petstore_extended/ru/get/user__username_",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "get",
+      "path": "user__username_"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-put=user__username_",
+    "path": "/docs/petstore_extended/ru/put/user__username_",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "put",
+      "path": "user__username_"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-delete=user__username_",
+    "path": "/docs/petstore_extended/ru/delete/user__username_",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "delete",
+      "path": "user__username_"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-post=user_createWithArray",
+    "path": "/docs/petstore_extended/ru/post/user_createWithArray",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "post",
+      "path": "user_createWithArray"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-post=user_createWithList",
+    "path": "/docs/petstore_extended/ru/post/user_createWithList",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "post",
+      "path": "user_createWithList"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-get=user_login",
+    "path": "/docs/petstore_extended/ru/get/user_login",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "get",
+      "path": "user_login"
+    },
+    "_name": "_690b4e19"
+  },
+  {
+    "name": "openapi-docs/petstore_extended/ru-get=user_logout",
+    "path": "/docs/petstore_extended/ru/get/user_logout",
+    "component": "/Users/s00d/packeges/nuxt-openapi-plugin/.cache/docs.petstore_extended.vue",
+    "meta": {
+      "file": "petstore_extended",
+      "locale": "ru",
+      "type": "get",
+      "path": "user_logout"
+    },
+    "_name": "_690b4e19"
+  }
+]

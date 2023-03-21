@@ -4,7 +4,7 @@ export class PythonRequestsGenerator extends CodeGenerator {
   generateHeaderFile(url) {
     let code = `import http.client\n`;
     code += `conn = http.client.HTTPSConnection('${this.baseUrl}')\n`;
-    code += `conn.request('${this.method}', '${url}'`;
+    code += `conn.request('${this.method}', '${url}', `;
     return code;
   }
 
@@ -17,7 +17,7 @@ export class PythonRequestsGenerator extends CodeGenerator {
 
   generateMimeTypeHeader() {
     let code = `\nheaders = {\n`;
-    code += `'Content-type': '${this.mimeType}'\n`;
+    code += `   'Content-type': '${this.mimeType}'\n`;
     code += `}\n`;
     code += `conn.request_headers.update(headers)\n`;
     return code;
@@ -28,7 +28,7 @@ export class PythonRequestsGenerator extends CodeGenerator {
     this.params
       .filter((param) => param.in === 'headers')
       .forEach((param) => {
-        code += `'${param.name}': '${param.value}',\n`;
+        code += `   '${param.name}': '${param.value}',\n`;
       });
     code += `}\n`;
     code += `conn.request_headers.update(headers)\n`;
