@@ -1,6 +1,6 @@
 {
   "name": "nuxt-openapi-docs-module",
-  "version": "1.3.4",
+  "version": "1.4.1",
   "description": "A plugin for Nuxt.js to generate pages from OpenAPI specifications",
   "main": "index.js",
   "license": "MIT",
@@ -9,7 +9,6 @@
     "example": "cd example && npm run generate && cd .. && rm -rf docs && mv example/dist docs && rm -rf example/dist && git add docs"
   },
   "dependencies": {
-    "httpsnippet": "^2.0.0",
     "isomorphic-dompurify": "^1.2.0",
     "marked": "^4.2.12",
     "prismjs": "^1.29.0",

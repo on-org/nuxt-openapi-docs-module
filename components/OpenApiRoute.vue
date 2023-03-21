@@ -21,11 +21,7 @@
         :simples="simples"
         :method="method"
         :mime-type="mimeType"
-        :cookies="cookies"
-        :headers="headers"
-        :query="query"
-        :path="path"
-        :postData="postData"
+        :params="params"
       ></CodeSimples>
     </client-only>
 
@@ -95,11 +91,7 @@ export default {
     return {
       lang: 'javascript',
       mimeType: 'application/x-www-form-urlencoded',
-      cookies: [],
-      headers: [],
-      query: [],
-      path: [],
-      postData: [],
+      params: [],
     }
   },
   methods: {
@@ -115,7 +107,6 @@ export default {
           if (params.schema) {
             const properties = params.schema.properties;
             for (const propertyName in properties) {
-              console.log(propertyName, properties[propertyName])
               const property = properties[propertyName] || {};
 
               let def = '';
@@ -128,7 +119,8 @@ export default {
                 def = this.convertStringFormatToMd(property.type);
               }
 
-              this.postData.push({
+              this.params.push({
+                in: 'postData',
                 name: propertyName,
                 value: def.toString()
               })
@@ -156,18 +148,24 @@ export default {
           def = param.default ?? '';
         }
 
-
-
         if (def === '' && param.schema && param.schema.type) {
           def = this.convertStringFormatToMd(param.schema.type);
         }
 
-        if(this[p_in] && Array.isArray(this[p_in])) {
-          this[p_in].push({
-            name: p_name,
-            value: def.toString()
-          })
-        }
+        this.params.push({
+          in: p_in,
+          name: p_name,
+          value: def.toString()
+        })
+      }
+
+      const append = this.simples;
+      for (let i in append) {
+        this.params.push({
+          in: append[i].in,
+          name: append[i].name,
+          value: append[i].value
+        })
       }
     },
     convertStringFormatToMd(format) {

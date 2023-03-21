@@ -41,9 +41,9 @@ import 'prismjs/plugins/line-numbers/prism-line-numbers'
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
 
 import {copyToClipboard} from '../helpers';
-import HTTPSnippet from 'httpsnippet';
 
 import CustomDropdownWithSubMenu from '../lib/CustomDropdownWithSubMenu.vue';
+import {CodeGenerator} from "./CodeGenerator";
 
 
 export default {
@@ -70,27 +70,7 @@ export default {
       required: false,
       default: 'GET'
     },
-    cookies: {
-      type: Array,
-      required: false,
-      default: () => ([]),
-    },
-    headers: {
-      type: Array,
-      required: false,
-      default: () => ([]),
-    },
-    query: {
-      type: Array,
-      required: false,
-      default: () => ([]),
-    },
-    path: {
-      type: Array,
-      required: false,
-      default: () => ([]),
-    },
-    postData: {
+    params: {
       type: Array,
       required: false,
       default: () => ([]),
@@ -231,45 +211,22 @@ export default {
       if (!grammar) {
         return this.genCode
       }
-      const highlightedCode = Prism.highlight(this.genCode, grammar, this.snippet);
-      return highlightedCode
+      return Prism.highlight(this.genCode, grammar, this.snippet)
     },
 
     genCode() {
       const method = this.method.toUpperCase();
-      let baseUrl = this.baseUrl || `${location.protocol}//${location.host}/`;
-      if (!baseUrl.endsWith('/')) {
-        baseUrl += '/';
-      }
-      const fxurl = this.url.startsWith('/') ? this.url.substring(1) : this.url;
-      let url = baseUrl + fxurl;
 
-      for (const [name, value] of Object.entries(this.path)) {
-        url = url.replaceAll(`{${value.name}}`, value.value);
-      }
+      const generator = new CodeGenerator();
+      generator.baseUrl(this.baseUrl);
+      generator.url(this.url);
+      generator.method(method);
+      generator.params(JSON.parse(JSON.stringify(this.params)));
+      generator.mimeType(this.mimeType);
+      generator.lang(this.snippet);
+      generator.library(this.snippetLibrary);
 
-      const param = {
-        method,
-        url,
-        headers: JSON.parse(JSON.stringify(this.headers)),
-        queryString: JSON.parse(JSON.stringify(this.query)),
-        cookies: JSON.parse(JSON.stringify(this.cookies)),
-      };
-
-      if (method === 'POST' && this.postData.length > 0) {
-        param.postData = { mimeType: this.mimeType, params: JSON.parse(JSON.stringify(this.postData)) };
-      }
-
-      const append = this.simples;
-      for (let i in append) {
-        param[append[i].in].push({
-          name: append[i].name, value: append[i].value
-        })
-      }
-
-
-      const snippet = new HTTPSnippet(param);
-      return snippet.convert(this.snippet, this.snippetLibrary) || '';
+      return generator.convert();
     }
   },
 }
@@ -393,7 +350,7 @@ pre[class*="language-"] {
   cursor: pointer;
 }
 .code-panel {
-  min-height: 300px;
+  min-height: 100px;
   outline: 2px solid rgba(0, 0, 0, 0);
   outline-offset: 2px;
   overflow: hidden;
