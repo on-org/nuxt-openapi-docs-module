@@ -40,7 +40,7 @@ import OpenApiParameters from './blocks/OpenApiParameters.vue';
 import OpenApiResponses from './blocks/OpenApiResponses.vue';
 import OpenApiExamples from './blocks/OpenApiExamples.vue';
 
-import { tr} from "./helpers";
+import {getSchemaValsFromPath, tr} from "./helpers";
 
 export default {
   name: 'OpenApiRoute',
@@ -99,8 +99,19 @@ export default {
     genParamsToSimple() {
       if(this.route.requestBody && Object.keys(this.route.requestBody).length) {
         const pos = Object.keys(this.route.requestBody)[0]
-        const req = this.route.requestBody[pos]
-        if(Object.keys(req).length) {
+        let req = null;
+        if(pos === '$ref') {
+          const link = getSchemaValsFromPath(this.route.requestBody.$ref)
+          if(this.components[link.path] && this.components[link.path][link.name]) {
+            req = this.components[link.path][link.name].content;
+          }
+        } else {
+          req = this.route.requestBody[pos]
+        }
+        console.log(req);
+
+        if(req && Object.keys(req).length) {
+          console.log(111, req)
           this.mimeType = Object.keys(req)[0]
           const params = req[this.mimeType];
 
