@@ -2,23 +2,31 @@
 <template>
   <div class="col regular-font request-panel code-simple">
 
-    <CustomDropdownWithSubMenu :items="configs" @select="onLangClick"></CustomDropdownWithSubMenu>
+    <CustomDropdownWithSubMenu :items="config" @select="onLangClick"></CustomDropdownWithSubMenu>
 
-    <CodeView :lang="snippet" :code="code"></CodeView>
+    <div class="code-panel">
+      <div class="code-panel-body relative">
+        <button class="toolbar-btn absolute top-2 right-2" @click.stop.prevent='copyToClipboard'>Copy</button>
+        <pre class="language line-numbers" :class="`language-${snippetIndex}`"><code class="language" v-html="html"></code></pre>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import CodeView from './CodeView.vue'
+import RequestTemplater from "request-templater/dist/request-templater.es";
 import CustomDropdownWithSubMenu from '../lib/CustomDropdownWithSubMenu.vue';
-import {CodeGenerator} from "./CodeGenerator";
+import {copyToClipboard} from '../helpers';
+
+const requestTemplater = new RequestTemplater();
+
+const langs = requestTemplater.config();
 
 
 export default {
   name: 'code-simples',
   components: {
-    CustomDropdownWithSubMenu,
-    CodeView
+    CustomDropdownWithSubMenu
   },
   props: {
     simples: {
@@ -48,136 +56,15 @@ export default {
       type: String,
       required: false,
       default: 'application/x-www-form-urlencoded'
-    },
-    configs: {
-      type: Array,
-      required: false,
-      default: function () {
-        return [
-          {
-            snippet: 'shell',
-            libraries: {
-              cURL: 'curl',
-              HTTPie: 'httpie',
-              Wget: 'wget',
-            },
-          },
-          {
-            snippet: 'javascript',
-            libraries: {
-              XMLHttpRequest: 'xmlhttprequest',
-              jQuery: 'jquery',
-              Fetch: 'fetch',
-              Axios: 'axios',
-            },
-          },
-          {
-            snippet: 'python',
-            libraries: {
-              'Python 3': 'python',
-              'Requests': 'requests',
-            },
-          },
-          {
-            snippet: 'go',
-          },
-          {
-            snippet: 'c',
-          },
-          {
-            snippet: 'ocaml',
-          },
-          {
-            snippet: 'csharp',
-            libraries: {
-              HttpClient: 'httpclient',
-              RestSharp: 'restsharp',
-            },
-          },
-          {
-            snippet: 'java',
-            libraries: {
-              AsyncHttp: 'asynchttp',
-              NetHttp: 'nethttp',
-              OkHttp: 'okhttp',
-              Unirest: 'unirest',
-            },
-          },
-          {
-            snippet: 'http',
-          },
-          {
-            snippet: 'clojure',
-          },
-          {
-            snippet: 'kotlin',
-          },
-          {
-            snippet: 'php',
-            libraries: {
-              cURL: 'curl',
-              guzzle: 'guzzle',
-              http1: 'http 1.1',
-              http2: 'http 2',
-            },
-          },
-          {
-            snippet: 'powershell',
-            libraries: {
-              WebRequest: 'webrequest',
-              RestMethod: 'restmethod',
-            },
-          },
-          {
-            snippet: 'r',
-          },
-          {
-            snippet: 'ruby',
-          },
-          {
-            snippet: 'rust',
-          },
-          {
-            snippet: 'swift',
-          },
-          {
-            snippet: 'objectivec',
-          },
-          {
-            snippet: 'cpp',
-            libraries: {
-              iostream: 'iostream',
-              arduino: 'arduino',
-            }
-          },
-          {
-            snippet: 'dart',
-          },
-          {
-            snippet: 'scala',
-          },
-          {
-            snippet: 'lua',
-          },
-          {
-            snippet: 'perl',
-          },
-          {
-            snippet: 'swift',
-          },
-          {
-            snippet: 'brainfuck',
-          },
-        ];
-      }
     }
   },
 
   data() {
     return {
-      snippetIndex: 1,
-      snippetLibraryIndex: 'XMLHttpRequest',
+      snippetIndex: 'javascript',
+      snippetLibraryIndex: 'xmlhttprequest',
       code: '',
+      html: '',
       showPopup: false,
       onPopupIndex: null,
       vals: [],
@@ -187,6 +74,9 @@ export default {
   watch: {},
 
   methods: {
+    copyToClipboard(e) {
+      copyToClipboard(this.code, e)
+    },
     onLangClick(snippet, library = null) {
       this.snippetIndex = snippet;
       this.snippetLibraryIndex = library;
@@ -195,30 +85,22 @@ export default {
     genCode() {
       const method = this.method.toUpperCase();
 
-      const generator = new CodeGenerator();
-      generator.baseUrl(this.baseUrl);
-      generator.url(this.url);
-      generator.method(method);
-      generator.params(JSON.parse(JSON.stringify(this.params)));
-      generator.mimeType(this.mimeType);
-      generator.lang(this.snippet);
-      generator.library(this.snippetLibrary);
+      requestTemplater.baseUrl(this.baseUrl);
+      requestTemplater.url(this.url);
+      requestTemplater.method(method);
+      requestTemplater.params(JSON.parse(JSON.stringify(this.params)));
+      requestTemplater.mimeType(this.mimeType);
+      requestTemplater.lang(this.snippetIndex);
+      requestTemplater.library(this.snippetLibraryIndex);
 
-      this.code = generator.convert();
+      this.code = requestTemplater.generate();
+      this.html = requestTemplater.generateHighlight();
     }
   },
 
   computed: {
-    snippet() {
-      if(this.snippetIndex === null || !this.configs[this.snippetIndex]) return null
-      return this.configs[this.snippetIndex].snippet
-    },
-    snippetLibrary() {
-      if(this.snippetIndex === null || !this.configs[this.snippetIndex]) return null
-      if(this.snippetLibraryIndex === null)  return null;
-      if(!this.configs[this.snippetIndex].libraries) return null;
-
-      return this.configs[this.snippetIndex].libraries[this.snippetLibraryIndex]
+    config() {
+      return langs;
     },
   },
   mounted() {
@@ -228,6 +110,26 @@ export default {
 </script>
 
 <style>
+@import 'highlight.js/styles/tokyo-night-dark.css';
+
+:not(pre) > code[class*="language-"], pre[class*="language-"] {
+  background: #001529;
+  color: #d3d3d3;
+}
+
+.toolbar-btn {
+  cursor: pointer;
+  padding: 4px;
+  margin: 0px 2px;
+  font-size: 12px;
+  min-width: 50px;
+  color: #fff;
+  border: none;
+  background-color: #00a2fb;
+  top: 10px;
+  right: 10px;
+  z-index: 99;
+}
 
 
 

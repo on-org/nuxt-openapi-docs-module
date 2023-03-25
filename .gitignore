@@ -28,3 +28,4 @@ Homestead.json
 
 .cache/*.vue
 /templates/.docs.*
+/example/.nuxt

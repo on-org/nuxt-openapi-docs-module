@@ -14,6 +14,9 @@
         <a class="text-blue-500 hover:underline" :href="info.externalDocs.url">{{ tr(info.externalDocs, 'description', currentLocale) }}</a>
       </li>
     </ul>
+    <div v-if="info.version">
+      <h3 class="text-lg font-bold">version: {{ info.version }}</h3>
+    </div>
   </div>
 </template>
 <script>
@@ -38,15 +41,3 @@ export default {
   }
 };
 </script>
-<style>
-.description > pre {
-  background: #001529;
-  color: #9b9b9b;
-  padding: 12px;
-  font-size: 12px;
-}
-
-.description > h1, .description > h2 {
-  font-weight: 700;
-}
-</style>

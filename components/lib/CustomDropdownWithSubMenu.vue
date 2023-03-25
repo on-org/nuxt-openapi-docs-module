@@ -35,13 +35,13 @@
         <li
           v-for="(item, index) in items"
           :key="index"
-          @click="handleItemClick(item, index)"
+          @click="handleItemClick(index)"
           role="menuitem"
           class="border block px-4 py-2 m-0 text-sm text-gray-700 hover:bg-white hover:text-gray-800 dark:bg-black dark:hover:bg-gray-800 dark:text-gray-300/75"
         >
-          <template v-if="item.libraries">
+          <template v-if="item">
             <div class="flex justify-between cursor-pointer">
-              <span class="flex flex-grow">{{ item.snippet }}</span>
+              <span class="flex flex-grow">{{ index }}</span>
                 <span class="flex flex-grow" style="justify-content: end;">
                 <svg class="h-4 w-4 ml-2 self-center" style="display: initial;" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -49,11 +49,11 @@
               </span>
             </div>
 
-            <ul class="sub-menu" v-if="selectedSnippet === index">
+            <ul class="sub-menu" v-if="preSelectedSnippet === index">
               <li
-                v-for="(library, libraryKey) in item.libraries"
-                :key="libraryKey"
-                @click="handleItemClick(item, index, libraryKey)"
+                v-for="(library) in item"
+                :key="library"
+                @click="handleItemClick(index, library)"
                 class="bg-gray-100 hover:bg-gray-200 dark:bg-black dark:hover:bg-gray-800 dark:text-gray-300/75 block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
               >
                 {{ library }}
@@ -73,37 +73,27 @@
 export default {
   props: {
     items: {
-      type: Array,
+      type: Object,
       required: true,
     },
   },
   data() {
     return {
       isOpen: false,
-      selectedSnippet: 1,
-      selectedLibrary: 'XMLHttpRequest',
+      preSelectedSnippet: 'javascript',
+      selectedSnippet: 'javascript',
+      selectedLibrary: 'xmlhttprequest',
     };
   },
   computed: {
     selectedText() {
-      if(!this.selectedSnippet || !this.items[this.selectedSnippet]) {
-        return null;
-      } else {
-        if(!this.items[this.selectedSnippet].libraries) {
-          return this.items[this.selectedSnippet].snippet
-        } else if(!this.selectedLibrary) {
-          return null;
-        } else {
-          return this.items[this.selectedSnippet].snippet + ' / ' + this.items[this.selectedSnippet].libraries[this.selectedLibrary];
-        }
-      }
+      return this.selectedSnippet + ' / ' + this.selectedLibrary;
     }
   },
   methods: {
-    handleItemClick(item, snippet, library = null) {
-      if (item.libraries && !library) {
-        this.selectedSnippet = snippet;
-        this.selectedLibrary = null;
+    handleItemClick(snippet, library = null) {
+      if (!library) {
+        this.preSelectedSnippet = snippet;
       } else {
         this.selectedSnippet = snippet;
         this.selectedLibrary = library;
