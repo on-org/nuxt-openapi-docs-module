@@ -5,15 +5,7 @@ import * as fs from "fs";
 import {marked} from "marked";
 
 import {
-  addComponent,
-  addPlugin,
-  addPluginTemplate,
-  addComponentsDir,
-  addPrerenderRoutes,
   addTemplate,
-  addLayout,
-  createResolver,
-  extendRouteRules,
   defineNuxtModule,
   extendPages
 } from '@nuxt/kit'

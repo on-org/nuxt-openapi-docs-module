@@ -8,12 +8,12 @@ export default defineNuxtConfig({
         folder: './docs/openapi',
         name: 'Api Docs',
         locales: {en: 'English', ru: 'Русский'},
-        files: function(ctx) {
+        files: function(ctx: any) {
           return {
             'petstore_extended': 'Petstore Extended Api',
           }
         },
-        params: function(ctx) {
+        params: function(ctx: any) {
           return [{ in: 'queryString', name: 'apikey', value: '1111'}]
         }
       }

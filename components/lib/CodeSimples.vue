@@ -1,16 +1,27 @@
 <template>
   <div class="col regular-font request-panel code-simple">
 
-    <CustomDropdownWithSubMenu :items="configs" @select="onLangClick"></CustomDropdownWithSubMenu>
+    <CustomDropdownWithSubMenu :items="config" @select="onLangClick"></CustomDropdownWithSubMenu>
 
-    <CodeView :lang="snippet" :code="code"></CodeView>
+    <div class="code-panel">
+      <div class="code-panel-body relative">
+        <button class="toolbar-btn absolute top-2 right-2" @click.stop.prevent='copy'>Copy</button>
+        <pre class="language line-numbers" :class="`language-${snippetIndex}`"><code class="language"
+                                                                                     v-html="html"></code></pre>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
+import RequestTemplater from "request-templater/dist/request-templater.es";
 import CustomDropdownWithSubMenu from '../lib/CustomDropdownWithSubMenu.vue';
-import {CodeGenerator} from "./CodeGenerator";
-import CodeView from './CodeView.vue'
+import {copyToClipboard} from '../helpers';
+
+const requestTemplater = new RequestTemplater();
+
+// const config = {};
+const config = requestTemplater.config();
 
 const props = defineProps({
   simples: {
@@ -44,123 +55,11 @@ const props = defineProps({
 })
 
 
-let snippetIndex = ref(1);
-let snippetLibraryIndex = ref('XMLHttpRequest');
+let snippetIndex = ref('javascript');
+let snippetLibraryIndex = ref('xmlhttprequest');
 let code = ref('');
+let html = ref('');
 let vals = [];
-const configs = [
-  {
-    snippet: 'shell',
-    libraries: {
-      cURL: 'curl',
-      HTTPie: 'httpie',
-      Wget: 'wget',
-    },
-  },
-  {
-    snippet: 'javascript',
-    libraries: {
-      XMLHttpRequest: 'xmlhttprequest',
-      jQuery: 'jquery',
-      Fetch: 'fetch',
-      Axios: 'axios',
-    },
-  },
-  {
-    snippet: 'python',
-    libraries: {
-      'Python 3': 'python',
-      'Requests': 'requests',
-    },
-  },
-  {
-    snippet: 'go',
-  },
-  {
-    snippet: 'c',
-  },
-  {
-    snippet: 'ocaml',
-  },
-  {
-    snippet: 'csharp',
-    libraries: {
-      HttpClient: 'httpclient',
-      RestSharp: 'restsharp',
-    },
-  },
-  {
-    snippet: 'java',
-    libraries: {
-      AsyncHttp: 'asynchttp',
-      NetHttp: 'nethttp',
-      OkHttp: 'okhttp',
-      Unirest: 'unirest',
-    },
-  },
-  {
-    snippet: 'http',
-  },
-  {
-    snippet: 'clojure',
-  },
-  {
-    snippet: 'kotlin',
-  },
-  {
-    snippet: 'php',
-    libraries: {
-      cURL: 'curl',
-      guzzle: 'guzzle',
-      http1: 'http 1.1',
-      http2: 'http 2',
-    },
-  },
-  {
-    snippet: 'powershell',
-    libraries: {
-      WebRequest: 'webrequest',
-      RestMethod: 'restmethod',
-    },
-  },
-  {
-    snippet: 'r',
-  },
-  {
-    snippet: 'ruby',
-  },
-  {
-    snippet: 'rust',
-  },
-  {
-    snippet: 'swift',
-  },
-  {
-    snippet: 'objectivec',
-  },
-  {
-    snippet: 'cpp',
-    libraries: {
-      iostream: 'iostream',
-      arduino: 'arduino',
-    }
-  },
-  {
-    snippet: 'dart',
-  },
-  {
-    snippet: 'scala',
-  },
-  {
-    snippet: 'lua',
-  },
-  {
-    snippet: 'perl',
-  },
-  {
-    snippet: 'brainfuck',
-  },
-];
 
 function onLangClick(snippet, library = null) {
   snippetIndex.value = snippet;
@@ -168,41 +67,111 @@ function onLangClick(snippet, library = null) {
   genCode()
 }
 
-const snippet = computed(() => {
-  if(snippetIndex.value === null || !configs[snippetIndex.value]) return null
-
-  return configs[snippetIndex.value].snippet
-})
-
-const snippetLibrary = computed(() => {
-  if(snippetIndex.value === null || !configs[snippetIndex.value]) return null
-  if(snippetLibraryIndex.value === null)  return null;
-  if(!configs[snippetIndex.value].libraries) return null;
-
-  return configs[snippetIndex.value].libraries[snippetLibraryIndex.value]
-})
+function copy(e) {
+  copyToClipboard(this.code, e)
+}
 
 function genCode() {
   const method = props.method.toUpperCase();
   let baseUrl = props.baseUrl || `${location.protocol}//${location.host}/`;
 
-  const generator = new CodeGenerator();
-  generator.baseUrl(baseUrl);
-  generator.url(props.url);
-  generator.method(method);
-  generator.params(JSON.parse(JSON.stringify(props.params)));
-  generator.mimeType(props.mimeType);
-  generator.lang(snippet.value);
-  generator.library(snippetLibrary.value);
+  requestTemplater.baseUrl(baseUrl);
+  requestTemplater.url(props.url);
+  requestTemplater.method(method);
+  requestTemplater.params(JSON.parse(JSON.stringify(props.params)));
+  requestTemplater.mimeType(props.mimeType);
+  requestTemplater.lang(snippetIndex.value);
+  requestTemplater.library(snippetLibraryIndex.value);
 
-  code.value = generator.convert();
+  code.value = requestTemplater.generate();
+  html.value = requestTemplater.generateHighlight();
 }
 
 genCode();
 </script>
 
 <style>
+pre code.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em
+}
 
+code.hljs {
+  padding: 3px 5px
+}
+
+.hljs-comment, .hljs-meta {
+  color: #565f89
+}
+
+.hljs-deletion, .hljs-doctag, .hljs-regexp, .hljs-selector-attr, .hljs-selector-class, .hljs-selector-id, .hljs-selector-pseudo, .hljs-tag, .hljs-template-tag, .hljs-variable.language_ {
+  color: #f7768e
+}
+
+.hljs-link, .hljs-literal, .hljs-number, .hljs-params, .hljs-template-variable, .hljs-type, .hljs-variable {
+  color: #ff9e64
+}
+
+.hljs-attribute, .hljs-built_in {
+  color: #e0af68
+}
+
+.hljs-keyword, .hljs-property, .hljs-subst, .hljs-title, .hljs-title.class_, .hljs-title.class_.inherited__, .hljs-title.function_ {
+  color: #7dcfff
+}
+
+.hljs-selector-tag {
+  color: #73daca
+}
+
+.hljs-addition, .hljs-bullet, .hljs-quote, .hljs-string, .hljs-symbol {
+  color: #9ece6a
+}
+
+.hljs-code, .hljs-formula, .hljs-section {
+  color: #7aa2f7
+}
+
+.hljs-attr, .hljs-char.escape_, .hljs-keyword, .hljs-name, .hljs-operator {
+  color: #bb9af7
+}
+
+.hljs-punctuation {
+  color: #c0caf5
+}
+
+.hljs {
+  background: #1a1b26;
+  color: #9aa5ce
+}
+
+.hljs-emphasis {
+  font-style: italic
+}
+
+.hljs-strong {
+  font-weight: 700
+}
+
+:not(pre) > code[class*="language-"], pre[class*="language-"] {
+  background: #001529;
+  color: #d3d3d3;
+}
+
+.toolbar-btn {
+  cursor: pointer;
+  padding: 4px;
+  margin: 0px 2px;
+  font-size: 12px;
+  min-width: 50px;
+  color: #fff;
+  border: none;
+  background-color: #00a2fb;
+  top: 10px;
+  right: 10px;
+  z-index: 99;
+}
 
 
 pre {

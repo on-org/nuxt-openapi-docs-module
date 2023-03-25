@@ -155,7 +155,6 @@ td {
 
 th {
   font-weight: bold;
-//background-color: #f2f2f2;
 }
 
 tbody tr:nth-of-type(even) {

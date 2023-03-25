@@ -35,13 +35,13 @@
         <li
           v-for="(item, index) in items"
           :key="index"
-          @click.stop.prevent="handleItemClick(item, index)"
+          @click="handleItemClick(index)"
           role="menuitem"
           class="border block px-4 py-2 m-0 text-sm text-gray-700 hover:bg-white hover:text-gray-800 dark:bg-black dark:hover:bg-gray-800 dark:text-gray-300/75"
         >
-          <template v-if="item.libraries">
+          <template v-if="item">
             <div class="flex justify-between cursor-pointer">
-              <span class="flex flex-grow">{{ item.snippet }}</span>
+              <span class="flex flex-grow">{{ index }}</span>
                 <span class="flex flex-grow" style="justify-content: end;">
                 <svg class="h-4 w-4 ml-2 self-center" style="display: initial;" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -49,11 +49,11 @@
               </span>
             </div>
 
-            <ul class="sub-menu" v-if="selectedSnippet === index">
+            <ul class="sub-menu" v-if="preSelectedSnippet === index">
               <li
-                v-for="(library, libraryKey) in item.libraries"
-                :key="libraryKey"
-                @click.stop.prevent="handleItemClick(item, index, libraryKey)"
+                v-for="(library) in item"
+                :key="library"
+                @click="handleItemClick(index, library)"
                 class="bg-gray-100 hover:bg-gray-200 dark:bg-black dark:hover:bg-gray-800 dark:text-gray-300/75 block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
               >
                 {{ library }}
@@ -74,32 +74,22 @@ const emit = defineEmits(['select'])
 
 const props = defineProps({
   items: {
-    type: Array,
+    type: Object,
     required: true
   },
 })
 let isOpen = ref(false);
-let selectedSnippet = ref(1);
-let selectedLibrary = ref('XMLHttpRequest');
+let preSelectedSnippet = ref('javascript');
+let selectedSnippet = ref('javascript');
+let selectedLibrary = ref('xmlhttprequest');
 
 const selectedText = computed(() => {
-  if(!selectedSnippet.value || !props.items[selectedSnippet.value]) {
-    return null;
-  } else {
-    if(!props.items[selectedSnippet.value].libraries) {
-      return props.items[selectedSnippet.value].snippet
-    } else if(!selectedLibrary.value) {
-      return null;
-    } else {
-      return props.items[selectedSnippet.value].snippet + ' / ' + props.items[selectedSnippet.value].libraries[selectedLibrary.value];
-    }
-  }
+  return selectedSnippet.value + ' / ' + selectedLibrary.value
 })
 
-function handleItemClick(item, snippet, library = null) {
-  if (item.libraries && !library) {
-    selectedSnippet.value = snippet;
-    selectedLibrary.value = null;
+function handleItemClick(snippet, library = null) {
+  if (!library) {
+    preSelectedSnippet.value = snippet;
   } else {
     selectedSnippet.value = snippet;
     selectedLibrary.value = library;
