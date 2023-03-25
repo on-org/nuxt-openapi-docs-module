@@ -45,7 +45,7 @@ import OpenApiExamples from './blocks/OpenApiExamples.vue';
 
 import CodeSimples from './lib/CodeSimples.vue';
 
-import {tr} from "./helpers";
+import {getSchemaValsFromPath, tr} from "./helpers";
 
 export default {
   components: {
@@ -90,16 +90,12 @@ export default {
       default: () => ({}),
     },
   },
+
   data() {
     return {
       lang: 'javascript',
       mimeType: 'application/x-www-form-urlencoded',
       params: [],
-      // cookies: [],
-      // headers: [],
-      // query: [],
-      // path: [],
-      // postData: [],
     }
   },
   methods: {
@@ -107,8 +103,18 @@ export default {
     genParamsToSimple() {
       if(this.route.requestBody && Object.keys(this.route.requestBody).length) {
         const pos = Object.keys(this.route.requestBody)[0]
-        const req = this.route.requestBody[pos]
-        if(Object.keys(req).length) {
+        let req = null;
+        if(pos === '$ref') {
+          const link = getSchemaValsFromPath(this.route.requestBody.$ref)
+          if(this.components[link.path] && this.components[link.path][link.name]) {
+            req = this.components[link.path][link.name].content;
+          }
+        } else {
+          req = this.route.requestBody[pos]
+        }
+
+        if(req && Object.keys(req).length) {
+          console.log(111, req)
           this.mimeType = Object.keys(req)[0]
           const params = req[this.mimeType];
 
@@ -204,12 +210,5 @@ export default {
   mounted() {
     this.genParamsToSimple();
   }
-  // setup(props, {refs}) {
-  //   const html = ref(props.markdown)
-  //
-  //   return {
-  //     html,
-  //   }
-  // },
-}
+};
 </script>
