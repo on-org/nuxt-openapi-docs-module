@@ -18,10 +18,11 @@
                    placeholder="Search...">
 
             <div class="mt-4" v-for="item in list">
-              <nuxt-link :to="item.url" @click="() => isSearchOpen = false">
+              <nuxt-link :to="item.url">
                 <div class="mt-2">
                   <div class="bg-gray-100 dark:bg-gray-900 rounded-md px-3 py-2">
-                    <h5 class="text-base font-medium text-gray-700" v-text="item.title"></h5>
+                    <h5 class="text-base font-medium text-gray-700" v-html="item.title"></h5>
+                    <p class="text-sm text-gray-400" style="font-size: 10px;" v-text="item.path"></p>
                     <p class="text-sm text-gray-500" v-html="item.description"></p>
                   </div>
                 </div>
@@ -101,6 +102,7 @@ export default {
         let result = '...' + description.substring(start, end) + '...';
         result = result.replace(query, "<b>" + query + "</b>");
         this.list.push({
+          path: 'info',
           title: summary,
           description: result,
           url: `/${this.path}/${this.file}/${this.currentLocale}/get/info`,
@@ -117,18 +119,40 @@ export default {
           let summary = this.tr(obj, 'summary', this.currentLocale).toLowerCase();
           let description = this.tr(obj, 'description', this.currentLocale).toLowerCase();
 
+          let apper = null;
 
-          let index = description.indexOf(query);
+          let index = summary.indexOf(query);
+          if (index !== -1) {
+            let result = description.substring(0, 100) + '...';
+            apper = {
+              path: obj.path,
+              title: summary.replace(query, "<b>" + query + "</b>"),
+              description: result + '...',
+              url: `/${this.path}/${this.file}/${this.currentLocale}/${method}/${path}`,
+            };
+          }
+
+          index = description.indexOf(query);
           if (index !== -1) {
             let start = Math.max(index - 50, 0);
             let end = Math.min(index + query.length + 50, description.length);
             let result = '...' + description.substring(start, end) + '...';
             result = result.replace(query, "<b>" + query + "</b>");
-            this.list.push({
-              title: summary,
-              description: result,
-              url: `/${this.path}/${this.file}/${this.currentLocale}/${method}/${path}`,
-            });
+            if(!apper) {
+              apper = {
+                path: obj.path,
+                title: summary,
+                description: result,
+                url: `/${this.path}/${this.file}/${this.currentLocale}/${method}/${path}`,
+              };
+            } else {
+              apper.description = result;
+            }
+
+          }
+
+          if(apper) {
+            this.list.push(apper);
           }
         }
 
