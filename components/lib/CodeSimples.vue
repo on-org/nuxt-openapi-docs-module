@@ -176,7 +176,7 @@ code.hljs {
 
 pre {
   font-family: monospace;
-  background-color: #f7f7f7;
+  border: 1px solid #f7f7f7;
   padding: 10px;
   border-radius: 5px;
   overflow-x: auto;

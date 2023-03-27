@@ -17,7 +17,7 @@
         </template>
       </CustomDropdown>
     </div>
-    <div class="locales">
+    <div class="yaml">
       <button
         @click="downloadYaml"
         type="button"
@@ -27,9 +27,13 @@
         Yaml
       </button>
     </div>
+    <div class="search">
+      <Search :doc="props.doc" :current-locale="props.currentLocale" :file="props.file" :path="props.path" />
+    </div>
   </div>
 </template>
 <script setup>
+import Search from './lib/Search.vue'
 import CustomDropdown from './lib/CustomDropdown.vue'
 import DarkModeToggle from './lib/DarkModeToggle.vue'
 
@@ -112,7 +116,7 @@ function downloadYaml() {
   align-items: center;
 }
 
-.files, .locales {
+.files, .locales, .yaml {
   padding-right: 10px;
 }
 .selected {

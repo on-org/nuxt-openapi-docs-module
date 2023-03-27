@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h2 v-if="parametersRef.length" class="text-lg font-bold mb-2">Parameters:</h2>
-    <table v-if="parametersRef.length" class="table-auto w-full">
+    <h2 v-if="props.parameters.length" class="text-lg font-bold mb-2">Parameters:</h2>
+    <table v-if="props.parameters.length" class="table-auto w-full">
       <thead>
       <tr>
         <th class="border px-4 py-2">Parameter Name</th>
@@ -15,7 +15,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(param, index) in parametersRef" :key="index" class="open-api-param">
+      <tr v-for="(param, index) in props.parameters" :key="index" class="open-api-param">
         <td class="border px-4 py-2 font-semibold">{{ tr(param, 'name', props.currentLocale) }}</td>
         <td class="border px-4 py-2" v-html="tr(param, 'description', props.currentLocale)"></td>
         <td class="border px-4 py-2">{{ param.in ? param.in : '-' }}</td>
@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-import {getSchemaValsFromPath, tr} from "../helpers";
+import {tr} from "../helpers";
 
 
 const props = defineProps({
@@ -47,25 +47,6 @@ const props = defineProps({
   },
 })
 
-const parametersRef = computed(() => {
-  if(!props.parameters) {
-    return []
-  }
-  let res = [];
-  for (let i in props.parameters) {
-    let param = props.parameters[i]
-    if (param.$ref) {
-      const link = getSchemaValsFromPath(param.$ref)
-      if(props.components[link.path] && props.components[link.path][link.name]) {
-        param = props.components[link.path][link.name];
-      }
-    }
-    param.path = i;
-
-    res.push(param);
-  }
-  return res;
-})
 </script>
 
 <style scoped>

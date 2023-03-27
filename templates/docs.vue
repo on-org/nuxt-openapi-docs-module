@@ -34,37 +34,23 @@
   </div>
 </template>
 
+
 <script setup>
-import MainHeader from '../components/lib/MainHeader.vue';
-import MainLeftMenu from '../components/lib/MainLeftMenu.vue';
-import MainContent from '../components/lib/MainContent.vue';
-import OpenApiHeader from '../components/OpenApiHeader.vue';
-import OpenApiMenu from '../components/OpenApiMenu.vue';
-import OpenApiInfo from '../components/OpenApiInfo.vue';
-import OpenApiComponents from '../components/OpenApiComponents.vue';
-import OpenApiRoute from '../components/OpenApiRoute.vue';
-import NotFound from '../components/NotFound.vue';
+const route = useRoute()
 
 const files_getter = <%= options.files %>;
 const simples_getter = <%= options.params %>;
 const options = <%= JSON.stringify(options) %>;
-
-const route = useRoute()
 
 const file = route.params.file ?? route.meta.file;
 const currentLocale = route.params.locale ?? route.meta.locale;
 const type = route.params.type ?? route.meta.type
 const path = route.params.path ?? route.meta.path;
 
-let isMenuOpen = true;
-let isDarkMode = false;
-let isDesktop = true;
-
 const doc = computed(() => options.doc)
 const locales = computed(() => options.locales)
 const name = computed(() => options.name)
 
-const isMobile = computed(() => process.client ? window.innerWidth >= 768 : false)
 
 const isInfo = computed(() => path === 'info')
 const files = computed(() => files_getter(useNuxtApp()))
@@ -82,36 +68,81 @@ const server = computed(() => {
   return doc.value.servers[0].url ?? null
 })
 
-if(process.client) {
-  isDarkMode = localStorage.getItem('isDarkMode') === 'true'
-  if(isDarkMode) document.querySelector('html').classList.add('dark')
-}
 
-function toggleMenu() {
-  isMenuOpen = !isMenuOpen;
-}
+</script>
 
-function toggleDarkMode() {
-  if(process.client) {
-    isDarkMode = !isDarkMode
-    // localStorage.setItem('isDarkMode', isDarkMode)
-    if(isDarkMode) document.querySelector('html').classList.add('dark')
-    else document.querySelector('html').classList.remove('dark');
-  }
-}
+<script>
+import MainHeader from '../components/lib/MainHeader.vue';
+import MainLeftMenu from '../components/lib/MainLeftMenu.vue';
+import MainContent from '../components/lib/MainContent.vue';
+import OpenApiHeader from '../components/OpenApiHeader.vue';
+import OpenApiMenu from '../components/OpenApiMenu.vue';
+import OpenApiInfo from '../components/OpenApiInfo.vue';
+import OpenApiComponents from '../components/OpenApiComponents.vue';
+import OpenApiRoute from '../components/OpenApiRoute.vue';
+import NotFound from '../components/NotFound.vue';
 
-function handleResize() {
-  isDesktop = window.innerWidth >= 768 // set breakpoint here
-  if (!isDesktop) {
-    isMenuOpen = false
-  }
-}
-
-if(process.client) {
-  isMenuOpen = window.innerWidth > 640;
-  window.addEventListener('resize', handleResize)
-  // isDarkMode = localStorage.getItem('isDarkMode') === 'true'
-  if(isDarkMode) document.querySelector('html').classList.add('dark')
+export default {
+  name: 'AppDocs',
+  components: {
+    MainHeader,
+    MainLeftMenu,
+    MainContent,
+    OpenApiHeader,
+    OpenApiInfo,
+    OpenApiComponents,
+    OpenApiRoute,
+    OpenApiMenu,
+    NotFound,
+  },
+  data() {
+    return {
+      isMenuOpen: true,
+      isMobile: false,
+      isDarkMode: false,
+    };
+  },
+  methods: {
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen;
+    },
+    toggleDarkMode() {
+      if(process.client) {
+        this.isDarkMode = !this.isDarkMode
+        localStorage.setItem('isDarkMode', this.isDarkMode)
+        if(this.isDarkMode) document.querySelector('html').classList.add('dark')
+        else document.querySelector('html').classList.remove('dark');
+      }
+    },
+    handleResize() {
+      this.isDesktop = window.innerWidth >= 768 // set breakpoint here
+      if (!this.isDesktop) {
+        this.isMenuOpen = false
+      }
+    },
+  },
+  computed: {
+    doc() {
+      return this.options.doc
+    },
+    name() {
+      return this.options.name
+    },
+  },
+  mounted() {
+    if(process.client) {
+      this.isMobile = window.innerWidth < 640;
+      this.isMenuOpen = window.innerWidth > 640;
+      window.addEventListener('resize', this.handleResize)
+      this.isDarkMode = localStorage.getItem('isDarkMode') === 'true'
+      if(this.isDarkMode) document.querySelector('html').classList.add('dark')
+    }
+  },
+  beforeDestroy() {
+    if(process.client) {
+      window.removeEventListener('resize', this.handleResize)
+    }
+  },
 }
 </script>
 

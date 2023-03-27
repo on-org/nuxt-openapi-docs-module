@@ -32,7 +32,13 @@ renderer.text = function (text: string) {
   return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 };
 
-function replaceMarkdown(obj: { [key: string]: any } | any): any {
+function getSchemaValsFromPath(ref: string) {
+  const [type, path, name] = ref.replace('#/', '').split('/');
+
+  return {type, path, name};
+}
+
+function replaceMarkdown(obj: { [key: string]: any } | any, components: any): any {
   if (typeof obj === 'string') {
     if (obj.match(/\[.*?\]\(.*?\)|^>/)) {
       return marked(obj, {renderer: renderer});
@@ -40,11 +46,18 @@ function replaceMarkdown(obj: { [key: string]: any } | any): any {
       return sanitizeText(obj);
     }
   } else if (Array.isArray(obj)) {
-    return obj.map(replaceMarkdown);
+    return obj.map((val) => replaceMarkdown(val, components));
   } else if (typeof obj === 'object' && obj !== null) {
     return Object.entries(obj).reduce((acc, [key, value]) => {
-      // @ts-ignore
-      acc[key] = replaceMarkdown(value);
+      if(key === '$ref' && typeof value === 'string') {
+        const link = getSchemaValsFromPath(value)
+        if(components[link.path] && components[link.path][link.name]) {
+          return components[link.path][link.name];
+        }
+      } else {
+        // @ts-ignore
+        acc[key] = replaceMarkdown(value, components);
+      }
       return acc;
     }, {});
   } else {
@@ -98,7 +111,7 @@ export default defineNuxtModule<OpenApiDocsOptions>({
       return {}
     },
   },
-  async setup(options, nuxt) {
+  setup(options, nuxt) {
     Object.keys(options.files(this)).forEach((fileName) => {
       const openApiSpec = parseYamlFile(options, fileName)
 
@@ -116,7 +129,8 @@ export default defineNuxtModule<OpenApiDocsOptions>({
         delete openApiSpec.paths[i];
       }
 
-      options.doc = replaceMarkdown(openApiSpec);
+      openApiSpec.components = replaceMarkdown(openApiSpec.components, openApiSpec.components)
+      options.doc = replaceMarkdown(openApiSpec, openApiSpec.components);
 
         // Добавляем шаблон для каждого файла
       addTemplate({

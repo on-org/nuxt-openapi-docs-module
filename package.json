@@ -1,6 +1,6 @@
 {
   "name": "nuxt-openapi-docs-module",
-  "version": "2.1.1",
+  "version": "2.2.1",
   "description": "A plugin for Nuxt.js to generate pages from OpenAPI specifications",
   "main": "index.ts",
   "license": "MIT",
@@ -9,18 +9,20 @@
     "example": "cd example && npm run generate && cd .. && rm -rf docs && mv example/dist docs && rm -rf example/dist && git add docs"
   },
   "dependencies": {
-    "@nuxt/content": "^2.5.2",
-    "flowbite": "^1.6.4",
     "highlight.js": "^11.7.0",
     "isomorphic-dompurify": "^1.2.0",
+    "js-yaml": "^4.1.0",
     "marked": "^4.2.12",
     "url": "^0.11.0",
     "vue": "^3.2.47",
     "yaml": "^2.2.1"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.5",
     "@types/marked": "^4.0.8",
-    "request-templater": "^1.1.1",
+    "@types/node": "^18.15.10",
+    "flowbite": "^1.6.4",
+    "request-templater": "^1.1.2",
     "tailwindcss": "^3.2.7"
   },
   "peerDependencies": {
