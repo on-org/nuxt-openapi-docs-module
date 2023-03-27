@@ -1,5 +1,20 @@
 <template>
   <div class="openapi-menu">
+    <div class="files">
+      <CustomDropdown :placeholder="files[file]" :options="files" :value="file" :route-function="changeDoc">
+        <template v-slot:default="{ option, index, isSelected }">
+          {{ option }}
+        </template>
+      </CustomDropdown>
+    </div>
+    <div class="locales mt-4">
+      <CustomDropdown :placeholder="locales[currentLocale]" :options="locales" :value="currentLocale" :route-function="changeLocale">
+        <template v-slot:default="{ option, index, isSelected }">
+          {{ option }}
+        </template>
+      </CustomDropdown>
+    </div>
+
     <h2 class="text-xl font-bold mb-2">API documentation</h2>
     <p class="mb-4">Select a route from the list below:</p>
     <ul class="menu list-none mb-4">
@@ -36,7 +51,11 @@
 </template>
 
 <script>
+import CustomDropdown from './lib/CustomDropdown.vue'
 export default {
+  components: {
+    CustomDropdown,
+  },
   props: {
     routes: {
       type: Object,
@@ -52,6 +71,14 @@ export default {
     },
     path: {
       type: String,
+      required: true,
+    },
+    files: {
+      type: Object,
+      required: true,
+    },
+    locales: {
+      type: Object,
       required: true,
     },
   },
@@ -89,7 +116,13 @@ export default {
     },
     getSubRoute(route) {
       return '/' + this.path + '/' + this.file + '/' + this.currentLocale + '/' + route.type + '/' + this.genUrl(route.path);
-    }
+    },
+    changeDoc(option) {
+      return '/' + this.path + '/' + option + '/' + this.currentLocale + '/get/info';
+    },
+    changeLocale(option) {
+      return '/' + this.path + '/' + this.file + '/' + option + '/get/info';
+    },
   },
   computed: {
     pathsByTags() {

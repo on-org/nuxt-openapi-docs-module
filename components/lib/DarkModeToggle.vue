@@ -1,6 +1,6 @@
 <template>
   <button class="mr-2" @click="() => $emit('change', !value)">
-    {{ value ? 'Light' : 'Dark' }} Mode
+    {{ value ? 'Light' : 'Dark' }}
   </button>
 </template>
 

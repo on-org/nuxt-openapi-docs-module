@@ -3,20 +3,6 @@
     <div class="files pr-4">
       <DarkModeToggle :value="isDarkMode" @change="() => $emit('toggleDarkMode')" />
     </div>
-    <div class="files pr-4">
-      <CustomDropdown :placeholder="files[file]" :options="files" :value="file" :route-function="changeDoc">
-        <template v-slot:default="{ option, index, isSelected }">
-          {{ option }}
-        </template>
-      </CustomDropdown>
-    </div>
-    <div class="locales">
-      <CustomDropdown :placeholder="locales[currentLocale]" :options="locales" :value="currentLocale" :route-function="changeLocale">
-        <template v-slot:default="{ option, index, isSelected }">
-          {{ option }}
-        </template>
-      </CustomDropdown>
-    </div>
     <div class="yaml">
       <button
         @click="downloadYaml"
@@ -34,11 +20,9 @@
 </template>
 <script>
 import Search from './lib/Search.vue'
-import CustomDropdown from './lib/CustomDropdown.vue'
 import DarkModeToggle from './lib/DarkModeToggle.vue'
 export default {
   components: {
-    CustomDropdown,
     DarkModeToggle,
     Search
   },
@@ -76,12 +60,6 @@ export default {
 
   },
   methods: {
-    changeDoc(option) {
-      return '/' + this.path + '/' + option + '/' + this.currentLocale + '/get/info';
-    },
-    changeLocale(option) {
-      return '/' + this.path + '/' + this.file + '/' + option + '/get/info';
-    },
     downloadYaml() {
       const json = JSON.stringify(this.doc);
       const blob = new Blob([json], { type: 'application/json' });
