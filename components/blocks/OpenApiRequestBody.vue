@@ -1,8 +1,8 @@
 <template>
   <div>
     <h3 class="text-lg font-medium">Request Body:</h3>
-    <pre class="mt-2 p-2 rounded-md">{{ tr(requestBodyRef, 'description', currentLocale) }}</pre>
-    <div v-for="(val, key) in requestBodyRef.content">
+    <pre class="mt-2 p-2 rounded-md">{{ tr(requestBody, 'description', currentLocale) }}</pre>
+    <div v-for="(val, key) in requestBody.content">
       <pre class="mt-2 p-2 rounded-md" v-text="key"></pre>
       <OpenApiSchema :schema="val.schema" :current-locale="currentLocale" :components="components" class="mt-4" />
     </div>
@@ -60,16 +60,7 @@ export default {
     tr
   },
   computed: {
-    requestBodyRef() {
-      if (this.requestBody.$ref) {
-        const link = getSchemaValsFromPath(this.requestBody.$ref)
-        if(this.components[link.path] && this.components[link.path][link.name]) {
-          return this.components[link.path][link.name];
-        }
-      }
 
-      return this.requestBody;
-    }
   }
 };
 </script>

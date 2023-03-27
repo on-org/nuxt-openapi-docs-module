@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h2 v-if="parametersRef.length" class="text-lg font-bold mb-2">Parameters:</h2>
-    <table v-if="parametersRef.length" class="table-auto w-full">
+    <h2 v-if="parameters.length" class="text-lg font-bold mb-2">Parameters:</h2>
+    <table v-if="parameters.length" class="table-auto w-full">
       <thead>
       <tr>
         <th class="border px-4 py-2">Parameter Name</th>
@@ -15,7 +15,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="(param, index) in parametersRef" :key="index" class="open-api-param">
+      <tr v-for="(param, index) in parameters" :key="index" class="open-api-param">
         <td class="border px-4 py-2 font-semibold">{{ tr(param, 'name', currentLocale) }}</td>
         <td class="border px-4 py-2" v-html="tr(param, 'description', currentLocale)"></td>
         <td class="border px-4 py-2">{{ param.in ? param.in : '-' }}</td>
@@ -47,25 +47,7 @@ export default {
     },
   },
   computed: {
-    parametersRef() {
-      if(!this.parameters) {
-        return []
-      }
-      let res = [];
-      for (let i in this.parameters) {
-        let param = this.parameters[i]
-        if (param.$ref) {
-          const link = getSchemaValsFromPath(param.$ref)
-          if(this.components[link.path] && this.components[link.path][link.name]) {
-            param = this.components[link.path][link.name];
-          }
-        }
-        param.path = i;
 
-        res.push(param);
-      }
-      return res;
-    }
   },
   methods: {
     tr,

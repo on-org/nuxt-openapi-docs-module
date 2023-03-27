@@ -1,13 +1,12 @@
-import {resolve} from "path";
-import yaml from "yaml";
 import path from "path";
+import yaml from "yaml";
 import fs from "fs";
 import {marked} from "marked";
+import {getSchemaValsFromPath} from "./components/helpers";
 
 const renderer = new marked.Renderer();
 renderer.text = function(text) {
-  const replacedText = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  return replacedText;
+  return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 };
 
 function sanitizeText(text) {
@@ -25,7 +24,7 @@ function sanitizeText(text) {
   });
 }
 
-function replaceMarkdown(obj) {
+function replaceMarkdown(obj, components) {
   if (typeof obj === 'string') {
     if (obj.match(/\[.*?\]\(.*?\)|^>/)) {
       return marked(obj, { renderer: renderer });
@@ -33,10 +32,17 @@ function replaceMarkdown(obj) {
       return sanitizeText(obj);
     }
   } else if (Array.isArray(obj)) {
-    return obj.map(replaceMarkdown);
+    return obj.map((val) => replaceMarkdown(val, components));
   } else if (typeof obj === 'object' && obj !== null) {
     return Object.entries(obj).reduce((acc, [key, value]) => {
-      acc[key] = replaceMarkdown(value);
+      if(key === '$ref' && typeof value === 'string') {
+        const link = getSchemaValsFromPath(value)
+        if(components[link.path] && components[link.path][link.name]) {
+          return components[link.path][link.name];
+        }
+      } else {
+        acc[key] = replaceMarkdown(value, components);
+      }
       return acc;
     }, {});
   } else {
@@ -86,7 +92,8 @@ module.exports = async function (moduleOptions) {
 
     // Генерируем шаблон и роуты
     this.extendRoutes((routes, resolve) => {
-      options.doc = replaceMarkdown(openApiSpec);
+      openApiSpec.components = replaceMarkdown(openApiSpec.components, openApiSpec.components)
+      options.doc = replaceMarkdown(openApiSpec, openApiSpec.components);
       this.addTemplate({
         src: resolve(__dirname, 'templates/docs.vue'),
         fileName: resolve(__dirname, `.cache/docs.${fileName}.vue`),

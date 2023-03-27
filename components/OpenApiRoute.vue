@@ -99,16 +99,7 @@ export default {
     genParamsToSimple() {
       if(this.route.requestBody && Object.keys(this.route.requestBody).length) {
         const pos = Object.keys(this.route.requestBody)[0]
-        let req = null;
-        if(pos === '$ref') {
-          const link = getSchemaValsFromPath(this.route.requestBody.$ref)
-          if(this.components[link.path] && this.components[link.path][link.name]) {
-            req = this.components[link.path][link.name].content;
-          }
-        } else {
-          req = this.route.requestBody[pos]
-        }
-        console.log(req);
+        let req = this.route.requestBody[pos];
 
         if(req && Object.keys(req).length) {
           console.log(111, req)
@@ -144,10 +135,6 @@ export default {
 
       for (let i in this.route.parameters) {
         const param = this.route.parameters[i]
-
-        if (param.$ref) {
-          continue;
-        }
 
         const p_name = param.name ?? '';
         const p_in = param.in ?? '';
