@@ -3,20 +3,6 @@
     <div class="files pr-4">
       <DarkModeToggle :value="props.isDarkMode" @change="() => emit('toggleDarkMode')" />
     </div>
-    <div class="files pr-4">
-      <CustomDropdown :placeholder="props.files[file]" :options="props.files" :value="props.file" :route-function="changeDoc">
-        <template v-slot:default="{ option, index, isSelected }">
-          {{ option }}
-        </template>
-      </CustomDropdown>
-    </div>
-    <div class="locales">
-      <CustomDropdown :placeholder="props.locales[currentLocale]" :options="props.locales" :value="props.currentLocale" :route-function="changeLocale">
-        <template v-slot:default="{ option, index, isSelected }">
-          {{ option }}
-        </template>
-      </CustomDropdown>
-    </div>
     <div class="yaml">
       <button
         @click="downloadYaml"
@@ -34,7 +20,6 @@
 </template>
 <script setup>
 import Search from './lib/Search.vue'
-import CustomDropdown from './lib/CustomDropdown.vue'
 import DarkModeToggle from './lib/DarkModeToggle.vue'
 
 const emit = defineEmits(['toggleDarkMode'])
@@ -69,13 +54,6 @@ const props = defineProps({
     required: true
   },
 })
-
-function changeDoc(option) {
-  return '/' + props.path + '/' + option + '/' + props.currentLocale + '/get/info';
-}
-function changeLocale(option) {
-  return '/' + props.path + '/' + props.file + '/' + option + '/get/info';
-}
 
 function downloadYaml() {
   const json = JSON.stringify(props.doc);

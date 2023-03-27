@@ -1,5 +1,20 @@
 <template>
   <div class="openapi-menu">
+    <div class="files">
+      <CustomDropdown :placeholder="files[file]" :options="files" :value="file" :route-function="changeDoc">
+        <template v-slot:default="{ option, index, isSelected }">
+          {{ option }}
+        </template>
+      </CustomDropdown>
+    </div>
+    <div class="locales mt-4">
+      <CustomDropdown :placeholder="locales[currentLocale]" :options="locales" :value="currentLocale" :route-function="changeLocale">
+        <template v-slot:default="{ option, index, isSelected }">
+          {{ option }}
+        </template>
+      </CustomDropdown>
+    </div>
+
     <h2 class="text-xl font-bold mb-2">API documentation</h2>
     <p class="mb-4">Select a route from the list below:</p>
     <ul class="menu list-none mb-4">
@@ -20,11 +35,11 @@
             <span class="menu-item__icon">{{ open !== tag ? '▼' : '▲' }}</span>
           </div>
           <ul v-if="open === tag" v-cloak class="pl-2">
-            <li v-for="(item) in routes" class="menu-item hover:bg-gray-200 dark:hover:bg-gray-700" :class="`menu-item-${item.type}`">
-              <nuxt-link :to="getSubRoute(item)" @click.native.stop.prevent class="block-btn py-2 px-4 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
+            <li v-for="(route) in routes" class="menu-item hover:bg-gray-200 dark:hover:bg-gray-700" :class="`menu-item-${route.type}`">
+              <nuxt-link :to="getSubRoute(route)" @click.native.stop.prevent class="block-btn py-2 px-4 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
                 <div class="flex flex-col">
-                  <div class="font-bold item-path">{{ getRouteType(item.type) }} {{ item.name }}</div>
-                  <div class="description text-sm text-gray-600 dark:text-gray-300/75 overflow-hidden overflow-ellipsis whitespace-nowrap">{{ item.description }}</div>
+                  <div class="font-bold item-path">{{ getRouteType(route.type) }} {{ route.name }}</div>
+                  <div class="description text-sm text-gray-600 dark:text-gray-300/75 overflow-hidden overflow-ellipsis whitespace-nowrap">{{ route.description }}</div>
                 </div>
               </nuxt-link>
             </li>
@@ -36,9 +51,11 @@
 </template>
 
 <script>
-import { ref } from 'vue'
-
+import CustomDropdown from './lib/CustomDropdown.vue'
 export default {
+  components: {
+    CustomDropdown,
+  },
   props: {
     routes: {
       type: Object,
@@ -56,6 +73,14 @@ export default {
       type: String,
       required: true,
     },
+    files: {
+      type: Object,
+      required: true,
+    },
+    locales: {
+      type: Object,
+      required: true,
+    },
   },
   setup() {
     const open = ref(null)
@@ -65,12 +90,7 @@ export default {
       open
     }
   },
-
   methods: {
-    toggleOpen(tag) {
-      this.open = this.open === tag ? null : tag;
-      localStorage.setItem('menu_open', this.open)
-    },
     getRouteType(method) {
       switch (method.toUpperCase()) {
         case 'GET':
@@ -87,12 +107,25 @@ export default {
           return '';
       }
     },
+    genUrl(path) {
+      return encodeURI(path)
+    },
+    toggleOpen(tag) {
+      this.open = this.open === tag ? null : tag;
+      localStorage.setItem('menu_open', this.open)
+    },
     getRoute(path) {
       return '/' + this.path + '/' + this.file + '/' + this.currentLocale + '/get/' + path;
     },
     getSubRoute(route) {
-      return '/' + this.path + '/' + this.file + '/' + this.currentLocale + '/' + route.type + '/' + encodeURI(route.path);
-    }
+      return '/' + this.path + '/' + this.file + '/' + this.currentLocale + '/' + route.type + '/' + this.genUrl(route.path);
+    },
+    changeDoc(option) {
+      return '/' + this.path + '/' + option + '/' + this.currentLocale + '/get/info';
+    },
+    changeLocale(option) {
+      return '/' + this.path + '/' + this.file + '/' + option + '/get/info';
+    },
   },
   computed: {
     pathsByTags() {
@@ -123,14 +156,14 @@ export default {
       });
 
       return pathsByTags;
-    }
+    },
   },
   mounted() {
     if(process.client) {
       this.open = localStorage.getItem('menu_open') ?? null
     }
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
@@ -175,10 +208,6 @@ export default {
   display: block;
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem; /* аналогично rounded-md */
-}
-
-.openapi-menu a.block:hover {
-
 }
 
 .openapi-menu li.sub-menu > a.block {
