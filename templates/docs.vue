@@ -125,7 +125,7 @@ export default {
       this.$nuxt.$on('downloadYamlDoc', this.downloadYaml);
     }
   },
-  beforeDestroy() {
+  destroyed() {
     if(process.client) {
       this.$nuxt.$off('downloadYamlDoc', this.downloadYaml);
     }

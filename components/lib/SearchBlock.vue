@@ -72,7 +72,7 @@ export default {
       this.$nuxt.$on('toggleSearchDoc', this.toggleSearch);
     }
   },
-  beforeDestroy() {
+  destroyed() {
     this.$nuxt.$off('toggleSearchDoc', this.toggleSearch);
   },
   methods: {
