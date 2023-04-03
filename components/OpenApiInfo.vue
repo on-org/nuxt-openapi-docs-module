@@ -1,7 +1,8 @@
 <template>
   <div>
     <h2 class="text-2xl font-bold">{{ tr(info, 'title', currentLocale) }}</h2>
-    <p class="my-4 description doc-info" v-html="tr(info, 'description', currentLocale)"></p>
+    <div class="my-4 description doc-info" v-html="tr(info, 'description', currentLocale)"></div>
+
     <div v-if="servers">
       <h3 class="text-lg font-bold">Servers</h3>
       <ul class="list-disc list-inside">
@@ -10,6 +11,7 @@
         </li>
       </ul>
     </div>
+
     <h3 v-if="info.externalDocs" class="text-lg font-bold">External documentation</h3>
     <ul v-if="info.externalDocs" class="list-disc list-inside">
       <li>

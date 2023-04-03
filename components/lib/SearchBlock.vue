@@ -24,8 +24,7 @@
           </div>
         </div>
       </div>
-      <button class="absolute top-0 right-0 m-3 text-gray-800 hover:text-gray-900 shadow bg-white/50 dark:text-gray-300/75"
-              @click="toggleSearch">
+      <button class="absolute top-0 right-0 m-3 text-gray-800 hover:text-gray-900 shadow bg-white/50 dark:text-gray-300/75" @click="toggleSearch">
         <svg class="w-10 h-10 shadow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
@@ -72,7 +71,7 @@ export default {
       this.$nuxt.$on('toggleSearchDoc', this.toggleSearch);
     }
   },
-  destroyed() {
+  beforeDestroy() {
     this.$nuxt.$off('toggleSearchDoc', this.toggleSearch);
   },
   methods: {
