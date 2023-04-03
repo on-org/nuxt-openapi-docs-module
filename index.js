@@ -5,7 +5,7 @@ import {marked} from "marked";
 import * as yaml from 'js-yaml';
 import hljs from "highlight.js";
 
-import {addTemplate, defineNuxtModule, extendPages} from '@nuxt/kit'
+import {addTemplate, addPlugin, defineNuxtModule, extendPages} from '@nuxt/kit'
 
 function sanitizeText(text) {
   const map = {
@@ -177,13 +177,22 @@ export default defineNuxtModule({
             if(j === 'servers') return;
             if (!pathsByTags[tag]) {
               const tagInfo = tags[tag] ?? {}
-              const description = tagInfo.description ?? '';
-              const isOpen = tagInfo['x-tag-expanded'] ?? true;
-              pathsByTags[tag] = {
-                description: marked.parse(description),
-                isOpen: isOpen,
+
+              const item = {
+                name: tagInfo.name ?? tag,
+                description: marked.parse(tagInfo.description ?? ''),
+                isOpen: tagInfo['x-tag-expanded'] ?? true,
                 items: []
-              };
+              }
+              for(let i in localoptions.locales) {
+                if(tagInfo[`x-description-${i}`]) {
+                  item[`x-description-${i}`] = marked.parse(tagInfo[`x-description-${i}`]);
+                }
+                if(tagInfo[`x-name-${i}`]) {
+                  item[`x-name-${i}`] = tagInfo[`x-name-${i}`];
+                }
+              }
+              pathsByTags[tag] = item;
             }
             const item = {
               name: openapi_item.path,
@@ -283,6 +292,13 @@ export default defineNuxtModule({
         })
 
       })
+    })
+
+
+    addPlugin({
+      src: path.resolve(__dirname, 'plugin.js'),
+      fileName: 'openapiplugin.js',
+      options,
     })
   },
 });

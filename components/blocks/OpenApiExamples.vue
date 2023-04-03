@@ -1,14 +1,14 @@
 <template>
   <div class="openapi-examples">
-    <h3 class="text-lg font-bold mb-2">Examples: </h3>
+    <h3 class="text-lg font-bold mb-2">{{ $openapidoc.getLocaleText(currentLocale, 'Examples') }}: </h3>
     <div v-for="(example, name) in examples" :key="name">
       <h4 class="text-lg font-medium">{{ name }}</h4>
       <table class="w-full mt-2">
         <thead>
         <tr>
-          <th class="px-4 py-2 border-b border-gray-300">Media Type</th>
-          <th class="px-4 py-2 border-b border-gray-300">Summary</th>
-          <th class="px-4 py-2 border-b border-gray-300">Value</th>
+          <th class="px-4 py-2 border-b border-gray-300">{{ $openapidoc.getLocaleText(currentLocale, 'Media Type') }}</th>
+          <th class="px-4 py-2 border-b border-gray-300">{{ $openapidoc.getLocaleText(currentLocale, 'Summary') }}</th>
+          <th class="px-4 py-2 border-b border-gray-300">{{ $openapidoc.getLocaleText(currentLocale, 'Value') }}</th>
         </tr>
         </thead>
         <tbody>

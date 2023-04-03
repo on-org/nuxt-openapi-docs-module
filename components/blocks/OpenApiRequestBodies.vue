@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 class="text-lg font-bold mb-2">Request Bodies: </h3>
+    <h3 class="text-lg font-bold mb-2">{{ $openapidoc.getLocaleText(currentLocale, 'Request Bodies') }}: </h3>
     <div v-for="(requestBody, name) in requestBodies" :key="name" class="mt-4">
       <h3 class="text-lg font-medium">{{ name }}</h3>
       <OpenApiRequestBody :requestBody="requestBody" :current-locale="currentLocale" />

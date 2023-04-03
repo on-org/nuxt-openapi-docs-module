@@ -1,11 +1,11 @@
 <template>
   <div class="examples-container">
-    <h4 class="text-xl font-medium mb-2">Examples:</h4>
+    <h4 class="text-xl font-medium mb-2">{{ $openapidoc.getLocaleText(currentLocale, 'Examples') }}:</h4>
     <div v-for="(example, exampleName) in examples" :key="exampleName">
       <h5 class="text-lg font-medium mb-2">{{ exampleName }}</h5>
       <div class="example" v-if="example">
         <template v-if="example.summary">
-          <p class="mb-1"><strong>Summary:</strong> {{ tr(example, 'summary', currentLocale) }}</p>
+          <p class="mb-1"><strong>{{ $openapidoc.getLocaleText(currentLocale, 'Summary') }}:</strong> {{ tr(example, 'summary', currentLocale) }}</p>
         </template>
         <template v-if="example.description">
           <p class="mb-1"><strong>Description:</strong> {{ tr(example, 'description', currentLocale) }}</p>

@@ -3,6 +3,7 @@
   "version": "1.7.2",
   "description": "A plugin for Nuxt.js to generate pages from OpenAPI specifications",
   "main": "index.js",
+  "types": "index.d.ts",
   "license": "MIT",
   "scripts": {
     "dev": "cd example && npm run dev",
@@ -20,6 +21,7 @@
   "devDependencies": {
     "@nuxt/kit": "3.2.3",
     "@nuxt/schema": "3.2.3",
+    "@nuxt/types": "^2.16.3",
     "@types/js-yaml": "^4.0.5",
     "autoprefixer": "^10.4.14",
     "flowbite": "^1.6.4",

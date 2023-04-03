@@ -6,7 +6,7 @@
     </h1>
     <div v-if="deprecated" class="flex p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
       <div>
-        <span class="font-medium">Deprecated!</span>
+        <span class="font-medium">{{ $openapidoc.getLocaleText(currentLocale, 'Deprecated!') }}</span>
       </div>
     </div>
     <h2 class="text-lg font-bold mb-2">{{ summary }}</h2>

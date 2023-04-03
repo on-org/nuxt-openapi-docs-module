@@ -1,23 +1,23 @@
 <template>
   <div class="schema border border-gray-300 rounded p-2" v-if="schema">
     <div class="schema-row items-center" v-if="schema.title">
-      <span class="schema-row-label font-bold mr-2">Title:</span>
+      <span class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText(currentLocale, 'Title') }}:</span>
       <span class="schema-row-value" v-html="tr(schema, 'title', currentLocale)"></span>
     </div>
     <div class="schema-row items-center" v-if="schema.description">
-      <span class="schema-row-label font-bold mr-2">Description:</span>
+      <span class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText(currentLocale, 'Description') }}:</span>
       <span class="schema-row-value" v-html="tr(schema, 'description', currentLocale)"></span>
     </div>
     <div class="schema-row items-center" v-if="schema.type">
-      <span class="schema-row-label font-bold mr-2">Type:</span>
+      <span class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText(currentLocale, 'Type') }}:</span>
       <span class="schema-row-value">{{ schema.type }}</span>
     </div>
     <div class="schema-row items-center" v-if="schema.format">
-      <span class="schema-row-label font-bold mr-2">Format:</span>
+      <span class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText(currentLocale, 'Format') }}:</span>
       <span class="schema-row-value">{{ schema.format }}</span>
     </div>
     <div class="schema-row items-center" v-if="schema.enum">
-      <div class="schema-row-label font-bold mr-2">Enum:</div>
+      <div class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText(currentLocale, 'Enum') }}:</div>
       <div class="schema-row-value p-2">
         <ul class="list-disc">
           <li v-for="(value, index) in schema.enum" :key="index">{{ value }}</li>
@@ -25,28 +25,28 @@
       </div>
     </div>
     <div class="schema-row items-center" v-if="schema.default">
-      <span class="schema-row-label font-bold mr-2">Default:</span>
+      <span class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText(currentLocale, 'Default') }}:</span>
       <span class="schema-row-value">{{ schema.default }}</span>
     </div>
     <div class="schema-row items-center" v-if="schema.pattern">
-      <span class="schema-row-label font-bold mr-2">Pattern:</span>
+      <span class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText(currentLocale, 'Pattern') }}:</span>
       <span class="schema-row-value">{{ schema.pattern }}</span>
     </div>
     <div class="schema-row items-center" v-if="schema.items">
-      <div class="schema-row-label font-bold mr-2">Items:</div>
+      <div class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText(currentLocale, 'Items') }}:</div>
       <div class="schema-row-value">
         <open-api-schema :components="components" :current-locale="currentLocale" :schema="schema.items" />
       </div>
     </div>
     <div class="schema-row items-center" v-if="schema.properties">
-      <div class="schema-row-label font-bold mr-2">Properties:</div>
+      <div class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText(currentLocale, 'Properties') }}:</div>
       <div class="schema-row-value">
         <table class="table-auto">
           <thead>
           <tr>
-            <th class="px-4 py-2">Name</th>
-            <th class="px-4 py-2">Type</th>
-            <th class="px-4 py-2">Description</th>
+            <th class="px-4 py-2">{{ $openapidoc.getLocaleText(currentLocale, 'Name') }}</th>
+            <th class="px-4 py-2">{{ $openapidoc.getLocaleText(currentLocale, 'Type') }}</th>
+            <th class="px-4 py-2">{{ $openapidoc.getLocaleText(currentLocale, 'Description') }}</th>
           </tr>
           </thead>
           <tbody>
@@ -77,7 +77,7 @@
               </div>
 
               <div class="schema-row items-center" v-if="property.oneOf">
-                <div class="schema-row-label font-bold mr-2">One Of:</div>
+                <div class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText(currentLocale, 'One Of') }}:</div>
                 <div class="schema-row-value">
                   <div v-for="(oneOf, index) in property.oneOf" :key="index">
                     <open-api-schema :components="components" :schema="oneOf" :current-locale="currentLocale" />
@@ -91,13 +91,13 @@
       </div>
     </div>
     <div class="schema-row items-center" v-if="schema.additionalProperties">
-      <div class="schema-row-label font-bold mr-2">Additional Properties:</div>
+      <div class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText(currentLocale, 'Additional Properties') }}:</div>
       <div class="schema-row-value">
         <open-api-schema :components="components" :current-locale="currentLocale" :schema="schema.additionalProperties" />
       </div>
     </div>
     <div class="schema-row items-center" v-if="schema.allOf">
-      <div class="schema-row-label font-bold mr-2">All Of:</div>
+      <div class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText(currentLocale, 'All Of') }}:</div>
       <div class="schema-row-value">
         <div v-for="(allOf, index) in schema.allOf" :key="index">
           <open-api-schema :components="components" :schema="allOf" :current-locale="currentLocale" />
@@ -106,7 +106,7 @@
     </div>
 
     <div class="schema-row items-center" v-if="schema.oneOf">
-      <div class="schema-row-label font-bold mr-2">One Of:</div>
+      <div class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText(currentLocale, 'One Of') }}:</div>
       <div class="schema-row-value">
         <div v-for="(oneOf, index) in schema.oneOf" :key="index">
           <open-api-schema :components="components" :schema="oneOf" :current-locale="currentLocale" />
@@ -117,7 +117,7 @@
 </template>
 
 <script>
-import {getSchemaValsFromPath, tr} from "../helpers";
+import {tr} from "../helpers";
 
 export default {
   name: 'OpenApiSchema',

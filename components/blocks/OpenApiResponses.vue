@@ -1,12 +1,12 @@
 <template>
   <div>
-    <h2 class="text-lg font-bold mb-2">Responses:</h2>
+    <h2 class="text-lg font-bold mb-2">{{ $openapidoc.getLocaleText(currentLocale, 'Responses') }}:</h2>
     <table class="w-full border-collapse">
       <thead>
       <tr class="border border-b border-gray-300">
-        <th class="border p-3 font-semibold text-left">Status</th>
-        <th class="border p-3 font-semibold text-left" style="width: 25%">Description</th>
-        <th class="border p-3 font-semibold text-left">Content</th>
+        <th class="border p-3 font-semibold text-left">{{ $openapidoc.getLocaleText(currentLocale, 'Status')  }}</th>
+        <th class="border p-3 font-semibold text-left" style="width: 25%">{{ $openapidoc.getLocaleText(currentLocale, 'Description') }}</th>
+        <th class="border p-3 font-semibold text-left">{{ $openapidoc.getLocaleText(currentLocale, 'Content') }}</th>
       </tr>
       </thead>
       <tbody>

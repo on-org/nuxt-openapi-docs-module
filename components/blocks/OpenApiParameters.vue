@@ -4,12 +4,12 @@
     <table v-if="parameters.length" class="table-auto w-full">
       <thead>
       <tr>
-        <th class="border px-4 py-2">Parameter Name</th>
-        <th class="border px-4 py-2" style="width: 25%">Description</th>
-        <th class="border px-4 py-2">In</th>
-        <th class="border px-4 py-2">Required</th>
-        <th class="border px-4 py-2">schema</th>
-        <th class="border px-4 py-2">Example</th>
+        <th class="border px-4 py-2">{{ $openapidoc.getLocaleText(currentLocale, 'Parameter Name') }}</th>
+        <th class="border px-4 py-2" style="width: 25%">{{ $openapidoc.getLocaleText(currentLocale, 'Description') }}</th>
+        <th class="border px-4 py-2">{{ $openapidoc.getLocaleText(currentLocale, 'In') }}</th>
+        <th class="border px-4 py-2">{{ $openapidoc.getLocaleText(currentLocale, 'Required') }}</th>
+        <th class="border px-4 py-2">{{ $openapidoc.getLocaleText(currentLocale, 'Schema') }}</th>
+        <th class="border px-4 py-2">{{ $openapidoc.getLocaleText(currentLocale, 'Example') }}</th>
       </tr>
       </thead>
       <tbody>

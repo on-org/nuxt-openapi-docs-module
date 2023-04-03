@@ -15,29 +15,29 @@
       </CustomDropdown>
     </div>
 
-    <h2 class="text-xl font-bold mb-2">API documentation</h2>
-    <p class="mb-4">Select a route from the list below:</p>
+    <h2 class="text-xl font-bold mb-2">{{ $openapidoc.getLocaleText(currentLocale, 'API documentation') }}</h2>
+    <p class="mb-4">{{ $openapidoc.getLocaleText(currentLocale, 'Select a route from the list below:') }}</p>
 
 
     <ul class="menu list-none mb-4">
       <li>
-        <nuxt-link :to="getRoute('info')" class="relative inline-flex items-center w-full text-base font-medium border-b border-gray-200 rounded-t-lg hover:bg-gray-200 dark:hover:bg-gray-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+        <nuxt-link :to="getRoute('info')" class="relative inline-flex items-center w-full text-base font-medium border-b border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
           <svg class="w-4 h-4 mr-2 fill-current" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"></path></svg>
-          <b>OpenAPI Info</b>
+          <b>{{ $openapidoc.getLocaleText(currentLocale, 'Info') }}</b>
         </nuxt-link>
       </li>
       <li>
-        <nuxt-link :to="getRoute('components')" class="relative inline-flex items-center w-full text-base font-medium border-b border-gray-200 rounded-t-lg hover:bg-gray-200 dark:hover:bg-gray-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+        <nuxt-link :to="getRoute('components')" class="relative inline-flex items-center w-full text-base font-medium border-b border-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
           <svg class="w-4 h-4 mr-2 fill-current" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z"></path></svg>
-          <b>OpenAPI Components</b>
+          <b>{{ $openapidoc.getLocaleText(currentLocale, 'Components') }}</b>
         </nuxt-link>
       </li>
-      <MainLeftMenuSubMenu v-for="(sub_routes, tag) in routes" :key="tag" class="sub-menu" :title="tag" :description="sub_routes.description" :is-open="sub_routes.isOpen">
+      <MainLeftMenuSubMenu v-for="(sub_routes, tag) in routes" :key="tag" class="sub-menu" :title="tr(sub_routes, 'name', currentLocale)" :description="tr(sub_routes, 'description', currentLocale)" :is-open="sub_routes.isOpen">
         <li v-for="(route) in sub_routes.items" class="menu-item hover:bg-gray-200 dark:hover:bg-gray-700" :class="`menu-item-${route.type}`">
-          <nuxt-link :to="getSubRoute(route)" @click.native.stop.prevent class="block-btn py-2 px-4 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
+          <nuxt-link :to="getSubRoute(route)" @click.native.stop.prevent class="block-btn py-2 px-4 hover:bg-gray-200 dark:hover:bg-gray-700">
             <div class="flex flex-col">
               <div class="font-semibold item-path">
-                <span class="px-1 rounded font-medium rounded method-tag" :class="getTagColor(route.type)">{{ getRouteType(route.type) }} </span>
+                <span class="px-1 font-medium method-tag" :class="getTagColor(route.type)">{{ getRouteType(route.type) }} </span>
                 {{ route.name }}
               </div>
               <div class="description text-sm text-gray-600 dark:text-gray-300/75 overflow-hidden overflow-ellipsis whitespace-nowrap">{{ tr(route, 'description', currentLocale) }}</div>

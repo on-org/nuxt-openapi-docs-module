@@ -133,6 +133,8 @@ export default {
   methods: {
     tr,
     genParamsToSimple() {
+      this.params = [];
+
       if(this.route.requestBody && Object.keys(this.route.requestBody).length) {
         const pos = Object.keys(this.route.requestBody)[0];
         let req = this.route.requestBody[pos];
@@ -240,7 +242,20 @@ export default {
         });
       }
 
-      return this.params;
+      const globalParams = this.$openapidoc.getParams();
+
+      for (let i in globalParams) {
+        const param = globalParams[i];
+        if (param.value === '' && param.type) {
+          param.value = this.convertStringFormatToMd(param.type, param.name);
+        }
+
+        this.params.push({
+          in: param.pos,
+          name: param.name,
+          value: JSON.parse(JSON.stringify(param.value))
+        });
+      }
     },
 
     handleNestedArrayOrObject(property, propertyName) {

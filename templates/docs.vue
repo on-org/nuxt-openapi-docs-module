@@ -14,6 +14,7 @@ import OpenApiComponents from '../components/OpenApiComponents.vue';
 import OpenApiRoute from '../components/OpenApiRoute.vue';
 import NotFound from '../components/NotFound.vue';
 import SearchBlock from '../components/lib/SearchBlock.vue';
+import {tr} from "../components/helpers";
 
 const simples = <%= options.params %>;
 
@@ -30,6 +31,24 @@ export default {
     OpenApiRoute,
     NotFound,
     SearchBlock,
+  },
+  head() {
+    if (this.isInfo) {
+      return {
+        title: `[${this.file}] - Info Docs`,
+        description: '',
+      };
+    }
+    if (this.isComponents) {
+      return {
+        title: `[${this.file}] - Components Docs`,
+        description: '',
+      };
+    }
+    return {
+      title: '[' +this.file + '] - ' + tr(this.activeRoute, 'summary', this.currentLocale),
+      description: tr(this.activeRoute, 'description', this.currentLocale),
+    };
   },
   async fetch() {
     const ctx = this.$nuxt.context

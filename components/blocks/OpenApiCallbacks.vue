@@ -1,6 +1,6 @@
 <template>
   <div v-if="callbacks">
-    <h2 class="text-lg font-bold mb-2">Callbacks:</h2>
+    <h2 class="text-lg font-bold mb-2">{{ $openapidoc.getLocaleText(currentLocale, 'Callbacks') }}:</h2>
     <div class="list-disc list-inside">
       <div v-for="(item, name) in callbacks" :key="name">
         <div  v-for="(callback, method) in item" :key="name">

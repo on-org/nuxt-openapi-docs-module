@@ -29,16 +29,16 @@
           <p><strong>{{ index }}:</strong></p>
           <ul>
             <li v-if="flow.authorizationUrl">
-              <strong>Authorization URL:</strong> {{ flow.authorizationUrl }}
+              <strong>{{ $openapidoc.getLocaleText(currentLocale, 'Authorization URL') }}:</strong> {{ flow.authorizationUrl }}
             </li>
             <li v-if="flow.tokenUrl">
-              <strong>Token URL:</strong> {{ flow.tokenUrl }}
+              <strong>{{ $openapidoc.getLocaleText(currentLocale, 'Token URL') }}:</strong> {{ flow.tokenUrl }}
             </li>
             <li v-if="flow.refreshUrl">
-              <strong>Refresh URL:</strong> {{ flow.refreshUrl }}
+              <strong>{{ $openapidoc.getLocaleText(currentLocale, 'Refresh URL') }}:</strong> {{ flow.refreshUrl }}
             </li>
             <li v-if="flow.scopes">
-              <strong>Scopes:</strong>
+              <strong>{{ $openapidoc.getLocaleText(currentLocale, 'Scopes') }}:</strong>
               <ul>
                 <li v-for="(description, name) in flow.scopes" :key="name">
                   <strong>{{ name }}:</strong> {{ description }}
@@ -48,10 +48,10 @@
           </ul>
         </li>
       </ul>
-      <p v-if="securityScheme.description">
-        <strong>Description:</strong>
+      <div v-if="securityScheme.description">
+        <strong>{{ $openapidoc.getLocaleText(currentLocale, 'Description') }}:</strong>
         <div v-html="tr(securityScheme, 'description', currentLocale)"></div>
-      </p>
+      </div>
     </div>
   </div>
 </template>
