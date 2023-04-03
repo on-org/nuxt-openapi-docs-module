@@ -1,22 +1,25 @@
 <template>
-  <div class="border border-gray-300 p-4 mb-8">
-    <h1 class="text-2xl font-bold mb-2">{{ path }}</h1>
+  <div class="border border-gray-300 p-4 mb-8 doc-info">
+    <h1 class="text-2xl font-bold mb-2">
+      <span class="text-xl font-medium mr-2 px-2.5 py-0.5 rounded" :class="getTagColor(method)">{{ method }}</span>
+      {{ path }}
+    </h1>
+    <div v-if="deprecated" class="flex p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+      <div>
+        <span class="font-medium">Deprecated!</span>
+      </div>
+    </div>
     <h2 class="text-lg font-bold mb-2">{{ summary }}</h2>
-    <p class="text-gray-600 mb-2">{{ method }}</p>
     <p class="mb-2">
-      <span v-for="(tag, index) in tags" :key="index"
-            class="inline-block bg-gray-300 dark:bg-blue-200 dark:text-black px-2 py-1 rounded mr-2">
-        {{ tag }}
-      </span>
+      <span v-for="(tag, index) in tags" :key="index" class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">{{ tag }}</span>
     </p>
     <p class="mb-2" v-html="description"></p>
-    <p class="text-red-600 font-bold mb-2" v-if="deprecated">Deprecated</p>
   </div>
 </template>
 
 
 <script>
-import {tr} from "../helpers";
+import {getTagColor, tr} from "../helpers";
 
 export default {
   props: {
@@ -32,7 +35,7 @@ export default {
     },
   },
   methods: {
-    tr
+    tr, getTagColor
   }
 };
 </script>

@@ -49,7 +49,8 @@
         </li>
       </ul>
       <p v-if="securityScheme.description">
-        <strong>Description:</strong> {{ tr(securityScheme, 'description', currentLocale) }}
+        <strong>Description:</strong>
+        <div v-html="tr(securityScheme, 'description', currentLocale)"></div>
       </p>
     </div>
   </div>

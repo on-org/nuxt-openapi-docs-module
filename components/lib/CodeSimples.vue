@@ -7,7 +7,7 @@
     <div class="code-panel">
       <div class="code-panel-body relative">
         <button class="toolbar-btn absolute top-2 right-2" @click.stop.prevent='copyToClipboard'>Copy</button>
-        <pre class="language line-numbers" :class="`language-${snippetIndex}`"><code class="language" v-html="html"></code></pre>
+        <pre class="p-4 language line-numbers" :class="`language-${snippetIndex}`"><code class="language" v-html="html"></code></pre>
       </div>
     </div>
   </div>
@@ -85,7 +85,7 @@ export default {
     genCode() {
       const method = this.method.toUpperCase();
 
-      requestTemplater.baseUrl(this.baseUrl);
+      requestTemplater.baseUrl(this.baseUrl ?? `https://${location.host}`);
       requestTemplater.url(this.url);
       requestTemplater.method(method);
       requestTemplater.params(JSON.parse(JSON.stringify(this.params)));
@@ -110,56 +110,5 @@ export default {
 </script>
 
 <style>
-@import 'highlight.js/styles/tokyo-night-dark.css';
-
-:not(pre) > code[class*="language-"], pre[class*="language-"] {
-  background: #001529;
-  color: #d3d3d3;
-}
-
-.toolbar-btn {
-  cursor: pointer;
-  padding: 4px;
-  margin: 0px 2px;
-  font-size: 12px;
-  min-width: 50px;
-  color: #fff;
-  border: none;
-  background-color: #00a2fb;
-  top: 10px;
-  right: 10px;
-  z-index: 99;
-}
-
-
-
-pre {
-  font-family: monospace;
-  border: 1px solid #f7f7f7;
-  padding: 10px;
-  border-radius: 5px;
-  overflow-x: auto;
-}
-
-code {
-  font-family: monospace;
-}
-
-.keyword {
-  font-weight: bold;
-  color: #0077c2;
-}
-
-.operator {
-  color: #a90d91;
-}
-
-.string {
-  color: #2a9d8f;
-}
-
-.punctuation {
-  color: #a90d91;
-}
 
 </style>

@@ -10,7 +10,7 @@
       </svg>
     </div>
     <div class="dropdown-menu absolute w-full top-full left-0 z-50 py-2 bg-white rounded-md shadow-lg dark:bg-black dark:text-gray-300/75" v-if="isOpen">
-      <nuxt-link v-for="(option, index) in options" :key="index" class="dropdown-item px-4 py-2 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-gray-900" :class="{'bg-gray-300 dark:text-gray-900': index === selectedOption}" :to="routeFunction(index)" @click="selectOption(index)">
+      <nuxt-link v-for="(option, index) in options" :key="index" class="dropdown-item px-4 py-2 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-gray-900" :class="{'bg-gray-300 dark:text-gray-900': index === selectedOption}" :to="routeFunction(index)" @click.native="selectOption(index)">
         <slot v-bind:option="option" v-bind:index="index">{{ option }}</slot>
       </nuxt-link>
     </div>

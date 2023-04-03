@@ -56,7 +56,6 @@ modules: [
         {
             folder: './docs/openapi',
             name: 'OpenApiDocs',
-            locales: {en: 'English'},
             files: function(ctx) {return { 'News-API': 'News API'}},
         }
     ],
@@ -67,9 +66,9 @@ modules: [
 - `folder` (default: ./docs/openapi): the folder where your OpenAPI specification files are located.
 - `name` (default: OpenApiDocs): the name of the main component used to render the OpenAPI documentation.
 - `path`: the component url for docs.
-- `locales`: object with locales, {en: 'English'}.
 - `files`: function with files list in OpenApiDocs folder, files: function(ctx) {return { 'News-API': 'News API'}}.
 - `params`: function with params list add to code block, params: function(ctx) {return [{ in: 'queryString', name: 'key', value: '1111'}]}.
+- `debug`: print debug information to console, Default: false
 - 
 ### Folder Structure
 The default folder structure for your OpenAPI specification files should look like this:
@@ -90,3 +89,24 @@ This module provides several reusable Nuxt.js components to render your OpenAPI 
 You can customize these components by modifying the corresponding .vue files in the components/ folder.
 
 files: moduleOptions.files ?? function (ctx) { return {} },
+
+### Localization
+
+1. Add info - x-locales
+```yaml
+info:
+  #  ...
+  x-locales:
+    en: English
+    ru: Русский
+```
+2. Add locale text
+```yaml
+  /pet:
+    post:
+      # ...
+      summary: Add a new pet to the store
+      x-summary-ru: Добавить нового питомца в магазин
+```
+
+Example: ```example/docs/openapi/localization.yaml```

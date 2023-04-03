@@ -1,0 +1,49 @@
+openapi: 3.0.1
+info:
+  title: Authentication Test Case
+  description: Demonstrate various authentication methods supported by RapiDoc
+servers:
+  - url: https://reqres.in/api/
+paths:
+  /users/{userId}:
+    get:
+      description: Uses HTTP Basic Auth
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+            example: 3
+          required: true
+          description: Numeric ID of the user to get
+      security:
+      - http-basic: []
+      - petstore_auth:
+          - 'write:pets'
+          - 'read:pets'
+
+  /users:
+    get:
+      description: Uses API Key Auth
+      security:
+      - api_key1: []
+components:
+  securitySchemes:
+    http-basic:
+      type: http
+      scheme: basic
+    api_key1:
+      type: apiKey
+      name: Authorization
+      in: header
+    petstore_auth:
+      description: |
+        Get access to data while protecting your account credentials.
+        OAuth2 is also a safer and more secure way to give you access.
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: 'http://petstore.swagger.io/api/oauth/dialog'
+          scopes:
+            'write:pets': modify pets in your account
+            'read:pets': read your pets

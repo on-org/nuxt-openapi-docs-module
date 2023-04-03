@@ -14,7 +14,7 @@
       </button>
     </div>
     <div class="search">
-      <Search :doc="doc" :current-locale="currentLocale" :file="file" :path="path" />
+      <Search :current-locale="currentLocale" :file="file" :path="path" />
     </div>
   </div>
 </template>
@@ -43,10 +43,6 @@ export default {
       type: Object,
       required: true,
     },
-    doc: {
-      type: Object,
-      required: true
-    },
     isDarkMode: {
       type: Boolean,
       required: true,
@@ -61,20 +57,7 @@ export default {
   },
   methods: {
     downloadYaml() {
-      const json = JSON.stringify(this.doc);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = this.file + '.yaml';
-      document.body.appendChild(link);
-
-      link.click();
-
-      // Очистить ссылку и объект URL после скачивания файла
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+      this.$nuxt.$emit('downloadYamlDoc');
     }
   },
 };

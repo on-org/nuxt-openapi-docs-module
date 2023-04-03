@@ -3,7 +3,7 @@
     <h3 class="text-xl font-semibold">Security:</h3>
     <ul class="list-disc ml-6">
       <li v-for="(securityRequirement, index) in security" :key="index" class="py-2">
-        <OpenApiSecurityRequirement :securityRequirement="securityRequirement" :current-locale="currentLocale" />
+        <OpenApiSecurityRequirement :securityRequirement="securityRequirement" :current-locale="currentLocale"  :path_doc="path_doc" :file="file" />
       </li>
     </ul>
   </div>
@@ -21,6 +21,14 @@ export default {
       required: true,
     },
     currentLocale: {
+      type: String,
+      required: true,
+    },
+    path_doc: {
+      type: String,
+      required: true,
+    },
+    file: {
       type: String,
       required: true,
     },

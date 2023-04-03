@@ -1,13 +1,11 @@
-import path from "path";
-import yaml from "yaml";
-import fs from "fs";
+import * as path from "path";
+import {resolve} from "path";
+import * as fs from "fs";
 import {marked} from "marked";
-import {getSchemaValsFromPath} from "./components/helpers";
+import * as yaml from 'js-yaml';
+import hljs from "highlight.js";
 
-const renderer = new marked.Renderer();
-renderer.text = function(text) {
-  return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-};
+import {addTemplate, defineNuxtModule, extendPages} from '@nuxt/kit'
 
 function sanitizeText(text) {
   const map = {
@@ -19,29 +17,74 @@ function sanitizeText(text) {
     '|': '&#x7C;'
   };
   const reg = /[<>"'\\|]/gi;
-  return text.replace(reg, function(match) {
+  return text.replace(reg, function (match) {
+    // @ts-ignore
     return map[match];
   });
 }
 
-function replaceMarkdown(obj, components) {
+const renderer = new marked.Renderer();
+renderer.text = function (text) {
+  return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+};
+
+marked.setOptions({
+  renderer: renderer,
+  highlight: function(code, lang) {
+    const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+    return hljs.highlight(code, { language }).value;
+  },
+  langPrefix: 'hljs language-', // highlight.js css expects a top-level 'hljs' class.
+  pedantic: false,
+  gfm: true,
+  breaks: false,
+  sanitize: false,
+  smartypants: false,
+  xhtml: false
+});
+
+function getSchemaValsFromPath(ref) {
+  const [type, path, name] = ref.replace('#/', '').split('/');
+
+  return {type, path, name};
+}
+
+function replaceMarkdown(obj, components, definitions, lastlink = null) {
   if (typeof obj === 'string') {
-    if (obj.match(/\[.*?\]\(.*?\)|^>/)) {
-      return marked(obj, { renderer: renderer });
+    if (obj.match(/\[.*?\]\(.*?\)|^>/) || obj.match(/```|\*\*|:--|<a |## |------/)) {
+      return marked.parse(obj);
     } else {
       return sanitizeText(obj);
     }
   } else if (Array.isArray(obj)) {
-    return obj.map((val) => replaceMarkdown(val, components));
+    return obj.map((val) => replaceMarkdown(val, components, definitions, lastlink));
   } else if (typeof obj === 'object' && obj !== null) {
     return Object.entries(obj).reduce((acc, [key, value]) => {
       if(key === '$ref' && typeof value === 'string') {
         const link = getSchemaValsFromPath(value)
-        if(components[link.path] && components[link.path][link.name]) {
-          return components[link.path][link.name];
+
+        if(lastlink === value) return { type: "string", title: link.path, description: 'recursive' }
+
+        if (link.type === 'definitions') {
+          if(definitions && definitions[link.path]) {
+            lastlink = value;
+
+            const item = definitions[link.path];
+            item.title = link.path
+            return replaceMarkdown(item, components, definitions, lastlink);
+          }
+        }
+
+        if(components && components[link.path] && components[link.path][link.name]) {
+          lastlink = value;
+
+          const item = components[link.path][link.name];
+          item.title = link.path
+          return replaceMarkdown(item, components, definitions, lastlink);
         }
       } else {
-        acc[key] = replaceMarkdown(value, components);
+        // @ts-ignore
+        acc[key] = replaceMarkdown(value, components, definitions, lastlink);
       }
       return acc;
     }, {});
@@ -50,100 +93,199 @@ function replaceMarkdown(obj, components) {
   }
 }
 
-let complite = false;
+// Функция для парсинга YAML-файла
+function parseYamlFile(folder, fileName) {
+  const filePath = path.join(folder, fileName + '.yaml')
+  // const yamlData = this.nuxt.readContent(filePath)
+  const yamlData = fs.readFileSync(filePath, 'utf8');
+  return yaml.load(yamlData)
+}
 
+export default defineNuxtModule({
+  meta: {
+    name: 'nuxt-open-api-docs',
+    configKey: 'openApiDocs',
+    compatibility: {
+      nuxt: '^2.0.0',
+      bridge: false,
+    },
+  },
+  defaults: {
+    folder: './docs/openapi',
+    name: 'OpenApiDocs',
+    path: 'docs',
+    debug: false,
+    doc: {},
+    files: function (ctx) {
+      return {API: 'api'}
+    },
+    params: function (ctx) {
+      return {}
+    },
+  },
+  setup(options, nuxt) {
+    if(options.debug) {
+      nuxt.hook('generate:route', (route) => {
+        console.log(`[GENERATE DEBUG] Generating route: ${route.route}`)
+      })
+      nuxt.hook('generate:routeCreated', (route) => {
+        console.log(`[GENERATE DEBUG] Route created: ${route.route}`)
+      })
 
-module.exports = async function (moduleOptions) {
-    if (complite) return;
-    complite = true
-
-    const options = {
-        ...moduleOptions,
-        folder: moduleOptions.folder || './docs/openapi',
-        name: moduleOptions.name || 'OpenApiDocs',
-        path: moduleOptions.path || 'docs',
-        locales: moduleOptions.locales ?? {en: 'English'},
-        files: moduleOptions.files ?? function (ctx) { return { 'API': 'api' } },
-        params: moduleOptions.params ?? function (ctx) { return {} },
-        doc: {}
-    };
-
-    // fs.rmSync(path.resolve(this.options.srcDir, 'dist/', options.path), { recursive: true, force: true });
-
-
-  Object.keys(options.files(this)).forEach((fileName) => {
-    // Получаем имя файла без расширения
-    const absolutePath = path.join(options.folder, fileName + '.yaml');
-    const yamlData = fs.readFileSync(absolutePath, 'utf8');
-    const openApiSpec = yaml.parse(yamlData);
-
-    for (let i in openApiSpec.paths) {
-      let reUrl = i
-      if (reUrl.startsWith('/')) reUrl = reUrl.substring(1);
-      reUrl = reUrl.replace(/[\/\\.?+=&{}]/gumi, '_')
-
-      openApiSpec.paths[reUrl] = openApiSpec.paths[i]
-      for (let j in openApiSpec.paths[reUrl]) {
-        openApiSpec.paths[reUrl][j].path = i;
-      }
-
-      delete openApiSpec.paths[i];
+      nuxt.hook('generate:routeFailed', (route, errors) => {
+        console.error(`[GENERATE DEBUG] Route failed: ${route.route}`)
+        console.error(errors)
+      })
     }
 
-    // Генерируем шаблон и роуты
-    this.extendRoutes((routes, resolve) => {
-      openApiSpec.components = replaceMarkdown(openApiSpec.components, openApiSpec.components)
-      options.doc = replaceMarkdown(openApiSpec, openApiSpec.components);
-      this.addTemplate({
-        src: resolve(__dirname, 'templates/docs.vue'),
-        fileName: resolve(__dirname, `.cache/docs.${fileName}.vue`),
-        options,
-      });
+    Object.keys(options.files(this)).forEach((fileName) => {
+      console.log('Generate: ' + fileName)
+      const localoptions = JSON.parse(JSON.stringify(options));
+      const openApiSpec = parseYamlFile(resolve(nuxt.options.rootDir, localoptions.folder), fileName)
+      if(!openApiSpec) return;
+      if(!openApiSpec.paths) return;
 
-      Object.keys(options.locales).forEach((locale) => {
-        routes.push({
-          name: `openapi-${options.path}/${fileName}/${locale}-info`,
-          path: `/${options.path}/${fileName}/${locale}/get/info`,
-          component: resolve(__dirname, `.cache/docs.${fileName}.vue`),
-          meta: {
-            file: fileName,
-            locale: locale,
-            type: 'get',
-            path: 'info',
-          }
-        })
-        routes.push({
-          name: `openapi-${options.path}/${fileName}/${locale}-components`,
-          path: `/${options.path}/${fileName}/${locale}/get/components`,
-          component: resolve(__dirname, `.cache/docs.${fileName}.vue`),
-          meta: {
-            file: fileName,
-            locale: locale,
-            type: 'get',
-            path: 'components',
-          }
-        })
+      localoptions.locales = {en: 'English'};
+      if(openApiSpec.info['x-locales']) {
+        localoptions.locales = {...{ en: 'English' }, ...openApiSpec.info['x-locales']};
+      }
 
-        for (let i in openApiSpec.paths) {
-          for (let type in openApiSpec.paths[i]) {
-            routes.push({
-              name: `openapi-${options.path}/${fileName}/${locale}-${type}=${i}`,
-              path: `/${options.path}/${fileName}/${locale}/${type}/${i}`,
-              component: resolve(__dirname, `.cache/docs.${fileName}.vue`),
-              meta: {
-                file: fileName,
-                locale: locale,
-                type: type,
-                path: i,
+      const tags = (openApiSpec.tags ?? []).reduce((acc, tag) => {
+        acc[tag.name] = tag;
+        return acc;
+      }, {});
+
+
+      const pathsByTags = {};
+      for (let i in openApiSpec.paths) {
+        let reUrl = i
+        if (reUrl.startsWith('/')) reUrl = reUrl.substring(1);
+        reUrl = reUrl.replace(/[\/\\.?+=&{}]/gumi, '_')
+
+        openApiSpec.paths[reUrl] = openApiSpec.paths[i]
+
+
+        for (let j in openApiSpec.paths[reUrl]) {
+          const openapi_item = openApiSpec.paths[reUrl][j];
+
+          openapi_item.path = i;
+
+          if(!openapi_item.tags) openapi_item.tags = ['other']
+
+          openapi_item.tags.forEach((tag, val) => {
+            if(j === 'parameters') return;
+            if(j === 'servers') return;
+            if (!pathsByTags[tag]) {
+              const tagInfo = tags[tag] ?? {}
+              const description = tagInfo.description ?? '';
+              const isOpen = tagInfo['x-tag-expanded'] ?? true;
+              pathsByTags[tag] = {
+                description: marked.parse(description),
+                isOpen: isOpen,
+                items: []
+              };
+            }
+            const item = {
+              name: openapi_item.path,
+              path: reUrl,
+              type: j,
+              description: openapi_item.description ?? null,
+            };
+            for(let i in localoptions.locales) {
+              if(openapi_item[`x-description-${i}`]) {
+                item[`x-description-${i}`] = openapi_item[`x-description-${i}`];
               }
-            })
-          }
-        }
-      })
-    });
-  });
+            }
+            pathsByTags[tag].items.push(item);
+          })
 
-}
+        }
+
+        delete openApiSpec.paths[i];
+      }
+
+      openApiSpec.definitions = replaceMarkdown(openApiSpec.definitions, openApiSpec.components, openApiSpec.definitions)
+      openApiSpec.components = replaceMarkdown(openApiSpec.components, openApiSpec.components, openApiSpec.definitions)
+      localoptions.doc = replaceMarkdown(openApiSpec, openApiSpec.components, openApiSpec.definitions);
+      localoptions.pathsByTags = pathsByTags;
+      localoptions.fileName = fileName;
+
+
+      const layoutName = (`apidocs-layout-${fileName}`)
+        .replace(/["']/g, "")
+        .replace(/./g, "-");
+      if(!nuxt.options.layouts[layoutName]) {
+        addTemplate({
+          src: resolve(__dirname, 'layout/docs.vue'),
+          filename: `apidocs.layout.${fileName}.vue`,
+          dst: resolve(__dirname, `.cache/apidocs.layout.${fileName}.vue`),
+          write: true,
+          options: {...localoptions, files: options.files, params: options.params},
+        })
+
+        // nuxt addLayout О_о!!!
+        nuxt.options.layouts[layoutName] = resolve(__dirname, `.cache/apidocs.layout.${fileName}.vue`);
+      }
+
+
+
+      // Добавляем шаблон для каждого файла
+      addTemplate({
+        src: resolve(__dirname, 'templates/docs.vue'),
+        filename: `apidocs.${fileName}.vue`,
+        dst: resolve(__dirname, `.cache/apidocs.${fileName}.vue`),
+        write: true,
+        options: {...localoptions, files: options.files, params: options.params},
+      })
+
+      extendPages((pages) => {
+        Object.keys(localoptions.locales).forEach((locale) => {
+          pages.push({
+            name: `openapi-${localoptions.path}/${fileName}/${locale}-info`,
+            path: `/${localoptions.path}/${fileName}/${locale}/get/info`,
+            component: resolve(__dirname, `.cache/apidocs.${fileName}.vue`),
+            meta: {
+              file: fileName,
+              locale: locale,
+              type: 'get',
+              path: 'info',
+            },
+          })
+
+          pages.push({
+            name: `openapi-${localoptions.path}/${fileName}/${locale}-components`,
+            path: `/${localoptions.path}/${fileName}/${locale}/get/components`,
+            component: resolve(__dirname, `.cache/apidocs.${fileName}.vue`),
+            meta: {
+              file: fileName,
+              locale: locale,
+              type: 'get',
+              path: 'components',
+            },
+          })
+
+          // Генерируем роуты для каждого типа запроса и пути
+          for (const i in openApiSpec.paths) {
+            for (const type in openApiSpec.paths[i]) {
+              pages.push({
+                name: `openapi-${localoptions.path}/${fileName}/${locale}-${type}-${i}`,
+                path: `/${localoptions.path}/${fileName}/${locale}/${type}/${i}`,
+                component: resolve(__dirname, `.cache/apidocs.${fileName}.vue`),
+                meta: {
+                  file: fileName,
+                  locale: locale,
+                  type: type,
+                  path: i,
+                },
+              })
+            }
+          }
+        })
+
+      })
+    })
+  },
+});
 
 
 module.exports.meta = require('./package.json')

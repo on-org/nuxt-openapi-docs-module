@@ -7,7 +7,7 @@
         </template>
       </CustomDropdown>
     </div>
-    <div class="locales mt-4">
+    <div class="locales mt-4" v-if="isLocalization" >
       <CustomDropdown :placeholder="locales[currentLocale]" :options="locales" :value="currentLocale" :route-function="changeLocale">
         <template v-slot:default="{ option, index, isSelected }">
           {{ option }}
@@ -17,44 +17,46 @@
 
     <h2 class="text-xl font-bold mb-2">API documentation</h2>
     <p class="mb-4">Select a route from the list below:</p>
+
+
     <ul class="menu list-none mb-4">
       <li>
-        <nuxt-link :to="getRoute('info')" class="block px-2 py-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
-          OpenAPI Info
+        <nuxt-link :to="getRoute('info')" class="relative inline-flex items-center w-full text-base font-medium border-b border-gray-200 rounded-t-lg hover:bg-gray-200 dark:hover:bg-gray-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+          <svg class="w-4 h-4 mr-2 fill-current" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"></path></svg>
+          <b>OpenAPI Info</b>
         </nuxt-link>
       </li>
       <li>
-        <nuxt-link :to="getRoute('components')" class="block px-2 py-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
-          OpenAPI Components
+        <nuxt-link :to="getRoute('components')" class="relative inline-flex items-center w-full text-base font-medium border-b border-gray-200 rounded-t-lg hover:bg-gray-200 dark:hover:bg-gray-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+          <svg class="w-4 h-4 mr-2 fill-current" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z"></path></svg>
+          <b>OpenAPI Components</b>
         </nuxt-link>
       </li>
-      <li v-for="(routes, tag) in pathsByTags" :key="tag" class="sub-menu">
-        <div :class="{ 'selected': open === tag }" class="block px-2 py-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-900">
-          <div class="menu-title flex justify-between items-center" @click="toggleOpen(tag)">
-            <span class="font-bold">{{ tag }}</span>
-            <span class="menu-item__icon">{{ open !== tag ? '▼' : '▲' }}</span>
-          </div>
-          <ul v-if="open === tag" v-cloak class="pl-2">
-            <li v-for="(route) in routes" class="menu-item hover:bg-gray-200 dark:hover:bg-gray-700" :class="`menu-item-${route.type}`">
-              <nuxt-link :to="getSubRoute(route)" @click.native.stop.prevent class="block-btn py-2 px-4 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
-                <div class="flex flex-col">
-                  <div class="font-bold item-path">{{ getRouteType(route.type) }} {{ route.name }}</div>
-                  <div class="description text-sm text-gray-600 dark:text-gray-300/75 overflow-hidden overflow-ellipsis whitespace-nowrap">{{ route.description }}</div>
-                </div>
-              </nuxt-link>
-            </li>
-          </ul>
-        </div>
-      </li>
+      <MainLeftMenuSubMenu v-for="(sub_routes, tag) in routes" :key="tag" class="sub-menu" :title="tag" :description="sub_routes.description" :is-open="sub_routes.isOpen">
+        <li v-for="(route) in sub_routes.items" class="menu-item hover:bg-gray-200 dark:hover:bg-gray-700" :class="`menu-item-${route.type}`">
+          <nuxt-link :to="getSubRoute(route)" @click.native.stop.prevent class="block-btn py-2 px-4 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700">
+            <div class="flex flex-col">
+              <div class="font-semibold item-path">
+                <span class="px-1 rounded font-medium rounded method-tag" :class="getTagColor(route.type)">{{ getRouteType(route.type) }} </span>
+                {{ route.name }}
+              </div>
+              <div class="description text-sm text-gray-600 dark:text-gray-300/75 overflow-hidden overflow-ellipsis whitespace-nowrap">{{ tr(route, 'description', currentLocale) }}</div>
+            </div>
+          </nuxt-link>
+        </li>
+      </MainLeftMenuSubMenu>
     </ul>
   </div>
 </template>
 
 <script>
 import CustomDropdown from './lib/CustomDropdown.vue'
+import MainLeftMenuSubMenu from './lib/MainLeftMenuSubMenu.vue'
+import {getTagColor, tr} from "./helpers";
 export default {
   components: {
     CustomDropdown,
+    MainLeftMenuSubMenu,
   },
   props: {
     routes: {
@@ -82,12 +84,14 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      open: null,
-    };
+  computed: {
+    isLocalization() {
+      return Object.keys(this.locales).length > 1;
+    }
   },
   methods: {
+    tr,
+    getTagColor,
     getRouteType(method) {
       switch (method.toUpperCase()) {
         case 'GET':
@@ -99,7 +103,7 @@ export default {
         case 'PATCH':
           return '💾 PATCH';
         case 'DELETE':
-          return '🗑️ DELETE';
+          return '🗑️ DEL';
         default:
           return '';
       }
@@ -107,63 +111,44 @@ export default {
     genUrl(path) {
       return encodeURI(path)
     },
-    toggleOpen(tag) {
-      this.open = this.open === tag ? null : tag;
-      localStorage.setItem('menu_open', this.open)
-    },
     getRoute(path) {
-      return '/' + this.path + '/' + this.file + '/' + this.currentLocale + '/get/' + path;
+      return {name: `openapi-${this.path}/${this.file}/${this.currentLocale}-${path}`, meta: {locale: 'en', path: path, file: this.file, type: 'get'}};
     },
     getSubRoute(route) {
-      return '/' + this.path + '/' + this.file + '/' + this.currentLocale + '/' + route.type + '/' + this.genUrl(route.path);
+      const path = this.genUrl(route.path);
+      const type = route.type;
+      return {name: `openapi-${this.path}/${this.file}/${this.currentLocale}-${type}-${path}`, meta: {locale: this.currentLocale, path: path, file: this.file, type: type}};
     },
     changeDoc(option) {
-      return '/' + this.path + '/' + option + '/' + this.currentLocale + '/get/info';
+      return {name: `openapi-${this.path}/${option}/en-info`, meta: {locale: 'en', path: option, type: 'get',  file: this.file}};
     },
     changeLocale(option) {
-      return '/' + this.path + '/' + this.file + '/' + option + '/get/info';
+      return {name: `openapi-${this.path}/${this.file}/${option}-info`, meta: {locale: option, path: this.file, type: 'get',  file: this.file}};
     },
-  },
-  computed: {
-    pathsByTags() {
-      const paths = this.routes;
-      const pathKeys = Object.keys(paths);
-      const pathsByTags = {};
-
-      pathKeys.forEach((route_path) => {
-        const valses = Object.keys(paths[route_path]);
-        valses.forEach((type) => {
-          const path = paths[route_path][type];
-          const tags = path.tags;
-
-          if (tags && tags.length) {
-            tags.forEach((tag) => {
-              if (!pathsByTags[tag]) {
-                pathsByTags[tag] = [];
-              }
-              pathsByTags[tag].push({
-                name: path.path,
-                path: route_path,
-                type: type,
-                description: path.description,
-              });
-            });
-          }
-        })
-      });
-
-      return pathsByTags;
-    },
-  },
-  mounted() {
-    if(process.client) {
-      this.open = localStorage.getItem('menu_open') ?? null
-    }
   },
 };
 </script>
 
 <style scoped>
+.method-tag {
+  width: 45px;
+  display: inline-block;
+  text-align: center;
+  font-size: .55rem;
+  line-height: 0.75rem;
+  margin-right: 0.05rem;
+  vertical-align: text-top;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+.rotate-icon {
+  transition: transform 0.3s ease-in-out;
+}
+
+.open .rotate-icon {
+  transform: rotate(180deg);
+}
+
 .block-btn {
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
@@ -179,7 +164,7 @@ export default {
 }
 
 .openapi-menu {
-
+  padding-bottom: 100px;
 }
 
 .openapi-menu h2 {
@@ -239,30 +224,40 @@ export default {
 
 .openapi-menu li.menu-item {
   padding: 3px;
+  margin-left: 3px;
 }
 
 .openapi-menu li.menu-item-get {
-  border-left: 0.25rem solid #38a169; /* аналогично border-l-4 и соответствует зеленому цвету для GET-запросов в TailwindCSS */
+  border-left: 0.35rem solid #38a169; /* аналогично border-l-4 и соответствует зеленому цвету для GET-запросов в TailwindCSS */
 }
 
 .openapi-menu li.menu-item-post {
-  border-left: 0.25rem solid #3856a1; /* аналогично border-l-4 и соответствует зеленому цвету для GET-запросов в TailwindCSS */
+  border-left: 0.35rem solid #3856a1; /* аналогично border-l-4 и соответствует зеленому цвету для GET-запросов в TailwindCSS */
 }
 
 .openapi-menu li.menu-item-delete {
-  border-left: 0.25rem solid #a13838; /* аналогично border-l-4 и соответствует зеленому цвету для GET-запросов в TailwindCSS */
+  border-left: 0.35rem solid #a13838; /* аналогично border-l-4 и соответствует зеленому цвету для GET-запросов в TailwindCSS */
 }
 
 .openapi-menu li.menu-item-options {
-  border-left: 0.25rem solid #a13838; /* аналогично border-l-4 и соответствует зеленому цвету для GET-запросов в TailwindCSS */
+  border-left: 0.35rem solid #a13838; /* аналогично border-l-4 и соответствует зеленому цвету для GET-запросов в TailwindCSS */
 }
 
 .openapi-menu li.menu-item-put {
-  border-left: 0.25rem solid #5b38a1; /* аналогично border-l-4 и соответствует зеленому цвету для GET-запросов в TailwindCSS */
+  border-left: 0.35rem solid #5b38a1; /* аналогично border-l-4 и соответствует зеленому цвету для GET-запросов в TailwindCSS */
 }
 
 .openapi-menu li.menu-item-patch {
   border-left: 0.25rem solid #a19338; /* аналогично border-l-4 и соответствует зеленому цвету для GET-запросов в TailwindCSS */
 }
 
+
+.nuxt-link-active {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.nuxt-link-active div {
+  opacity: 0.8;
+}
 </style>

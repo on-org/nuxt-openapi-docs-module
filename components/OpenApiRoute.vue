@@ -2,18 +2,32 @@
   <div>
     <OpenApiRouteHeader
         :path="route.path"
-        :method="route.method"
+        :method="method"
         :tags="route.tags"
         :summary="tr(route, 'summary', currentLocale)"
         :description="tr(route, 'description', currentLocale)"
         :deprecated="route.deprecated"
         :current-locale="currentLocale"
     />
+
+    <div v-if="route.servers">
+      <h3 class="text-lg font-bold">Servers</h3>
+      <ul class="list-disc list-inside">
+        <li v-for="server in route.servers" :key="server.url">
+          <a class="text-blue-500 hover:underline" :href="server.url">{{ server.url }}</a>
+        </li>
+      </ul>
+    </div>
+
+    <OpenApiSecurity v-if="route.security" :security="route.security" :current-locale="currentLocale" :path_doc="path_doc" :file="file" />
+
     <OpenApiParameters v-if="route.parameters" :parameters="route.parameters" :current-locale="currentLocale"  :components="components" />
+
+    <OpenApiParameters v-if="subParams" :parameters="subParams" :current-locale="currentLocale"  :components="components" title="Global params" />
 
     <OpenApiRequestBody v-if="route.requestBody" :requestBody="route.requestBody" :current-locale="currentLocale" :components="components" />
 
-    <client-only>
+    <client-only v-if="route.path">
       <h2 class="text-lg font-bold mb-2">Code simples:</h2>
       <CodeSimples
         :url="route.path"
@@ -25,10 +39,20 @@
       ></CodeSimples>
     </client-only>
 
-    <OpenApiSecurity v-if="route.security" :security="route.security" :current-locale="currentLocale" />
-
     <OpenApiResponses v-if="route.responses" :responses="route.responses" :current-locale="currentLocale" :components="components" />
     <OpenApiExamples v-if="route.examples" :examples="route.examples" :current-locale="currentLocale" />
+
+    <OpenApiCallbacks
+      v-if="route.callbacks"
+      :callbacks="route.callbacks"
+      :server="server"
+      :current-locale="currentLocale"
+      :components="components"
+      :simples="simples"
+      :params="params"
+      :file="file"
+      :path_doc="path_doc"
+    />
   </div>
 </template>
 
@@ -39,12 +63,13 @@ import OpenApiSecurity from './blocks/OpenApiSecurity.vue';
 import OpenApiParameters from './blocks/OpenApiParameters.vue';
 import OpenApiResponses from './blocks/OpenApiResponses.vue';
 import OpenApiExamples from './blocks/OpenApiExamples.vue';
-
-import {getSchemaValsFromPath, tr} from "./helpers";
+import OpenApiCallbacks from "./blocks/OpenApiCallbacks.vue";
+import {tr} from "./helpers";
 
 export default {
   name: 'OpenApiRoute',
   components: {
+    OpenApiCallbacks,
     OpenApiRouteHeader,
     OpenApiRequestBody,
     OpenApiSecurity,
@@ -59,7 +84,18 @@ export default {
       required: true,
     },
     route: {
-      type: Object,
+      type: [Object, Array],
+      required: true,
+    },
+    subParams: {
+      required: false,
+    },
+    path_doc: {
+      type: String,
+      required: true,
+    },
+    file: {
+      type: String,
       required: true,
     },
     currentLocale: {
@@ -98,12 +134,11 @@ export default {
     tr,
     genParamsToSimple() {
       if(this.route.requestBody && Object.keys(this.route.requestBody).length) {
-        const pos = Object.keys(this.route.requestBody)[0]
+        const pos = Object.keys(this.route.requestBody)[0];
         let req = this.route.requestBody[pos];
 
         if(req && Object.keys(req).length) {
-          console.log(111, req)
-          this.mimeType = Object.keys(req)[0]
+          this.mimeType = Object.keys(req)[0];
           const params = req[this.mimeType];
 
           if (params.schema) {
@@ -113,58 +148,142 @@ export default {
 
               let def = '';
               if(property.example) {
-                def = property.example ?? ''
+                def = property.example ?? '';
               }
-
 
               if (def === '' && property.type) {
                 def = this.convertStringFormatToMd(property.type, propertyName);
               }
 
-              this.params.push({
-                in: 'postData',
-                name: propertyName,
-                value: def.toString()
-              })
-            }
+              if (property.type === 'array') {
+                // Handle array types
+                if (property.items.type) {
+                  if(property.items.type === 'array' || property.items.type === 'object') {
+                    def = [this.handleNestedArrayOrObject(property, propertyName)];
+                  } else {
+                    def = [this.convertStringFormatToMd(property.items.type, propertyName)];
+                  }
+                } else if (property.items.enum) {
+                  def = [property.items.enum[0]];
+                } else if (property.items.properties || property.items.additionalProperties) {
+                  def = [this.handleNestedArrayOrObject(property.items, propertyName)];
+                }
 
+                this.params.push({
+                  in: 'postData',
+                  name: propertyName,
+                  value: JSON.parse(JSON.stringify(def))
+                });
+              } else if (property.type === 'object') {
+                // Handle object types
+                if (property.additionalProperties && property.additionalProperties.type) {
+                  def = {
+                    [propertyName]: this.convertStringFormatToMd(property.additionalProperties.type, propertyName)
+                  };
+                } else if (property.properties) {
+                  def = {};
+                  for (const subPropertyName in property.properties) {
+                    const subProperty = property.properties[subPropertyName] || {};
+                    if (subProperty.type) {
+                      def[subPropertyName] = this.convertStringFormatToMd(subProperty.type, subPropertyName);
+                    } else if (subProperty.properties || subProperty.additionalProperties) {
+                      def[subPropertyName] = this.handleNestedArrayOrObject(subProperty, propertyName);
+                    }
+                  }
+                }
+                this.params.push({
+                  in: 'postData',
+                  name: propertyName,
+                  value: JSON.parse(JSON.stringify(def))
+                });
+              } else {
+                this.params.push({
+                  in: 'postData',
+                  name: propertyName,
+                  value: def.toString()
+                });
+              }
+            }
           }
         }
-
       }
 
       for (let i in this.route.parameters) {
-        const param = this.route.parameters[i]
+        const param = this.route.parameters[i];
 
         const p_name = param.name ?? '';
         const p_in = param.in ?? '';
 
         let def = '';
         if(param.schema) {
-          def = param.schema.default ?? ''
+          def = param.schema.default ?? '';
         } else {
           def = param.default ?? '';
+        }
+
+        if (def === '' && param.type) {
+          def = this.convertStringFormatToMd(param.type, p_name);
         }
 
         if (def === '' && param.schema && param.schema.type) {
           def = this.convertStringFormatToMd(param.schema.type, p_name);
         }
 
+        if (def === '' && param.enum) {
+          def = param.enum[0] ?? '';
+        }
+
         this.params.push({
           in: p_in,
           name: p_name,
           value: def.toString()
-        })
+        });
       }
 
-      const append = this.simples;
-      for (let i in append) {
-        this.params.push({
-          in: append[i].in,
-          name: append[i].name,
-          value: append[i].value
-        })
+      return this.params;
+    },
+
+    handleNestedArrayOrObject(property, propertyName) {
+      if (property.type === 'array') {
+        // Handle nested array
+        if (property.items.type) {
+          if (property.items.type === 'array') {
+            return [this.handleNestedArrayOrObject(property.items, propertyName)];
+          } else if (property.items.type === 'object') {
+            return [this.handleNestedObject(property.items)];
+          } else {
+            return [this.convertStringFormatToMd(property.items.type)];
+          }
+        } else if (property.items.enum) {
+          return [property.items.enum[0]];
+        } else if (property.items.properties || property.items.additionalProperties) {
+          return [this.handleNestedObject(property.items)];
+        }
+      } else if (property.type === 'object') {
+        // Handle nested object
+        return this.handleNestedObject(property);
       }
+      return '';
+    },
+
+    handleNestedObject(property) {
+      if (property.additionalProperties && property.additionalProperties.type) {
+        return {
+          [propertyName]: this.convertStringFormatToMd(property.additionalProperties.type, propertyName)
+        };
+      } else if (property.properties) {
+        const obj = {};
+        for (const subPropertyName in property.properties) {
+          const subProperty = property.properties[subPropertyName] || {};
+          if (subProperty.type) {
+            obj[subPropertyName] = this.convertStringFormatToMd(subProperty.type, subPropertyName);
+          } else if (subProperty.properties || subProperty.additionalProperties) {
+            obj[subPropertyName] = this.handleNestedArrayOrObject(subProperty, subPropertyName);
+          }
+        }
+        return obj;
+      }
+      return '';
     },
     convertStringFormatToMd(format, name) {
       switch (format) {
@@ -183,6 +302,8 @@ export default {
         case 'uri':
           return 'https://example.com';
         case 'integer':
+          return '1';
+        case 'number':
           return '1';
         case 'string':
           return `{${name}}`;

@@ -1,5 +1,15 @@
 <template>
   <div>
+<!--    <h2 class="text-2xl font-bold">Components</h2>-->
+
+    <div v-if="components.schemas">
+      <h3 class="text-lg font-bold">Schemas</h3>
+      <div v-for="(schema, name) in components.schemas">
+        <h4 class="text-base font-bold" v-text="name"></h4>
+        <open-api-schema :components="components" :schema="schema" :current-locale="currentLocale"></open-api-schema>
+      </div>
+    </div>
+
     <div v-if="components.schema">
       <open-api-schema :components="components" :schema="components.schema" :current-locale="currentLocale"></open-api-schema>
     </div>

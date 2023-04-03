@@ -1,7 +1,7 @@
 <template>
   <div>
     <h3 class="text-lg font-medium">Request Body:</h3>
-    <pre class="mt-2 p-2 rounded-md">{{ tr(requestBody, 'description', currentLocale) }}</pre>
+    <pre class="mt-2 p-2 rounded-md" v-if="requestBody.description" v-html="tr(requestBody, 'description', currentLocale)"></pre>
     <div v-for="(val, key) in requestBody.content">
       <pre class="mt-2 p-2 rounded-md" v-text="key"></pre>
       <OpenApiSchema :schema="val.schema" :current-locale="currentLocale" :components="components" class="mt-4" />
@@ -35,7 +35,7 @@
 
 <script>
 import OpenApiSchema from './OpenApiSchema.vue';
-import {getSchemaValsFromPath, tr} from "../helpers";
+import {tr} from "../helpers";
 
 export default {
   name: 'OpenApiRequestBody',
