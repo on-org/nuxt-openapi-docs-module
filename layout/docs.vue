@@ -74,6 +74,14 @@ export default {
       },
       deep: true
     },
+    '$route': {
+      handler: function(val) {
+        if (this.isMobile) {
+          this.isMenuOpen = false;
+        }
+      },
+      deep: true
+    },
   },
   data() {
     return {
@@ -101,9 +109,14 @@ export default {
       }
     },
     handleResize() {
-      this.isDesktop = window.innerWidth >= 768 // set breakpoint here
-      if (!this.isDesktop) {
+      this.isDesktop = window.innerWidth >= 639
+      this.isMobile = window.innerWidth < 639;
+      console.log(this.isDesktop, this.isMenuOpen)
+      if (!this.isDesktop && this.isMenuOpen) {
         this.isMenuOpen = false
+      }
+      if (this.isDesktop) {
+        this.isMenuOpen = true
       }
     },
   },
@@ -114,17 +127,16 @@ export default {
   },
   mounted() {
     if(process.client) {
-      this.isMobile = window.innerWidth < 640;
-      this.isMenuOpen = window.innerWidth > 640;
+      this.isMobile = window.innerWidth < 639;
+      this.isMenuOpen = window.innerWidth > 639;
       window.addEventListener('resize', this.handleResize)
       this.isDarkMode = localStorage.getItem('isDarkMode') === 'true'
       if(this.isDarkMode) document.querySelector('html').classList.add('dark')
     }
+
   },
   beforeDestroy() {
-    if(process.client) {
-      window.removeEventListener('resize', this.handleResize)
-    }
+    window.removeEventListener('resize', this.handleResize)
   },
 }
 </script>
@@ -203,13 +215,17 @@ blockquote {
   padding-left: 10px;
   border-left: 5px solid #ccc;
 }
+
 table {
-  border-collapse: collapse;
-  width: 100%;
   max-width: 100%;
   margin-bottom: 1rem;
   background-color: transparent;
   border: 2px solid gray;
+
+  width: 100%;
+  border-collapse: collapse;
+  overflow-x: auto;
+  display: block;
 }
 
 th,
@@ -217,6 +233,15 @@ td {
   padding: 0.75rem;
   vertical-align: top;
   border-top: 1px solid #dee2e6;
+
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+@media (max-width: 768px) {
+  th, td {
+    white-space: nowrap;
+  }
 }
 
 th {
