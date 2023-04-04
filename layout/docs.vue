@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-col h-screen dark:bg-gray-900 dark:text-gray-300/75">
-    <MainHeader :isMenuOpen="isMenuOpen" @toggleMenu="toggleMenu" class="dark:bg-black dark:text-gray-300/75">
+    <MainHeader :isMenuOpen="isMenuOpen" @toggleMenu="toggleMenu" class="bg-blue dark:bg-blue">
       <template #logo>
-        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="30">
-          <rect width="100" height="30" rx="5" fill="#1A202C" />
-          <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#FFFFFF" font-size="16" v-text="name"></text>
+        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="30" style="border: 1px solid white;border-radius: 0.375rem;">
+          <rect width="100" height="30" rx="5" fill="#2d87e2" />
+          <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="16" v-text="name"></text>
         </svg>
       </template>
       <div slot="button">
@@ -42,7 +42,6 @@ import OpenApiInfo from '../components/OpenApiInfo.vue';
 import OpenApiComponents from '../components/OpenApiComponents.vue';
 import OpenApiRoute from '../components/OpenApiRoute.vue';
 import NotFound from '../components/NotFound.vue';
-import {options} from "marked";
 
 const files = <%= options.files %>;
 
@@ -271,5 +270,29 @@ pre {
 .text-xs p {
   font-size: .75rem;
   line-height: 1rem;
+}
+
+.bg-blue {
+  background-color: #2d87e2;
+  color: white;
+}
+
+.bg-blue {
+  background-color: #2d87e2;
+  color: white;
+}
+
+.dark .dark\:bg-blue {
+  background-color: #001b35;
+  color: rgba(209,213,219,.75);
+}
+
+a.bg-blue:hover, button.bg-blue:hover {
+  background-color: rgb(144 192 240 / 57%);
+  color: white;
+}
+
+.dark .dark\:bg-slate {
+  background-color: rgb(2 6 23);
 }
 </style>

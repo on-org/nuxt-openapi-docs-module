@@ -1,5 +1,5 @@
 <template>
-  <header class="flex items-center justify-between bg-white text-gray-800 px-4 py-3 sm:px-6 h-16 shadow-md border-b">
+  <header class="flex items-center justify-between text-gray-800 px-4 py-3 sm:px-6 h-16 shadow-md border-b">
     <!-- Mobile menu button -->
     <button class="menu-icon sm:hidden" @click="toggleMenu">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
