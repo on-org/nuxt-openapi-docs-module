@@ -131,7 +131,7 @@ This method sets the accessor function that determines whether the user has acce
 This method sets the footer text that is displayed in the API documentation. The footer parameter is a string representing the text to be displayed. If null is passed as the parameter, the footer will be removed.
 
 - `setLogo(logo: string): void`
-This method sets the html(or svg) of the logo that is displayed in the API documentation. The logo parameter is a string representing the URL of the logo image.
+This method sets the html(or svg) of the logo that is displayed in the API documentation.
 
 Example: example/plugins/auth.js
 
