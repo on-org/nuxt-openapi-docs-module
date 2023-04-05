@@ -5,9 +5,15 @@ interface OpenApiPlugin {
   getParams(): Array<{pos: string, name: string, value: string, type: string}>
   clearParams(): void;
   addLocale(lang: string, locale: {[key: string]: string}): void;
-  getLocale(lang): {[key: string]: string};
-  getLocaleText(lang, path): string;
-  hasLocaleText(lang, path): boolean;
+  getLocale(lang: string): {[key: string]: string};
+  getLocaleText(lang: string, path: string): string;
+  hasLocaleText(lang: string, path: string): boolean;
+  hasAccess(file: string): boolean;
+  setAccess(accessor: (path: string) => boolean): boolean;
+  getFooter(): null|string;
+  setFooter(footer: null|string): void;
+  getLogo(): string;
+  setLogo(footer: string): void;
 }
 
 declare module 'vue/types/vue' {

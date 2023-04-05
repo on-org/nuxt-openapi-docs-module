@@ -1,7 +1,7 @@
 <template>
   <div class="openapi-menu">
     <div class="files">
-      <CustomDropdown :placeholder="files[file]" :options="files" :value="file" :route-function="changeDoc">
+      <CustomDropdown :placeholder="files[file]" :options="filesAccessor" :value="file" :route-function="changeDoc">
         <template v-slot:default="{ option, index, isSelected }">
           {{ option }}
         </template>
@@ -87,6 +87,15 @@ export default {
   computed: {
     isLocalization() {
       return Object.keys(this.locales).length > 1;
+    },
+    filesAccessor() {
+      const result = {}
+      for (let i in this.files) {
+        if (this.$openapidoc.hasAccess(i)) {
+          result[i] = this.files[i];
+        }
+      }
+      return result
     }
   },
   methods: {

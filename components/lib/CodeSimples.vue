@@ -29,10 +29,6 @@ export default {
     CustomDropdownWithSubMenu
   },
   props: {
-    simples: {
-      type: [Object, Array],
-      required: false,
-    },
     baseUrl: {
       type: String,
       required: false,

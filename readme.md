@@ -19,7 +19,8 @@ work with static and server target
 
 You can use this table to determine which version of the package supports which versions of Nuxt. Version 1.0.0 supports only Nuxt 1.x, while version 2.0.0 supports only Nuxt 2.x. Note that a newer version of the package may not work with an older version of Nuxt.
 
-![desktop image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/desktop.png)
+![desktop image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/white.png)
+![desktop image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/white2.png)
 ![black image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/black.png)
 ![mobile image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/mobile.png)
 
@@ -66,8 +67,7 @@ modules: [
 - `folder` (default: ./docs/openapi): the folder where your OpenAPI specification files are located.
 - `name` (default: OpenApiDocs): the name of the main component used to render the OpenAPI documentation.
 - `path`: the component url for docs.
-- `files`: function with files list in OpenApiDocs folder, files: function(ctx) {return { 'News-API': 'News API'}}.
-- `params`: function with params list add to code block, params: function(ctx) {return [{ in: 'queryString', name: 'key', value: '1111'}]}.
+- `files`: function with files list in OpenApiDocs folder, files: function() {return { 'News-API': 'News API'}}.
 - `debug`: print debug information to console, Default: false
 - 
 ### Folder Structure
@@ -110,3 +110,35 @@ info:
 ```
 
 Example: ```example/docs/openapi/localization.yaml```
+
+### Plugin
+
+Here's a description of all the properties and methods of the OpenApiPlugin interface:
+
+ - `addParam(pos: 'headers'|'query'|'postData'|'path'|'cookie', name: string, value: string, type?: string): void`
+This method allows you to add a parameter to the API documentation. The pos parameter specifies the position of the parameter (headers, query, postData, path, or cookie), while name and value specify the name and value of the parameter, respectively. The type parameter is optional and specifies the data type of the parameter.
+
+- `clearParams(): void`
+This method clears all the parameters that have been added to the API documentation.
+
+- `addLocale(lang: string, locale: {[key: string]: string}): void`
+This method allows you to add a translation for a specific language. The lang parameter specifies the language code (e.g., "en", "fr", "es"), while the locale parameter is an object that maps translation keys to their respective translations.
+
+- `setAccess(accessor: (path: string) => boolean): boolean`
+This method sets the accessor function that determines whether the user has access to a specific file. The accessor function takes a file path as input and returns a boolean indicating whether the user has access.
+
+- `setFooter(footer: null|string): void`
+This method sets the footer text that is displayed in the API documentation. The footer parameter is a string representing the text to be displayed. If null is passed as the parameter, the footer will be removed.
+
+- `setLogo(logo: string): void`
+This method sets the html(or svg) of the logo that is displayed in the API documentation. The logo parameter is a string representing the URL of the logo image.
+
+Example: example/plugins/auth.js
+
+```js
+ context.$openapidoc.setAccess((file) => {
+    return file !== 'no-access';
+  })
+
+  context.$openapidoc.setFooter('<div><b>Nuxt OpenApi doc panel</b> </div>')
+```

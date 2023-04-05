@@ -1,7 +1,12 @@
-const EventBusPlugin = (context, inject) => {
-  const $auth = true;
-  inject('auth', $auth);
-  context.$bus = $auth;
+const AuthPlugin = (context, inject) => {
+  context.$openapidoc.setAccess((file) => {
+    if(context.isStatic) {
+      return true;
+    }
+    return file !== 'no-access';
+  })
+
+  context.$openapidoc.setFooter('<div><b>Nuxt OpenApi doc panel</b> - [<a href="https://on-org.github.io/nuxt-openapi-docs-module/docs/petstore_extended/en/get/components/">Example</a>] [<a href="https://github.com/on-org/OnlineSIM-Nuxt-Proxy-landing">Info</a>] by <a href="https://github.com/s00d">s00d</a></div>');
 };
 
-export default EventBusPlugin;
+export default AuthPlugin;

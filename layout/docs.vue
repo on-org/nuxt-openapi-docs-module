@@ -2,10 +2,7 @@
   <div class="flex flex-col h-screen dark:bg-gray-900 dark:text-gray-300/75">
     <MainHeader :isMenuOpen="isMenuOpen" @toggleMenu="toggleMenu" class="bg-blue dark:bg-blue">
       <template #logo>
-        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="30" style="border: 1px solid white;border-radius: 0.375rem;">
-          <rect width="100" height="30" rx="5" fill="#2d87e2" />
-          <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="16" v-text="name"></text>
-        </svg>
+        <span v-html="logo"></span>
       </template>
       <div slot="button">
         <OpenApiHeader
@@ -23,10 +20,15 @@
       <MainLeftMenu :isMenuOpen="isMenuOpen" :isMobile="isMobile">
         <OpenApiMenu :routes="pathsByTags" :current-locale="currentLocale" :file="file" :path="path_doc" :files="files" :locales="locales" />
       </MainLeftMenu>
-      <MainContent>
+      <MainContent style="padding-bottom: 4rem">
         <transition name="fade" tag="div">
           <Nuxt />
         </transition>
+
+        <footer class="fixed w-full bg-gray-900 py-8" v-if="footer">
+          <div class="container mx-auto flex justify-between bg-gray-100 text-gray-800 border-t border-gray-700 dark:bg-slate dark:text-gray-300/75" v-html="footer">
+          </div>
+        </footer>
       </MainContent>
     </div>
   </div>
@@ -42,8 +44,6 @@ import OpenApiInfo from '../components/OpenApiInfo.vue';
 import OpenApiComponents from '../components/OpenApiComponents.vue';
 import OpenApiRoute from '../components/OpenApiRoute.vue';
 import NotFound from '../components/NotFound.vue';
-
-const files = <%= options.files %>;
 
 export default {
   name: 'openapi-docs',
@@ -62,6 +62,9 @@ export default {
     try {
       const ctx = this.$nuxt.context
       this.currentLocale = ctx.route.params.locale ?? ctx.route.meta[0].locale;
+      if(!this.$openapidoc.hasAccess(this.file)) {
+        this.$nuxt.context.error({ status: 404, message: 'page not found' });
+      }
     } catch (e) {
       console.error(e)
     }
@@ -86,6 +89,7 @@ export default {
   data() {
     return {
       pathsByTags: <%= JSON.stringify(options.pathsByTags) %>,
+      files: <%= JSON.stringify(options.files) %>,
       path_doc: '<%= options.path %>',
       locales: <%= JSON.stringify(options.locales) %>,
       name: '<%= options.name %>',
@@ -95,6 +99,14 @@ export default {
       file: '<%= options.fileName %>',
       isDarkMode: false,
     };
+  },
+  computed: {
+    footer() {
+      return this.$openapidoc.getFooter()
+    },
+    logo() {
+      return this.$openapidoc.getLogo().replace(':name', this.name)
+    }
   },
   methods: {
     toggleMenu() {
@@ -118,11 +130,6 @@ export default {
       if (this.isDesktop) {
         this.isMenuOpen = true
       }
-    },
-  },
-  computed: {
-    files() {
-      return files(this)
     },
   },
   mounted() {
@@ -319,5 +326,34 @@ a.bg-blue:hover, button.bg-blue:hover {
 
 .dark .dark\:bg-slate {
   background-color: rgb(2 6 23);
+}
+
+footer {
+  right: 0;
+  bottom: 0;
+  height: 2.5rem;
+  line-height: 2.5rem;
+
+  @media (min-width: 640px) {
+    padding-left: 15rem;
+  }
+
+}
+footer .container {
+  height: 100%;
+  border-top: 1px solid #e1e1e1;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+footer .container a {
+  color: #4299e1;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  border-bottom: 1px solid #4299e1;
+}
+footer .container a:hover {
+  color: #2c5282;
+  border-bottom: 1px solid #2c5282;
 }
 </style>

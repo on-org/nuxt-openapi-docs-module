@@ -46,16 +46,18 @@ export default {
         folder: './docs/openapi',
         name: 'Api Docs',
         debug: true,
-        files: function(ctx) {
+        files: function() {
           if(process.env.NODE_ENV !== 'production') {
             return {
               'petstore_extended': 'Petstore Extended Api',
               'localization': 'Localization',
+              'no-access': 'no access',
             }
           }
            return {
              'petstore_extended': 'Petstore Extended Api',
              'localization': 'Localization',
+             'no-access': 'no access',
 
              "additional-props": "additional-props",
              "allof": "allof",

@@ -116,12 +116,7 @@ export default defineNuxtModule({
     path: 'docs',
     debug: false,
     doc: {},
-    files: function (ctx) {
-      return {API: 'api'}
-    },
-    params: function (ctx) {
-      return {}
-    },
+    files: {},
   },
   setup(options, nuxt) {
     if(options.debug) {
@@ -138,7 +133,7 @@ export default defineNuxtModule({
       })
     }
 
-    Object.keys(options.files(this)).forEach((fileName) => {
+    Object.keys(options.files()).forEach((fileName) => {
       console.log('Generate: ' + fileName)
       const localoptions = JSON.parse(JSON.stringify(options));
       const openApiSpec = parseYamlFile(resolve(nuxt.options.rootDir, localoptions.folder), fileName)
@@ -229,7 +224,7 @@ export default defineNuxtModule({
           filename: `apidocs.layout.${fileName}.vue`,
           dst: resolve(__dirname, `.cache/apidocs.layout.${fileName}.vue`),
           write: true,
-          options: {...localoptions, files: options.files, params: options.params},
+          options: {...localoptions, files: options.files()},
         })
 
         // nuxt addLayout О_о!!!
@@ -244,7 +239,7 @@ export default defineNuxtModule({
         filename: `apidocs.${fileName}.vue`,
         dst: resolve(__dirname, `.cache/apidocs.${fileName}.vue`),
         write: true,
-        options: {...localoptions, files: options.files, params: options.params},
+        options: {...localoptions, files: options.files()},
       })
 
       extendPages((pages) => {

@@ -2,7 +2,7 @@
   <div>
     <OpenApiInfo v-if="isInfo" :info="doc.info" :servers="doc.servers" :current-locale="currentLocale"></OpenApiInfo>
     <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="currentLocale"></OpenApiComponents>
-    <OpenApiRoute v-else-if="activeRoute" :route="activeRoute" :current-locale="currentLocale" :method="type" :components="doc.components" :url="path" :path_doc="path_doc" :file="file" :simples="simples" :server="server" :sub-params="subParams" />
+    <OpenApiRoute v-else-if="activeRoute" :route="activeRoute" :current-locale="currentLocale" :method="type" :components="doc.components" :url="path" :path_doc="path_doc" :file="file" :server="server" :sub-params="subParams" />
     <NotFound v-else />
     <SearchBlock :current-locale="currentLocale" :doc="doc" :path="options.path" :file="file" />
   </div>
@@ -15,8 +15,6 @@ import OpenApiRoute from '../components/OpenApiRoute.vue';
 import NotFound from '../components/NotFound.vue';
 import SearchBlock from '../components/lib/SearchBlock.vue';
 import {tr} from "../components/helpers";
-
-const simples = <%= options.params %>;
 
 export default {
   name: 'AppDocs',
@@ -106,9 +104,6 @@ export default {
     },
     name() {
       return this.options.name
-    },
-    simples() {
-      return simples(this)
     },
     isInfo() {
       return this.path === 'info'

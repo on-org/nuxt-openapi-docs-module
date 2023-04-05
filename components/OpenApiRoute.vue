@@ -32,7 +32,6 @@
       <CodeSimples
         :url="route.path"
         :baseUrl="server"
-        :simples="simples"
         :method="method"
         :mime-type="mimeType"
         :params="params"
@@ -79,10 +78,6 @@ export default {
     CodeSimples: () => import('./lib/CodeSimples.vue')
   },
   props: {
-    simples: {
-      type: [Object, Array],
-      required: true,
-    },
     route: {
       type: [Object, Array],
       required: true,
