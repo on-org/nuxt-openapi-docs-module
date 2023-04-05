@@ -133,6 +133,9 @@ This method sets the footer text that is displayed in the API documentation. The
 - `setLogo(logo: string): void`
 This method sets the html(or svg) of the logo that is displayed in the API documentation.
 
+- `setRouteInfo(routeInfo: (file: string, url: string, method: string) => string|null): void;`
+add route info to path
+
 Example: example/plugins/auth.js
 
 ```js

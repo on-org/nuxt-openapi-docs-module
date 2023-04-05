@@ -11,12 +11,17 @@
     />
 
     <div v-if="route.servers">
-      <h3 class="text-lg font-bold">Servers</h3>
+      <h3 class="text-lg font-bold">{{ $openapidoc.getLocaleText(currentLocale, 'Servers') }}</h3>
       <ul class="list-disc list-inside">
         <li v-for="server in route.servers" :key="server.url">
           <a class="text-blue-500 hover:underline" :href="server.url">{{ server.url }}</a>
         </li>
       </ul>
+    </div>
+
+    <div class="border border-gray-300 p-4 mb-8 doc-info" v-if="routeInfo">
+      <h3 class="text-lg font-bold">{{ $openapidoc.getLocaleText(currentLocale, 'Info') }}:</h3>
+      <div v-html="routeInfo"></div>
     </div>
 
     <OpenApiSecurity v-if="route.security" :security="route.security" :current-locale="currentLocale" :path_doc="path_doc" :file="file" />
@@ -28,7 +33,7 @@
     <OpenApiRequestBody v-if="route.requestBody" :requestBody="route.requestBody" :current-locale="currentLocale" :components="components" />
 
     <client-only v-if="route.path">
-      <h2 class="text-lg font-bold mb-2">Code simples:</h2>
+      <h2 class="text-lg font-bold mb-2">{{ $openapidoc.getLocaleText(currentLocale, 'Code simple') }}:</h2>
       <CodeSimples
         :url="route.path"
         :baseUrl="server"
@@ -124,6 +129,11 @@ export default {
       mimeType: 'application/x-www-form-urlencoded',
       params: [],
     }
+  },
+  computed: {
+    routeInfo() {
+      return this.$openapidoc.getRouteInfo(this.file, this.url, this.method)
+    },
   },
   methods: {
     tr,

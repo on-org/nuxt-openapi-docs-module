@@ -9,6 +9,8 @@
   "Summary": "Краткое описание",
   "Content": "Описание",
   "Title": "Название",
+  "Servers": "Серверы",
+  "Code simple": "Пример кода",
   "Type": "Тип",
   "Enum": "Enum",
   "Pattern": "Шаблон",

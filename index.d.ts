@@ -14,6 +14,8 @@ interface OpenApiPlugin {
   setFooter(footer: null|string): void;
   getLogo(): string;
   setLogo(footer: string): void;
+  getRouteInfo(file: string, url: string, method: string): (file: string, url: string, method: string) => string|null;
+  setRouteInfo(routeInfo: (file: string, url: string, method: string) => string|null): void;
 }
 
 declare module 'vue/types/vue' {

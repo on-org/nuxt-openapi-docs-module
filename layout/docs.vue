@@ -232,7 +232,12 @@ table {
   width: 100%;
   border-collapse: collapse;
   overflow-x: auto;
-  display: block;
+}
+
+@media (max-width: 1000px) {
+  table {
+    display: block;
+  }
 }
 
 th,
@@ -267,7 +272,6 @@ tfoot {
 tfoot td {
   border-top: none;
 }
-
 
 
 .doc-info a {
