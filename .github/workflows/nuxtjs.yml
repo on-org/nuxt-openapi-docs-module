@@ -55,7 +55,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuxt-build-
       - name: Install dependencies
-        run: cd example && npm i
+        run: npm i && cd example && npm i
       - name: Static HTML export with Nuxt
         run: npm run example
       - name: Upload artifact
