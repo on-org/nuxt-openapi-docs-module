@@ -1,6 +1,6 @@
 const AuthPlugin = (context, inject) => {
   context.$openapidoc.setAccess((file) => {
-    if(context.isStatic) {
+    if(context.isStatic && !context.nuxtState) {
       return true;
     }
     return file !== 'no-access';
