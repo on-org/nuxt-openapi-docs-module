@@ -121,7 +121,6 @@ export default {
     handleResize() {
       this.isDesktop = window.innerWidth >= 639
       this.isMobile = window.innerWidth < 639;
-      console.log(this.isDesktop, this.isMenuOpen)
       if (!this.isDesktop && this.isMenuOpen) {
         this.isMenuOpen = false
       }
