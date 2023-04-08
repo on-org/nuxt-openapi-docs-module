@@ -14,6 +14,7 @@
     "isomorphic-dompurify": "^1.2.0",
     "js-yaml": "^4.1.0",
     "marked": "^4.3.0",
+    "sync-fetch": "^0.4.2",
     "vue": "^2.7.14"
   },
   "devDependencies": {

@@ -4,6 +4,7 @@ import * as fs from "fs";
 import {marked} from "marked";
 import * as yaml from 'js-yaml';
 import hljs from "highlight.js";
+import fetch from 'sync-fetch';
 
 import {addTemplate, addPlugin, defineNuxtModule, extendPages} from '@nuxt/kit'
 
@@ -95,10 +96,33 @@ function replaceMarkdown(obj, components, definitions, lastlink = null) {
 
 // Функция для парсинга YAML-файла
 function parseYamlFile(folder, fileName) {
-  const filePath = path.join(folder, fileName + '.yaml')
-  // const yamlData = this.nuxt.readContent(filePath)
-  const yamlData = fs.readFileSync(filePath, 'utf8');
-  return yaml.load(yamlData)
+  let yamlData = ''
+  if (fileName.startsWith('http')) {
+    yamlData = fetch(fileName).text();
+  } else {
+    const extension = path.extname(fileName);
+    if(!extension) {
+      fileName += '.yaml';
+    }
+    const filePath = path.join(folder, fileName)
+    yamlData = fs.readFileSync(filePath, 'utf8');
+  }
+
+  const extension = path.extname(fileName);
+  const newFileName = path.basename(fileName, extension);
+
+  return {fileName: newFileName, openApiSpec: yaml.load(yamlData)}
+}
+
+function filesCleanup(files) {
+  const result = {}
+  for (let i in files) {
+    const extension = path.extname(i);
+    const fileName = path.basename(i, extension);
+
+    result[fileName] = files[i]
+  }
+  return result
 }
 
 export default defineNuxtModule({
@@ -133,10 +157,13 @@ export default defineNuxtModule({
       })
     }
 
-    Object.keys(options.files()).forEach((fileName) => {
-      console.log('Generate: ' + fileName)
+    const files = filesCleanup(options.files());
+
+    Object.keys(options.files()).forEach(async (filePath) => {
+      console.log('Generate: ' + filePath)
       const localoptions = JSON.parse(JSON.stringify(options));
-      const openApiSpec = parseYamlFile(resolve(nuxt.options.rootDir, localoptions.folder), fileName)
+      const { openApiSpec, fileName } = parseYamlFile(resolve(nuxt.options.rootDir, localoptions.folder), filePath);
+
       if(!openApiSpec) return;
       if(!openApiSpec.paths) return;
 
@@ -187,6 +214,7 @@ export default defineNuxtModule({
                   item[`x-name-${i}`] = tagInfo[`x-name-${i}`];
                 }
               }
+
               pathsByTags[tag] = item;
             }
             const item = {
@@ -215,22 +243,22 @@ export default defineNuxtModule({
       localoptions.fileName = fileName;
 
 
+
       const layoutName = (`apidocs-layout-${fileName}`)
         .replace(/["']/g, "")
-        .replace(/./g, "-");
+        .replace(/\./g, "-");
       if(!nuxt.options.layouts[layoutName]) {
         addTemplate({
           src: resolve(__dirname, 'layout/docs.vue'),
           filename: `apidocs.layout.${fileName}.vue`,
           dst: resolve(__dirname, `.cache/apidocs.layout.${fileName}.vue`),
           write: true,
-          options: {...localoptions, files: options.files()},
+          options: {...localoptions, files: files},
         })
 
         // nuxt addLayout О_о!!!
         nuxt.options.layouts[layoutName] = resolve(__dirname, `.cache/apidocs.layout.${fileName}.vue`);
       }
-
 
 
       // Добавляем шаблон для каждого файла
@@ -239,7 +267,7 @@ export default defineNuxtModule({
         filename: `apidocs.${fileName}.vue`,
         dst: resolve(__dirname, `.cache/apidocs.${fileName}.vue`),
         write: true,
-        options: {...localoptions, files: options.files()},
+        options: {...localoptions, files: files},
       })
 
       extendPages((pages) => {

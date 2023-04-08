@@ -21,7 +21,7 @@ export default {
   layout(ctx) {
     return (`apidocs-layout-${ctx.route.params.file ?? ctx.route.meta[0].file}`)
       .replace(/["']/g, "")
-      .replace(/./g, "-");
+      .replace(/\./g, "-");
   },
   components: {
     OpenApiInfo,

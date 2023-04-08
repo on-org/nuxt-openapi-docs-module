@@ -60,8 +60,6 @@ export default {
   },
   async fetch() {
     try {
-      const ctx = this.$nuxt.context
-      this.currentLocale = ctx.route.params.locale ?? ctx.route.meta[0].locale;
       if(!this.$openapidoc.hasAccess(this.file)) {
         this.$nuxt.context.error({ status: 404, message: 'page not found' });
       }

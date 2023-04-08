@@ -1,0 +1,89 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "version": "1.0",
+    "title": "API Server templating using variables",
+    "description": "Various ways to define API servers in the spec including variables\n```yaml\n  servers:\n    - url: 'http://example.com/api'\n      description: Test server (just for example)\n    - url: '/api'\n    - url: '{protocol}://dev.com/api/{version}'\n      variables:\n        protocol:\n          description: Protocol (with enum)\n          default: https\n          enum:\n            - http\n            - https\n        version:\n          description: API Version (without enum)\n          default: v1\n    - url: '{protocol}://{environment}.example.com/{version}'\n      variables:\n        environment:\n          default: api    # Production server\n          description: >\n            Server choices:\n            * `api` Production (this is the default).\n            * `api.qa` QA server.\n            * `api.dev` Development server.\n          enum:\n            - api      # Production server\n            - api.dev  # Development server\n            - api.qa   # Testing server\n        protocol:\n          default: https\n          enum:\n            - http\n            - https\n        version:\n          default: v2\n          enum:\n            - v1\n            - v2\n```\n"
+  },
+  "servers": [
+    {
+      "url": "http://example.com/api",
+      "description": "Test server (just for example)"
+    },
+    {
+      "url": "{protocol}://dev.com/api/{version}",
+      "variables": {
+        "protocol": {
+          "description": "Protocol (with enum)",
+          "default": "https",
+          "enum": [
+            "http",
+            "https"
+          ]
+        },
+        "version": {
+          "description": "API Version (without enum)",
+          "default": "v1"
+        }
+      }
+    },
+    {
+      "url": "{protocol}://{environment}.example.com/{version}",
+      "variables": {
+        "environment": {
+          "default": "api",
+          "description": "Server choices:\n * `api` Production (this is the default).\n * `api.qa` QA server.\n * `api.dev` Development server.\n",
+          "enum": [
+            "api",
+            "api.dev",
+            "api.qa"
+          ]
+        },
+        "protocol": {
+          "default": "https",
+          "enum": [
+            "http",
+            "https"
+          ]
+        },
+        "version": {
+          "default": "v2",
+          "enum": [
+            "v1",
+            "v2"
+          ]
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/api-server-template": {
+      "get": {
+        "summary": "Dynamic API Server.",
+        "description": "Uses API server template string and variables which can be used to generatea a desired API server url -  The selected and computed API Server URL should be shown against `API SERVER`.",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "description": "Person Name",
+                      "type": "string"
+                    },
+                    "age": {
+                      "description": "Person Age",
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

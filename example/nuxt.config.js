@@ -52,6 +52,9 @@ export default {
               'petstore_extended': 'Petstore Extended Api',
               'localization': 'Localization',
               'no-access': 'no access',
+              'test-yaml.yaml': 'yaml ext',
+              'test-json.json': 'json ext',
+              'https://petstore.swagger.io/v2/swagger.json': 'petstore url',
             }
           }
            return {
