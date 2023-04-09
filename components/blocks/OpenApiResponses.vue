@@ -31,8 +31,6 @@
 </template>
 
 <script>
-import OpenApiExamples from './OpenApiExamplesResponse.vue';
-import OpenApiSchema from "./OpenApiSchema.vue";
 import {tr} from "../helpers";
 
 export default {
@@ -50,10 +48,6 @@ export default {
       type: Object,
       default: () => ({}),
     },
-  },
-  components: {
-    OpenApiSchema,
-    OpenApiExamples,
   },
   methods: {
     tr

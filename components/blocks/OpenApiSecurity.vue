@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import OpenApiSecurityRequirement from './OpenApiSecurityRequirement.vue';
 import {tr} from "../helpers";
 
 export default {
@@ -32,9 +31,6 @@ export default {
       type: String,
       required: true,
     },
-  },
-  components: {
-    OpenApiSecurityRequirement,
   },
   methods: {
     tr

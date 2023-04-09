@@ -61,26 +61,12 @@
 </template>
 
 <script>
-import OpenApiRouteHeader from './blocks/OpenApiRouteHeader.vue';
-import OpenApiRequestBody from './blocks/OpenApiRequestBody.vue';
-import OpenApiSecurity from './blocks/OpenApiSecurity.vue';
-import OpenApiParameters from './blocks/OpenApiParameters.vue';
-import OpenApiResponses from './blocks/OpenApiResponses.vue';
-import OpenApiExamples from './blocks/OpenApiExamples.vue';
-import OpenApiCallbacks from "./blocks/OpenApiCallbacks.vue";
 import {tr} from "./helpers";
 
 export default {
   name: 'OpenApiRoute',
   components: {
-    OpenApiCallbacks,
-    OpenApiRouteHeader,
-    OpenApiRequestBody,
-    OpenApiSecurity,
-    OpenApiParameters,
-    OpenApiResponses,
-    OpenApiExamples,
-    CodeSimples: () => import('./lib/CodeSimples.vue')
+    // CodeSimples: () => import('./lib/CodeSimples.vue')
   },
   props: {
     route: {

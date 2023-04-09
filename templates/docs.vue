@@ -8,27 +8,23 @@
   </div>
 </template>
 
+
 <script>
-import OpenApiInfo from '../components/OpenApiInfo.vue';
-import OpenApiComponents from '../components/OpenApiComponents.vue';
-import OpenApiRoute from '../components/OpenApiRoute.vue';
-import NotFound from '../components/NotFound.vue';
-import SearchBlock from '../components/lib/SearchBlock.vue';
-import {tr} from "../components/helpers";
+
+const isNuxt3 = <%= options.isNuxt3 %>;
+const isNuxt2 = <%= options.isNuxt2 %>;
+
+if(isNuxt3) {
+  definePageMeta({
+    layout: `<%= options.layoutName %>`,
+  });
+}
 
 export default {
   name: 'AppDocs',
-  layout(ctx) {
-    return (`apidocs-layout-${ctx.route.params.file ?? ctx.route.meta[0].file}`)
-      .replace(/["']/g, "")
-      .replace(/\./g, "-");
-  },
-  components: {
-    OpenApiInfo,
-    OpenApiComponents,
-    OpenApiRoute,
-    NotFound,
-    SearchBlock,
+  layout: `<%= options.layoutName %>`,
+  transition: {
+    name: 'fade'
   },
   head() {
     if (this.isInfo) {
@@ -43,10 +39,28 @@ export default {
         description: '',
       };
     }
+
+    const title = this.activeRoute[`x-summary-${this.currentLocale}`] ?? this.activeRoute['summary'] ?? ''
+    const description = this.activeRoute[`x-description-${this.currentLocale}`] ?? this.activeRoute['description'] ?? ''
+
     return {
-      title: '[' +this.file + '] - ' + tr(this.activeRoute, 'summary', this.currentLocale),
-      description: tr(this.activeRoute, 'description', this.currentLocale),
+      title: '[' +this.file + '] - ' + title,
+      description: description,
     };
+  },
+  setup() {
+    if(isNuxt3) {
+      const route = useRoute()
+      const currentLocale = ref(route.params.locale ?? route.meta.locale)
+      const type = ref(route.params.type ?? route.meta.type)
+      const path = ref(route.params.path ?? route.meta.path)
+
+      return {
+        currentLocale,
+        type,
+        path
+      }
+    }
   },
   async fetch() {
     const ctx = this.$nuxt.context
@@ -59,15 +73,15 @@ export default {
       console.error(ctx.route)
     }
   },
-  created() { this.$fetch(); },
+  created() { if(this && this.$fetch) this.$fetch(); },
   data() {
     return {
       options: <%= JSON.stringify(options) %>,
       path_doc: '<%= options.path %>',
       file: '<%= options.fileName %>',
-      currentLocale: 'en',
-      type: '',
-      path: '',
+      // currentLocale: 'en',
+      // type: '',
+      // path: '',
     };
   },
   watch: {
@@ -136,13 +150,14 @@ export default {
   },
   mounted() {
     if(process.client) {
-      this.$nuxt.$on('downloadYamlDoc', this.downloadYaml);
+      this.$openapidocBus.$on('downloadYamlDoc', this.downloadYaml);
     }
   },
+  unmounted() {
+    this.$openapidocBus.$off('downloadYamlDoc', this.downloadYaml);
+  },
   destroyed() {
-    if(process.client) {
-      this.$nuxt.$off('downloadYamlDoc', this.downloadYaml);
-    }
+    this.$openapidocBus.$off('downloadYamlDoc', this.downloadYaml);
   },
 }
 </script>

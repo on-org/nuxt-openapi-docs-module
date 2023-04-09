@@ -37,17 +37,9 @@
 </template>
 
 <script>
-import OpenApiParameters from "./OpenApiParameters.vue";
-import OpenApiRequestBody from "./OpenApiRequestBody.vue";
-import OpenApiResponses from "./OpenApiResponses.vue";
 
 export default {
   name: "OpenApiCallbacks",
-  components: {
-    OpenApiParameters,
-    OpenApiRequestBody,
-    OpenApiResponses,
-  },
   props: {
     callbacks: {
       type: Object,

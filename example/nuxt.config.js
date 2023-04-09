@@ -116,9 +116,6 @@ export default {
              "toomany-example-generation": "toomany-example-generation",
              "xml": "xml",
            }
-        },
-        params: function(ctx) {
-          return [{ in: 'queryString', name: 'apikey', value: '1111'}]
         }
       }
     ],

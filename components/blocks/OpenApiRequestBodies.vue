@@ -19,7 +19,6 @@
 }
 </style>
 <script>
-import OpenApiRequestBody from './OpenApiRequestBody.vue';
 import {tr} from "../helpers";
 
 export default {
@@ -33,9 +32,6 @@ export default {
       type: String,
       required: true,
     },
-  },
-  components: {
-    OpenApiRequestBody,
   },
   methods: {
     tr

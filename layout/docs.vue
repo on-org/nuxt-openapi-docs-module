@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col h-screen dark:bg-gray-900 dark:text-gray-300/75">
-    <MainHeader :isMenuOpen="isMenuOpen" @toggleMenu="toggleMenu" class="bg-blue dark:bg-blue">
+    <OpenApiMainHeader :isMenuOpen="isMenuOpen" @toggleMenu="toggleMenu" class="bg-blue dark:bg-blue">
       <template #logo>
         <span v-html="logo"></span>
       </template>
@@ -15,48 +15,51 @@
           @toggleDarkMode="toggleDarkMode"
         />
       </div>
-    </MainHeader>
+    </OpenApiMainHeader>
     <div class="flex flex-1 overflow-hidden">
-      <MainLeftMenu :isMenuOpen="isMenuOpen" :isMobile="isMobile">
+      <OpenApiMainLeftMenu :isMenuOpen="isMenuOpen" :isMobile="isMobile">
         <OpenApiMenu :routes="pathsByTags" :current-locale="currentLocale" :file="file" :path="path_doc" :files="files" :locales="locales" />
-      </MainLeftMenu>
-      <MainContent style="padding-bottom: 4rem">
-        <transition name="fade" tag="div">
-          <Nuxt />
+      </OpenApiMainLeftMenu>
+      <OpenApiMainContent style="padding-bottom: 4rem">
+        <transition name="fade" tag="div" v-if="isVue2">
+          <Nuxt v-if="isVue2" />
         </transition>
+
+        <transition name="fade" tag="div" v-if="isVue3">
+          <div v-if="isVue3">
+            <slot v-if="isVue3" />
+          </div>
+        </transition>
+
 
         <footer class="fixed w-full bg-gray-900 py-8" v-if="footer">
           <div class="container mx-auto flex justify-between bg-gray-100 text-gray-800 border-t border-gray-700 dark:bg-slate dark:text-gray-300/75" v-html="footer">
           </div>
         </footer>
-      </MainContent>
+      </OpenApiMainContent>
     </div>
   </div>
 </template>
 
 <script>
-import MainHeader from '../components/lib/MainHeader.vue';
-import MainLeftMenu from '../components/lib/MainLeftMenu.vue';
-import MainContent from '../components/lib/MainContent.vue';
-import OpenApiHeader from '../components/OpenApiHeader.vue';
-import OpenApiMenu from '../components/OpenApiMenu.vue';
-import OpenApiInfo from '../components/OpenApiInfo.vue';
-import OpenApiComponents from '../components/OpenApiComponents.vue';
-import OpenApiRoute from '../components/OpenApiRoute.vue';
-import NotFound from '../components/NotFound.vue';
+const isNuxt3 = <%= options.isNuxt3 %>;
+const isNuxt2 = <%= options.isNuxt2 %>;
 
 export default {
   name: 'openapi-docs',
-  components: {
-    MainHeader,
-    MainLeftMenu,
-    MainContent,
-    OpenApiHeader,
-    OpenApiInfo,
-    OpenApiComponents,
-    OpenApiRoute,
-    OpenApiMenu,
-    NotFound,
+
+  setup() {
+    if(isNuxt3) {
+      const file = '<%= options.fileName %>';
+      const { $openapidoc } = useNuxtApp()
+
+      if(!$openapidoc.hasAccess(file)) {
+        throw createError({
+          statusCode: 404,
+          message: 'page not found',
+        })
+      }
+    }
   },
   async fetch() {
     try {
@@ -67,7 +70,9 @@ export default {
       console.error(e)
     }
   },
-  created() { this.$fetch(); },
+  created() {
+    if(this && this.$fetch) this.$fetch();
+  },
   watch: {
     '$route.meta': {
       handler: function(val) {
@@ -104,6 +109,12 @@ export default {
     },
     logo() {
       return this.$openapidoc.getLogo().replace(':name', this.name)
+    },
+    isVue2(){
+      return isNuxt2
+    },
+    isVue3(){
+      return isNuxt3
     }
   },
   methods: {
@@ -139,6 +150,9 @@ export default {
     }
 
   },
+  unmounted() {
+    window.removeEventListener('resize', this.handleResize)
+  },
   beforeDestroy() {
     window.removeEventListener('resize', this.handleResize)
   },
@@ -146,9 +160,6 @@ export default {
 </script>
 
 <style>
-@import "../tailwindcss.css";
-@import 'highlight.js/styles/tokyo-night-dark.css';
-
 :not(pre) > code[class*="language-"], pre[class*="language-"] {
   background: #001529;
   color: #d3d3d3;

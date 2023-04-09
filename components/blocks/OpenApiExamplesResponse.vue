@@ -11,7 +11,7 @@
           <p class="mb-1"><strong>Description:</strong> {{ tr(example, 'description', currentLocale) }}</p>
         </template>
         <template v-if="example.value">
-          <open-api-schema :schema="example.schema" :current-locale="currentLocale" :components="components" />
+          <OpenApiSchema :schema="example.schema" :current-locale="currentLocale" :components="components" />
           <template v-if="isJsonMediaType(mediaType)">
             <pre class="mt-2"><code :class="'language-json'">{{ example.value }}</code></pre>
           </template>
@@ -25,14 +25,10 @@
 </template>
 
 <script>
-import openApiSchema from './OpenApiSchema.vue';
 import {tr} from "../helpers";
 
 export default {
   name: 'OpenApiExamples',
-  components: {
-    openApiSchema,
-  },
   props: {
     examples: {
       type: Object,

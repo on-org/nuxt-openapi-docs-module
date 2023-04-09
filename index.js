@@ -6,7 +6,9 @@ import * as yaml from 'js-yaml';
 import hljs from "highlight.js";
 import fetch from 'sync-fetch';
 
-import {addTemplate, addPlugin, defineNuxtModule, extendPages} from '@nuxt/kit'
+import {addTemplate, addPlugin, defineNuxtModule, extendPages, isNuxt3, isNuxt2, addLayout, addComponentsDir, addComponent} from '@nuxt/kit'
+import {join, parse, relative} from "pathe";
+import {kebabCase} from "scule";
 
 function sanitizeText(text) {
   const map = {
@@ -129,10 +131,6 @@ export default defineNuxtModule({
   meta: {
     name: 'nuxt-open-api-docs',
     configKey: 'openApiDocs',
-    compatibility: {
-      nuxt: '^2.0.0',
-      bridge: false,
-    },
   },
   defaults: {
     folder: './docs/openapi',
@@ -142,7 +140,8 @@ export default defineNuxtModule({
     doc: {},
     files: {},
   },
-  setup(options, nuxt) {
+  async setup(options, nuxt) {
+    // console.log(111, nuxt.options.buildDir)
     if(options.debug) {
       nuxt.hook('generate:route', (route) => {
         console.log(`[GENERATE DEBUG] Generating route: ${route.route}`)
@@ -157,9 +156,31 @@ export default defineNuxtModule({
       })
     }
 
+    const co = await addComponentsDir({
+      path: path.resolve(__dirname, "./components"),
+      pathPrefix: false,
+      // prefix: 'OA',
+      extensions: ['vue']
+    })
+
+    nuxt.hook("components:dirs", (dirs) => {
+      // console.log(222, dirs)
+    });
+
+    if (isNuxt3(nuxt)) {
+      // await addComponent({
+      //   name: 'Nuxt',
+      //   filePath: path.resolve(__dirname, "./NuxtBlock.vue"),
+      // })
+
+    }
+
+    options.isNuxt3 = isNuxt3(nuxt);
+    options.isNuxt2 = isNuxt2(nuxt);
+
     const files = filesCleanup(options.files());
 
-    Object.keys(options.files()).forEach(async (filePath) => {
+    Object.keys(options.files()).forEach((filePath) => {
       console.log('Generate: ' + filePath)
       const localoptions = JSON.parse(JSON.stringify(options));
       const { openApiSpec, fileName } = parseYamlFile(resolve(nuxt.options.rootDir, localoptions.folder), filePath);
@@ -241,41 +262,40 @@ export default defineNuxtModule({
       localoptions.doc = replaceMarkdown(openApiSpec, openApiSpec.components, openApiSpec.definitions);
       localoptions.pathsByTags = pathsByTags;
       localoptions.fileName = fileName;
+      localoptions.layoutName = kebabCase(`apidocs-layout-${fileName}`).replace(/["']/g, "");
 
-
-
-      const layoutName = (`apidocs-layout-${fileName}`)
-        .replace(/["']/g, "")
-        .replace(/\./g, "-");
-      if(!nuxt.options.layouts[layoutName]) {
-        addTemplate({
-          src: resolve(__dirname, 'layout/docs.vue'),
-          filename: `apidocs.layout.${fileName}.vue`,
-          dst: resolve(__dirname, `.cache/apidocs.layout.${fileName}.vue`),
-          write: true,
-          options: {...localoptions, files: files},
-        })
-
-        // nuxt addLayout О_о!!!
-        nuxt.options.layouts[layoutName] = resolve(__dirname, `.cache/apidocs.layout.${fileName}.vue`);
-      }
-
-
-      // Добавляем шаблон для каждого файла
-      addTemplate({
-        src: resolve(__dirname, 'templates/docs.vue'),
-        filename: `apidocs.${fileName}.vue`,
-        dst: resolve(__dirname, `.cache/apidocs.${fileName}.vue`),
+      addLayout({
+        src: resolve(__dirname, 'layout/docs.vue'),
+        filename: `apidocs.layout.${fileName}.vue`,
+        name: localoptions.layoutName,
         write: true,
         options: {...localoptions, files: files},
       })
+
+      if(isNuxt3(nuxt)) {
+        nuxt.hook("app:templates", (app) => {
+          // console.log(app.layouts)
+        });
+      }
+
+      // Добавляем шаблон для каждого файла
+     addTemplate({
+        src: resolve(__dirname, 'templates/docs.vue'),
+        filename: `apidocs.${fileName}.vue`,
+        // dst: resolve(__dirname, `.cache/apidocs.${fileName}.vue`),
+        write: true,
+        options: {...localoptions, files: files},
+      })
+
+
 
       extendPages((pages) => {
         Object.keys(localoptions.locales).forEach((locale) => {
           pages.push({
             name: `openapi-${localoptions.path}/${fileName}/${locale}-info`,
             path: `/${localoptions.path}/${fileName}/${locale}/get/info`,
-            component: resolve(__dirname, `.cache/apidocs.${fileName}.vue`),
+            component: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
+            file: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
             meta: {
               file: fileName,
               locale: locale,
@@ -287,7 +307,8 @@ export default defineNuxtModule({
           pages.push({
             name: `openapi-${localoptions.path}/${fileName}/${locale}-components`,
             path: `/${localoptions.path}/${fileName}/${locale}/get/components`,
-            component: resolve(__dirname, `.cache/apidocs.${fileName}.vue`),
+            component: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
+            file: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
             meta: {
               file: fileName,
               locale: locale,
@@ -302,7 +323,8 @@ export default defineNuxtModule({
               pages.push({
                 name: `openapi-${localoptions.path}/${fileName}/${locale}-${type}-${i}`,
                 path: `/${localoptions.path}/${fileName}/${locale}/${type}/${i}`,
-                component: resolve(__dirname, `.cache/apidocs.${fileName}.vue`),
+                component: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
+                file: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
                 meta: {
                   file: fileName,
                   locale: locale,
@@ -318,11 +340,23 @@ export default defineNuxtModule({
     })
 
 
-    addPlugin({
-      src: path.resolve(__dirname, 'plugin.js'),
-      fileName: 'openapiplugin.js',
-      options,
-    })
+    if(isNuxt2(nuxt)) {
+      addPlugin({
+        src: path.resolve(__dirname, 'plugin.js'),
+        fileName: 'openapiplugin.js',
+        options,
+      })
+    }
+    if(isNuxt3(nuxt)) {
+      addPlugin({
+        src: path.resolve(__dirname, 'plugin3.js'),
+        fileName: 'openapiplugin.js',
+        options,
+      })
+    }
+
+    nuxt.options.css.push(path.resolve(__dirname, '.', 'tokyo-night-dark.css'));
+    nuxt.options.css.push(path.resolve(__dirname, '.', 'tailwindcss.css'));
   },
 });
 

@@ -16,6 +16,7 @@ work with static and server target
 |---------|-------------------------|
 | 1.0     | 	2.x                    |
 | 2.0     | 	3.x                    |
+| 3.0     | 	2.x and 3.x            |
 
 You can use this table to determine which version of the package supports which versions of Nuxt. Version 1.0.0 supports only Nuxt 1.x, while version 2.0.0 supports only Nuxt 2.x. Note that a newer version of the package may not work with an older version of Nuxt.
 
@@ -57,7 +58,7 @@ modules: [
         {
             folder: './docs/openapi',
             name: 'OpenApiDocs',
-            files: function(ctx) {return { 'News-API': 'News API'}},
+            files: function() {return { 'News-API': 'News API'}},
         }
     ],
 ],
@@ -144,4 +145,14 @@ Example: example/plugins/auth.js
   })
 
   context.$openapidoc.setFooter('<div><b>Nuxt OpenApi doc panel</b> </div>')
+```
+
+
+### use open api url
+
+```js
+{
+  // ...
+  files: function() {return { 'https://petstore.swagger.io/v2/swagger.json': 'petstore url' }}
+}
 ```

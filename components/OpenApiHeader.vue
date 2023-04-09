@@ -1,7 +1,7 @@
 <template>
   <div class="right flex items-center">
     <div class="files pr-4">
-      <DarkModeToggle :value="isDarkMode" @change="() => $emit('toggleDarkMode')" />
+      <OpenApiDarkModeToggle :value="isDarkMode" @change="() => $emit('toggleDarkMode')" />
     </div>
     <div class="yaml">
       <button
@@ -14,18 +14,12 @@
       </button>
     </div>
     <div class="search">
-      <Search :current-locale="currentLocale" :file="file" :path="path" />
+      <OpenApiSearch :current-locale="currentLocale" :file="file" :path="path" />
     </div>
   </div>
 </template>
 <script>
-import Search from './lib/Search.vue'
-import DarkModeToggle from './lib/DarkModeToggle.vue'
 export default {
-  components: {
-    DarkModeToggle,
-    Search
-  },
   props: {
     currentLocale: {
       type: String,
@@ -57,7 +51,7 @@ export default {
   },
   methods: {
     downloadYaml() {
-      this.$nuxt.$emit('downloadYamlDoc');
+      this.$openapidocBus.$emit('downloadYamlDoc');
     }
   },
 };

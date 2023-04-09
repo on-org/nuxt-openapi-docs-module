@@ -68,11 +68,11 @@ export default {
   },
   mounted() {
     if(process.client) {
-      this.$nuxt.$on('toggleSearchDoc', this.toggleSearch);
+      this.$openapidocBus.$on('toggleSearchDoc', this.toggleSearch);
     }
   },
   beforeDestroy() {
-    this.$nuxt.$off('toggleSearchDoc', this.toggleSearch);
+    this.$openapidocBus.$off('toggleSearchDoc', this.toggleSearch);
   },
   methods: {
     tr,
@@ -157,5 +157,6 @@ export default {
       }
     }
   }
-} </script>
+};
+</script>
 <style> /* Add custom styles here */ </style>

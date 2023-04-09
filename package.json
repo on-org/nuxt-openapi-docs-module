@@ -1,21 +1,25 @@
 {
   "name": "nuxt-openapi-docs-module",
-  "version": "1.8.3",
+  "version": "3.0.1",
   "description": "A plugin for Nuxt.js to generate pages from OpenAPI specifications",
   "main": "index.js",
   "types": "index.d.ts",
   "license": "MIT",
   "scripts": {
-    "dev": "cd example && npm run dev",
-    "example": "cd example && rm -rf dist && npm run generate && cd .. && rm -rf docs && mv example/dist docs && rm -rf example/dist && git add docs"
+    "reinstall:2": "rm -rf node_modules package-lock.json .nuxt && npm i && cd example && rm -rf node_modules package-lock.json .nuxt && npm i",
+    "reinstall:3": "rm -rf node_modules package-lock.json .nuxt && npm i && cd example3 && rm -rf node_modules package-lock.json .nuxt && npm i",
+    "dev:2": "cd example && npm run dev",
+    "dev:3": "cd example3 && npm run dev",
+    "example:2": "cd example && rm -rf dist .output && npm run generate && cd .. && rm -rf docs && mv example/dist docs && rm -rf example/dist && git add docs",
+    "example:3": "cd example3 && rm -rf dist .output && npm run generate && cd .. && rm -rf docs && mv example3/.output/public docs && rm -rf example3/.output example3/dist example3/.nuxt && git add docs"
   },
   "dependencies": {
     "highlight.js": "^11.7.0",
     "isomorphic-dompurify": "^1.2.0",
     "js-yaml": "^4.1.0",
     "marked": "^4.3.0",
-    "sync-fetch": "^0.4.2",
-    "vue": "^2.7.14"
+    "mitt": "^3.0.0",
+    "sync-fetch": "^0.4.2"
   },
   "devDependencies": {
     "@nuxt/kit": "3.2.3",
@@ -29,7 +33,16 @@
     "request-templater": "^1.2.1",
     "tailwindcss": "^3.3.1"
   },
+  "peerDependenciesMeta": {
+    "nuxt": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    }
+  },
   "peerDependencies": {
-    "nuxt": "^2.16.2"
+    "nuxt": "^2.16.1 || ^3.0.1",
+    "vue": "^2.6.1 || ^3.0.1"
   }
 }

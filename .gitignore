@@ -29,3 +29,16 @@ Homestead.json
 .cache/*.vue
 /templates/.docs.*
 /example/.nuxt
+/example3/.nuxt
+
+.yarn/cache
+.yarn/unplugged
+.yarn/install-state.gz
+
+/example/.yarn/cache
+/example/.yarn/unplugged
+/example/.yarn/install-state.gz
+
+/example3/.yarn/cache
+/example3/.yarn/unplugged
+/example3/.yarn/install-state.gz

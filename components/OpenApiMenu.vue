@@ -50,14 +50,8 @@
 </template>
 
 <script>
-import CustomDropdown from './lib/CustomDropdown.vue'
-import MainLeftMenuSubMenu from './lib/MainLeftMenuSubMenu.vue'
 import {getTagColor, tr} from "./helpers";
 export default {
-  components: {
-    CustomDropdown,
-    MainLeftMenuSubMenu,
-  },
   props: {
     routes: {
       type: Object,

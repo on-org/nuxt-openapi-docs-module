@@ -30,13 +30,9 @@
 </template>
 
 <script>
-import OpenApiSchema from './OpenApiSchema.vue';
 import {tr} from "../helpers";
 
 export default {
-  components: {
-    OpenApiSchema
-  },
   props: {
     title: {
       type: String,
