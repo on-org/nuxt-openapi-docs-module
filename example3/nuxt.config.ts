@@ -1,7 +1,11 @@
+const isDev = process.env.NODE_ENV !== 'production';
 import { defineNuxtConfig } from "nuxt/config";
 import * as path from "path";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  app: {
+    baseURL: isDev ? '/' : '/nuxt-openapi-docs-module'
+  },
   modules: [
     [
       'nuxt-openapi-docs-module',
