@@ -18,6 +18,22 @@ work with static and server target
 | 2.0     | 	3.x                    |
 | 3.0     | 	2.x and 3.x            |
 
+
+for nuxt 3 need add vite.config.ts
+
+```js
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  build: {
+    rollupOptions: {
+      external: ["vue/server-renderer"],
+    },
+  },
+});
+
+```
+
 You can use this table to determine which version of the package supports which versions of Nuxt. Version 1.0.0 supports only Nuxt 1.x, while version 2.0.0 supports only Nuxt 2.x. Note that a newer version of the package may not work with an older version of Nuxt.
 
 ![desktop image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/white.png)
