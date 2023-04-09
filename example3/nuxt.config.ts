@@ -4,7 +4,7 @@ import * as path from "path";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   app: {
-    baseURL: isDev ? '/' : '/nuxt-openapi-docs-module'
+    baseURL: isDev ? '/' : '/nuxt-openapi-docs-module/'
   },
   modules: [
     [
