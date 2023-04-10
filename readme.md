@@ -35,9 +35,10 @@ export default defineConfig({
 ```
 
 
-- [✨ &nbsp;Release Notes](/CHANGELOG.md)
-[🏀 Online playground](https://stackblitz.com/github/on-org/nuxt-openapi-docs-module?file=playground/pages/index.vue)
-[🛠 Demo](https://on-org.github.io/nuxt-openapi-docs-module/)
+- [✨ &nbsp;Release Notes](/changelog.md)
+- [🛠 Demo](https://on-org.github.io/nuxt-openapi-docs-module/)
+<!-- - [🏀 Online playground](https://stackblitz.com/github/on-org/nuxt-openapi-docs-module?file=playground/pages/index.vue) -->
+
 
 
 ## Quick Setup
