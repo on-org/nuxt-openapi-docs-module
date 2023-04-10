@@ -39,7 +39,10 @@ export default defineConfig({
 - [🛠 Demo](https://on-org.github.io/nuxt-openapi-docs-module/)
 <!-- - [🏀 Online playground](https://stackblitz.com/github/on-org/nuxt-openapi-docs-module?file=playground/pages/index.vue) -->
 
-
+![desktop image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/white.png)
+![desktop image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/white2.png)
+![black image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/black.png)
+![mobile image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/mobile.png)
 
 ## Quick Setup
 
