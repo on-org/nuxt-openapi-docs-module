@@ -1,3 +1,55 @@
+# Dependencies
+node_modules
+
+# Logs
+*.log*
+
+# Temp directories
+.temp
+.tmp
+.cache
+
+# Yarn
+**/.yarn/cache
+**/.yarn/*state*
+
+# Nuxt
+.nuxt
+.output
+.vercel_build_output
+.build-*
+.env
+.netlify
+
+# Testing
+reports
+coverage
+*.lcov
+.nyc_output
+
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Intellij idea
+*.iml
+.idea
+
+# OSX
+.DS_Store
+.AppleDouble
+.LSOverride
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+
 /vendor/
 node_modules/
 npm-debug.log
@@ -16,7 +68,6 @@ public_html/storage
 public_html/hot
 
 storage/*.key
-.env
 Homestead.yaml
 Homestead.json
 /.vagrant
@@ -24,21 +75,20 @@ Homestead.json
 /input
 /input_1
 /output
-.idea
 
 .cache/*.vue
 /templates/.docs.*
-/example/.nuxt
-/example3/.nuxt
+/playground/.nuxt
+/playground2/.nuxt
 
 .yarn/cache
 .yarn/unplugged
 .yarn/install-state.gz
 
-/example/.yarn/cache
-/example/.yarn/unplugged
-/example/.yarn/install-state.gz
+/playground/.yarn/cache
+/playground/.yarn/unplugged
+/playground/.yarn/install-state.gz
 
-/example3/.yarn/cache
-/example3/.yarn/unplugged
-/example3/.yarn/install-state.gz
+/playground2/.yarn/cache
+/playground2/.yarn/unplugged
+/playground2/.yarn/install-state.gz

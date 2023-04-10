@@ -1,0 +1,27 @@
+{
+  "name": "nuxt-text-docs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "NODE_OPTIONS=--max-old-space-size=12192 nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate1": "nuxt generate --max_old_space_size=12192 --optimize_for_size",
+    "generate": "node --max-old-space-size=12192 node_modules/nuxt/bin/nuxt.js generate"
+  },
+  "dependencies": {
+    "core-js": "^3.25.3"
+  },
+  "devDependencies": {
+    "@nuxt/types": "^2.16.3",
+    "@nuxt/typescript-build": "^3.0.1",
+    "@types/node": "^18.15.11",
+    "nuxt": "^2.16.2",
+    "ts-loader": "^8.4.0",
+    "tslib": "^2.5.0",
+    "typescript": "^4.8.4",
+    "vue": "^2.7.10",
+    "vue-server-renderer": "^2.7.10",
+    "vue-template-compiler": "^2.7.10"
+  }
+}

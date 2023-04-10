@@ -1,0 +1,5 @@
+{
+  "name": "nuxt-open-api-docs",
+  "configKey": "openApiDocs",
+  "version": "3.1.1"
+}

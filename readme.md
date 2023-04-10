@@ -34,34 +34,48 @@ export default defineConfig({
 
 ```
 
-You can use this table to determine which version of the package supports which versions of Nuxt. Version 1.0.0 supports only Nuxt 1.x, while version 2.0.0 supports only Nuxt 2.x. Note that a newer version of the package may not work with an older version of Nuxt.
 
-![desktop image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/white.png)
-![desktop image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/white2.png)
-![black image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/black.png)
-![mobile image](https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/mobile.png)
+- [✨ &nbsp;Release Notes](/CHANGELOG.md)
+[🏀 Online playground](https://stackblitz.com/github/on-org/nuxt-openapi-docs-module?file=playground%2Fapp.vue)
 
-# Example
+## Quick Setup
 
-[Show](https://on-org.github.io/nuxt-openapi-docs-module/)
+1. Add `nuxt-openapi-docs-module` dependency to your project
 
-# Installation
 ```bash
-npm install nuxt-openapi-docs-module
+# Using pnpm
+pnpm add -D nuxt-openapi-docs-module
+
+# Using yarn
+yarn add --dev nuxt-openapi-docs-module
+
+# Using npm
+npm install --save-dev nuxt-openapi-docs-module
 ```
 
-Usage
-Add the `nuxt-openapi-docs-module` to your Nuxt.js application by adding it to the modules section in your nuxt.config.js file:
+2. Add `nuxt-openapi-docs-module` to the `modules` section of `nuxt.config.ts`
 
+nuxt 3
+```js
+export default defineNuxtConfig({
+  modules: [
+    'my-module'
+  ]
+})
+```
+
+nuxt 2
 ```javascript
 module.exports = {
-modules: [
-'nuxt-openapi-docs-module',
-],
-// ...
+  modules: [
+    'nuxt-openapi-docs-module',
+  ],
 }
 ```
-This will automatically include the necessary components and set up the routes for your OpenAPI documentation.
+
+That's it! You can now use Open Api Docs in your Nuxt app ✨
+
+
 
 ## Configuration
 You can customize the behavior of the module by providing options in the nuxt.config.js file.
@@ -86,7 +100,7 @@ modules: [
 - `path`: the component url for docs.
 - `files`: function with files list in OpenApiDocs folder, files: function() {return { 'News-API': 'News API'}}.
 - `debug`: print debug information to console, Default: false
-- 
+-
 ### Folder Structure
 The default folder structure for your OpenAPI specification files should look like this:
 
@@ -103,7 +117,7 @@ This module provides several reusable Nuxt.js components to render your OpenAPI 
 - `OpenApiInfo`: the component used to render the OpenAPI specification information.
 - `OpenApiComponents`: the component used to render the OpenAPI components.
 - `OpenApiRoute`: the component used to render a single OpenAPI route.
-You can customize these components by modifying the corresponding .vue files in the components/ folder.
+  You can customize these components by modifying the corresponding .vue files in the components/ folder.
 
 files: moduleOptions.files ?? function (ctx) { return {} },
 
@@ -132,26 +146,26 @@ Example: ```example/docs/openapi/localization.yaml```
 
 Here's a description of all the properties and methods of the OpenApiPlugin interface:
 
- - `addParam(pos: 'headers'|'query'|'postData'|'path'|'cookie', name: string, value: string, type?: string): void`
-This method allows you to add a parameter to the API documentation. The pos parameter specifies the position of the parameter (headers, query, postData, path, or cookie), while name and value specify the name and value of the parameter, respectively. The type parameter is optional and specifies the data type of the parameter.
+- `addParam(pos: 'headers'|'query'|'postData'|'path'|'cookie', name: string, value: string, type?: string): void`
+  This method allows you to add a parameter to the API documentation. The pos parameter specifies the position of the parameter (headers, query, postData, path, or cookie), while name and value specify the name and value of the parameter, respectively. The type parameter is optional and specifies the data type of the parameter.
 
 - `clearParams(): void`
-This method clears all the parameters that have been added to the API documentation.
+  This method clears all the parameters that have been added to the API documentation.
 
 - `addLocale(lang: string, locale: {[key: string]: string}): void`
-This method allows you to add a translation for a specific language. The lang parameter specifies the language code (e.g., "en", "fr", "es"), while the locale parameter is an object that maps translation keys to their respective translations.
+  This method allows you to add a translation for a specific language. The lang parameter specifies the language code (e.g., "en", "fr", "es"), while the locale parameter is an object that maps translation keys to their respective translations.
 
 - `setAccess(accessor: (path: string) => boolean): boolean`
-This method sets the accessor function that determines whether the user has access to a specific file. The accessor function takes a file path as input and returns a boolean indicating whether the user has access.
+  This method sets the accessor function that determines whether the user has access to a specific file. The accessor function takes a file path as input and returns a boolean indicating whether the user has access.
 
 - `setFooter(footer: null|string): void`
-This method sets the footer text that is displayed in the API documentation. The footer parameter is a string representing the text to be displayed. If null is passed as the parameter, the footer will be removed.
+  This method sets the footer text that is displayed in the API documentation. The footer parameter is a string representing the text to be displayed. If null is passed as the parameter, the footer will be removed.
 
 - `setLogo(logo: string): void`
-This method sets the html(or svg) of the logo that is displayed in the API documentation.
+  This method sets the html(or svg) of the logo that is displayed in the API documentation.
 
 - `setRouteInfo(routeInfo: (file: string, url: string, method: string) => string|null): void;`
-add route info to path
+  add route info to path
 
 Example: example/plugins/auth.js
 
@@ -169,6 +183,47 @@ Example: example/plugins/auth.js
 ```js
 {
   // ...
-  files: function() {return { 'https://petstore.swagger.io/v2/swagger.json': 'petstore url' }}
+  [
+    [
+      'nuxt-openapi-docs-module',
+      {
+        folder: './docs/openapi',
+        name: 'OpenApiDocs',
+        files: function() {
+            return {
+              'https://petstore.swagger.io/v2/swagger.json': 'petstore url'
+            }
+        },
+      }
+    ],
+  ]
 }
 ```
+
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Generate type stubs
+npm run dev:prepare
+
+# Develop with the playground
+npm run dev
+
+# Build the playground
+npm run dev:build
+
+# Run ESLint
+npm run lint
+
+# Run Vitest
+npm run test
+npm run test:watch
+
+# Release new version
+npm run release
+```
+
