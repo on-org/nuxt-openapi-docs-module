@@ -62,7 +62,7 @@ nuxt 3
 ```js
 export default defineNuxtConfig({
   modules: [
-    'my-module'
+    'nuxt-openapi-docs-module'
   ]
 })
 ```
