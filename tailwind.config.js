@@ -2,9 +2,7 @@
 module.exports = {
   mode: 'jit',
   content: [
-    './pages/**/*.{html,js,vue}',
-    './components/**/*.{html,js,vue}',
-    './templates/**/*.{html,js,vue}',
+    './src/**/*.{html,js,vue,ts}',
   ],
   darkMode: 'class',
   plugins: [

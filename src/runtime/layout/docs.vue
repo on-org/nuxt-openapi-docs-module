@@ -27,7 +27,7 @@
           <% if (options.isNuxt3) {print(' <div><slot></slot></div>');} %>
         </transition>
 
-        <footer class="fixed w-full bg-gray-900 py-8" v-if="footer">
+        <footer class="fixed w-full bg-white dark:bg-gray-900" v-if="footer">
           <div class="container mx-auto flex justify-between bg-gray-100 text-gray-800 border-t border-gray-700 dark:bg-slate dark:text-gray-300/75" v-html="footer">
           </div>
         </footer>
@@ -398,5 +398,9 @@ footer .container a {
 footer .container a:hover {
   color: #2c5282;
   border-bottom: 1px solid #2c5282;
+}
+
+.text-blue {
+  color: #2d87e2;
 }
 </style>

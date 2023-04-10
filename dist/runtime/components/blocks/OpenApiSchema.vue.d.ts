@@ -17,6 +17,10 @@ declare namespace _default {
             function _default(): {};
             export { _default as default };
         }
+        namespace title {
+            const _default_1: null;
+            export { _default_1 as default };
+        }
     }
     const computed: {};
     namespace methods {
