@@ -297,6 +297,37 @@ tfoot td {
   margin: 1.5rem 0;
 }
 
+.doc-info h1 {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.doc-info h2 {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.doc-info h3 {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.doc-info h4 {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.doc-info ul {
+  list-style-type: circle;
+  margin-left: 20px;
+}
+
+.doc-info ul li {
+  margin-bottom: 10px;
+}
+
+
+
 .fade-enter-active, .fade-leave-active {
   transition: opacity .3s;
 }

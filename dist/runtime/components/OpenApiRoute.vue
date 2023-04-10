@@ -1,13 +1,13 @@
 <template>
   <div>
     <OpenApiRouteHeader
-        :path="route.path"
-        :method="method"
-        :tags="route.tags"
-        :summary="tr(route, 'summary', currentLocale)"
-        :description="tr(route, 'description', currentLocale)"
-        :deprecated="route.deprecated"
-        :current-locale="currentLocale"
+      :path="route.path"
+      :method="method"
+      :tags="route.tags"
+      :summary="tr(route, 'summary', currentLocale)"
+      :description="tr(route, 'description', currentLocale)"
+      :deprecated="route.deprecated"
+      :current-locale="currentLocale"
     />
 
     <div v-if="route.servers">
@@ -24,13 +24,17 @@
       <div v-html="routeInfo"></div>
     </div>
 
-    <OpenApiSecurity v-if="route.security" :security="route.security" :current-locale="currentLocale" :path_doc="path_doc" :file="file" />
+    <OpenApiSecurity v-if="route.security" :security="route.security" :current-locale="currentLocale"
+                     :path_doc="path_doc" :file="file"/>
 
-    <OpenApiParameters v-if="route.parameters" :parameters="route.parameters" :current-locale="currentLocale"  :components="components" />
+    <OpenApiParameters v-if="route.parameters" :parameters="route.parameters" :current-locale="currentLocale"
+                       :components="components"/>
 
-    <OpenApiParameters v-if="subParams" :parameters="subParams" :current-locale="currentLocale"  :components="components" title="Global params" />
+    <OpenApiParameters v-if="subParams" :parameters="subParams" :current-locale="currentLocale" :components="components"
+                       title="Global params"/>
 
-    <OpenApiRequestBody v-if="route.requestBody" :requestBody="route.requestBody" :current-locale="currentLocale" :components="components" />
+    <OpenApiRequestBody v-if="route.requestBody" :requestBody="route.requestBody" :current-locale="currentLocale"
+                        :components="components"/>
 
     <client-only v-if="route.path">
       <h2 class="text-lg font-bold mb-2">{{ $openapidoc.getLocaleText(currentLocale, 'Code simple') }}:</h2>
@@ -43,8 +47,9 @@
       ></CodeSimples>
     </client-only>
 
-    <OpenApiResponses v-if="route.responses" :responses="route.responses" :current-locale="currentLocale" :components="components" />
-    <OpenApiExamples v-if="route.examples" :examples="route.examples" :current-locale="currentLocale" />
+    <OpenApiResponses v-if="route.responses" :responses="route.responses" :current-locale="currentLocale"
+                      :components="components"/>
+    <OpenApiExamples v-if="route.examples" :examples="route.examples" :current-locale="currentLocale"/>
 
     <OpenApiCallbacks
       v-if="route.callbacks"
@@ -126,11 +131,11 @@ export default {
     genParamsToSimple() {
       this.params = [];
 
-      if(this.route.requestBody && Object.keys(this.route.requestBody).length) {
+      if (this.route.requestBody && Object.keys(this.route.requestBody).length) {
         const pos = Object.keys(this.route.requestBody)[0];
         let req = this.route.requestBody[pos];
 
-        if(req && Object.keys(req).length) {
+        if (req && Object.keys(req).length) {
           this.mimeType = Object.keys(req)[0];
           const params = req[this.mimeType];
 
@@ -140,7 +145,7 @@ export default {
               const property = properties[propertyName] || {};
 
               let def = '';
-              if(property.example) {
+              if (property.example) {
                 def = property.example ?? '';
               }
 
@@ -151,7 +156,7 @@ export default {
               if (property.type === 'array') {
                 // Handle array types
                 if (property.items.type) {
-                  if(property.items.type === 'array' || property.items.type === 'object') {
+                  if (property.items.type === 'array' || property.items.type === 'object') {
                     def = [this.handleNestedArrayOrObject(property, propertyName)];
                   } else {
                     def = [this.convertStringFormatToMd(property.items.type, propertyName)];
@@ -208,7 +213,7 @@ export default {
         const p_in = param.in ?? '';
 
         let def = '';
-        if(param.schema) {
+        if (param.schema) {
           def = param.schema.default ?? '';
         } else {
           def = param.default ?? '';
