@@ -216,18 +216,17 @@ npm install
 # Generate type stubs
 npm run dev:prepare
 
-# Develop with the playground
-npm run dev
+# Develop with the playground with nuxt 2
+cd playground2 && npm install && cd ..
+npm run dev:2
+# Develop with the playground with nuxt 2
+npm run dev:3
 
 # Build the playground
 npm run dev:build
 
 # Run ESLint
 npm run lint
-
-# Run Vitest
-npm run test
-npm run test:watch
 
 # Release new version
 npm run release
