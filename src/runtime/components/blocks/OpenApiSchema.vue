@@ -76,10 +76,10 @@
                 <div v-if="key === 'reference'">
                   <open-api-schema :components="components" :current-locale="currentLocale" :schema="property" title="reference" />
                 </div>
-                <div class="border px-4 py-2" v-if="property.items">
+                <div class="border px-2 py-2" v-if="property.items">
                   <open-api-schema :components="components" :current-locale="currentLocale" :schema="property.items" />
                 </div>
-                <div class="border px-4 py-2" v-if="property.properties">
+                <div class="border px-2 py-2" v-if="property.properties">
                   <open-api-schema v-for="(sproperty, key) in property.properties" :key="key" :components="components" :current-locale="currentLocale" :schema="sproperty" title="properties" />
                 </div>
                 <div class="schema-row items-center" v-if="property.oneOf">

@@ -3,24 +3,23 @@
     <h3 class="text-lg font-bold mb-2">{{ $openapidoc.getLocaleText(currentLocale, 'Examples') }}: </h3>
     <div v-for="(example, name) in examples" :key="name">
       <h4 class="text-lg font-medium">{{ name }}</h4>
-      <table class="w-full mt-2">
-        <thead>
-        <tr>
-          <th class="px-4 py-2 border-b border-gray-300">{{ $openapidoc.getLocaleText(currentLocale, 'Media Type') }}</th>
-          <th class="px-4 py-2 border-b border-gray-300">{{ $openapidoc.getLocaleText(currentLocale, 'Summary') }}</th>
-          <th class="px-4 py-2 border-b border-gray-300">{{ $openapidoc.getLocaleText(currentLocale, 'Value') }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="(value, mediaType) in example" :key="mediaType">
-          <td class="px-4 py-2 border-b border-gray-300">{{ mediaType }}</td>
-          <td class="px-4 py-2 border-b border-gray-300">{{ tr(value, 'summary', currentLocale) }}</td>
-          <td class="px-4 py-2 border-b border-gray-300">
-            <pre class="m-0 whitespace-pre-wrap">{{ value.value }}</pre>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+
+      <OpenApiTable>
+        <template v-slot:header>
+          <OpenApiTableHeader :flex="1">{{ $openapidoc.getLocaleText(currentLocale, 'Media Type') }}</OpenApiTableHeader>
+          <OpenApiTableHeader :flex="1">{{ $openapidoc.getLocaleText(currentLocale, 'Summary') }}</OpenApiTableHeader>
+          <OpenApiTableHeader :flex="1">{{ $openapidoc.getLocaleText(currentLocale, 'Value') }}</OpenApiTableHeader>
+        </template>
+        <template v-slot:body>
+          <OpenApiTableRow v-for="(value, mediaType) in example" :key="mediaType" :has-nested-table="false">
+            <OpenApiTableColl :flex="1">{{ mediaType }}</OpenApiTableColl>
+            <OpenApiTableColl :flex="1" v-html="tr(value, 'summary', currentLocale)"></OpenApiTableColl>
+            <OpenApiTableColl :flex="1">
+              <pre class="m-0 whitespace-pre-wrap w-full">{{ JSON.stringify(value, null, 2) }}</pre>
+            </OpenApiTableColl>
+          </OpenApiTableRow>
+        </template>
+      </OpenApiTable>
     </div>
   </div>
 </template>

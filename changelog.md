@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.2.4] - 2023-04-11
 
+### Fixed
+
+- fix example
+
+## [3.2.4] - 2023-04-11
+
 ### Added
 
 - add hide button
