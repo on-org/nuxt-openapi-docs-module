@@ -1,6 +1,6 @@
 {
   "name": "nuxt-openapi-docs-module",
-  "version": "3.2.2",
+  "version": "3.2.3",
   "description": "A plugin for Nuxt.js to generate pages from OpenAPI specifications",
   "repository": "on-org/nuxt-openapi-docs-module",
   "license": "MIT",

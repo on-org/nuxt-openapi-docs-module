@@ -2,7 +2,9 @@
   <div class="flex flex-col h-screen dark:bg-gray-900 dark:text-gray-300/75">
     <OpenApiMainHeader :isMenuOpen="isMenuOpen" @toggleMenu="toggleMenu" class="bg-blue dark:bg-blue">
       <template #logo>
-        <span v-html="logo"></span>
+        <nuxt-link to="/">
+          <span v-html="logo"></span>
+        </nuxt-link>
       </template>
       <div slot="button">
         <OpenApiHeader
