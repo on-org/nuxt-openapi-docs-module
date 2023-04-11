@@ -183,7 +183,6 @@ Example: example/plugins/auth.js
   context.$openapidoc.setFooter('<div><b>Nuxt OpenApi doc panel</b> </div>')
 ```
 
-
 ### use open api url
 
 ```js
