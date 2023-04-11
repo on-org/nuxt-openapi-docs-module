@@ -1,8 +1,19 @@
 {
   "name": "nuxt-openapi-docs-module",
-  "version": "3.2.14",
+  "version": "3.2.15",
   "description": "A plugin for Nuxt.js to generate pages from OpenAPI specifications",
   "homepage": "https://github.com/on-org/nuxt-openapi-docs-module#readme",
+  "keywords": [
+    "nuxt",
+    "openapi",
+    "docs",
+    "panel",
+    "admin",
+    "indo",
+    "generator",
+    "nuxt2",
+    "nuxt3"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/on-org/nuxt-openapi-docs-module.git"

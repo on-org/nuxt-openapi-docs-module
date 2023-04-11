@@ -106,16 +106,18 @@ docs/
         api2.yaml
 ```
 
+
 ### Localization
 
 [wiki](https://github.com/on-org/nuxt-openapi-docs-module/wiki/Localization)
+
 
 ### Plugin
 
 [wiki](https://github.com/on-org/nuxt-openapi-docs-module/wiki/Plugin)
 
 
-## Development
+### Development
 
 [wiki](https://github.com/on-org/nuxt-openapi-docs-module/wiki/Development)
 
