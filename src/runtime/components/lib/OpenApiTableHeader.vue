@@ -33,4 +33,10 @@ export default {
     width: 40px
   }
 }
+
+@media (max-width: 639px) {
+  .header {
+    display: none;
+  }
+}
 </style>

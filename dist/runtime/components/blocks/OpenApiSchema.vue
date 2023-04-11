@@ -46,7 +46,7 @@
       <div class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText(currentLocale, 'Properties') }}:</div>
       <div class="schema-row-value">
 
-        <OpenApiTable>
+        <OpenApiTable :open="open">
           <template v-slot:header>
             <OpenApiTableHeader :flex="1">{{ $openapidoc.getLocaleText(currentLocale, 'Name') }}</OpenApiTableHeader>
             <OpenApiTableHeader :flex="1">{{ $openapidoc.getLocaleText(currentLocale, 'Type') }}</OpenApiTableHeader>
@@ -77,7 +77,7 @@
                   <open-api-schema :components="components" :current-locale="currentLocale" :schema="property" title="reference" />
                 </div>
                 <div class="border px-4 py-2" v-if="property.items">
-                  <open-api-schema :components="components" :current-locale="currentLocale" :schema="property.items" title="items" />
+                  <open-api-schema :components="components" :current-locale="currentLocale" :schema="property.items" />
                 </div>
                 <div class="border px-4 py-2" v-if="property.properties">
                   <open-api-schema v-for="(sproperty, key) in property.properties" :key="key" :components="components" :current-locale="currentLocale" :schema="sproperty" title="properties" />
@@ -100,14 +100,14 @@
     </div>
     <div class="schema-row items-center" v-if="schema.additionalProperties">
       <div class="schema-row-value">
-        <open-api-schema :components="components" :current-locale="currentLocale" :schema="schema.additionalProperties" :title="$openapidoc.getLocaleText(currentLocale, 'Additional Properties')" />
+        <open-api-schema :components="components" :current-locale="currentLocale" :schema="schema.additionalProperties" :title="$openapidoc.getLocaleText(currentLocale, 'Additional Properties')" :open="false" />
       </div>
     </div>
     <div class="schema-row items-center" v-if="schema.allOf">
       <div class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText(currentLocale, 'All Of') }}:</div>
       <div class="schema-row-value">
         <div v-for="(allOf, index) in schema.allOf" :key="index">
-          <open-api-schema :components="components" :schema="allOf" :current-locale="currentLocale" />
+          <open-api-schema :components="components" :schema="allOf" :current-locale="currentLocale" :open="false" />
         </div>
       </div>
     </div>
@@ -116,7 +116,7 @@
       <div class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText(currentLocale, 'One Of') }}:</div>
       <div class="schema-row-value">
         <div v-for="(oneOf, index) in schema.oneOf" :key="index">
-          <open-api-schema :components="components" :schema="oneOf" :current-locale="currentLocale" />
+          <open-api-schema :components="components" :schema="oneOf" :current-locale="currentLocale" :open="false" />
         </div>
       </div>
     </div>
@@ -143,6 +143,10 @@ export default {
     },
     title: {
       default: null,
+    },
+    open: {
+      type: Boolean,
+      default: true,
     },
   },
   computed: {

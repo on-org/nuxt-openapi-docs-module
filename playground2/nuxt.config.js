@@ -54,6 +54,7 @@ export default {
               'no-access': 'no access',
               'test-yaml.yaml': 'yaml ext',
               'test-json.json': 'json ext',
+              "oneof": "oneof",
               'https://petstore.swagger.io/v2/swagger.json': 'petstore url',
             }
           }

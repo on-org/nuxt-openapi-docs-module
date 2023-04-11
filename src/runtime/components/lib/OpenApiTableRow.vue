@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col row">
     <div class="flex flex-row items-center row">
-      <div class="p-1 cursor-pointer opener" style="width: 30px">
-        <div v-if="hasNestedTable" @click="toggleNestedTable" :class="{ 'open': nestedTableShown }">
-          <svg class="w-4 h-4 mr-2 fill-current rotate-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <div class="p-1.5 cursor-pointer opener"  @click="toggleNestedTable">
+        <div v-if="hasNestedTable" :class="{ 'open': nestedTableShown }">
+          <svg class="coll-opener w-4 h-4 mr-2 fill-current rotate-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path>
           </svg>
         </div>
@@ -49,6 +49,15 @@ export default {
   .opener {
     order: 99;
   }
+}
+
+.opener {
+  width: 30px;
+  align-self: auto;
+  box-sizing: border-box;
+  position: relative;
+  align-items: center;
+  display: flex;
 }
 
 </style>

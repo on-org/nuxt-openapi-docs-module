@@ -21,6 +21,12 @@ declare namespace _default {
             const _default_1: null;
             export { _default_1 as default };
         }
+        namespace open {
+            const type_3: BooleanConstructor;
+            export { type_3 as type };
+            const _default_2: boolean;
+            export { _default_2 as default };
+        }
     }
     const computed: {};
     namespace methods {

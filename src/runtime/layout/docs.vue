@@ -408,6 +408,7 @@ footer .container a:hover {
 
 .rotate-icon {
   transition: transform 0.3s ease-in-out;
+  cursor: pointer;
 }
 
 .open .rotate-icon {
