@@ -1,9 +1,19 @@
 {
   "name": "nuxt-openapi-docs-module",
-  "version": "3.2.9",
+  "version": "3.2.11",
   "description": "A plugin for Nuxt.js to generate pages from OpenAPI specifications",
-  "repository": "on-org/nuxt-openapi-docs-module",
   "homepage": "https://github.com/on-org/nuxt-openapi-docs-module#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/on-org/nuxt-openapi-docs-module.git"
+  },
+  "bugs": {
+    "url": "https://github.com/on-org/nuxt-openapi-docs-module/issues"
+  },
+  "files": [
+    "/dist",
+    "/README.md"
+  ],
   "license": "MIT",
   "type": "module",
   "exports": {
@@ -15,9 +25,6 @@
   },
   "main": "./dist/module.cjs",
   "types": "./dist/types.d.ts",
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "prepack": "nuxt-module-build",
     "dev": "nuxi dev playground",
