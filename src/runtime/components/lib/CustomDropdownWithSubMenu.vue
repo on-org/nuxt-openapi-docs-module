@@ -4,23 +4,11 @@
       @click="isOpen = !isOpen"
       type="button"
       class="inline-flex justify-center items-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:bg-black dark:text-gray-300/75"
-      aria-haspopup="true"
-      :aria-expanded="isOpen"
+      :class="{open: isOpen}"
     >
       <b>{{ selectedText ? selectedText : 'Select Library' }}</b>
-      <svg
-        class="-mr-1 ml-2 h-5 w-5"
-        :class="isOpen ? '-rotate-180' : 'rotate-0'"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M5.293 7.707a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-          clip-rule="evenodd"
-        />
+      <svg class="w-4 h-4 fill-current rotate-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path>
       </svg>
     </button>
 

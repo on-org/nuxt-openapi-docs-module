@@ -403,4 +403,12 @@ footer .container a:hover {
 .text-blue {
   color: #2d87e2;
 }
+
+.rotate-icon {
+  transition: transform 0.3s ease-in-out;
+}
+
+.open .rotate-icon {
+  transform: rotate(180deg);
+}
 </style>

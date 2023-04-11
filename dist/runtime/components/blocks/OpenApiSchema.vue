@@ -53,7 +53,7 @@
             <OpenApiTableHeader :flex="1">{{ $openapidoc.getLocaleText(currentLocale, 'Description') }}</OpenApiTableHeader>
           </template>
           <template v-slot:body>
-            <OpenApiTableRow v-for="(property, key) in schema.properties" :key="key" :has-nested-table="key === 'reference' || property.properties || property.items || property.oneOf">
+            <OpenApiTableRow v-for="(property, key) in schema.properties" :key="key" :has-nested-table="key === 'reference' || !!property.properties || !!property.items || !!property.oneOf">
               <OpenApiTableColl :flex="1">{{ key }}</OpenApiTableColl>
               <OpenApiTableColl :flex="1">{{ property.type }}</OpenApiTableColl>
               <OpenApiTableColl :flex="1" style="display: block;">

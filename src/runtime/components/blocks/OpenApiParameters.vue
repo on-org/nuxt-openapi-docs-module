@@ -11,7 +11,7 @@
         <OpenApiTableHeader :flex="1">{{ $openapidoc.getLocaleText(currentLocale, 'Example') }}</OpenApiTableHeader>
       </template>
       <template v-slot:body>
-        <OpenApiTableRow v-for="(param, index) in parameters" :has-nested-table="!!param.schema">
+        <OpenApiTableRow v-for="(param, index) in parameters" :key="index" :has-nested-table="!!param.schema">
           <OpenApiTableColl :flex="1">{{ tr(param, 'name', currentLocale) }}</OpenApiTableColl>
           <OpenApiTableColl :flex="2" v-html="tr(param, 'description', currentLocale)"></OpenApiTableColl>
           <OpenApiTableColl :flex="1">{{ param.in ? param.in : '-' }}</OpenApiTableColl>

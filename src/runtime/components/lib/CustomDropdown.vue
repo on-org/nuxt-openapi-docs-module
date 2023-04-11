@@ -1,12 +1,11 @@
 <template>
   <div class="relative inline-block w-full">
-    <div class="dropdown-toggle flex items-center justify-between px-4 py-2 border border-gray-300 bg-white/75 dark:bg-slate dark:text-gray-300/75 rounded-md cursor-pointer" @click="isOpen = !isOpen">
+    <div class="dropdown-toggle flex items-center justify-between px-4 py-2 border border-gray-300 bg-white/75 dark:bg-slate dark:text-gray-300/75 rounded-md cursor-pointer" @click="isOpen = !isOpen" :class="{open: isOpen}">
       <span class="text-gray-500 dark:text-gray-300/75">
         {{ placeholder ?? selectedOption }}
       </span>
-      <svg class="w-4 h-4 ml-2 fill-current dark:fill-white/50" viewBox="0 0 20 20">
-        <path v-if="!isOpen" d="M5 8h10l-5 7z" />
-        <path v-else d="M5 12h10l-5-7z" />
+      <svg class="w-4 h-4 fill-current rotate-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path>
       </svg>
     </div>
     <div class="dropdown-menu absolute w-full top-full left-0 z-50 py-2 bg-white rounded-md shadow-lg dark:bg-slate dark:text-gray-300/75" v-if="isOpen">

@@ -50,11 +50,5 @@ export default {
 </script>
 
 <style scoped>
-.rotate-icon {
-  transition: transform 0.3s ease-in-out;
-}
 
-.open .rotate-icon {
-  transform: rotate(180deg);
-}
 </style>
