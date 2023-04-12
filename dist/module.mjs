@@ -291,7 +291,7 @@ const module = defineNuxtModule({
         src: resolver.resolve("./runtime/plugin3.ts")
       });
     }
-    nuxt.options.css.push(resolver.resolve(",/runtime/tokyo-night-dark.css"));
+    nuxt.options.css.push(resolver.resolve("./runtime/tokyo-night-dark.css"));
     nuxt.options.css.push(resolver.resolve("./runtime/tailwindcss.css"));
   }
 });
