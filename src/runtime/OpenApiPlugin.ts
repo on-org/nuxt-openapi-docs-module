@@ -32,12 +32,12 @@ export default class OpenApiPlugin {
   }
 
   getLocale(lang: string) {
-    return this.locales[lang] ?? null;
+    return this.locales[lang] || null;
   }
 
   getLocaleText(lang: string, path: string) {
     if(!this.locales[lang]) return path
-    return this.locales[lang][path] ?? path;
+    return this.locales[lang][path] || path;
   }
 
   hasLocaleText(lang: string, path: string) {

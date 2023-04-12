@@ -1,5 +1,5 @@
 export function tr(data, param, locale) {
-    return data[`x-${param}-${locale}`] ?? data[param] ?? ''
+    return data[`x-${param}-${locale}`] || data[param] || ''
 }
 
 export function getTagColor(method) {
