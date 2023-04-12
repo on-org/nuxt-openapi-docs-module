@@ -283,16 +283,16 @@ const module = defineNuxtModule({
     });
     if (isNuxt2(nuxt)) {
       addPlugin({
-        src: resolver.resolve("./runtime/plugin.ts")
+        src: resolver.resolve("./runtime/plugin")
       });
     }
     if (isNuxt3(nuxt)) {
       addPlugin({
-        src: resolver.resolve("./runtime/plugin3.ts")
+        src: resolver.resolve("./runtime/plugin3")
       });
     }
-    nuxt.options.css.push(resolver.resolve("./tokyo-night-dark.css"));
-    nuxt.options.css.push(resolver.resolve("./tailwindcss.css"));
+    nuxt.options.css.push(resolver.resolve("./runtime/tokyo-night-dark.css"));
+    nuxt.options.css.push(resolver.resolve("./runtime/tailwindcss.css"));
   }
 });
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="security-scheme border border-gray-300 p-4 mb-8">
+  <div class="security-scheme border border-gray-300 rounded p-4 mb-8">
     <h4 class="security-scheme__name text-xl font-bold mb-4" style="margin-top: 0">
       {{ tr(securityScheme, 'name', currentLocale) }}
     </h4>
