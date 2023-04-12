@@ -19,7 +19,7 @@
       </ul>
     </div>
 
-    <div class="border border-gray-300 p-4 mb-8 doc-info" v-if="routeInfo">
+    <div class="border border-gray-300 rounded p-4 mb-8 doc-info" v-if="routeInfo">
       <h3 class="text-lg font-bold">{{ $openapidoc.getLocaleText(currentLocale, 'Info') }}:</h3>
       <div v-html="routeInfo"></div>
     </div>

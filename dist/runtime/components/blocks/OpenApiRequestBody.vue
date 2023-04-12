@@ -1,12 +1,14 @@
 <template>
   <div>
-    <h3 class="text-lg font-medium">{{ $openapidoc.getLocaleText(currentLocale, 'Request Body') }}:</h3>
-    <pre class="mt-2 p-2 rounded-md" v-if="requestBody.description" v-html="tr(requestBody, 'description', currentLocale)"></pre>
-    <div v-for="(val, key) in requestBody.content">
-      <pre class="mt-2 p-2 rounded-md" v-text="key"></pre>
-      <OpenApiSchema :schema="val.schema" :current-locale="currentLocale" :components="components" class="mt-4" />
-    </div>
+    <h2 class="text-lg font-bold">{{ $openapidoc.getLocaleText(currentLocale, 'Request Body') }}:</h2>
+    <div class="mt-2 p-2 rounded-md" v-if="requestBody.description" v-html="tr(requestBody, 'description', currentLocale)"></div>
 
+    <OpenApiTabs>
+      <template v-for="(val, key) in requestBody.content" :slot="key">
+        <pre class="mt-2 p-2 rounded-md" v-text="key"></pre>
+        <OpenApiSchema :schema="val.schema" :current-locale="currentLocale" :components="components" class="mt-4" />
+      </template>
+    </OpenApiTabs>
   </div>
 </template>
 <style>

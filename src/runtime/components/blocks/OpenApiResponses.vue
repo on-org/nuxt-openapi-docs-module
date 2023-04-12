@@ -16,10 +16,12 @@
           <template v-slot:nested-table>
             <OpenApiExamples v-if="response.examples" :examples="response.examples" :current-locale="currentLocale" :components="components" />
 
-            <div v-for="(val, key) in response.content">
-              <pre class="mt-2 p-2 rounded-md" v-text="key"></pre>
-              <OpenApiSchema :schema="val.schema" :current-locale="currentLocale" :components="components" class="mt-4" />
-            </div>
+            <OpenApiTabs v-if="response.content">
+              <template v-for="(val, key) in response.content" :slot="key">
+                <pre class="mt-2 p-2 rounded-md" v-text="key"></pre>
+                <OpenApiSchema :schema="val.schema" :current-locale="currentLocale" :components="components" class="mt-4" />
+              </template>
+            </OpenApiTabs>
 
             <OpenApiSchema v-if="response.schema" :schema="response.schema" :current-locale="currentLocale" :components="components" class="mt-4" />
           </template>

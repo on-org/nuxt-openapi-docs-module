@@ -1,5 +1,5 @@
 <template>
-  <div class="border border-gray-300 p-4 mb-8 doc-info">
+  <div class="border border-gray-300 rounded p-4 mb-8 doc-info">
     <h1 class="text-2xl font-bold mb-2">
       <span class="text-xl font-medium mr-2 px-2.5 py-0.5 rounded" :class="getTagColor(method)">{{ method }}</span>
       {{ path }}
