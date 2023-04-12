@@ -384,5 +384,6 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.options.css.push(resolver.resolve('./tokyo-night-dark.css'));
     nuxt.options.css.push(resolver.resolve('./tailwindcss.css'));
+    nuxt.options.css.push(resolver.resolve('./styles.scss'));
   }
 })

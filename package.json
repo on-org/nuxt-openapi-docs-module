@@ -37,7 +37,7 @@
   "main": "./dist/module.cjs",
   "types": "./dist/types.d.ts",
   "scripts": {
-    "prepack": "nuxt-module-build",
+    "prepack2": "nuxt-module-build",
     "dev": "nuxi dev playground",
     "dev:3": "nuxi dev playground",
     "dev:2": "cd playground2 && npm run dev",
@@ -50,7 +50,7 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "prepublish": "npm run prepack"
+    "prepublish2": "npm run prepack"
   },
   "dependencies": {
     "@nuxt/kit": "<=3.2.3",
@@ -78,6 +78,7 @@
     "fs-extra": "^11.1.1",
     "postcss": "^8.4.21",
     "request-templater": "^1.2.1",
+    "sass": "^1.62.0",
     "tailwindcss": "^3.3.1",
     "vitest": "^0.29.8"
   },

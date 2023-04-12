@@ -10,8 +10,9 @@
   }
 
   @media screen and (min-width: 640px) {
-    .content {
-      padding-left: 16rem;
-    }
+      .content {
+          max-width: 1000px;
+          margin: 0 auto;
+      }
   }
 </style>
