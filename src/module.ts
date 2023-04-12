@@ -373,12 +373,12 @@ export default defineNuxtModule<ModuleOptions>({
 
     if(isNuxt2(nuxt)) {
       addPlugin({
-        src: resolver.resolve('./runtime/plugin.ts'),
+        src: resolver.resolve('./runtime/plugin'),
       })
     }
     if(isNuxt3(nuxt)) {
       addPlugin({
-        src: resolver.resolve('./runtime/plugin3.ts'),
+        src: resolver.resolve('./runtime/plugin3'),
       })
     }
 
