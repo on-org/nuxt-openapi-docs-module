@@ -201,10 +201,12 @@ const module = defineNuxtModule({
               name: url,
               path: reUrl,
               type: method,
-              description: openapi_item.description ?? null
+              description: openapi_item.summary ?? openapi_item.description ?? null
             };
             for (const i in localoptions.locales) {
-              if (openapi_item[`x-description-${i}`]) {
+              if (openapi_item[`x-summary-${i}`]) {
+                item[`x-description-${i}`] = openapi_item[`x-summary-${i}`];
+              } else if (openapi_item[`x-description-${i}`]) {
                 item[`x-description-${i}`] = openapi_item[`x-description-${i}`];
               }
             }
