@@ -1,6 +1,8 @@
 <template>
   <div class="py-4">
-    <h3 class="text-xl font-semibold">{{ $openapidoc.getLocaleText(currentLocale, 'Security') }}:</h3>
+    <h3 class="text-xl font-semibold">
+      {{ $openapidoc.getLocaleText(currentLocale, 'Security') }}:
+    </h3>
     <ul class="list-disc ml-6">
       <li v-for="(securityRequirement, index) in security" :key="index" class="py-2">
         <OpenApiSecurityRequirement :securityRequirement="securityRequirement" :current-locale="currentLocale"  :path_doc="path_doc" :file="file" />

@@ -3,7 +3,7 @@
     <div>
       <OpenApiInfo v-if="isInfo" :info="doc.info" :servers="doc.servers" :current-locale="currentLocale"></OpenApiInfo>
       <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="currentLocale"></OpenApiComponents>
-      <OpenApiRoute v-else-if="activeRoute" :route="activeRoute" :current-locale="currentLocale" :method="type" :components="doc.components" :url="path" :path_doc="path_doc" :file="file" :server="server" :sub-params="subParams" />
+      <OpenApiRoute v-else-if="activeRoute" :route="activeRoute" :current-locale="currentLocale" :method="type" :components="doc.components" :url="url" :path_doc="path_doc" :file="file" :server="server" :sub-params="subParams" />
       <NotFound v-else />
       <SearchBlock :current-locale="currentLocale" :doc="doc" :path="options.path" :file="file" />
     </div>
@@ -52,7 +52,8 @@ export default {
       return {
         currentLocale: route.params.locale ?? route.meta.locale,
         type: route.params.type ?? route.meta.type,
-        path: route.params.path ?? route.meta.path
+        path: route.params.path ?? route.meta.path,
+        url: route.params.url ?? route.meta.url
       }
     }
   },
@@ -62,6 +63,7 @@ export default {
       this.currentLocale = ctx.route.params.locale ?? ctx.route.meta[0].locale;
       this.type = ctx.route.params.type ?? ctx.route.meta[0].type;
       this.path = ctx.route.params.path ?? ctx.route.meta[0].path;
+      this.url = ctx.route.params.url ?? ctx.route.meta[0].url;
     } catch (e) {
       console.error(e)
       console.error(ctx.route)
@@ -85,12 +87,13 @@ export default {
         this.currentLocale = val.locale;
         this.type = val.type;
         this.path = val.path;
+        this.url = val.url;
       },
       deep: true
     },
   },
   methods: {
-    downloadYaml() {
+    downloadJson() {
       const json = JSON.stringify(this.doc, null, 4);
       const blob = new Blob([json], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -122,19 +125,19 @@ export default {
     },
     activeRoute() {
       if(!this.options.doc.paths) return null;
-      if(!this.options.doc.paths[this.path]) return null;
-      return this.options.doc.paths[this.path][this.type] ?? null
+      if(!this.options.doc.paths[this.url]) return null;
+      return this.options.doc.paths[this.url][this.type] ?? null
     },
 
     subParams() {
       if(!this.options.doc.paths) return null;
-      if(!this.options.doc.paths[this.path]) return null;
-      return this.options.doc.paths[this.path]['parameters'] ?? null
+      if(!this.options.doc.paths[this.url]) return null;
+      return this.options.doc.paths[this.url]['parameters'] ?? null
     },
 
     server() {
-      if(this.options.doc.paths && this.options.doc.paths[this.path] && this.options.doc.paths[this.path]['servers'] && this.options.doc.paths[this.path]['servers'][0]) {
-        return this.options.doc.paths[this.path]['servers'][0].url ?? null
+      if(this.options.doc.paths && this.options.doc.paths[this.url] && this.options.doc.paths[this.url]['servers'] && this.options.doc.paths[this.url]['servers'][0]) {
+        return this.options.doc.paths[this.url]['servers'][0].url ?? null
       }
 
       if (!this.options.doc.servers || !this.options.doc.servers[0]) {
@@ -145,14 +148,14 @@ export default {
   },
   mounted() {
     if(process.client) {
-      this.$openapidocBus.$on('downloadYamlDoc', this.downloadYaml);
+      this.$openapidocBus.$on('downloadJsonDoc', this.downloadJson);
     }
   },
   unmounted() {
-    this.$openapidocBus.$off('downloadYamlDoc', this.downloadYaml);
+    this.$openapidocBus.$off('downloadJsonDoc', this.downloadJson);
   },
   destroyed() {
-    this.$openapidocBus.$off('downloadYamlDoc', this.downloadYaml);
+    this.$openapidocBus.$off('downloadJsonDoc', this.downloadJson);
   },
 }
 </script>

@@ -10,31 +10,31 @@ declare namespace _default {
             const required_1: boolean;
             export { required_1 as required };
         }
-        export namespace path_doc {
+        export namespace url {
             const type_1: StringConstructor;
             export { type_1 as type };
             const required_2: boolean;
             export { required_2 as required };
+            const _default: string;
+            export { _default as default };
         }
-        export namespace file {
+        export namespace path_doc {
             const type_2: StringConstructor;
             export { type_2 as type };
             const required_3: boolean;
             export { required_3 as required };
         }
-        export namespace currentLocale {
+        export namespace file {
             const type_3: StringConstructor;
             export { type_3 as type };
             const required_4: boolean;
             export { required_4 as required };
         }
-        export namespace url {
+        export namespace currentLocale {
             const type_4: StringConstructor;
             export { type_4 as type };
             const required_5: boolean;
             export { required_5 as required };
-            const _default: string;
-            export { _default as default };
         }
         export namespace server {
             const type_5: StringConstructor;
