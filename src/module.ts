@@ -7,8 +7,7 @@ import {
   isNuxt2,
   addLayout,
   addComponentsDir,
-  createResolver,
-  addComponent
+  createResolver
 } from '@nuxt/kit'
 
 
@@ -233,24 +232,20 @@ export default defineNuxtModule<ModuleOptions>({
 
 
       const pathsByTags: {[key: string]: PathByTag} = {};
-      for (const i in openApiSpec.paths) {
-        let reUrl = i
+      for (const url in openApiSpec.paths) {
+        let reUrl = url
         if (reUrl.startsWith('/')) reUrl = reUrl.substring(1);
-        reUrl = reUrl.replace(/[/\\.?+=&{}]/gumi, '_')
+        if (reUrl.endsWith('/')) reUrl = reUrl.substring(-1);
+        reUrl = reUrl.replace(/[/\\.?+=&{}]/gumi, '_').replace(/__+/, '_')
 
-        openApiSpec.paths[reUrl] = openApiSpec.paths[i]
-
-
-        for (const j in openApiSpec.paths[reUrl]) {
-          const openapi_item = openApiSpec.paths[reUrl][j];
-
-          openapi_item.path = i;
+        for (const method in openApiSpec.paths[url]) {
+          const openapi_item = openApiSpec.paths[url][method];
 
           if(!openapi_item.tags) openapi_item.tags = ['other']
 
-          openapi_item.tags.forEach((tag: string, val: any) => {
-            if(j === 'parameters') return;
-            if(j === 'servers') return;
+          openapi_item.tags.forEach((tag: string) => {
+            if(method === 'parameters') return;
+            if(method === 'servers') return;
             if (!pathsByTags[tag]) {
               const tagInfo = tags[tag] ?? {}
 
@@ -272,9 +267,9 @@ export default defineNuxtModule<ModuleOptions>({
               pathsByTags[tag] = item;
             }
             const item: PathByTagItem = {
-              name: openapi_item.path,
+              name: url,
               path: reUrl,
-              type: j,
+              type: method,
               description: openapi_item.description ?? null,
             };
             for(const i in localoptions.locales) {
@@ -284,10 +279,7 @@ export default defineNuxtModule<ModuleOptions>({
             }
             pathsByTags[tag].items.push(item);
           })
-
         }
-
-        delete openApiSpec.paths[i];
       }
 
       openApiSpec.definitions = replaceMarkdown(openApiSpec.definitions, openApiSpec.components, openApiSpec.definitions)
@@ -347,22 +339,29 @@ export default defineNuxtModule<ModuleOptions>({
             },
           })
 
-          // Генерируем роуты для каждого типа запроса и пути
-          for (const i in openApiSpec.paths) {
-            for (const type in openApiSpec.paths[i]) {
+          for (let tag in pathsByTags) {
+            for (let i in pathsByTags[tag].items) {
+              const item = pathsByTags[tag].items[i]
               pages.push({
-                name: `openapi-${localoptions.path}/${fileName}/${locale}-${type}-${i}`,
-                path: `/${localoptions.path}/${fileName}/${locale}/${type}/${i}`,
+                name: `openapi-${localoptions.path}/${fileName}/${locale}-${item.type}-${item.path}`,
+                path: `/${localoptions.path}/${fileName}/${locale}/${item.type}/${item.path}`,
                 // @ts-ignore
                 component: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
                 file: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
                 meta: {
                   file: fileName,
                   locale: locale,
-                  type: type,
-                  path: i,
+                  type: item.type,
+                  path: item.path,
+                  url: item.name,
                 },
               })
+            }
+          }
+          // Генерируем роуты для каждого типа запроса и пути
+          for (const i in openApiSpec.paths) {
+            for (const type in openApiSpec.paths[i]) {
+
             }
           }
         })

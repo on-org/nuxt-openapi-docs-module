@@ -37,7 +37,7 @@ declare namespace _default {
     }
     const computed: {};
     namespace methods {
-        function downloadYaml(): void;
+        function downloadJson(): void;
     }
 }
 export default _default;

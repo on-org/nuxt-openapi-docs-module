@@ -163,21 +163,21 @@ const module = defineNuxtModule({
         return acc;
       }, {});
       const pathsByTags = {};
-      for (const i in openApiSpec.paths) {
-        let reUrl = i;
+      for (const url in openApiSpec.paths) {
+        let reUrl = url;
         if (reUrl.startsWith("/"))
           reUrl = reUrl.substring(1);
-        reUrl = reUrl.replace(/[/\\.?+=&{}]/gumi, "_");
-        openApiSpec.paths[reUrl] = openApiSpec.paths[i];
-        for (const j in openApiSpec.paths[reUrl]) {
-          const openapi_item = openApiSpec.paths[reUrl][j];
-          openapi_item.path = i;
+        if (reUrl.endsWith("/"))
+          reUrl = reUrl.substring(-1);
+        reUrl = reUrl.replace(/[/\\.?+=&{}]/gumi, "_").replace(/__+/, "_");
+        for (const method in openApiSpec.paths[url]) {
+          const openapi_item = openApiSpec.paths[url][method];
           if (!openapi_item.tags)
             openapi_item.tags = ["other"];
-          openapi_item.tags.forEach((tag, val) => {
-            if (j === "parameters")
+          openapi_item.tags.forEach((tag) => {
+            if (method === "parameters")
               return;
-            if (j === "servers")
+            if (method === "servers")
               return;
             if (!pathsByTags[tag]) {
               const tagInfo = tags[tag] ?? {};
@@ -187,31 +187,30 @@ const module = defineNuxtModule({
                 isOpen: tagInfo["x-tag-expanded"] ?? true,
                 items: []
               };
-              for (const i2 in localoptions.locales) {
-                if (tagInfo[`x-description-${i2}`]) {
-                  item2[`x-description-${i2}`] = marked.parse(tagInfo[`x-description-${i2}`]);
+              for (const i in localoptions.locales) {
+                if (tagInfo[`x-description-${i}`]) {
+                  item2[`x-description-${i}`] = marked.parse(tagInfo[`x-description-${i}`]);
                 }
-                if (tagInfo[`x-name-${i2}`]) {
-                  item2[`x-name-${i2}`] = tagInfo[`x-name-${i2}`];
+                if (tagInfo[`x-name-${i}`]) {
+                  item2[`x-name-${i}`] = tagInfo[`x-name-${i}`];
                 }
               }
               pathsByTags[tag] = item2;
             }
             const item = {
-              name: openapi_item.path,
+              name: url,
               path: reUrl,
-              type: j,
+              type: method,
               description: openapi_item.description ?? null
             };
-            for (const i2 in localoptions.locales) {
-              if (openapi_item[`x-description-${i2}`]) {
-                item[`x-description-${i2}`] = openapi_item[`x-description-${i2}`];
+            for (const i in localoptions.locales) {
+              if (openapi_item[`x-description-${i}`]) {
+                item[`x-description-${i}`] = openapi_item[`x-description-${i}`];
               }
             }
             pathsByTags[tag].items.push(item);
           });
         }
-        delete openApiSpec.paths[i];
       }
       openApiSpec.definitions = replaceMarkdown(openApiSpec.definitions, openApiSpec.components, openApiSpec.definitions);
       openApiSpec.components = replaceMarkdown(openApiSpec.components, openApiSpec.components, openApiSpec.definitions);
@@ -261,21 +260,27 @@ const module = defineNuxtModule({
               path: "components"
             }
           });
-          for (const i in openApiSpec.paths) {
-            for (const type in openApiSpec.paths[i]) {
+          for (let tag in pathsByTags) {
+            for (let i in pathsByTags[tag].items) {
+              const item = pathsByTags[tag].items[i];
               pages.push({
-                name: `openapi-${localoptions.path}/${fileName}/${locale}-${type}-${i}`,
-                path: `/${localoptions.path}/${fileName}/${locale}/${type}/${i}`,
+                name: `openapi-${localoptions.path}/${fileName}/${locale}-${item.type}-${item.path}`,
+                path: `/${localoptions.path}/${fileName}/${locale}/${item.type}/${item.path}`,
                 // @ts-ignore
                 component: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
                 file: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
                 meta: {
                   file: fileName,
                   locale,
-                  type,
-                  path: i
+                  type: item.type,
+                  path: item.path,
+                  url: item.name
                 }
               });
+            }
+          }
+          for (const i in openApiSpec.paths) {
+            for (const type in openApiSpec.paths[i]) {
             }
           }
         });

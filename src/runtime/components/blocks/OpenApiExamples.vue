@@ -2,7 +2,7 @@
   <div class="openapi-examples">
     <h3 class="text-lg font-bold mb-2">{{ $openapidoc.getLocaleText(currentLocale, 'Examples') }}: </h3>
     <div v-for="(example, name) in examples" :key="name">
-      <h4 class="text-lg font-medium">{{ name }}</h4>
+      <h4 class="text-base font-bold">{{ name }}</h4>
 
       <OpenApiTable>
         <template v-slot:header>

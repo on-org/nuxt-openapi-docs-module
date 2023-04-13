@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="text-lg font-bold">{{ $openapidoc.getLocaleText(currentLocale, 'Request Body') }}:</h2>
+    <h4 class="text-base font-bold">{{ $openapidoc.getLocaleText(currentLocale, 'Request Body') }}:</h4>
     <div class="mt-2 p-2 rounded-md" v-if="requestBody.description" v-html="tr(requestBody, 'description', currentLocale)"></div>
 
     <OpenApiTabs>
@@ -9,6 +9,7 @@
         <OpenApiSchema :schema="val.schema" :current-locale="currentLocale" :components="components" class="mt-4" />
       </template>
     </OpenApiTabs>
+
   </div>
 </template>
 <style>
@@ -55,7 +56,7 @@ export default {
     },
   },
   methods: {
-    tr
+    tr,
   },
   computed: {
 

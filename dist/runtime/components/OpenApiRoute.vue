@@ -1,7 +1,7 @@
 <template>
   <div>
     <OpenApiRouteHeader
-      :path="route.path"
+      :path="url"
       :method="method"
       :tags="route.tags"
       :summary="tr(route, 'summary', currentLocale)"
@@ -80,6 +80,10 @@ export default {
     },
     subParams: {
       required: false,
+    },
+    url: {
+      type: String,
+      required: true,
     },
     path_doc: {
       type: String,

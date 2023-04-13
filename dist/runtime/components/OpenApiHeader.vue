@@ -5,12 +5,12 @@
     </div>
     <div class="yaml">
       <button
-        @click="downloadYaml"
+        @click="downloadJson"
         type="button"
         class="inline-flex justify-center items-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 bg-blue dark:bg-blue"
         aria-haspopup="true"
       >
-        Yaml
+        Json
       </button>
     </div>
     <div class="search">
@@ -50,8 +50,8 @@ export default {
 
   },
   methods: {
-    downloadYaml() {
-      this.$openapidocBus.$emit('downloadYamlDoc');
+    downloadJson() {
+      this.$openapidocBus.$emit('downloadJsonDoc');
     }
   },
 };
