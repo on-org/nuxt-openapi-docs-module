@@ -3,7 +3,7 @@
     <slot />
   </main>
 </template>
-<style scoped>
+<style scoped lang="scss">
   .content {
     overflow-x: scroll;
 
@@ -11,6 +11,9 @@
 
   @media screen and (min-width: 640px) {
       .content {
+          box-shadow: -2px 0px 6px 0px rgba(#000, 0.05);
+      }
+      .container {
           max-width: 1000px;
           margin: 0 auto;
       }

@@ -32,23 +32,31 @@ export default {
 .oapi-aside {
   align-self: stretch;
   width: var(--aside-width);
-  border-right: 1px solid #f4f4f7;
+  background: #f6f8fa;
   padding: 16px 24px 40px;
   overflow-y: auto;
   height: 100%;
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+  }
   &::-webkit-scrollbar-track {
     background-color: transparent;
   }
 
   &::-webkit-scrollbar {
     background-color: transparent;
-    width: 8px;
+    width: 12px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: #ebebeb;
+    background-color: #e1e1e1;
     border-radius: 10px;
-    border-right: 4px solid #fff;
+    border-right: 8px solid #f6f8fa;
   }
 }
 

@@ -202,7 +202,7 @@ export default {
     background: rgba(#000, .03);
   }
   &--is-active {
-    color: #007afb;
+    background: #fff;
     .oapi-menu-item-tag {
       color: #fff;
       &--get {
