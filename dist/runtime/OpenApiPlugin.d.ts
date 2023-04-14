@@ -27,7 +27,7 @@ export default class OpenApiPlugin {
     getLocaleText(lang: string, path: string): string;
     hasLocaleText(lang: string, path: string): boolean;
     hasAccess(file: string): boolean;
-    setAccess(accessor: (file: string) => true): void;
+    setAccess(accessor: (file: string) => boolean): void;
     getFooter(): string | null;
     setFooter(footer: null | string): void;
     getLogo(): string | null;

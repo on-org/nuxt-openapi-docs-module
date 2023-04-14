@@ -40,7 +40,7 @@
 
 <script>
 <% if (options.isNuxt3) {
-  print('import {useNuxtApp} from "#app";');
+  print('import {useNuxtApp, showError} from "#app";');
 } %>
 
 
@@ -56,7 +56,7 @@ export default {
       const { $openapidoc } = useNuxtApp()
 
       if(!$openapidoc.hasAccess(file)) {
-        throw createError({
+        showError({
           statusCode: 404,
           message: 'page not found',
         })

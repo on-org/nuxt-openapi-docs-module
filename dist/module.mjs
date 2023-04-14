@@ -108,6 +108,98 @@ function filesCleanup(files) {
   }
   return result;
 }
+function processCustomPaths(custom, locales) {
+  const pathsByTags = {};
+  if (Object.keys(custom).length) {
+    pathsByTags["custom"] = {
+      name: custom.name ?? "Custom",
+      description: custom.description ?? "",
+      isOpen: custom["x-tag-expanded"] ?? true,
+      items: []
+    };
+    for (const i in locales) {
+      if (custom[`x-summary-${i}`]) {
+        pathsByTags[`x-description-${i}`] = custom[`x-summary-${i}`];
+      }
+      if (custom[`x-name-${i}`]) {
+        pathsByTags[`x-name-${i}`] = custom[`x-name-${i}`];
+      }
+    }
+    for (const path in custom.paths) {
+      const item = {
+        name: custom.paths[path].title ?? path,
+        path,
+        type: "custom",
+        description: custom.paths[path].description ?? "",
+        icon: custom.paths[path]["x-icon"] ?? null
+      };
+      for (const i in locales) {
+        if (custom[`x-summary-${i}`]) {
+          pathsByTags[`x-description-${i}`] = custom[`x-summary-${i}`];
+        }
+        if (custom[`x-name-${i}`]) {
+          pathsByTags[`x-name-${i}`] = custom[`x-name-${i}`];
+        }
+      }
+      pathsByTags["custom"].items.push(item);
+    }
+  }
+  return pathsByTags;
+}
+function processOpenApiPaths(paths, locales) {
+  const pathsByTags = {};
+  for (const url in paths) {
+    let routePath = url;
+    if (routePath.startsWith("/"))
+      routePath = routePath.substring(1);
+    if (routePath.endsWith("/"))
+      routePath = routePath.substring(-1);
+    routePath = routePath.replace(/[/\\.?+=&{}]/gumi, "_").replace(/__+/, "_");
+    for (const method in paths[url]) {
+      const openapi_item = paths[url][method];
+      if (!openapi_item.tags)
+        openapi_item.tags = ["other"];
+      openapi_item.tags.forEach((tag) => {
+        if (method === "parameters")
+          return;
+        if (method === "servers")
+          return;
+        if (!pathsByTags[tag]) {
+          const tagInfo = openapi_item.tags[tag] ?? {};
+          const item2 = {
+            name: tagInfo.name ?? tag,
+            description: marked.parse(tagInfo.description ?? ""),
+            isOpen: tagInfo["x-tag-expanded"] ?? true,
+            items: []
+          };
+          for (const locale in locales) {
+            if (tagInfo[`x-description-${locale}`]) {
+              item2[`x-description-${locale}`] = marked.parse(tagInfo[`x-description-${locale}`]);
+            }
+            if (tagInfo[`x-name-${locale}`]) {
+              item2[`x-name-${locale}`] = tagInfo[`x-name-${locale}`];
+            }
+          }
+          pathsByTags[tag] = item2;
+        }
+        const item = {
+          name: url,
+          path: routePath,
+          type: method,
+          icon: openapi_item["x-icon"] ?? null,
+          description: openapi_item.summary ?? null
+        };
+        for (const i in locales) {
+          if (openapi_item[`x-summary-${i}`]) {
+            item[`x-description-${i}`] = openapi_item[`x-summary-${i}`];
+          }
+        }
+        pathsByTags[tag].items.push(item);
+      });
+    }
+  }
+  return pathsByTags;
+}
 const module = defineNuxtModule({
   meta: {
     name: "nuxt-open-api-docs",
@@ -158,60 +250,14 @@ const module = defineNuxtModule({
       if (openApiSpec.info["x-locales"]) {
         localoptions.locales = { ...{ en: "English" }, ...openApiSpec.info["x-locales"] };
       }
-      const tags = (openApiSpec.tags ?? []).reduce((acc, tag) => {
+      (openApiSpec.tags ?? []).reduce((acc, tag) => {
         acc[tag.name] = tag;
         return acc;
       }, {});
-      const pathsByTags = {};
-      for (const url in openApiSpec.paths) {
-        let reUrl = url;
-        if (reUrl.startsWith("/"))
-          reUrl = reUrl.substring(1);
-        if (reUrl.endsWith("/"))
-          reUrl = reUrl.substring(-1);
-        reUrl = reUrl.replace(/[/\\.?+=&{}]/gumi, "_").replace(/__+/, "_");
-        for (const method in openApiSpec.paths[url]) {
-          const openapi_item = openApiSpec.paths[url][method];
-          if (!openapi_item.tags)
-            openapi_item.tags = ["other"];
-          openapi_item.tags.forEach((tag) => {
-            if (method === "parameters")
-              return;
-            if (method === "servers")
-              return;
-            if (!pathsByTags[tag]) {
-              const tagInfo = tags[tag] ?? {};
-              const item2 = {
-                name: tagInfo.name ?? tag,
-                description: marked.parse(tagInfo.description ?? ""),
-                isOpen: tagInfo["x-tag-expanded"] ?? true,
-                items: []
-              };
-              for (const i in localoptions.locales) {
-                if (tagInfo[`x-description-${i}`]) {
-                  item2[`x-description-${i}`] = marked.parse(tagInfo[`x-description-${i}`]);
-                }
-                if (tagInfo[`x-name-${i}`]) {
-                  item2[`x-name-${i}`] = tagInfo[`x-name-${i}`];
-                }
-              }
-              pathsByTags[tag] = item2;
-            }
-            const item = {
-              name: url,
-              path: reUrl,
-              type: method,
-              description: openapi_item.summary ?? null
-            };
-            for (const i in localoptions.locales) {
-              if (openapi_item[`x-summary-${i}`]) {
-                item[`x-description-${i}`] = openapi_item[`x-summary-${i}`];
-              }
-            }
-            pathsByTags[tag].items.push(item);
-          });
-        }
-      }
+      const pathsByTags = JSON.parse(JSON.stringify({
+        ...processCustomPaths(openApiSpec["x-custom-path"] ?? {}, localoptions.locales),
+        ...processOpenApiPaths(openApiSpec.paths, localoptions.locales)
+      }));
       openApiSpec.definitions = replaceMarkdown(openApiSpec.definitions, openApiSpec.components, openApiSpec.definitions);
       openApiSpec.components = replaceMarkdown(openApiSpec.components, openApiSpec.components, openApiSpec.definitions);
       localoptions.doc = replaceMarkdown(openApiSpec, openApiSpec.components, openApiSpec.definitions);
@@ -261,6 +307,8 @@ const module = defineNuxtModule({
             }
           });
           for (let tag in pathsByTags) {
+            if (tag === "custom")
+              continue;
             for (let i in pathsByTags[tag].items) {
               const item = pathsByTags[tag].items[i];
               pages.push({

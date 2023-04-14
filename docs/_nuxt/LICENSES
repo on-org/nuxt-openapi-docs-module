@@ -12,6 +12,15 @@
 
 
 /*!
+ * Request Templater v1.1.2
+ *
+ * Copyright (C) 2012-2023 Pavel Kuz`min (@s00d).
+ *
+ * Date: Sun, 02 Apr 2023 16:47:59 GMT
+ */
+
+
+/*!
  * Vue.js v2.7.14
  * (c) 2014-2022 Evan You
  * Released under the MIT License.
@@ -19,9 +28,10 @@
 
 
 /*!
- * Request Templater v1.1.2
+ * The buffer module from node.js, for the browser.
  *
- * Copyright (C) 2012-2023 Pavel Kuz`min (@s00d).
- *
- * Date: Sun, 02 Apr 2023 16:47:59 GMT
+ * @author   Feross Aboukhadijeh <http://feross.org>
+ * @license  MIT
  */
+
+/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */

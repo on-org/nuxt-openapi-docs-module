@@ -36,10 +36,10 @@
     <OpenApiRequestBody v-if="route.requestBody" :requestBody="route.requestBody" :current-locale="currentLocale"
                         :components="components"/>
 
-    <client-only v-if="route.path">
+    <client-only v-if="url">
       <h2 class="text-lg font-bold mb-2">{{ $openapidoc.getLocaleText(currentLocale, 'Code simple') }}:</h2>
       <CodeSimples
-        :url="route.path"
+        :url="url"
         :baseUrl="server"
         :method="method"
         :mime-type="mimeType"
@@ -80,10 +80,6 @@ export default {
     },
     subParams: {
       required: false,
-    },
-    url: {
-      type: String,
-      required: true,
     },
     path_doc: {
       type: String,

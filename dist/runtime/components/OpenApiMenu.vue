@@ -37,7 +37,8 @@
           <nuxt-link :to="getSubRoute(route)" @click.native.stop.prevent class="block-btn py-2 px-4 hover:bg-gray-200 dark:hover:bg-gray-700">
             <div class="flex flex-col">
               <div class="font-semibold item-path">
-                <span class="px-1 font-medium method-tag" :class="getTagColor(route.type)">{{ getRouteType(route.type) }} </span>
+                <span class="px-1 font-medium method-icon" v-if="route.icon" v-html="route.icon"></span>
+                <span class="px-1 font-medium method-tag" v-else-if="route.type !== 'custom'" :class="getTagColor(route.type)">{{ getRouteType(route.type) }} </span>
                 {{ route.name }}
               </div>
               <div class="description text-sm text-gray-600 dark:text-gray-300/75 overflow-hidden overflow-ellipsis whitespace-nowrap">{{ tr(route, 'description', currentLocale) }}</div>
@@ -120,6 +121,10 @@ export default {
     getSubRoute(route) {
       const path = this.genUrl(route.path);
       const type = route.type;
+      if (route.type === 'custom') {
+        return `/${this.path}/${this.file}/${this.currentLocale}/${type}/${path}`
+      }
+
       return {name: `openapi-${this.path}/${this.file}/${this.currentLocale}-${type}-${path}`, meta: {locale: this.currentLocale, path: path, file: this.file, type: type}};
     },
     changeDoc(option) {
@@ -133,6 +138,10 @@ export default {
 </script>
 
 <style scoped>
+.method-icon {
+  width: 24px;
+  display: inline-block;
+}
 .method-tag {
   width: 45px;
   display: inline-block;

@@ -1,5 +1,9 @@
 const isDev = process.env.NODE_ENV !== 'production';
 export default defineNuxtConfig({
+  plugins: [
+    { src: '@/plugins/content' }
+  ],
+  // debug: true,
   modules: [
     [
       '../src/module',

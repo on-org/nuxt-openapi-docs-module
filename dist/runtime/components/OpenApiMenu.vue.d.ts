@@ -53,7 +53,7 @@ declare namespace _default {
                 type: string;
             };
         };
-        export function getSubRoute(route: any): {
+        export function getSubRoute(route: any): string | {
             name: string;
             meta: {
                 locale: any;

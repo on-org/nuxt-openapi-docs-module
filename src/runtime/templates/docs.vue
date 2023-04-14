@@ -16,7 +16,6 @@
 } %>
 
 const isNuxt3 = <%= options.isNuxt3 %>;
-
 export default {
   name: 'AppDocs',
   layout: `<%= options.layoutName %>`,
@@ -28,13 +27,23 @@ export default {
       return {
         title: `[${this.file}] - Info Docs`,
         description: '',
+        bodyAttrs: {
+          class: 'ggggg'
+        }
       };
     }
     if (this.isComponents) {
       return {
         title: `[${this.file}] - Components Docs`,
         description: '',
+        bodyAttrs: {
+          class: 'gggg'
+        }
       };
+    }
+
+    if (!this.activeRoute) {
+      return {}
     }
 
     const title = this.activeRoute[`x-summary-${this.currentLocale}`] ?? this.activeRoute['summary'] ?? ''
@@ -47,7 +56,6 @@ export default {
   },
   setup() {
     if(isNuxt3) {
-      console.log('setup!!')
       const route = useRoute()
       return {
         currentLocale: route.params.locale ?? route.meta.locale,

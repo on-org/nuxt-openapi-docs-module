@@ -23,7 +23,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    { src: '@/plugins/auth' },
+    { src: '@/plugins/content' },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -51,6 +51,7 @@ export default {
             return {
               'petstore_extended': 'Petstore Extended Api',
               'localization': 'Localization',
+              'page': 'Custom Page',
               'no-access': 'no access',
               'test-yaml.yaml': 'yaml ext',
               'test-json.json': 'json ext',
@@ -62,6 +63,7 @@ export default {
              'petstore_extended': 'Petstore Extended Api',
              'localization': 'Localization',
              'no-access': 'no access',
+             'page': 'Custom Page',
 
              "additional-props": "additional-props",
              "allof": "allof",
