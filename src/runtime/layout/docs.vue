@@ -40,7 +40,7 @@
 
 <script>
 <% if (options.isNuxt3) {
-  print('import {useNuxtApp, showError} from "#app";');
+  print('import {useNuxtApp, showError, useRoute} from "#app";');
 } %>
 
 
@@ -61,6 +61,10 @@ export default {
           message: 'page not found',
         })
       }
+      const route = useRoute()
+      return {
+        currentLocale: route.params.locale ?? route.meta.locale ?? 'en',
+      }
     }
   },
   async fetch() {
@@ -68,6 +72,8 @@ export default {
       if(!this.$openapidoc.hasAccess(this.file)) {
         this.$nuxt.context.error({ status: 404, message: 'page not found' });
       }
+      const ctx = this.$nuxt.context
+      this.currentLocale = ctx.route.params.locale ?? ctx.route.meta[0].locale ?? 'en';
     } catch (e) {
       console.error(e)
     }
@@ -78,7 +84,9 @@ export default {
   watch: {
     '$route.meta': {
       handler: function(val) {
-        this.currentLocale = val.locale;
+        if(val.locale) {
+          this.currentLocale = val.locale;
+        }
       },
       deep: true
     },
