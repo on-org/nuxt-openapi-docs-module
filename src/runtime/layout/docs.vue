@@ -6,7 +6,7 @@
           <span v-html="logo"></span>
         </nuxt-link>
       </template>
-      <div slot="button">
+      <template #button>
         <OpenApiHeader
           :current-locale="currentLocale"
           :files="files"
@@ -16,7 +16,7 @@
           :is-dark-mode="isDarkMode"
           @toggleDarkMode="toggleDarkMode"
         />
-      </div>
+      </template>
     </OpenApiMainHeader>
     <div class="flex flex-1 overflow-hidden">
       <OpenApiMainLeftMenu :isMenuOpen="isMenuOpen" :isMobile="isMobile">

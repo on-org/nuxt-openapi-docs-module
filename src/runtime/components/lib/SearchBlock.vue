@@ -103,7 +103,7 @@ export default {
           path: 'info',
           title: summary,
           description: result,
-          url: `/${this.path}/${this.file}/${this.currentLocale}/get/info`,
+          url: `/${this.path}/${this.file}/${this.currentLocale}/info`,
         });
       }
 
@@ -114,6 +114,11 @@ export default {
         for (let method in paths) {
           let obj = paths[method];
 
+          let routePath = path
+          if (routePath.startsWith('/')) routePath = routePath.substring(1);
+          if (routePath.endsWith('/')) routePath = routePath.substring(-1);
+          routePath = routePath.replace(/[/\\.?+=&{}]/gumi, '_').replace(/__+/, '_')
+
           let summary = this.tr(obj, 'summary', this.currentLocale).toLowerCase();
           let description = this.tr(obj, 'description', this.currentLocale).toLowerCase();
 
@@ -123,10 +128,10 @@ export default {
           if (index !== -1) {
             let result = description.substring(0, 100) + '...';
             apper = {
-              path: obj.path,
+              path: path,
               title: summary.replace(query, "<b>" + query + "</b>"),
               description: result + '...',
-              url: `/${this.path}/${this.file}/${this.currentLocale}/${method}/${path}`,
+              url: `/${this.path}/${this.file}/${this.currentLocale}/${method}/${routePath}`,
             };
           }
 
@@ -138,10 +143,10 @@ export default {
             result = result.replace(query, "<b>" + query + "</b>");
             if(!apper) {
               apper = {
-                path: obj.path,
+                path: path,
                 title: summary,
                 description: result,
-                url: `/${this.path}/${this.file}/${this.currentLocale}/${method}/${path}`,
+                url: `/${this.path}/${this.file}/${this.currentLocale}/${method}/${routePath}`,
               };
             } else {
               apper.description = result;

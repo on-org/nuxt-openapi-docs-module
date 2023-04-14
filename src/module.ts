@@ -365,7 +365,7 @@ export default defineNuxtModule<ModuleOptions>({
         Object.keys(localoptions.locales).forEach((locale) => {
           pages.push({
             name: `openapi-${localoptions.path}/${fileName}/${locale}-info`,
-            path: `/${localoptions.path}/${fileName}/${locale}/get/info`,
+            path: `/${localoptions.path}/${fileName}/${locale}/info`,
             // @ts-ignore
             component: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
             file: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
@@ -379,7 +379,7 @@ export default defineNuxtModule<ModuleOptions>({
 
           pages.push({
             name: `openapi-${localoptions.path}/${fileName}/${locale}-components`,
-            path: `/${localoptions.path}/${fileName}/${locale}/get/components`,
+            path: `/${localoptions.path}/${fileName}/${locale}/components`,
             // @ts-ignore
             component: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
             file: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
