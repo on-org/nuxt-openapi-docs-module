@@ -38,6 +38,10 @@ export default {
     base: isDev ? '/' : '/nuxt-openapi-docs-module'
   },
 
+  generate: {
+    fallback: true
+  },
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     [
