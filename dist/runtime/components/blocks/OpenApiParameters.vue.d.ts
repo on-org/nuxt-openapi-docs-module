@@ -6,7 +6,7 @@ declare namespace _default {
             const _default: string;
             export { _default as default };
         }
-        const parameters: (ObjectConstructor | ArrayConstructor)[];
+        const parameters: (ArrayConstructor | ObjectConstructor)[];
         namespace currentLocale {
             const type_1: StringConstructor;
             export { type_1 as type };

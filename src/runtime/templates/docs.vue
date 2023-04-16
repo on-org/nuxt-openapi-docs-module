@@ -4,6 +4,7 @@
       <OpenApiInfo v-if="isInfo" :info="doc.info" :servers="doc.servers" :current-locale="currentLocale"></OpenApiInfo>
       <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="currentLocale"></OpenApiComponents>
       <OpenApiRoute v-else-if="activeRoute" :route="activeRoute" :current-locale="currentLocale" :method="type" :components="doc.components" :url="url" :path_doc="path_doc" :file="file" :server="server" :sub-params="subParams" />
+      <OpenApiRoute v-else-if="activeWebhook" :route="activeWebhook" :current-locale="currentLocale" :method="type" :components="doc.components" :url="url" :path_doc="path_doc" :file="file" :server="server" :sub-params="subParams" />
       <NotFound v-else />
       <SearchBlock :current-locale="currentLocale" :doc="doc" :path="options.path" :file="file" />
     </div>
@@ -135,6 +136,11 @@ export default {
       if(!this.options.doc.paths) return null;
       if(!this.options.doc.paths[this.url]) return null;
       return this.options.doc.paths[this.url][this.type] ?? null
+    },
+    activeWebhook() {
+      if(!this.options.doc.webhooks) return null;
+      if(!this.options.doc.webhooks[this.url]) return null;
+      return this.options.doc.webhooks[this.url][this.type] ?? null
     },
 
     subParams() {

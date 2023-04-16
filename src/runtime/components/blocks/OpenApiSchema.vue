@@ -104,12 +104,7 @@
       </div>
     </div>
     <div class="schema-row items-center" v-if="schema.allOf">
-      <div class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText(currentLocale, 'All Of') }}:</div>
-      <div class="schema-row-value">
-        <div v-for="(allOf, index) in schema.allOf" :key="index">
-          <open-api-schema :components="components" :schema="allOf" :current-locale="currentLocale" :open="false" />
-        </div>
-      </div>
+      <open-api-schema :components="components" :schema="assignAllOf(schema.allOf)" :current-locale="currentLocale" :open="false" />
     </div>
 
     <div class="schema-row items-center" v-if="schema.oneOf">
@@ -154,7 +149,14 @@ export default {
   },
   methods: {
     tr,
-  },
+    assignAllOf(allOf) {
+      return {
+        properties: allOf.reduce((acc, curr) => {
+          return { ...acc, ...curr.properties };
+        }, {}),
+      };
+    }
+  }
 };
 </script>
 

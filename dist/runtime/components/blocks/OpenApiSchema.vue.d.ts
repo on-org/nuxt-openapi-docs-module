@@ -31,6 +31,9 @@ declare namespace _default {
     const computed: {};
     namespace methods {
         export { tr };
+        export function assignAllOf(allOf: any): {
+            properties: any;
+        };
     }
 }
 export default _default;

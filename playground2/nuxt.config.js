@@ -59,8 +59,9 @@ export default {
               'no-access': 'no access',
               'test-yaml.yaml': 'yaml ext',
               'test-json.json': 'json ext',
-              "oneof": "oneof",
-              'https://petstore.swagger.io/v2/swagger.json': 'petstore url',
+              "external-refs.yaml": "external-refs.yaml",
+              "external-refs2.yaml": "external-refs2.yaml",
+              // 'https://petstore.swagger.io/v2/swagger.json': 'petstore url',
             }
           }
            return {
@@ -68,6 +69,9 @@ export default {
              'localization': 'Localization',
              'no-access': 'no access',
              'page': 'Custom Page',
+             'webhook': 'webhook',
+             "external-refs": "external-refs",
+             "external-refs2": "external-refs2",
 
              "additional-props": "additional-props",
              "allof": "allof",

@@ -10,6 +10,7 @@ interface OpenAPIObject31 {
   security?: SecurityRequirementObject[]; // Массив объектов с требованиями безопасности, которые должны быть выполнены для доступа к API (опционально)
   tags?: TagObject[]; // Массив объектов с тегами, которые могут быть применены к маршрутам API (опционально)
   externalDocs?: ExternalDocumentationObject; // Объект с дополнительной документацией о API (опционально)
+  definitions?: undefined;
 }
 
 // Интерфейс OpenAPI для версии 3.0
@@ -21,6 +22,7 @@ interface OpenAPIObject30 {
   security?: SecurityRequirementObject[]; // Массив объектов с требованиями безопасности, которые должны быть выполнены для доступа к API (опционально)
   tags?: TagObject[]; // Массив объектов с тегами, которые могут быть применены к маршрутам API (опционально)
   externalDocs?: ExternalDocumentationObject; // Объект с дополнительной документацией о API (опционально)
+  definitions?: undefined;
 }
 
 // Интерфейс OpenAPI для версии 2.1
@@ -34,6 +36,7 @@ interface SwaggerObject21 {
   securityDefinitions?: SecurityDefinitionsObject; // Объект с описанием способов аутентификации и авторизации в API (опционально)
   tags?: TagObject[]; // Массив объектов с тегами, которые могут быть применены к маршрутам API (опционально)
   externalDocs?: ExternalDocumentationObject; // Объект с дополнительной документацией о API (опционально)
+  components?: undefined;
 }
 
 interface SwaggerObject20 {
@@ -52,6 +55,7 @@ interface SwaggerObject20 {
   security?: SecurityRequirementObject[]; // Массив объектов с требованиями безопасности, которые должны быть выполнены для доступа к API (опционально)
   tags?: TagObject[]; // Массив объектов с тегами, которые могут быть применены к маршрутам API (опционально)
   externalDocs?: ExternalDocumentationObject; // Объект с дополнительной документацией о API (опционально)
+  components?: undefined;
 }
 
 interface InfoObject31 {
@@ -70,6 +74,9 @@ interface InfoObject31 {
     url?: string; // URL лицензии
     [key: `x-${string}-${string}`]: string | undefined;
   };
+
+  'x-locales'?: {[key:string]: string};
+
   [key: `x-${string}-${string}`]: string | undefined;
 }
 
@@ -166,6 +173,7 @@ interface InfoObject30 {
   contact?: ContactObject; // Контактная информация для API
   license?: LicenseObject; // Лицензия для API
   [key: `x-${string}-${string}`]: string | undefined;
+  'x-locales'?: {[key:string]: string};
 }
 
 interface PathsObject30 {
@@ -403,6 +411,7 @@ interface SwaggerObject21 {
   security?: SecurityRequirementObject[]; // Требования к безопасности для API
   tags?: TagObject[]; // Теги, используемые для организации маршрутов по группам
   externalDocs?: ExternalDocumentationObject; // Внешняя документация, связанная с API
+  'x-locales'?: {[key:string]: string}
 }
 
 
@@ -414,6 +423,7 @@ interface InfoObject20 {
   contact?: ContactObject; // Контактная информация для API
   license?: LicenseObject; // Лицензия для API
   [key: `x-${string}-${string}`]: string | undefined;
+  'x-locales'?: {[key:string]: string}
 }
 
 interface PathsObject20 {

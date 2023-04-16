@@ -3,7 +3,7 @@ declare namespace _default {
     const components: {};
     namespace props {
         export namespace route {
-            const type: (ObjectConstructor | ArrayConstructor)[];
+            const type: (ArrayConstructor | ObjectConstructor)[];
             const required: boolean;
         }
         export namespace subParams {
