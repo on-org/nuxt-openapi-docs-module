@@ -178,9 +178,8 @@ export default class Parser {
     } else if (typeof obj === 'object' && obj !== null) {
       return Object.entries(obj).reduce((acc, [key, value]) => {
         if(key === '$ref' && typeof value === 'string') {
-          console.log(key, value)
           if(!value.startsWith('#')) {
-            obj = this.refFileLoader(value)
+            return obj = this.refFileLoader(value)
           }
           return obj = this.refLoader(value)
         } else {

@@ -59,8 +59,8 @@ export default {
               // 'no-access': 'no access',
               // 'test-yaml.yaml': 'yaml ext',
               // 'test-json.json': 'json ext',
-              // "external-refs.yaml": "external-refs.yaml",
-              // "external-refs2.yaml": "external-refs2.yaml",
+              "external-refs.yaml": "external-refs.yaml",
+              "external-refs2.yaml": "external-refs2.yaml",
               // 'https://petstore.swagger.io/v2/swagger.json': 'petstore url',
             }
           }
