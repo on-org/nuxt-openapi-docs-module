@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "axios": "^0.27.2",
-    "core-js": "^3.25.3"
+    "core-js": "^3.25.3",
+    "nuxt-openapi-docs-module": "^3.5.8"
   },
   "devDependencies": {
     "@nuxt/types": "^2.16.3",
