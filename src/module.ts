@@ -10,7 +10,6 @@ import {
   createResolver
 } from '@nuxt/kit'
 
-
 import * as fs from "fs";
 import {marked} from "marked";
 import * as yaml from 'js-yaml';
@@ -381,7 +380,7 @@ export default defineNuxtModule<ModuleOptions>({
       })
     }
 
-    nuxt.options.css.push(resolver.resolve('./runtime/tokyo-night-dark.css'));
+    nuxt.options.css.push(resolver.resolve('./runtime/github.css'));
     nuxt.options.css.push(resolver.resolve('./runtime/tailwindcss.css'));
     nuxt.options.css.push(resolver.resolve('./styles.scss'));
   }

@@ -1,8 +1,101 @@
+$oapi-base-font-size: 16px;
+
 :root {
   --aside-width: 350px;
   --primary-color: #409eff;
+  --oapi-system-ui: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --oapi-mono: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+  --oapi-text-color: #1f2328;
+  --oapi-bg-code-multi: #f6f8fa;
+  --oapi-bg-code-single: rgba(175,184,193,0.2);
+}
+
+html.oapi {
+  font-weight: 400;
+  line-height: 1.75;
+  color: var(--oapi-text-color);
+  font-size: 16px;
+  font-family: var(--oapi-system-ui);
+}
+
+.oapi {
+  p {
+    margin-bottom: 1rem;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: var(--oapi-system-ui);
+    font-weight: 600;
+    line-height: 1.25;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-size: 2em
+  }
+
+  h2 {
+    padding-bottom: .3em;
+    border-bottom: 1px solid var(--color-border-muted)
+  }
+
+  h2 {
+    font-size: 1.5em
+  }
+
+  h3 {
+    font-size: 1.25em
+  }
+
+  h4 {
+    font-size: 1em
+  }
+
+  h5 {
+    font-size: .875em
+  }
+
+  h6 {
+    font-size: .85em;
+    color: var(--color-fg-muted)
+  }
+
+  small, .text_small {
+    font-size: 0.833rem;
+  }
+
+  .hljs {
+    background: var(--oapi-bg-code-multi);
+  }
+
+  code {
+    font-family: var(--oapi-mono);
+    padding: 0.2em 0.4em;
+    margin: 0;
+    font-size: .75rem;
+    white-space: break-spaces;
+    background-color: var(--oapi-bg-code-single);
+    border-radius: 6px;
+  }
+
+  pre {
+    border: 1px solid #e1e4e8;
+    background: var(--oapi-bg-code-multi);
+    color: #444;
+    font-size: .75rem;
+    padding: 16px;
+    font-family: var(--oapi-mono);
+    border-radius: 6px;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+
+    code {
+      padding: 0;
+    }
+  }
 }
 
 .oapi-mono {
-  font-family: monospace, monospace;
+  font-family: var(--oapi-mono);
 }

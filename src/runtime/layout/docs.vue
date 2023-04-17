@@ -38,23 +38,30 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 <% if (options.isNuxt3) {
-  print('import {useNuxtApp} from "#app";');
+  print('import {useNuxtApp, useHead} from "#app";');
 } %>
 
 
 const isNuxt3 = <%= options.isNuxt3 %>;
 const isNuxt2 = <%= options.isNuxt2 %>;
 
-export default {
+function genHead() {
+  return {
+    htmlAttrs: { class: 'oapi' }
+  }
+}
+
+export default Vue.extend({
   name: 'openapi-docs',
 
   setup() {
     if(isNuxt3) {
       const file = '<%= options.fileName %>';
       const { $openapidoc } = useNuxtApp()
-
+      useHead(genHead());
       if(!$openapidoc.hasAccess(file)) {
         throw createError({
           statusCode: 404,
@@ -105,6 +112,9 @@ export default {
       isDarkMode: false,
     };
   },
+  head() {
+    return genHead();
+  },
   computed: {
     footer() {
       return this.$openapidoc.getFooter()
@@ -120,6 +130,9 @@ export default {
     }
   },
   methods: {
+    foo(val: string) {
+      console.log(val.toUpperCase());
+    },
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
     },
@@ -150,6 +163,9 @@ export default {
       this.isDarkMode = localStorage.getItem('isDarkMode') === 'true'
       if(this.isDarkMode) document.querySelector('html').classList.add('dark')
     }
+    this.$nextTick(() => {
+      this.foo('foobar');
+    });
 
   },
   unmounted() {
@@ -158,7 +174,7 @@ export default {
   beforeDestroy() {
     window.removeEventListener('resize', this.handleResize)
   },
-}
+})
 </script>
 
 <style>
@@ -182,14 +198,6 @@ export default {
 }
 
 
-
-pre {
-  font-family: monospace;
-  border: 1px solid #f7f7f7;
-  padding: 10px;
-  border-radius: 5px;
-  overflow-x: auto;
-}
 
 code {
   font-family: monospace;
@@ -337,12 +345,6 @@ tfoot td {
   opacity: 0;
 }
 
-pre {
-  background: #001529;
-  color: #d3d3d3;
-  font-size: 12px;
-  padding: 4px;
-}
 
 .text-xs p {
   font-size: .75rem;

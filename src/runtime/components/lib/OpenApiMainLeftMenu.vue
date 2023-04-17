@@ -30,6 +30,7 @@ export default {
 
 <style scoped lang="scss">
 .oapi-aside {
+  flex: 0 0 auto;
   align-self: stretch;
   width: var(--aside-width);
   background: #f6f8fa;

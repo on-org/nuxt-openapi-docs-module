@@ -1,21 +1,26 @@
 <template>
-  <main class="content flex-1 p-4 dark:bg-gray-900/50 dark:text-gray-300/75">
-    <slot />
+  <main class="oapi-content">
+    <div class="oapi-content__container">
+      <slot />
+    </div>
   </main>
 </template>
 <style scoped lang="scss">
-  .content {
+  .oapi-content {
+    flex: 1 1 auto;
     overflow-x: scroll;
-
+    &__container {
+      padding: 16px 32px 40px;
+    }
   }
 
   @media screen and (min-width: 640px) {
-      .content {
-          box-shadow: -2px 0px 6px 0px rgba(#000, 0.05);
+    .oapi-content {
+      box-shadow: -2px 0px 6px 0px rgba(#000, 0.05);
+      &__container {
+        max-width: 1000px;
+        margin: 0 auto;
       }
-      .container {
-          max-width: 1000px;
-          margin: 0 auto;
-      }
+    }
   }
 </style>
