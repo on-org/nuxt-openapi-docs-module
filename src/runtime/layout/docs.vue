@@ -6,7 +6,7 @@
           <span v-html="logo"></span>
         </nuxt-link>
       </template>
-      <div slot="button">
+      <template #button>
         <OpenApiHeader
           :current-locale="currentLocale"
           :files="files"
@@ -16,7 +16,7 @@
           :is-dark-mode="isDarkMode"
           @toggleDarkMode="toggleDarkMode"
         />
-      </div>
+      </template>
     </OpenApiMainHeader>
     <div class="flex flex-1 overflow-hidden">
       <OpenApiMainLeftMenu :isMenuOpen="isMenuOpen" :isMobile="isMobile">
@@ -41,7 +41,7 @@
 <script lang="ts">
 import Vue from 'vue';
 <% if (options.isNuxt3) {
-  print('import {useNuxtApp, useHead} from "#app";');
+  print('import {useNuxtApp, showError, useRoute, useHead} from "#app";');
 } %>
 
 
@@ -63,10 +63,14 @@ export default Vue.extend({
       const { $openapidoc } = useNuxtApp()
       useHead(genHead());
       if(!$openapidoc.hasAccess(file)) {
-        throw createError({
+        showError({
           statusCode: 404,
           message: 'page not found',
         })
+      }
+      const route = useRoute()
+      return {
+        currentLocale: route.params.locale ?? route.meta.locale ?? 'en',
       }
     }
   },
@@ -75,6 +79,8 @@ export default Vue.extend({
       if(!this.$openapidoc.hasAccess(this.file)) {
         this.$nuxt.context.error({ status: 404, message: 'page not found' });
       }
+      const ctx = this.$nuxt.context
+      this.currentLocale = ctx.route.params.locale ?? ctx.route.meta[0].locale ?? 'en';
     } catch (e) {
       console.error(e)
     }
@@ -85,7 +91,9 @@ export default Vue.extend({
   watch: {
     '$route.meta': {
       handler: function(val) {
-        this.currentLocale = val.locale;
+        if(val.locale) {
+          this.currentLocale = val.locale;
+        }
       },
       deep: true
     },

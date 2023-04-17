@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.8]- 2023-04-16
+
+### Added
+
+- add parser class
+- add external ref
+- webhooks
+
+### Fixed
+
+- allOf
+
+## [3.5.7]- 2023-04-14
+
+### Fixed
+
+- search
+- info and components path
+- nuxt 3 header
+
+## [3.5.2]- 2023-04-14
+
+### Fixed
+
+- nuxt locale path
+
+## [3.5.1]- 2023-04-14
+
+### Added
+
+- custom pages
+
+### Fixed
+
+nuxt 3 auth
+
 ## [3.4.3]- 2023-04-13
 
 ### Removed

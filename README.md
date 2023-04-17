@@ -123,3 +123,7 @@ docs/
 
 [wiki](https://github.com/on-org/nuxt-openapi-docs-module/wiki/Development)
 
+### Custom pages
+
+[wiki](https://github.com/on-org/nuxt-openapi-docs-module/wiki/Custom-pages)
+

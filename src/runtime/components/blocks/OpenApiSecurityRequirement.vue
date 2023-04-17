@@ -62,11 +62,7 @@ export default {
   methods: {
     tr,
     getRoute(scheme) {
-      // http://localhost:3000/docs/auth-test1/en/get/components#petstore_auth
-
       return {name: `openapi-${this.path_doc}/${this.file}/${this.currentLocale}-components`, hash: '#'+scheme, meta: {locale: 'en', path: 'components', file: this.file, type: 'get'}};
-
-      return '/'
     }
   }
 };

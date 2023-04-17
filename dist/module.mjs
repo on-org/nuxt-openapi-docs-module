@@ -1,11 +1,11 @@
 import { defineNuxtModule, createResolver, addComponentsDir, isNuxt3, isNuxt2, addLayout, addTemplate, extendPages, addPlugin } from '@nuxt/kit';
-import * as fs from 'fs';
+import { kebabCase } from 'scule';
+import { join, dirname, basename, extname, resolve } from 'path';
 import { marked } from 'marked';
+import fetch from 'sync-fetch';
+import fs from 'fs';
 import * as yaml from 'js-yaml';
 import hljs from 'highlight.js';
-import fetch from 'sync-fetch';
-import { kebabCase } from 'scule';
-import { resolve, extname, join, basename } from 'path';
 
 function sanitizeText(text) {
   const map = {
@@ -40,65 +40,231 @@ marked.setOptions({
   smartypants: false,
   xhtml: false
 });
-function getSchemaValsFromPath(ref) {
-  const [type, path, name] = ref.replace("#/", "").split("/");
-  return { type, path, name };
-}
-function replaceMarkdown(obj, components, definitions, lastlink = null) {
-  if (typeof obj === "string") {
-    if (obj.match(/\[.*?\]\(.*?\)|^>/) || obj.match(/```|\*\*|:--|<a |## |------/)) {
-      return marked.parse(obj);
-    } else {
-      return sanitizeText(obj);
+class Parser {
+  constructor(workDir) {
+    this.lastlink = "null";
+    this.fileName = "";
+    this.spec = {};
+    this.components = {};
+    this.definitions = {};
+    this.locales = { "en": "English" };
+    this.refs = {};
+    this.workDir = workDir;
+  }
+  load(fileName) {
+    const openApiSpec = this.parseYamlFile(this.workDir, fileName);
+    this.spec = openApiSpec.openApiSpec;
+    this.components = openApiSpec.openApiSpec.components;
+    this.definitions = openApiSpec.openApiSpec.definitions;
+    this.fileName = openApiSpec.fileName;
+    this.definitions = this.replaceMarkdown(this.definitions);
+    this.components = this.replaceMarkdown(this.components);
+    this.spec = this.replaceMarkdown(this.spec);
+    this.locales = { en: "English" };
+    if (this.spec.info["x-locales"]) {
+      this.locales = { ...{ en: "English" }, ...this.spec.info["x-locales"] };
     }
-  } else if (Array.isArray(obj)) {
-    return obj.map((val) => replaceMarkdown(val, components, definitions, lastlink));
-  } else if (typeof obj === "object" && obj !== null) {
-    return Object.entries(obj).reduce((acc, [key, value]) => {
-      if (key === "$ref" && typeof value === "string") {
-        const link = getSchemaValsFromPath(value);
-        if (lastlink === value)
-          return { type: "string", title: link.path, description: "recursive" };
-        if (link.type === "definitions") {
-          if (definitions && definitions[link.path]) {
-            lastlink = value;
-            const item = definitions[link.path];
-            item.title = link.path;
-            return replaceMarkdown(item, components, definitions, lastlink);
-          }
-        }
-        if (components && components[link.path] && components[link.path][link.name]) {
-          lastlink = value;
-          const item = components[link.path][link.name];
-          item.title = link.path;
-          return replaceMarkdown(item, components, definitions, lastlink);
-        }
-      } else {
-        acc[key] = replaceMarkdown(value, components, definitions, lastlink);
-      }
+    if (!this.spec.tags) {
+      this.spec.tags = [];
+    }
+    this.spec.tags.reduce((acc, tag) => {
+      acc[tag.name] = tag;
       return acc;
     }, {});
-  } else {
-    return obj;
   }
-}
-function parseYamlFile(folder, fileName) {
-  let yamlData = "";
-  if (fileName.startsWith("http")) {
-    yamlData = fetch(fileName).text();
-  } else {
-    const extension2 = extname(fileName);
-    if (!extension2) {
-      fileName += ".yaml";
+  getSchemaValsFromPath(ref) {
+    const [type, path, name] = ref.replace("#/", "").split("/");
+    return { type, path, name };
+  }
+  refLoader(value) {
+    if (this.refs[value])
+      return this.refs[value];
+    if (value.startsWith(".")) {
+      const [filepath, refPath] = value.split("#");
+      const dir = join(this.workDir, dirname(filepath));
+      const name = basename(filepath);
+      const spec = this.parseYamlFile(dir, name).openApiSpec;
+      if (!refPath)
+        return this.replaceMarkdown(spec);
+      const link2 = this.getSchemaValsFromPath(refPath);
+      if (spec && spec[link2.path] && spec[link2.path][link2.name]) {
+        this.lastlink = value;
+        const item = spec[link2.path][link2.name];
+        item.title = link2.path;
+        return this.replaceMarkdown(item);
+      }
     }
-    const filePath = join(folder, fileName);
-    yamlData = fs.readFileSync(filePath, "utf8");
+    const link = this.getSchemaValsFromPath(value);
+    if (this.lastlink === value)
+      return {
+        type: "string",
+        title: link.path,
+        description: "recursive"
+      };
+    if (link.type === "definitions") {
+      if (this.definitions[link.path]) {
+        this.lastlink = value;
+        const item = this.definitions[link.path];
+        item.title = link.path;
+        return this.refs[value] = this.replaceMarkdown(item);
+      }
+    }
+    if (this.components[link.path] && this.components[link.path][link.name]) {
+      this.lastlink = value;
+      const item = this.components[link.path][link.name];
+      item.title = link.path;
+      return this.refs[value] = this.replaceMarkdown(item);
+    }
   }
-  const extension = extname(fileName);
-  const newFileName = basename(fileName, extension);
-  const openApiSpec = yaml.load(yamlData);
-  return { fileName: newFileName, openApiSpec };
+  replaceMarkdown(obj) {
+    if (typeof obj === "string") {
+      if (obj.match(/\[.*?\]\(.*?\)|^>/) || obj.match(/```|\*\*|:--|<a |## |------/)) {
+        return marked.parse(obj);
+      } else {
+        return sanitizeText(obj);
+      }
+    } else if (Array.isArray(obj)) {
+      return obj.map((val) => this.replaceMarkdown(val));
+    } else if (typeof obj === "object" && obj !== null) {
+      return Object.entries(obj).reduce((acc, [key, value]) => {
+        if (key === "$ref" && typeof value === "string") {
+          return obj = this.refLoader(value);
+        } else {
+          acc[key] = this.replaceMarkdown(value);
+        }
+        return acc;
+      }, {});
+    } else {
+      return obj;
+    }
+  }
+  getLocales() {
+    return this.locales;
+  }
+  getPaths() {
+    return JSON.parse(JSON.stringify({
+      ...this.processOpenApiPaths(this.spec.webhooks ?? {}, "webhooks"),
+      ...this.processCustomPaths(this.spec["x-custom-path"] ?? {}),
+      ...this.processOpenApiPaths(this.spec.paths)
+    }));
+  }
+  getDoc() {
+    return this.spec;
+  }
+  getFilename() {
+    return this.fileName;
+  }
+  parseYamlFile(folder, fileName) {
+    let yamlData = "";
+    if (fileName.startsWith("http")) {
+      yamlData = fetch(fileName).text();
+    } else {
+      const extension2 = extname(fileName);
+      if (!extension2) {
+        fileName += ".yaml";
+      }
+      const filePath = join(folder, fileName);
+      yamlData = fs.readFileSync(filePath, "utf8");
+    }
+    const extension = extname(fileName);
+    const newFileName = basename(fileName, extension);
+    const openApiSpec = yaml.load(yamlData);
+    return { fileName: newFileName, openApiSpec };
+  }
+  processCustomPaths(custom) {
+    const pathsByTags = {};
+    if (Object.keys(custom).length) {
+      pathsByTags["custom"] = {
+        name: custom.name ?? "Custom",
+        description: custom.description ?? "",
+        isOpen: custom["x-tag-expanded"] ?? true,
+        items: []
+      };
+      for (const i in this.locales) {
+        if (custom[`x-summary-${i}`]) {
+          pathsByTags[`x-description-${i}`] = custom[`x-summary-${i}`];
+        }
+        if (custom[`x-name-${i}`]) {
+          pathsByTags[`x-name-${i}`] = custom[`x-name-${i}`];
+        }
+      }
+      for (const path in custom.paths) {
+        const item = {
+          name: custom.paths[path].title ?? path,
+          path,
+          type: "custom",
+          description: custom.paths[path].description ?? "",
+          icon: custom.paths[path]["x-icon"] ?? null
+        };
+        for (const i in this.locales) {
+          if (custom[`x-summary-${i}`]) {
+            pathsByTags[`x-description-${i}`] = custom[`x-summary-${i}`];
+          }
+          if (custom[`x-name-${i}`]) {
+            pathsByTags[`x-name-${i}`] = custom[`x-name-${i}`];
+          }
+        }
+        pathsByTags["custom"].items.push(item);
+      }
+    }
+    return pathsByTags;
+  }
+  processOpenApiPaths(paths, type = "other") {
+    const pathsByTags = {};
+    for (const url in paths) {
+      let routePath = url;
+      if (routePath.startsWith("/"))
+        routePath = routePath.substring(1);
+      if (routePath.endsWith("/"))
+        routePath = routePath.substring(-1);
+      routePath = routePath.replace(/[/\\.?+=&{}]/gumi, "_").replace(/__+/, "_");
+      for (const method in paths[url]) {
+        const openapi_item = paths[url][method];
+        if (!openapi_item.tags)
+          openapi_item.tags = [type];
+        openapi_item.tags.forEach((tag) => {
+          if (method === "parameters")
+            return;
+          if (method === "servers")
+            return;
+          if (!pathsByTags[tag]) {
+            const tagInfo = openapi_item.tags[tag] ?? {};
+            const item2 = {
+              name: tagInfo.name ?? tag,
+              description: marked.parse(tagInfo.description ?? ""),
+              isOpen: tagInfo["x-tag-expanded"] ?? true,
+              items: []
+            };
+            for (const locale in this.locales) {
+              if (tagInfo[`x-description-${locale}`]) {
+                item2[`x-description-${locale}`] = marked.parse(tagInfo[`x-description-${locale}`]);
+              }
+              if (tagInfo[`x-name-${locale}`]) {
+                item2[`x-name-${locale}`] = tagInfo[`x-name-${locale}`];
+              }
+            }
+            pathsByTags[tag] = item2;
+          }
+          const item = {
+            name: url,
+            path: routePath,
+            type: method,
+            icon: openapi_item["x-icon"] ?? null,
+            description: openapi_item.summary ?? null
+          };
+          for (const i in this.locales) {
+            if (openapi_item[`x-summary-${i}`]) {
+              item[`x-description-${i}`] = openapi_item[`x-summary-${i}`];
+            }
+          }
+          pathsByTags[tag].items.push(item);
+        });
+      }
+    }
+    return pathsByTags;
+  }
 }
+
 function filesCleanup(files) {
   const result = {};
   for (const i in files) {
@@ -149,78 +315,18 @@ const module = defineNuxtModule({
     Object.keys(options.files()).forEach((filePath) => {
       console.log("Generate: " + filePath);
       const localoptions = JSON.parse(JSON.stringify(options));
-      const { openApiSpec, fileName } = parseYamlFile(resolve(nuxt.options.rootDir, localoptions.folder), filePath);
-      if (!openApiSpec)
-        return;
-      if (!openApiSpec.paths)
-        return;
-      localoptions.locales = { en: "English" };
-      if (openApiSpec.info["x-locales"]) {
-        localoptions.locales = { ...{ en: "English" }, ...openApiSpec.info["x-locales"] };
-      }
-      const tags = (openApiSpec.tags ?? []).reduce((acc, tag) => {
-        acc[tag.name] = tag;
-        return acc;
-      }, {});
-      const pathsByTags = {};
-      for (const url in openApiSpec.paths) {
-        let reUrl = url;
-        if (reUrl.startsWith("/"))
-          reUrl = reUrl.substring(1);
-        if (reUrl.endsWith("/"))
-          reUrl = reUrl.substring(-1);
-        reUrl = reUrl.replace(/[/\\.?+=&{}]/gumi, "_").replace(/__+/, "_");
-        for (const method in openApiSpec.paths[url]) {
-          const openapi_item = openApiSpec.paths[url][method];
-          if (!openapi_item.tags)
-            openapi_item.tags = ["other"];
-          openapi_item.tags.forEach((tag) => {
-            if (method === "parameters")
-              return;
-            if (method === "servers")
-              return;
-            if (!pathsByTags[tag]) {
-              const tagInfo = tags[tag] ?? {};
-              const item2 = {
-                name: tagInfo.name ?? tag,
-                description: marked.parse(tagInfo.description ?? ""),
-                isOpen: tagInfo["x-tag-expanded"] ?? true,
-                items: []
-              };
-              for (const i in localoptions.locales) {
-                if (tagInfo[`x-description-${i}`]) {
-                  item2[`x-description-${i}`] = marked.parse(tagInfo[`x-description-${i}`]);
-                }
-                if (tagInfo[`x-name-${i}`]) {
-                  item2[`x-name-${i}`] = tagInfo[`x-name-${i}`];
-                }
-              }
-              pathsByTags[tag] = item2;
-            }
-            const item = {
-              name: url,
-              path: reUrl,
-              type: method,
-              description: openapi_item.summary ?? null
-            };
-            for (const i in localoptions.locales) {
-              if (openapi_item[`x-summary-${i}`]) {
-                item[`x-description-${i}`] = openapi_item[`x-summary-${i}`];
-              }
-            }
-            pathsByTags[tag].items.push(item);
-          });
-        }
-      }
-      openApiSpec.definitions = replaceMarkdown(openApiSpec.definitions, openApiSpec.components, openApiSpec.definitions);
-      openApiSpec.components = replaceMarkdown(openApiSpec.components, openApiSpec.components, openApiSpec.definitions);
-      localoptions.doc = replaceMarkdown(openApiSpec, openApiSpec.components, openApiSpec.definitions);
-      localoptions.pathsByTags = pathsByTags;
-      localoptions.fileName = fileName;
-      localoptions.layoutName = kebabCase(`apidocs-layout-${fileName}`).replace(/["']/g, "");
+      const workDir = resolve(nuxt.options.rootDir, localoptions.folder);
+      const parser = new Parser(workDir);
+      parser.load(filePath);
+      localoptions.locales = parser.getLocales();
+      const pathsByTags = parser.getPaths();
+      localoptions.doc = parser.getDoc();
+      localoptions.pathsByTags = parser.getPaths();
+      localoptions.fileName = parser.getFilename();
+      localoptions.layoutName = kebabCase(`apidocs-layout-${localoptions.fileName}`).replace(/["']/g, "");
       addLayout({
         src: resolver.resolve("./runtime/layout/docs.vue"),
-        filename: `apidocs.layout.${fileName}.vue`,
+        filename: `apidocs.layout.${localoptions.fileName}.vue`,
         // @ts-ignore
         name: localoptions.layoutName,
         write: true,
@@ -228,59 +334,57 @@ const module = defineNuxtModule({
       }, localoptions.layoutName);
       addTemplate({
         src: resolver.resolve("./runtime/templates/docs.vue"),
-        filename: `apidocs.${fileName}.vue`,
+        filename: `apidocs.${localoptions.fileName}.vue`,
         write: true,
         options: { ...localoptions, files }
       });
       extendPages((pages) => {
         Object.keys(localoptions.locales).forEach((locale) => {
           pages.push({
-            name: `openapi-${localoptions.path}/${fileName}/${locale}-info`,
-            path: `/${localoptions.path}/${fileName}/${locale}/get/info`,
+            name: `openapi-${localoptions.path}/${localoptions.fileName}/${locale}-info`,
+            path: `/${localoptions.path}/${localoptions.fileName}/${locale}/info`,
             // @ts-ignore
-            component: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
-            file: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
+            component: resolve(nuxt.options.buildDir, `apidocs.${localoptions.fileName}.vue`),
+            file: resolve(nuxt.options.buildDir, `apidocs.${localoptions.fileName}.vue`),
             meta: {
-              file: fileName,
+              file: localoptions.fileName,
               locale,
               type: "get",
               path: "info"
             }
           });
           pages.push({
-            name: `openapi-${localoptions.path}/${fileName}/${locale}-components`,
-            path: `/${localoptions.path}/${fileName}/${locale}/get/components`,
+            name: `openapi-${localoptions.path}/${localoptions.fileName}/${locale}-components`,
+            path: `/${localoptions.path}/${localoptions.fileName}/${locale}/components`,
             // @ts-ignore
-            component: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
-            file: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
+            component: resolve(nuxt.options.buildDir, `apidocs.${localoptions.fileName}.vue`),
+            file: resolve(nuxt.options.buildDir, `apidocs.${localoptions.fileName}.vue`),
             meta: {
-              file: fileName,
+              file: localoptions.fileName,
               locale,
               type: "get",
               path: "components"
             }
           });
           for (let tag in pathsByTags) {
+            if (tag === "custom")
+              continue;
             for (let i in pathsByTags[tag].items) {
               const item = pathsByTags[tag].items[i];
               pages.push({
-                name: `openapi-${localoptions.path}/${fileName}/${locale}-${item.type}-${item.path}`,
-                path: `/${localoptions.path}/${fileName}/${locale}/${item.type}/${item.path}`,
+                name: `openapi-${localoptions.path}/${localoptions.fileName}/${locale}-${item.type}-${item.path}`,
+                path: `/${localoptions.path}/${localoptions.fileName}/${locale}/${item.type}/${item.path}`,
                 // @ts-ignore
-                component: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
-                file: resolve(nuxt.options.buildDir, `apidocs.${fileName}.vue`),
+                component: resolve(nuxt.options.buildDir, `apidocs.${localoptions.fileName}.vue`),
+                file: resolve(nuxt.options.buildDir, `apidocs.${localoptions.fileName}.vue`),
                 meta: {
-                  file: fileName,
+                  file: localoptions.fileName,
                   locale,
                   type: item.type,
                   path: item.path,
                   url: item.name
                 }
               });
-            }
-          }
-          for (const i in openApiSpec.paths) {
-            for (const type in openApiSpec.paths[i]) {
             }
           }
         });

@@ -4,6 +4,7 @@
       <OpenApiInfo v-if="isInfo" :info="doc.info" :servers="doc.servers" :current-locale="currentLocale"></OpenApiInfo>
       <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="currentLocale"></OpenApiComponents>
       <OpenApiRoute v-else-if="activeRoute" :route="activeRoute" :current-locale="currentLocale" :method="type" :components="doc.components" :url="url" :path_doc="path_doc" :file="file" :server="server" :sub-params="subParams" />
+      <OpenApiRoute v-else-if="activeWebhook" :route="activeWebhook" :current-locale="currentLocale" :method="type" :components="doc.components" :url="url" :path_doc="path_doc" :file="file" :server="server" :sub-params="subParams" />
       <NotFound v-else />
       <SearchBlock :current-locale="currentLocale" :doc="doc" :path="options.path" :file="file" />
     </div>
@@ -16,7 +17,6 @@
 } %>
 
 const isNuxt3 = <%= options.isNuxt3 %>;
-
 export default {
   name: 'AppDocs',
   layout: `<%= options.layoutName %>`,
@@ -28,13 +28,23 @@ export default {
       return {
         title: `[${this.file}] - Info Docs`,
         description: '',
+        bodyAttrs: {
+          class: 'ggggg'
+        }
       };
     }
     if (this.isComponents) {
       return {
         title: `[${this.file}] - Components Docs`,
         description: '',
+        bodyAttrs: {
+          class: 'gggg'
+        }
       };
+    }
+
+    if (!this.activeRoute) {
+      return {}
     }
 
     const title = this.activeRoute[`x-summary-${this.currentLocale}`] ?? this.activeRoute['summary'] ?? ''
@@ -47,7 +57,6 @@ export default {
   },
   setup() {
     if(isNuxt3) {
-      console.log('setup!!')
       const route = useRoute()
       return {
         currentLocale: route.params.locale ?? route.meta.locale,
@@ -127,6 +136,11 @@ export default {
       if(!this.options.doc.paths) return null;
       if(!this.options.doc.paths[this.url]) return null;
       return this.options.doc.paths[this.url][this.type] ?? null
+    },
+    activeWebhook() {
+      if(!this.options.doc.webhooks) return null;
+      if(!this.options.doc.webhooks[this.url]) return null;
+      return this.options.doc.webhooks[this.url][this.type] ?? null
     },
 
     subParams() {

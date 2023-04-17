@@ -26,7 +26,7 @@ declare namespace _default {
     }
     namespace methods {
         export { tr };
-        export function getRoute(scheme: any): "/" | {
+        export function getRoute(scheme: any): {
             name: string;
             hash: string;
             meta: {

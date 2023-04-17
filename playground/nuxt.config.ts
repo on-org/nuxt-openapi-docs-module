@@ -1,5 +1,9 @@
 const isDev = process.env.NODE_ENV !== 'production';
 export default defineNuxtConfig({
+  plugins: [
+    { src: '@/plugins/content' }
+  ],
+  // debug: true,
   modules: [
     [
       '../src/module',
@@ -22,6 +26,7 @@ export default defineNuxtConfig({
             'petstore_extended': 'Petstore Extended Api',
             'localization': 'Localization',
             'no-access': 'no access',
+            'webhook': 'webhook',
 
             "additional-props": "additional-props",
             "allof": "allof",

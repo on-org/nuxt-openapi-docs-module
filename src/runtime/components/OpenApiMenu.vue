@@ -165,6 +165,10 @@ export default {
     getSubRoute(route) {
       const path = this.genUrl(route.path);
       const type = route.type;
+      if (route.type === 'custom') {
+        return `/${this.path}/${this.file}/${this.currentLocale}/${type}/${path}`
+      }
+
       return {name: `openapi-${this.path}/${this.file}/${this.currentLocale}-${type}-${path}`, meta: {locale: this.currentLocale, path: path, file: this.file, type: type}};
     },
     changeDoc(option) {
@@ -283,6 +287,10 @@ export default {
   }
 }
 
+.method-icon {
+  width: 24px;
+  display: inline-block;
+}
 .method-tag {
   width: 45px;
   display: inline-block;

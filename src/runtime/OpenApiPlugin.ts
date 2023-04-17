@@ -49,7 +49,7 @@ export default class OpenApiPlugin {
     return this.access(file)
   }
 
-  setAccess(accessor: (file: string) => true) {
+  setAccess(accessor: (file: string) => boolean) {
     this.access = accessor
   }
 

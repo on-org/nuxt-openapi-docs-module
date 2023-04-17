@@ -10,6 +10,7 @@
     "generate": "node --max-old-space-size=12192 node_modules/nuxt/bin/nuxt.js generate"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "core-js": "^3.25.3"
   },
   "devDependencies": {
