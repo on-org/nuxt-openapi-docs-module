@@ -54,11 +54,11 @@ export default {
           if(process.env.NODE_ENV !== 'production') {
             return {
               'petstore_extended': 'Petstore Extended Api',
-              'localization': 'Localization',
-              'page': 'Custom Page',
-              'no-access': 'no access',
-              'test-yaml.yaml': 'yaml ext',
-              'test-json.json': 'json ext',
+              // 'localization': 'Localization',
+              // 'page': 'Custom Page',
+              // 'no-access': 'no access',
+              // 'test-yaml.yaml': 'yaml ext',
+              // 'test-json.json': 'json ext',
               "external-refs.yaml": "external-refs.yaml",
               "external-refs2.yaml": "external-refs2.yaml",
               // 'https://petstore.swagger.io/v2/swagger.json': 'petstore url',

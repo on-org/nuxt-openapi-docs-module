@@ -81,14 +81,16 @@ export default class Parser {
     this.definitions = openApiSpec.openApiSpec.definitions;
     this.fileName = openApiSpec.fileName;
 
+    this.definitions = this.refReplace(this.definitions)
+    this.components = this.refReplace(this.components)
+    this.spec = this.refReplace(this.spec)
+
     this.definitions = this.replaceMarkdown(this.definitions)
-
     this.components = this.replaceMarkdown(this.components)
-
     this.spec = this.replaceMarkdown(this.spec)
 
     this.locales = {en: 'English'};
-    if(this.spec.info['x-locales']) {
+    if(this.spec && this.spec.info && this.spec.info['x-locales']) {
       this.locales = {...{ en: 'English' }, ...this.spec.info['x-locales']};
     }
 
@@ -107,34 +109,46 @@ export default class Parser {
     return {type, path, name};
   }
 
-  private refLoader(value: string) {
+  private refFileLoader(value: string) {
     if(this.refs[value]) return this.refs[value];
 
-    if(value.startsWith('.')) {
-      const [filepath, refPath] = value.split('#')
+    const [filepath, refPath] = value.split('#')
+
+    let spec: {[key: string]: any} = {};
+    if (filepath.startsWith('http')) {
+      const yamlData = fetch(filepath).text();
+      spec = yaml.load(yamlData) as {[key: string]: any};
+    } else {
       const dir = join(this.workDir, dirname(filepath))
       const name = basename(filepath)
 
       const spec = this.parseYamlFile(dir, name).openApiSpec;
-      if(!refPath) return this.replaceMarkdown(spec);
-      const link = this.getSchemaValsFromPath(refPath)
-
-      if(spec && spec[link.path] && spec[link.path][link.name]) {
-        this.lastlink = value;
-
-        const item = spec[link.path][link.name];
-        item.title = link.path
-        return this.replaceMarkdown(item);
-      }
+      if(!refPath) return this.refs[value] = this.refReplace(spec);
     }
+
+    const link = this.getSchemaValsFromPath(refPath)
+    if(spec && spec[link.path] && spec[link.path][link.name]) {
+      this.lastlink = value;
+
+      const item = spec[link.path][link.name];
+      item.title = link.path
+      return this.refs[value] = this.refReplace(item);
+    }
+
+    return value;
+  }
+
+  private refLoader(value: string) {
+    if(this.refs[value]) return this.refs[value];
 
     const link = this.getSchemaValsFromPath(value)
 
-    if(this.lastlink === value) return {
-      type: "string",
-      title: link.path,
-      description: 'recursive'
-    }
+    if(this.lastlink === value)
+      return {
+        type: "string",
+        title: link.path,
+        description: 'recursive'
+      }
 
     if (link.type === 'definitions') {
       if(this.definitions[link.path]) {
@@ -143,7 +157,7 @@ export default class Parser {
         const item = this.definitions[link.path];
         item.title = link.path
 
-        return this.refs[value] = this.replaceMarkdown(item);
+        return this.refs[value] = this.refReplace(item);
       }
     }
 
@@ -152,8 +166,30 @@ export default class Parser {
 
       const item = this.components[link.path][link.name];
       item.title = link.path
-      return this.refs[value] = this.replaceMarkdown(item);
+      return this.refs[value] = this.refReplace(item);
     }
+
+    return this.refs[value] = value
+  }
+
+  private refReplace(obj: {[key: string]: any}|string): any {
+    if (Array.isArray(obj)) {
+      return obj.map((val) => this.refReplace(val));
+    } else if (typeof obj === 'object' && obj !== null) {
+      return Object.entries(obj).reduce((acc, [key, value]) => {
+        if(key === '$ref' && typeof value === 'string') {
+          if(!value.startsWith('#')) {
+            return obj = this.refFileLoader(value)
+          }
+          return obj = this.refLoader(value)
+        } else {
+          // @ts-ignore
+          acc[key] = this.refReplace(value);
+        }
+        return acc;
+      }, {});
+    }
+    return obj;
   }
 
   private replaceMarkdown(obj: {[key: string]: any}|string): any {
@@ -168,7 +204,7 @@ export default class Parser {
     } else if (typeof obj === 'object' && obj !== null) {
       return Object.entries(obj).reduce((acc, [key, value]) => {
         if(key === '$ref' && typeof value === 'string') {
-          return obj = this.refLoader(value)
+          return value
         } else {
           // @ts-ignore
           acc[key] = this.replaceMarkdown(value);
@@ -185,7 +221,7 @@ export default class Parser {
   }
 
   getPaths(): {[key: string]: PathByTag} {
-    return  JSON.parse(JSON.stringify({
+    return JSON.parse(JSON.stringify({
       ...this.processOpenApiPaths(this.spec.webhooks ?? {}, 'webhooks'),
       ...this.processCustomPaths(this.spec['x-custom-path'] ?? {}),
       ...this.processOpenApiPaths(this.spec.paths),

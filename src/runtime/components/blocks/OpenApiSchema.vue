@@ -53,7 +53,7 @@
             <OpenApiTableHeader :flex="1">{{ $openapidoc.getLocaleText(currentLocale, 'Description') }}</OpenApiTableHeader>
           </template>
           <template v-slot:body>
-            <OpenApiTableRow v-for="(property, key) in schema.properties" :key="key" :has-nested-table="key === 'reference' || !!property.properties || !!property.items || !!property.oneOf">
+            <OpenApiTableRow v-for="(property, key) in schema.properties" :key="key" :has-nested-table="key === 'reference' || !!property.properties || !!property.items || !!property.oneOf || !!property.allOf">
               <OpenApiTableColl :flex="1">{{ key }}</OpenApiTableColl>
               <OpenApiTableColl :flex="1">{{ property.type }}</OpenApiTableColl>
               <OpenApiTableColl :flex="1" style="display: block;">
@@ -82,6 +82,11 @@
                 <div class="border px-2 py-2" v-if="property.properties">
                   <open-api-schema v-for="(sproperty, key) in property.properties" :key="key" :components="components" :current-locale="currentLocale" :schema="sproperty" title="properties" />
                 </div>
+                <div class="border px-2 py-2" v-if="property.allOf">
+                  <div v-for="(allOf, index) in property.allOf" :key="index">
+                    <open-api-schema :components="components" :schema="allOf" :current-locale="currentLocale" />
+                  </div>
+                </div>
                 <div class="schema-row items-center" v-if="property.oneOf">
                   <div class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText(currentLocale, 'One Of') }}:</div>
                   <div class="schema-row-value">
@@ -103,6 +108,8 @@
         <open-api-schema :components="components" :current-locale="currentLocale" :schema="schema.additionalProperties" :title="$openapidoc.getLocaleText(currentLocale, 'Additional Properties')" :open="false" />
       </div>
     </div>
+
+
     <div class="schema-row items-center" v-if="schema.allOf">
       <open-api-schema :components="components" :schema="assignAllOf(schema.allOf)" :current-locale="currentLocale" :open="false" />
     </div>
@@ -153,6 +160,13 @@ export default {
       return {
         properties: allOf.reduce((acc, curr) => {
           return { ...acc, ...curr.properties };
+        }, {}),
+      };
+    },
+    assign(allOf) {
+      return {
+        properties: allOf.reduce((acc, curr) => {
+          return { ...acc, ...curr };
         }, {}),
       };
     }

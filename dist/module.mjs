@@ -57,11 +57,14 @@ class Parser {
     this.components = openApiSpec.openApiSpec.components;
     this.definitions = openApiSpec.openApiSpec.definitions;
     this.fileName = openApiSpec.fileName;
+    this.definitions = this.refReplace(this.definitions);
+    this.components = this.refReplace(this.components);
+    this.spec = this.refReplace(this.spec);
     this.definitions = this.replaceMarkdown(this.definitions);
     this.components = this.replaceMarkdown(this.components);
     this.spec = this.replaceMarkdown(this.spec);
     this.locales = { en: "English" };
-    if (this.spec.info["x-locales"]) {
+    if (this.spec && this.spec.info && this.spec.info["x-locales"]) {
       this.locales = { ...{ en: "English" }, ...this.spec.info["x-locales"] };
     }
     if (!this.spec.tags) {
@@ -76,24 +79,33 @@ class Parser {
     const [type, path, name] = ref.replace("#/", "").split("/");
     return { type, path, name };
   }
+  refFileLoader(value) {
+    if (this.refs[value])
+      return this.refs[value];
+    const [filepath, refPath] = value.split("#");
+    let spec = {};
+    if (filepath.startsWith("http")) {
+      const yamlData = fetch(filepath).text();
+      spec = yaml.load(yamlData);
+    } else {
+      const dir = join(this.workDir, dirname(filepath));
+      const name = basename(filepath);
+      const spec2 = this.parseYamlFile(dir, name).openApiSpec;
+      if (!refPath)
+        return this.refs[value] = this.refReplace(spec2);
+    }
+    const link = this.getSchemaValsFromPath(refPath);
+    if (spec && spec[link.path] && spec[link.path][link.name]) {
+      this.lastlink = value;
+      const item = spec[link.path][link.name];
+      item.title = link.path;
+      return this.refs[value] = this.refReplace(item);
+    }
+    return value;
+  }
   refLoader(value) {
     if (this.refs[value])
       return this.refs[value];
-    if (value.startsWith(".")) {
-      const [filepath, refPath] = value.split("#");
-      const dir = join(this.workDir, dirname(filepath));
-      const name = basename(filepath);
-      const spec = this.parseYamlFile(dir, name).openApiSpec;
-      if (!refPath)
-        return this.replaceMarkdown(spec);
-      const link2 = this.getSchemaValsFromPath(refPath);
-      if (spec && spec[link2.path] && spec[link2.path][link2.name]) {
-        this.lastlink = value;
-        const item = spec[link2.path][link2.name];
-        item.title = link2.path;
-        return this.replaceMarkdown(item);
-      }
-    }
     const link = this.getSchemaValsFromPath(value);
     if (this.lastlink === value)
       return {
@@ -106,15 +118,34 @@ class Parser {
         this.lastlink = value;
         const item = this.definitions[link.path];
         item.title = link.path;
-        return this.refs[value] = this.replaceMarkdown(item);
+        return this.refs[value] = this.refReplace(item);
       }
     }
     if (this.components[link.path] && this.components[link.path][link.name]) {
       this.lastlink = value;
       const item = this.components[link.path][link.name];
       item.title = link.path;
-      return this.refs[value] = this.replaceMarkdown(item);
+      return this.refs[value] = this.refReplace(item);
     }
+    return this.refs[value] = value;
+  }
+  refReplace(obj) {
+    if (Array.isArray(obj)) {
+      return obj.map((val) => this.refReplace(val));
+    } else if (typeof obj === "object" && obj !== null) {
+      return Object.entries(obj).reduce((acc, [key, value]) => {
+        if (key === "$ref" && typeof value === "string") {
+          if (!value.startsWith("#")) {
+            return obj = this.refFileLoader(value);
+          }
+          return obj = this.refLoader(value);
+        } else {
+          acc[key] = this.refReplace(value);
+        }
+        return acc;
+      }, {});
+    }
+    return obj;
   }
   replaceMarkdown(obj) {
     if (typeof obj === "string") {
@@ -128,7 +159,7 @@ class Parser {
     } else if (typeof obj === "object" && obj !== null) {
       return Object.entries(obj).reduce((acc, [key, value]) => {
         if (key === "$ref" && typeof value === "string") {
-          return obj = this.refLoader(value);
+          return value;
         } else {
           acc[key] = this.replaceMarkdown(value);
         }

@@ -35,7 +35,9 @@ export default class Parser {
     constructor(workDir: string);
     load(fileName: string): void;
     private getSchemaValsFromPath;
+    private refFileLoader;
     private refLoader;
+    private refReplace;
     private replaceMarkdown;
     getLocales(): {
         [key: string]: string;

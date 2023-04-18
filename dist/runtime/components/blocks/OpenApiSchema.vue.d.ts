@@ -34,6 +34,9 @@ declare namespace _default {
         export function assignAllOf(allOf: any): {
             properties: any;
         };
+        export function assign(allOf: any): {
+            properties: any;
+        };
     }
 }
 export default _default;

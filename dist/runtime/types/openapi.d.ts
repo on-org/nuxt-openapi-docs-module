@@ -8,6 +8,7 @@ interface OpenAPIObject31 {
     security?: SecurityRequirementObject[];
     tags?: TagObject[];
     externalDocs?: ExternalDocumentationObject;
+    definitions?: undefined;
 }
 interface OpenAPIObject30 {
     openapi: string;
@@ -17,6 +18,7 @@ interface OpenAPIObject30 {
     security?: SecurityRequirementObject[];
     tags?: TagObject[];
     externalDocs?: ExternalDocumentationObject;
+    definitions?: undefined;
 }
 interface SwaggerObject21 {
     swagger: string;
@@ -28,6 +30,7 @@ interface SwaggerObject21 {
     securityDefinitions?: SecurityDefinitionsObject;
     tags?: TagObject[];
     externalDocs?: ExternalDocumentationObject;
+    components?: undefined;
 }
 interface SwaggerObject20 {
     swagger: string;
@@ -45,6 +48,7 @@ interface SwaggerObject20 {
     security?: SecurityRequirementObject[];
     tags?: TagObject[];
     externalDocs?: ExternalDocumentationObject;
+    components?: undefined;
 }
 interface InfoObject31 {
     title: string;
@@ -61,6 +65,9 @@ interface InfoObject31 {
         name: string;
         url?: string;
         [key: `x-${string}-${string}`]: string | undefined;
+    };
+    'x-locales'?: {
+        [key: string]: string;
     };
     [key: `x-${string}-${string}`]: string | undefined;
 }
@@ -150,6 +157,9 @@ interface InfoObject30 {
     contact?: ContactObject;
     license?: LicenseObject;
     [key: `x-${string}-${string}`]: string | undefined;
+    'x-locales'?: {
+        [key: string]: string;
+    };
 }
 interface PathsObject30 {
     [path: string]: PathItemObject30 | ReferenceObject | undefined;
@@ -397,6 +407,9 @@ interface SwaggerObject21 {
     security?: SecurityRequirementObject[];
     tags?: TagObject[];
     externalDocs?: ExternalDocumentationObject;
+    'x-locales'?: {
+        [key: string]: string;
+    };
 }
 interface InfoObject20 {
     title: string;
@@ -406,6 +419,9 @@ interface InfoObject20 {
     contact?: ContactObject;
     license?: LicenseObject;
     [key: `x-${string}-${string}`]: string | undefined;
+    'x-locales'?: {
+        [key: string]: string;
+    };
 }
 interface PathsObject20 {
     [path: string]: PathItemObject20 | ReferenceObject;
