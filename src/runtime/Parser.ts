@@ -155,7 +155,7 @@ export default class Parser {
         this.lastlink = value;
 
         const item = this.definitions[link.path];
-        item.title = link.path
+        item.title = link.name
 
         return this.refs[value] = this.refReplace(item);
       }
@@ -165,7 +165,8 @@ export default class Parser {
       this.lastlink = value;
 
       const item = this.components[link.path][link.name];
-      item.title = link.path
+      item.title = link.name
+
       return this.refs[value] = this.refReplace(item);
     }
 

@@ -117,14 +117,14 @@ class Parser {
       if (this.definitions[link.path]) {
         this.lastlink = value;
         const item = this.definitions[link.path];
-        item.title = link.path;
+        item.title = link.name;
         return this.refs[value] = this.refReplace(item);
       }
     }
     if (this.components[link.path] && this.components[link.path][link.name]) {
       this.lastlink = value;
       const item = this.components[link.path][link.name];
-      item.title = link.path;
+      item.title = link.name;
       return this.refs[value] = this.refReplace(item);
     }
     return this.refs[value] = value;
