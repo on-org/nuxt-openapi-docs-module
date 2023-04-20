@@ -22,13 +22,13 @@
           v-for="item in options"
           :key="item[valueProp]"
           class="oapi-dd-popup__list-item"
-          :class="{'oapi-dd-popup__list-item--is-active': value !== null && item[valueProp] === value}"
+          :class="{'oapi-dd-popup__list-item--is-active': modelValue !== null && item[valueProp] === modelValue}"
           @click="select(item[valueProp])"
         >
           <slot
             :item="item"
-            :selected-value="value"
-            :is-selected="value !== null && item[valueProp] === value"
+            :selected-value="modelValue"
+            :is-selected="modelValue !== null && item[valueProp] === modelValue"
             :close="close"
           >
             {{ item[textProp] }}
@@ -45,8 +45,12 @@ import OpenApiExpandIcon from '../icons/OpenApiExpandIcon.vue'
 export default {
   name: 'OpenApiDropdown',
   components: { OpenApiExpandIcon },
+  model: {
+    prop: 'modelValue',
+    event: 'update:modelValue',
+  },
   props: {
-    value: {
+    modelValue: {
       type: [String, Number],
       default: null,
     },
@@ -76,14 +80,14 @@ export default {
     classes() {
       return {
         'oapi-dd--is-open': this.isOpen,
-        'oapi-dd--empty': this.value === null,
+        'oapi-dd--empty': this.modelValue === null,
       }
     },
     selectedOption() {
-      if (this.value === null) {
+      if (this.modelValue === null) {
         return null;
       }
-      return this.options.find((item) => item[this.valueProp] === this.value) || null;
+      return this.options.find((item) => item[this.valueProp] === this.modelValue) || null;
     },
   },
   beforeUnmount () {
@@ -102,7 +106,6 @@ export default {
       if (this.$refs.popup && (this.$refs.popup === e.target || this.$refs.popup.contains(e.target))) {
         return;
       }
-      console.log('click outside')
       this.close();
     },
     cleanupOutside() {
@@ -119,8 +122,8 @@ export default {
       this.cleanupOutside();
     },
     select(value) {
-      if (this.value !== value) {
-        this.$emit('input', value);
+      if (this.modelValue !== value) {
+        this.$emit('update:modelValue', value);
       }
       this.close();
     },
