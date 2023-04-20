@@ -1,5 +1,6 @@
 <template>
   <li
+    v-if="resolvedSchema"
     class="oapi-prop"
     :class="classes"
   >
@@ -271,20 +272,23 @@ export default {
       return resolveAllOf(this.schema);
     },
     isPlainArray() {
+      if (!this.resolvedSchema) return false;
       const flatTypes = ['string', 'integer', 'number', 'boolean'];
       return this.resolvedSchema.type === 'array' && this.resolvedSchema.items && flatTypes.includes(this.resolvedSchema.items.type);
     },
     isObject() {
+      if (!this.resolvedSchema) return false;
       return this.resolvedSchema.type === 'object';
     },
     isArray() {
+      if (!this.resolvedSchema) return false;
       return this.resolvedSchema.type === 'array';
     },
     isOneOf() {
-      return !!this.resolvedSchema.oneOf;
+      return !!(this.resolvedSchema && this.resolvedSchema.oneOf);
     },
     isAnyOf() {
-      return !!this.resolvedSchema.anyOf;
+      return !!(this.resolvedSchema && this.resolvedSchema.anyOf);
     },
     hasProperties() {
       return !!Object.keys(this.resolvedSchema.properties || {}).length;
@@ -295,6 +299,7 @@ export default {
       return this.resolvedSchema.example.toString();
     },
     computedOneAnyOf() {
+      if (!this.resolvedSchema) return [];
       return this.resolvedSchema.oneOf || this.resolvedSchema.anyOf;
     },
     computedType() {
@@ -352,6 +357,7 @@ export default {
     tr,
     getType(schema) {
       let defType = schema.type || 'any';
+      if (!schema) return defType;
       if (schema.oneOf || schema.anyOf) {
         const arr = schema.oneOf || schema.anyOf || [];
         if (arr.length > 0 && arr[0].type && arr.every((item) => item.type && item.type === arr[0].type )) {

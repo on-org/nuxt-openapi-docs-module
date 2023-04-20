@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS=--max-old-space-size=12192 nuxt",
+    "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate1": "nuxt generate --max_old_space_size=12192 --optimize_for_size",
-    "generate": "node --max-old-space-size=12192 node_modules/nuxt/bin/nuxt.js generate"
+    "generate": "nuxt generate --max_old_space_size=12192 --optimize_for_size"
   },
   "dependencies": {
     "axios": "^0.27.2",
