@@ -101,7 +101,7 @@ html.oapi {
     font-size: .75rem;
     white-space: break-spaces;
     border-radius: 4px;
-    &:not(pre code) {
+    &:not(pre > code) {
       display: inline-block;
       background-color: var(--oapi-bg-code-single);
     }

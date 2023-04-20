@@ -432,7 +432,7 @@ const module = defineNuxtModule({
       });
     }
     nuxt.options.css.push(resolver.resolve("./runtime/github.css"));
-    nuxt.options.css.push(resolver.resolve("./runtime/styles.scss"));
+    nuxt.options.css.push(resolver.resolve("./runtime/styles.css"));
   }
 });
 
