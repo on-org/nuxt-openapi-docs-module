@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { resolveAllOf } from '../helpers.js'
+import { resolveAllOf } from '../helpers'
 import OpenApiSchemaProperty from './OpenApiSchemaProperty.vue'
 
 export default {

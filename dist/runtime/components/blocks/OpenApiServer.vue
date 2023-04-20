@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { tr } from '../helpers.js'
+import { tr } from '../helpers'
 
 export default {
   name: 'OpenApiServer',

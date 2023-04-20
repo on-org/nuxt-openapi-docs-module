@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import { tr } from '../helpers.js'
+import { tr } from '../helpers'
 import OpenApiMediaTypes from './OpenApiMediaTypes.vue'
 import OpenApiObjectModel from './OpenApiObjectModel.vue'
 

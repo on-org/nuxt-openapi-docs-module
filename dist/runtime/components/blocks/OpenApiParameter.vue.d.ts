@@ -29,4 +29,4 @@ declare namespace _default {
     }
 }
 export default _default;
-import { tr } from "../helpers.js";
+import { tr } from "../helpers";
