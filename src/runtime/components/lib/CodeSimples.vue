@@ -100,10 +100,19 @@ export default {
       this.snippetLibraryIndex = library;
       this.genCode()
     },
+    getAbsoluteUrl() {
+      const url = this.baseUrl;
+      if (!url) return window.location.origin;
+      if (/^https?:\/\//i.test(url)) {
+        return url;
+      }
+      const base = window.location.origin;
+      return new URL(url, base).href;
+    },
     genCode() {
       const method = this.method.toUpperCase();
 
-      requestTemplater.baseUrl(this.baseUrl ?? `https://${location.host}`);
+      requestTemplater.baseUrl(this.getAbsoluteUrl());
       requestTemplater.url(this.url);
       requestTemplater.method(method);
       requestTemplater.params(JSON.parse(JSON.stringify(this.params)));
