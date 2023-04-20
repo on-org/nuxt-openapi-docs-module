@@ -1,31 +1,29 @@
 <template>
   <div class="openapi-examples">
-    <h3 class="text-lg font-bold mb-2">{{ $openapidoc.getLocaleText(currentLocale, 'Examples') }}: </h3>
-    <div v-for="(example, name) in examples" :key="name">
-      <h4 class="text-base font-bold">{{ name }}</h4>
-
-      <OpenApiTable>
-        <template v-slot:header>
-          <OpenApiTableHeader :flex="1">{{ $openapidoc.getLocaleText(currentLocale, 'Media Type') }}</OpenApiTableHeader>
-          <OpenApiTableHeader :flex="1">{{ $openapidoc.getLocaleText(currentLocale, 'Value') }}</OpenApiTableHeader>
-        </template>
-        <template v-slot:body>
-          <OpenApiTableRow v-for="(value, mediaType) in example" :key="mediaType" :has-nested-table="false">
-            <OpenApiTableColl :flex="1">{{ mediaType }}</OpenApiTableColl>
-            <OpenApiTableColl :flex="1">
-              <pre class="m-0 whitespace-pre-wrap w-full">{{ JSON.stringify(value, null, 2) }}</pre>
-            </OpenApiTableColl>
-          </OpenApiTableRow>
-        </template>
-      </OpenApiTable>
+    <h2 id="examples">
+      {{ $openapidoc.getLocaleText(currentLocale, 'Examples') }}
+    </h2>
+    <div
+      v-for="(example, name) in examples"
+      :key="name"
+      class="oapi-schema-block"
+    >
+      <OpenApiExampleObject
+        :current-locale="currentLocale"
+        :example="example"
+        :name="name"
+        name-tag="h3"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import {tr} from "../helpers";
+import OpenApiExampleObject from './OpenApiExampleObject.vue'
 
 export default {
+  components: { OpenApiExampleObject },
   props: {
     examples: {
       type: Object,

@@ -1,22 +1,29 @@
 <template>
-  <header class="flex items-center justify-between text-gray-800 px-4 py-3 sm:px-6 h-16 shadow-md border-b">
+  <header class="oapi-header">
     <!-- Mobile menu button -->
-    <button class="menu-icon sm:hidden" @click="toggleMenu">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="3" y1="12" x2="21" y2="12"></line>
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <line x1="3" y1="18" x2="21" y2="18"></line>
+    <button
+      class="oapi-header__menu-btn oapi-header-btn"
+      @click="toggleMenu"
+    >
+      <svg
+        width="1em"
+        height="1em"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"
+        />
       </svg>
     </button>
 
     <!-- Left part of header (logo slot) -->
-    <div class="flex-shrink-0">
+    <div class="oapi-header__logo">
       <slot name="logo">
         <!-- Default logo here -->
       </slot>
     </div>
     <!-- Right part of header (button slot) -->
-    <div class="flex-shrink-0">
+    <div class="oapi-header__content">
       <slot name="button">
         <!-- Default button here -->
       </slot>
@@ -40,8 +47,59 @@ export default {
   },
 };
 </script>
-<style scoped>
-.menu-icon {
-  width: 30px;
+<style lang="scss">
+
+button.oapi-header-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  height: 32px;
+  background-color: #fff;
+  cursor: pointer;
+  border-radius: 6px;
+  border: 1px solid #e2e2e2;
+  font-size: 1rem;
+  transition: .3s ease-in-out;
+  &:hover {
+    background: #edf8ff;
+    box-shadow: 0 0 4px 0 rgba(#000, 0.05);
+  }
+}
+
+.oapi-header {
+  background: #f6f8fa;
+  border-bottom: 1px solid #e2e2e2;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+  padding: 12px 32px 12px 12px;
+  z-index: 10;
+  &__logo {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    a {
+      display: inline-flex;
+      svg {
+        display: block;
+      }
+    }
+  }
+  &__content {
+    margin-left: auto;
+  }
+  &__menu-btn {
+    font-size: 1.5rem !important;
+    margin-right: 8px !important;
+    padding: 0 !important;
+    width: 32px;
+    svg {
+      fill: #666;
+    }
+    @media screen and (min-width: 1110px) {
+      display: none;
+    }
+  }
 }
 </style>

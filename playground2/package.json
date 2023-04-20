@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_OPTIONS=--max-old-space-size=12192 nuxt",
+    "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate1": "nuxt generate --max_old_space_size=12192 --optimize_for_size",
     "generate": "node --max-old-space-size=12192 node_modules/nuxt/bin/nuxt.js generate"
   },
   "dependencies": {
@@ -18,12 +17,16 @@
     "@nuxt/types": "^2.16.3",
     "@nuxt/typescript-build": "^3.0.1",
     "@types/node": "^18.15.11",
+    "cross-env": "^7.0.3",
     "nuxt": "^2.16.2",
+    "sass": "1.33.0",
+    "sass-loader": "^10.1.1",
     "ts-loader": "^8.4.0",
     "tslib": "^2.5.0",
     "typescript": "^4.8.4",
     "vue": "^2.7.10",
     "vue-server-renderer": "^2.7.10",
-    "vue-template-compiler": "^2.7.10"
+    "vue-template-compiler": "^2.7.10",
+    "webpack": "^4.46.0"
   }
 }

@@ -1,26 +1,45 @@
 <template>
   <div>
-    <h2 class="text-2xl font-bold">{{ tr(info, 'title', currentLocale) }}</h2>
-    <div class="my-4 description doc-info" v-html="tr(info, 'description', currentLocale)"></div>
+    <div class="oapi-info-head">
+      <h1>{{ tr(info, 'title', currentLocale) }}</h1>
+      <span
+        v-if="info.version"
+        class="oapi-info-head__version"
+      >
+        {{ info.version }}
+      </span>
+    </div>
+    <div
+      class="oapi-info-block"
+      v-html="tr(info, 'description', currentLocale)"
+    />
 
     <div v-if="servers">
-      <h3 class="text-lg font-bold">Servers</h3>
-      <ul class="list-disc list-inside">
-        <li v-for="server in servers" :key="server.url">
-          <a class="text-blue-500 hover:underline" :href="getUrl(server)">{{ getUrl(server) }}</a> - <span v-if="server.description">{{ server.description }}</span>
+      <h2>{{ $openapidoc.getLocaleText(currentLocale, 'Servers') }}</h2>
+      <ul>
+        <li
+          v-for="server in servers"
+          :key="server.url"
+        >
+          <a
+            :href="getUrl(server)"
+          >{{ getUrl(server) }}</a> - <span v-if="server.description">{{ server.description }}</span>
         </li>
       </ul>
     </div>
 
-    <h3 v-if="info.externalDocs" class="text-lg font-bold">External documentation</h3>
-    <ul v-if="info.externalDocs" class="list-disc list-inside">
+    <h2 v-if="info.externalDocs">
+      {{ $openapidoc.getLocaleText(currentLocale, 'External documentation') }}
+    </h2>
+    <ul
+      v-if="info.externalDocs"
+    >
       <li>
-        <a class="text-blue-500 hover:underline" :href="info.externalDocs.url">{{ tr(info.externalDocs, 'description', currentLocale) }}</a>
+        <a
+          :href="info.externalDocs.url"
+        >{{ tr(info.externalDocs, 'description', currentLocale) }}</a>
       </li>
     </ul>
-    <div v-if="info.version">
-      <h3 class="text-lg font-bold">version: {{ info.version }}</h3>
-    </div>
   </div>
 </template>
 <script>
@@ -62,3 +81,25 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.oapi-info-head {
+  margin-bottom: 2rem;
+  h1 {
+    margin-bottom: 0;
+    margin-top: 0;
+    display: inline-block;
+  }
+  &__version {
+    vertical-align: top;
+    display: inline-block;
+    margin-top: 8px;
+    margin-left: 8px;
+    padding: 0.2em 0.4em;
+    font-size: .75rem;
+    background-color: var(--oapi-bg-code-single);
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+}
+</style>

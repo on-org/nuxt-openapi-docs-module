@@ -1,43 +1,50 @@
 <template>
-  <div>
-    <h2 class="text-lg font-bold mb-2">{{ $openapidoc.getLocaleText(currentLocale, 'Responses') }}:</h2>
+  <div class="oapi-responses">
+    <component
+      :is="isCb ? 'h3' : 'h2'"
+      :id="`${hPrefix}responses`"
+    >
+      {{ $openapidoc.getLocaleText(currentLocale, 'Responses') }}
+    </component>
 
-    <OpenApiTable>
-      <template v-slot:header>
-        <OpenApiTableHeader :flex="1">{{ $openapidoc.getLocaleText(currentLocale, 'Status') }}</OpenApiTableHeader>
-        <OpenApiTableHeader :flex="1">{{ $openapidoc.getLocaleText(currentLocale, 'Description') }}</OpenApiTableHeader>
-      </template>
-      <template v-slot:body>
-        <OpenApiTableRow v-for="(response, status) in responses" :key="status" :has-nested-table="!!response.examples || !!response.content || !!response.schema">
-          <OpenApiTableColl :flex="1">{{ status }}</OpenApiTableColl>
-          <OpenApiTableColl :flex="1" v-html="tr(response, 'description', currentLocale)"></OpenApiTableColl>
-
-
-          <template v-slot:nested-table>
-            <OpenApiExamples v-if="response.examples" :examples="response.examples" :current-locale="currentLocale" :components="components" />
-
-            <OpenApiTabs v-if="response.content">
-              <template v-for="(val, key) in response.content" :slot="key">
-                <pre class="mt-2 p-2 rounded-md" v-text="key"></pre>
-                <OpenApiSchema :schema="val.schema" :current-locale="currentLocale" :components="components" class="mt-4" />
-              </template>
-            </OpenApiTabs>
-
-            <OpenApiSchema v-if="response.schema" :schema="response.schema" :current-locale="currentLocale" :components="components" class="mt-4" />
-          </template>
-
-        </OpenApiTableRow>
-      </template>
-    </OpenApiTable>
+    <div
+      v-for="(response, status) in responses"
+      :key="status"
+      class="oapi-responses-item"
+    >
+      <component
+        :is="isCb ? 'h4' : 'h3'"
+        :id="`${hPrefix}response-${status}`"
+        class="oapi-responses-item__status"
+      >
+        {{ status }}
+      </component>
+      <div
+        class="oapi-responses-item__description"
+        v-html="tr(response, 'description', currentLocale)"
+      />
+      <OpenApiResponse
+        lite
+        :current-locale="currentLocale"
+        :response="response"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import {tr} from "../helpers";
+import OpenApiResponse from './OpenApiResponse.vue'
 
 export default {
   name: 'OpenApiResponses',
+  components: { OpenApiResponse },
   props: {
+    isCb: Boolean,
+    hPrefix: {
+      type: String,
+      default: '',
+    },
     responses: {
       type: Object,
       required: true,
@@ -56,3 +63,15 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.oapi-responses {
+
+}
+
+.oapi-responses-item {
+  .oapi-response {
+    margin-top: 16px;
+  }
+}
+</style>
