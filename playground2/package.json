@@ -9,9 +9,10 @@
     "generate": "node --max-old-space-size=12192 node_modules/nuxt/bin/nuxt.js generate"
   },
   "dependencies": {
+    "@nuxtjs/i18n": "^7.3.1",
     "axios": "^0.27.2",
     "core-js": "^3.25.3",
-    "nuxt-openapi-docs-module": "^3.5.8"
+    "nuxt-openapi-docs-module": "^4.0.6"
   },
   "devDependencies": {
     "@nuxt/types": "^2.16.3",

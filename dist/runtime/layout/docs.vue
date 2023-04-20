@@ -37,12 +37,12 @@
 </template>
 
 <script>
-<% if (options.isNuxt3) {
+<% if (options.isNuxt3 ?? false) {
   print('import {useNuxtApp, showError, useRoute, useHead} from "#app";');
 } %>
 
-const isNuxt3 = <%= options.isNuxt3 %>;
-const isNuxt2 = <%= options.isNuxt2 %>;
+const isNuxt3 = <%= options.isNuxt3 ?? false %>;
+const isNuxt2 = <%= options.isNuxt2 ?? false %>;
 
 function genHead() {
   return {
@@ -168,10 +168,6 @@ export default {
       this.isDarkMode = localStorage.getItem('isDarkMode') === 'true'
       if(this.isDarkMode) document.querySelector('html').classList.add('dark')
     }
-    this.$nextTick(() => {
-      this.foo('foobar');
-    });
-
   },
   unmounted() {
     window.removeEventListener('resize', this.handleResize)
