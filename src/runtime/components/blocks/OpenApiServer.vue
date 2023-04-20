@@ -42,12 +42,12 @@
             class="oapi-server-var__enum"
           >
             {{ $openapidoc.getLocaleText(currentLocale, 'Enum') }}:
-            <template
+            <span
               v-for="(enumVal) in varObj.enum"
               :key="enumVal"
             >
               <code>{{ enumVal }}</code>{{ ' ' }}
-            </template>
+            </span>
           </div>
         </li>
       </ul>

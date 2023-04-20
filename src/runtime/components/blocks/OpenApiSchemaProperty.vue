@@ -134,13 +134,12 @@
           class="oapi-prop-add-info oapi-prop-add-info--enums"
         >
           {{ $openapidoc.getLocaleText(currentLocale, 'Enum') }}:
-          <template
+          <span
             v-for="item in resolvedSchema.enum"
             :key="item"
           >
-            <code
-            >{{ item }}</code>{{ ' ' }}
-          </template>
+            <code>{{ item }}</code>{{ ' ' }}
+          </span>
         </div>
         <div
           v-if="flags.length"
