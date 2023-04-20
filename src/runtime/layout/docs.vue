@@ -13,8 +13,6 @@
           :locales="locales"
           :file="file"
           :path="path_doc"
-          :is-dark-mode="isDarkMode"
-          @toggleDarkMode="toggleDarkMode"
         />
       </template>
     </OpenApiMainHeader>
@@ -114,7 +112,6 @@ export default {
       isMobile: false,
       currentLocale: 'en',
       file: '<%= options.fileName %>',
-      isDarkMode: false,
     };
   },
   head() {
@@ -141,14 +138,6 @@ export default {
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
     },
-    toggleDarkMode() {
-      if(process.client) {
-        this.isDarkMode = !this.isDarkMode
-        localStorage.setItem('isDarkMode', this.isDarkMode)
-        if(this.isDarkMode) document.querySelector('html').classList.add('dark')
-        else document.querySelector('html').classList.remove('dark');
-      }
-    },
     handleResize() {
       this.isDesktop = window.innerWidth >= 1110;
       this.isMobile = window.innerWidth < 1110;
@@ -165,8 +154,6 @@ export default {
       this.isMobile = window.innerWidth < 1110;
       this.isMenuOpen = window.innerWidth >= 1110;
       window.addEventListener('resize', this.handleResize)
-      this.isDarkMode = localStorage.getItem('isDarkMode') === 'true'
-      if(this.isDarkMode) document.querySelector('html').classList.add('dark')
     }
   },
   unmounted() {
