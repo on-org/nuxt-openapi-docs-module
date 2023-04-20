@@ -3,10 +3,10 @@ import { kebabCase } from 'scule';
 import { join, dirname, basename, extname, resolve } from 'path';
 import { marked } from 'marked';
 import fetch from 'sync-fetch';
-import fs, { writeFileSync } from 'fs';
+import fs from 'fs';
 import * as yaml from 'js-yaml';
 import hljs from 'highlight.js';
-import { promises } from 'node:fs';
+import { promises, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import lodashTemplate from 'lodash.template';
 
 
@@ -377,6 +377,9 @@ const module = defineNuxtModule({
       }, localoptions.layoutName);
       const srcContents = await promises.readFile(resolver.resolve("./runtime/templates/docs.vue"), "utf-8");
       const template = lodashTemplate(srcContents, {})({ options: { ...localoptions, files: filesClean } });
+      if (!existsSync(join(__dirname, ".cache"))) {
+        mkdirSync(join(__dirname, ".cache"));
+      }
       const path = join(__dirname, ".cache", `${localoptions.fileName}.vue`);
       writeFileSync(path, template);
       extendPages((pages) => {

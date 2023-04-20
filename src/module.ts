@@ -12,8 +12,7 @@ import {
 import {kebabCase} from "scule";
 import {resolve,extname,basename,join} from "path";
 import Parser from "./runtime/Parser";
-import {promises} from "node:fs";
-import {writeFileSync} from "fs";
+import {promises, existsSync, writeFileSync, mkdirSync} from "node:fs";
 import lodashTemplate from "lodash.template";
 
 
@@ -116,6 +115,10 @@ export default defineNuxtModule<ModuleOptions>({
 
       const srcContents = await promises.readFile(resolver.resolve('./runtime/templates/docs.vue'), "utf-8");
       const template = lodashTemplate(srcContents, {})({options:{...localoptions, files: filesClean}});
+
+      if (!existsSync(join(__dirname, '.cache'))) {
+        mkdirSync(join(__dirname, '.cache'));
+      }
 
       const path = join(__dirname, '.cache', `${localoptions.fileName}.vue`);
       writeFileSync(path , template);
