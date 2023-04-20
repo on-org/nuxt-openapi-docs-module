@@ -1,34 +1,65 @@
 <template>
-  <div v-if="callbacks">
-    <h2 class="text-lg font-bold mb-2">{{ $openapidoc.getLocaleText(currentLocale, 'Callbacks') }}:</h2>
-    <div class="list-disc list-inside">
-      <div v-for="(item, name) in callbacks" :key="name">
-        <div  v-for="(callback, method) in item" :key="name">
-          <h3 class="text-md font-bold mb-1">{{ method }} - {{ name }}</h3>
-          <div class="text-sm mb-2"> {{ callback.description }}</div>
-          <div v-for="(operation, opName) in callback" :key="opName">
-            <div class="mb-2">
-              <span class="bg-indigo-100 text-indigo-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300">{{ opName }}</span>
-              <div class="text-sm mb-2">{{ operation.description }}</div>
-              <OpenApiParameters
-                v-if="operation.parameters"
-                :parameters="operation.parameters"
-                :current-locale="currentLocale"
-                :components="components"
-              />
-              <OpenApiRequestBody
-                v-if="operation.requestBody"
-                :requestBody="operation.requestBody"
-                :current-locale="currentLocale"
-                :components="components"
-              />
-              <OpenApiResponses
-                v-if="operation.responses"
-                :responses="operation.responses"
-                :current-locale="currentLocale"
-                :components="components"
-              />
+  <div
+    v-if="callbacks"
+    class="oapi-callbacks"
+  >
+    <h2>{{ $openapidoc.getLocaleText(currentLocale, 'Callbacks') }}</h2>
+    <div class="oapi-callbacks__list">
+      <div
+        v-for="(item, name) in callbacks"
+        :key="name"
+      >
+        <div
+          v-for="(callback, method) in item"
+          :key="method"
+          class="oapi-callback-method"
+        >
+          <h3 class="oapi-callback-method__name">
+            <code>{{ method }}</code> - {{ name }}
+          </h3>
+          <div
+            v-if="callback.description"
+            class="oapi-callback-method__description"
+            v-html="callback.description"
+          />
+          <div
+            v-for="(operation, opName) in callback"
+            :key="opName"
+            class="oapi-callback-op"
+          >
+            <div class="oapi-callback-op__name">
+              <span
+                class="oapi-method-tag"
+                :class="`oapi-method-tag--${opName}`"
+              >{{ opName }}</span>
             </div>
+            <div
+              v-if="operation.description"
+              class="oapi-callback-op__description"
+              v-html="operation.description"
+            />
+            <OpenApiParameters
+              v-if="operation.parameters"
+              :parameters="operation.parameters"
+              :current-locale="currentLocale"
+              :components="components"
+            />
+            <OpenApiRequestBody
+              v-if="operation.requestBody"
+              is-cb
+              :h-prefix="`${name}-${opName}-${method}`"
+              :request-body="operation.requestBody"
+              :current-locale="currentLocale"
+              :components="components"
+            />
+            <OpenApiResponses
+              is-cb
+              :h-prefix="`${name}-${opName}-${method}`"
+              v-if="operation.responses"
+              :responses="operation.responses"
+              :current-locale="currentLocale"
+              :components="components"
+            />
           </div>
         </div>
       </div>
@@ -37,8 +68,13 @@
 </template>
 
 <script>
+import OpenApiParameters from './OpenApiParameters.vue'
+import OpenApiRequestBody from './OpenApiRequestBody.vue'
+import OpenApiResponses from './OpenApiResponses.vue'
+
 export default {
   name: "OpenApiCallbacks",
+  components: { OpenApiResponses, OpenApiRequestBody, OpenApiParameters },
   props: {
     callbacks: {
       type: Object,
@@ -55,3 +91,23 @@ export default {
   },
 };
 </script>
+<style>
+.oapi-callbacks {
+  margin-top: 42px;
+  border-top: 2px solid #e2e2e2;
+}
+.oapi-callbacks__list {
+  padding-left: 16px;
+}
+
+.oapi-callback-method__name code {
+  font-size: inherit;
+}
+
+.oapi-callback-op {
+  padding-left: 16px;
+}
+.oapi-callback-op__name .oapi-method-tag {
+  font-size: 1.2rem;
+}
+</style>

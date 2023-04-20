@@ -1,4 +1,4 @@
-import { defineNuxtModule, createResolver, addComponentsDir, isNuxt3, isNuxt2, addLayout, addTemplate, extendPages, addPlugin } from '@nuxt/kit';
+import { defineNuxtModule, createResolver, addComponentsDir, isNuxt3, isNuxt2, addLayout, extendPages, addPlugin } from '@nuxt/kit';
 import { kebabCase } from 'scule';
 import { join, dirname, basename, extname, resolve } from 'path';
 import { marked } from 'marked';
@@ -6,7 +6,18 @@ import fetch from 'sync-fetch';
 import fs from 'fs';
 import * as yaml from 'js-yaml';
 import hljs from 'highlight.js';
+import { promises, existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import lodashTemplate from 'lodash.template';
 
+
+
+// -- Unbuild CommonJS Shims --
+import __cjs_url__ from 'url';
+import __cjs_path__ from 'path';
+import __cjs_mod__ from 'module';
+const __filename = __cjs_url__.fileURLToPath(import.meta.url);
+const __dirname = __cjs_path__.dirname(__filename);
+const require = __cjs_mod__.createRequire(import.meta.url);
 function sanitizeText(text) {
   const map = {
     "<": "&lt;",
@@ -342,8 +353,9 @@ const module = defineNuxtModule({
     });
     options.isNuxt3 = isNuxt3(nuxt);
     options.isNuxt2 = isNuxt2(nuxt);
-    const files = filesCleanup(options.files());
-    Object.keys(options.files()).forEach((filePath) => {
+    const filesClean = filesCleanup(options.files());
+    const files = options.files();
+    for (let filePath in files) {
       console.log("Generate: " + filePath);
       const localoptions = JSON.parse(JSON.stringify(options));
       const workDir = resolve(nuxt.options.rootDir, localoptions.folder);
@@ -361,23 +373,25 @@ const module = defineNuxtModule({
         // @ts-ignore
         name: localoptions.layoutName,
         write: true,
-        options: { ...localoptions, files }
+        options: { ...localoptions, files: filesClean }
       }, localoptions.layoutName);
-      addTemplate({
-        src: resolver.resolve("./runtime/templates/docs.vue"),
-        filename: `apidocs.${localoptions.fileName}.vue`,
-        write: true,
-        options: { ...localoptions, files }
-      });
+      const srcContents = await promises.readFile(resolver.resolve("./runtime/templates/docs.vue"), "utf-8");
+      const template = lodashTemplate(srcContents, {})({ options: { ...localoptions, files: filesClean } });
+      if (!existsSync(join(__dirname, ".cache"))) {
+        mkdirSync(join(__dirname, ".cache"));
+      }
+      const path = join(__dirname, ".cache", `${localoptions.fileName}.vue`);
+      writeFileSync(path, template);
       extendPages((pages) => {
         Object.keys(localoptions.locales).forEach((locale) => {
           pages.push({
             name: `openapi-${localoptions.path}/${localoptions.fileName}/${locale}-info`,
             path: `/${localoptions.path}/${localoptions.fileName}/${locale}/info`,
             // @ts-ignore
-            component: resolve(nuxt.options.buildDir, `apidocs.${localoptions.fileName}.vue`),
-            file: resolve(nuxt.options.buildDir, `apidocs.${localoptions.fileName}.vue`),
+            component: path,
+            file: path,
             meta: {
+              nuxtI18n: false,
               file: localoptions.fileName,
               locale,
               type: "get",
@@ -388,9 +402,10 @@ const module = defineNuxtModule({
             name: `openapi-${localoptions.path}/${localoptions.fileName}/${locale}-components`,
             path: `/${localoptions.path}/${localoptions.fileName}/${locale}/components`,
             // @ts-ignore
-            component: resolve(nuxt.options.buildDir, `apidocs.${localoptions.fileName}.vue`),
-            file: resolve(nuxt.options.buildDir, `apidocs.${localoptions.fileName}.vue`),
+            component: path,
+            file: path,
             meta: {
+              nuxtI18n: false,
               file: localoptions.fileName,
               locale,
               type: "get",
@@ -406,9 +421,10 @@ const module = defineNuxtModule({
                 name: `openapi-${localoptions.path}/${localoptions.fileName}/${locale}-${item.type}-${item.path}`,
                 path: `/${localoptions.path}/${localoptions.fileName}/${locale}/${item.type}/${item.path}`,
                 // @ts-ignore
-                component: resolve(nuxt.options.buildDir, `apidocs.${localoptions.fileName}.vue`),
-                file: resolve(nuxt.options.buildDir, `apidocs.${localoptions.fileName}.vue`),
+                component: path,
+                file: path,
                 meta: {
+                  nuxtI18n: false,
                   file: localoptions.fileName,
                   locale,
                   type: item.type,
@@ -420,7 +436,7 @@ const module = defineNuxtModule({
           }
         });
       });
-    });
+    }
     if (isNuxt2(nuxt)) {
       addPlugin({
         src: resolver.resolve("./runtime/plugin")
@@ -431,8 +447,8 @@ const module = defineNuxtModule({
         src: resolver.resolve("./runtime/plugin3")
       });
     }
-    nuxt.options.css.push(resolver.resolve("./runtime/tokyo-night-dark.css"));
-    nuxt.options.css.push(resolver.resolve("./runtime/tailwindcss.css"));
+    nuxt.options.css.push(resolver.resolve("./runtime/github.css"));
+    nuxt.options.css.push(resolver.resolve("./runtime/styles.css"));
   }
 });
 

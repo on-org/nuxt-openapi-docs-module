@@ -13,8 +13,6 @@
           :locales="locales"
           :file="file"
           :path="path_doc"
-          :is-dark-mode="isDarkMode"
-          @toggleDarkMode="toggleDarkMode"
         />
       </template>
     </OpenApiMainHeader>
@@ -36,14 +34,13 @@
   </div>
 </template>
 
-<script lang="ts">
-<% if (options.isNuxt3) {
+<script>
+<% if (options.isNuxt3 ?? false) {
   print('import {useNuxtApp, showError, useRoute, useHead} from "#app";');
 } %>
 
-
-const isNuxt3 = <%= options.isNuxt3 %>;
-const isNuxt2 = <%= options.isNuxt2 %>;
+const isNuxt3 = <%= options.isNuxt3 ?? false %>;
+const isNuxt2 = <%= options.isNuxt2 ?? false %>;
 
 function genHead() {
   return {
@@ -64,6 +61,7 @@ export default {
           message: 'page not found',
         })
       }
+      // @ts-ignore
       const route = useRoute()
       return {
         currentLocale: route.params.locale ?? route.meta.locale ?? 'en',
@@ -107,13 +105,13 @@ export default {
       pathsByTags: <%= JSON.stringify(options.pathsByTags) %>,
       files: <%= JSON.stringify(options.files) %>,
       path_doc: '<%= options.path %>',
+      // @ts-ignore
       locales: <%= JSON.stringify(options.locales) %>,
       name: '<%= options.name %>',
       isMenuOpen: true,
       isMobile: false,
       currentLocale: 'en',
       file: '<%= options.fileName %>',
-      isDarkMode: false,
     };
   },
   head() {
@@ -134,19 +132,11 @@ export default {
     }
   },
   methods: {
-    foo(val: string) {
+    foo(val) {
       console.log(val.toUpperCase());
     },
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
-    },
-    toggleDarkMode() {
-      if(process.client) {
-        this.isDarkMode = !this.isDarkMode
-        localStorage.setItem('isDarkMode', this.isDarkMode)
-        if(this.isDarkMode) document.querySelector('html').classList.add('dark')
-        else document.querySelector('html').classList.remove('dark');
-      }
     },
     handleResize() {
       this.isDesktop = window.innerWidth >= 1110;
@@ -164,13 +154,7 @@ export default {
       this.isMobile = window.innerWidth < 1110;
       this.isMenuOpen = window.innerWidth >= 1110;
       window.addEventListener('resize', this.handleResize)
-      this.isDarkMode = localStorage.getItem('isDarkMode') === 'true'
-      if(this.isDarkMode) document.querySelector('html').classList.add('dark')
     }
-    this.$nextTick(() => {
-      this.foo('foobar');
-    });
-
   },
   unmounted() {
     window.removeEventListener('resize', this.handleResize)

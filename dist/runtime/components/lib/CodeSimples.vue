@@ -1,13 +1,26 @@
 
 <template>
-  <div class="col regular-font request-panel code-simple">
+  <div class="oapi-code-simple">
+    <CustomDropdownWithSubMenu
+      :items="config"
+      @select="onLangClick"
+    />
 
-    <CustomDropdownWithSubMenu :items="config" @select="onLangClick"></CustomDropdownWithSubMenu>
-
-    <div class="code-panel">
-      <div class="code-panel-body relative">
-        <button class="toolbar-btn absolute top-2 right-2" @click.stop.prevent='copyToClipboard'>Copy</button>
-        <pre class="p-4 language line-numbers" :class="`language-${snippetIndex}`"><code class="language" v-html="html"></code></pre>
+    <div class="oapi-code-panel">
+      <div class="oapi-code-panel__body">
+        <button
+          class="oapi-code-panel__btn"
+          @click.stop.prevent="copyToClipboard"
+        >
+          Copy
+        </button>
+        <pre
+          class="language line-numbers"
+          :class="`language-${snippetIndex}`"
+        ><code
+          class="language"
+          v-html="html"
+        /></pre>
       </div>
     </div>
   </div>
@@ -24,7 +37,7 @@ const langs = requestTemplater.config();
 
 
 export default {
-  name: 'code-simples',
+  name: 'CodeSimples',
   components: {
     CustomDropdownWithSubMenu
   },
@@ -67,7 +80,16 @@ export default {
     }
   },
 
+  computed: {
+    config() {
+      return langs;
+    },
+  },
+
   watch: {},
+  mounted() {
+    this.genCode()
+  },
 
   methods: {
     copyToClipboard(e) {
@@ -92,19 +114,27 @@ export default {
       this.code = requestTemplater.generate();
       this.html = requestTemplater.generateHighlight();
     }
-  },
-
-  computed: {
-    config() {
-      return langs;
-    },
-  },
-  mounted() {
-    this.genCode()
   }
 }
 </script>
 
 <style>
-
+.oapi-code-panel__body {
+  position: relative;
+}
+.oapi-code-panel button.oapi-code-panel__btn {
+  position: absolute;
+  background-color: #00a2fb;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 12px;
+  margin: 0 2px;
+  min-width: 50px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  right: 10px;
+  top: 10px;
+  z-index: 99;
+}
 </style>

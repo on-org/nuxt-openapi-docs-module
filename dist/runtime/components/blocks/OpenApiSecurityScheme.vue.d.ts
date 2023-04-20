@@ -11,6 +11,9 @@ declare namespace _default {
             export { required_1 as required };
         }
     }
+    namespace computed {
+        function formattedIn(): any;
+    }
     namespace methods {
         export { tr };
     }

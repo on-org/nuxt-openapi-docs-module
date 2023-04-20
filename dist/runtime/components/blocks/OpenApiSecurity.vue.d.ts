@@ -1,5 +1,8 @@
 declare namespace _default {
     const name: string;
+    namespace components {
+        export { OpenApiSecurityRequirement };
+    }
     namespace props {
         namespace security {
             const type: ArrayConstructor;

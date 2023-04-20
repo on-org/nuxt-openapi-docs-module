@@ -229,7 +229,7 @@
 </template>
 
 <script>
-import { resolveAllOf, tr } from '../helpers.js'
+import { resolveAllOf, tr } from '../helpers'
 import OpenApiExpandIcon from '../icons/OpenApiExpandIcon.vue'
 import OpenApiSchemaSubObject from './OpenApiSchemaSubObject.vue'
 

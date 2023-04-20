@@ -1,0 +1,190 @@
+$oapi-base-font-size: 16px;
+
+:root {
+  --aside-width: 350px;
+  --primary-color: #409eff;
+  --oapi-system-ui: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --oapi-mono: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
+  --oapi-text-color: #1f2328;
+  --oapi-bg-code-multi: #f6f8fa;
+  --oapi-bg-code-single: rgba(175,184,193,0.2);
+  --oapi-method-color-get: #72AFF8;
+  --oapi-method-color-post: #70C995;
+  --oapi-method-color-put: #F0A44B;
+  --oapi-method-color-delete: #E64F47;
+  --oapi-method-color-patch: #7CE0C3;
+  --oapi-method-color-options: #0d5aa7;
+  --oapi-method-color-trace: #000;
+  --oapi-method-color-head: #9012fe;
+}
+
+@import "./normalize";
+
+html.oapi {
+  font-weight: 400;
+  line-height: 1.75;
+  color: var(--oapi-text-color);
+  font-size: 16px;
+  font-family: var(--oapi-system-ui);
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+.oapi {
+
+  &, & body {
+    margin: 0;
+    padding: 0;
+  }
+
+  a {
+    text-decoration: underline;
+    color: #6385ff;
+  }
+
+  p {
+    margin-bottom: 1rem;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: var(--oapi-system-ui);
+    font-weight: 600;
+    line-height: 1.25;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-size: 2em
+  }
+
+  h2 {
+    padding-bottom: .3em;
+    border-bottom: 1px solid var(--color-border-muted)
+  }
+
+  h2 {
+    font-size: 1.5em
+  }
+
+  h3 {
+    font-size: 1.25em
+  }
+
+  h4 {
+    font-size: 1em
+  }
+
+  h5 {
+    font-size: .875em
+  }
+
+  h6 {
+    font-size: .85em;
+    color: var(--color-fg-muted)
+  }
+
+  small, .text_small {
+    font-size: 0.833rem;
+  }
+
+  .hljs {
+    background: var(--oapi-bg-code-multi);
+  }
+
+  code {
+    font-family: var(--oapi-mono);
+    padding: 0.2em 0.4em;
+    margin: 0;
+    font-size: .75rem;
+    white-space: break-spaces;
+    border-radius: 4px;
+    &:not(pre > code) {
+      display: inline-block;
+      background-color: var(--oapi-bg-code-single);
+    }
+  }
+
+  pre {
+    border: 1px solid #e1e4e8;
+    background: var(--oapi-bg-code-multi);
+    color: #444;
+    font-size: .75rem;
+    padding: 16px;
+    font-family: var(--oapi-mono);
+    border-radius: 6px;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+
+    code {
+      padding: 0;
+    }
+  }
+
+  .oapi-method-tag {
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    line-height: 1;
+    padding: 3px 5px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-family: var(--oapi-mono);
+    font-weight: 600;
+    font-size: 2rem;
+    text-transform: uppercase;
+    &--get, &--post, &--put, &--patch, &--delete, &--options, &--head, &--trace {
+      border-color: currentColor !important;
+    }
+    &--get {
+      color: var(--oapi-method-color-get);
+    }
+    &--post {
+      color: var(--oapi-method-color-post);
+    }
+    &--patch {
+      color: var(--oapi-method-color-patch);
+    }
+    &--put {
+      color: var(--oapi-method-color-put);
+    }
+    &--delete {
+      color: var(--oapi-method-color-delete);
+    }
+    &--head {
+      color: var(--oapi-method-color-head);
+    }
+    &--trace {
+      color: var(--oapi-method-color-trace);
+    }
+    &--trace {
+      color: var(--oapi-method-color-options);
+    }
+  }
+
+  .oapi-schema-block {
+    margin-bottom: 3rem;
+    &__title {
+      font-weight: 600;
+      color: #7F8286;
+      margin-bottom: 4px;
+    }
+    &__required {
+      color: #e3a637;
+      margin-bottom: 4px;
+      margin-top: -12px;
+    }
+    &__description {
+      margin-bottom: 1rem;
+    }
+    &__model {
+      margin-top: 16px;
+    }
+  }
+}
+
+.oapi-mono {
+  font-family: var(--oapi-mono);
+}

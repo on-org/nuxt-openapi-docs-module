@@ -1,46 +1,38 @@
 <template>
-  <div>
-    <h4 class="text-base font-bold">{{ $openapidoc.getLocaleText(currentLocale, 'Request Body') }}:</h4>
-    <div class="mt-2 p-2 rounded-md" v-if="requestBody.description" v-html="tr(requestBody, 'description', currentLocale)"></div>
+  <div class="oapi-req-body">
+    <component
+      :is="isCb ? 'h3' : 'h2'"
+      :id="`${hPrefix}request-body`"
+    >
+      {{ $openapidoc.getLocaleText(currentLocale, 'Request body') }}
+    </component>
+    <div
+      v-if="requestBody.required"
+      class="oapi-req-body__required"
+    >
+      {{ $openapidoc.getLocaleText(currentLocale, 'Required') }}
+    </div>
+    <div
+      v-if="requestBody.description"
+      class="oapi-req-body__description"
+      v-html="tr(requestBody, 'description', currentLocale)"
+    />
 
-    <OpenApiTabs>
-      <template v-for="(val, key) in requestBody.content" :slot="key">
-        <pre class="mt-2 p-2 rounded-md" v-text="key"></pre>
-        <OpenApiSchema :schema="val.schema" :current-locale="currentLocale" :components="components" class="mt-4" />
-      </template>
-    </OpenApiTabs>
-
+    <OpenApiMediaTypes
+      v-if="requestBody.content"
+      :data="requestBody.content"
+      :current-locale="currentLocale"
+    />
   </div>
 </template>
-<style>
-.text-lg {
-  font-size: 1.125rem;
-}
-.font-medium {
-  font-weight: 500;
-}
-.mt-2 {
-  margin-top: 0.5rem;
-}
-.bg-gray-100 {
-  background-color: #f3f4f6;
-}
-.p-2 {
-  padding: 0.5rem;
-}
-.rounded-md {
-  border-radius: 0.375rem;
-}
-.mt-4 {
-  margin-top: 1rem;
-}
-</style>
 
 <script>
 import {tr} from "../helpers";
+import OpenApiMediaTypes from './OpenApiMediaTypes.vue'
 
 export default {
   name: 'OpenApiRequestBody',
+  components: { OpenApiMediaTypes },
   props: {
     requestBody: {
       type: Object,
@@ -54,12 +46,27 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    isCb: Boolean,
+    hPrefix: {
+      type: String,
+      default: '',
+    }
   },
   methods: {
     tr,
-  },
-  computed: {
-
   }
 };
 </script>
+
+<style>
+.oapi-req-body__required {
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-top: -12px;
+  color: #e3a637;
+  margin-bottom: 4px;
+}
+.oapi-req-body .oapi-req-body-obj {
+  margin-top: 16px;
+}
+</style>

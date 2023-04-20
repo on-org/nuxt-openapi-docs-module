@@ -97,6 +97,7 @@ button.oapi-header-btn {
     svg {
       fill: #666;
     }
+
     @media screen and (min-width: 1110px) {
       display: none;
     }

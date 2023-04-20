@@ -1,4 +1,8 @@
 declare namespace _default {
+    namespace components {
+        export { OpenApiDarkModeToggle };
+        export { OpenApiSearch };
+    }
     namespace props {
         namespace currentLocale {
             const type: StringConstructor;

@@ -1,22 +1,33 @@
 declare namespace _default {
     const name: string;
+    namespace components {
+        export { OpenApiResponse };
+    }
     namespace props {
-        namespace responses {
-            const type: ObjectConstructor;
-            const required: boolean;
+        export const isCb: BooleanConstructor;
+        export namespace hPrefix {
+            export const type: StringConstructor;
+            const _default: string;
+            export { _default as default };
         }
-        namespace currentLocale {
-            const type_1: StringConstructor;
+        export namespace responses {
+            const type_1: ObjectConstructor;
             export { type_1 as type };
+            export const required: boolean;
+        }
+        export namespace currentLocale {
+            const type_2: StringConstructor;
+            export { type_2 as type };
             const required_1: boolean;
             export { required_1 as required };
         }
-        namespace components {
-            const type_2: ObjectConstructor;
-            export { type_2 as type };
-            function _default(): {};
-            export { _default as default };
+        export namespace components_1 {
+            const type_3: ObjectConstructor;
+            export { type_3 as type };
+            function _default_1(): {};
+            export { _default_1 as default };
         }
+        export { components_1 as components };
     }
     namespace methods {
         export { tr };

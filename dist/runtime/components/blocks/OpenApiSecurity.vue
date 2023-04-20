@@ -1,11 +1,19 @@
 <template>
-  <div class="py-4">
-    <h3 class="text-xl font-semibold">
-      {{ $openapidoc.getLocaleText(currentLocale, 'Security') }}:
-    </h3>
-    <ul class="list-disc ml-6">
-      <li v-for="(securityRequirement, index) in security" :key="index" class="py-2">
-        <OpenApiSecurityRequirement :securityRequirement="securityRequirement" :current-locale="currentLocale"  :path_doc="path_doc" :file="file" />
+  <div class="oapi-route-sec">
+    <h2>
+      {{ $openapidoc.getLocaleText(currentLocale, 'Security') }}
+    </h2>
+    <ul class="oapi-route-sec__list">
+      <li
+        v-for="(securityRequirement, index) in security"
+        :key="index"
+      >
+        <OpenApiSecurityRequirement
+          :security-requirement="securityRequirement"
+          :current-locale="currentLocale"
+          :path_doc="path_doc"
+          :file="file"
+        />
       </li>
     </ul>
   </div>
@@ -13,9 +21,11 @@
 
 <script>
 import {tr} from "../helpers";
+import OpenApiSecurityRequirement from './OpenApiSecurityRequirement.vue'
 
 export default {
   name: 'OpenApiSecurity',
+  components: { OpenApiSecurityRequirement },
   props: {
     security: {
       type: Array,
@@ -39,8 +49,10 @@ export default {
   }
 };
 </script>
-<style scoped>
-li {
+<style>
+.oapi-route-sec__list, .oapi-route-sec__list ul {
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 </style>

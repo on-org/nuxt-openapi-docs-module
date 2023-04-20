@@ -10,8 +10,10 @@ import {
   createResolver
 } from '@nuxt/kit'
 import {kebabCase} from "scule";
-import {resolve,extname,basename} from "path";
+import {resolve,extname,basename,join} from "path";
 import Parser from "./runtime/Parser";
+import {promises, existsSync, writeFileSync, mkdirSync} from "node:fs";
+import lodashTemplate from "lodash.template";
 
 
 // Module options TypeScript interface definition
@@ -36,6 +38,7 @@ function filesCleanup(files: {[key: string]: string}) {
   }
   return result
 }
+
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'nuxt-open-api-docs',
@@ -51,7 +54,6 @@ export default defineNuxtModule<ModuleOptions>({
   },
   async setup (options, nuxt) {
     const resolver = createResolver(import.meta.url)
-
     if(options.debug) {
       // @ts-ignore
       nuxt.hook('generate:route', (route: any) => {
@@ -79,9 +81,10 @@ export default defineNuxtModule<ModuleOptions>({
     options.isNuxt2 = isNuxt2(nuxt);
 
 
-    const files = filesCleanup(options.files());
+    const filesClean = filesCleanup(options.files());
+    const files = options.files();
 
-    Object.keys(options.files()).forEach((filePath) => {
+    for (let filePath in files) {
       console.log('Generate: ' + filePath)
       const localoptions = JSON.parse(JSON.stringify(options));
       const workDir = resolve(nuxt.options.rootDir, localoptions.folder);
@@ -99,25 +102,26 @@ export default defineNuxtModule<ModuleOptions>({
       localoptions.fileName = parser.getFilename();
       localoptions.layoutName = (kebabCase(`apidocs-layout-${localoptions.fileName}`) as string).replace(/["']/g, "");
 
+
       addLayout({
         src: resolver.resolve( './runtime/layout/docs.vue'),
         filename: `apidocs.layout.${localoptions.fileName}.vue`,
         // @ts-ignore
         name: localoptions.layoutName,
         write: true,
-        options: {...localoptions, files: files},
+        options: {...localoptions, files: filesClean},
       }, localoptions.layoutName)
 
 
-      // Добавляем шаблон для каждого файла
-      addTemplate({
-        src: resolver.resolve('./runtime/templates/docs.vue'),
-        filename: `apidocs.${localoptions.fileName}.vue`,
-        write: true,
-        options: {...localoptions, files: files},
-      })
+      const srcContents = await promises.readFile(resolver.resolve('./runtime/templates/docs.vue'), "utf-8");
+      const template = lodashTemplate(srcContents, {})({options:{...localoptions, files: filesClean}});
 
+      if (!existsSync(join(__dirname, '.cache'))) {
+        mkdirSync(join(__dirname, '.cache'));
+      }
 
+      const path = join(__dirname, '.cache', `${localoptions.fileName}.vue`);
+      writeFileSync(path , template);
 
       extendPages((pages) => {
         Object.keys(localoptions.locales).forEach((locale) => {
@@ -125,9 +129,10 @@ export default defineNuxtModule<ModuleOptions>({
             name: `openapi-${localoptions.path}/${localoptions.fileName}/${locale}-info`,
             path: `/${localoptions.path}/${localoptions.fileName}/${locale}/info`,
             // @ts-ignore
-            component: resolve(nuxt.options.buildDir, `apidocs.${localoptions.fileName}.vue`),
-            file: resolve(nuxt.options.buildDir, `apidocs.${localoptions.fileName}.vue`),
+            component: path,
+            file: path,
             meta: {
+              nuxtI18n: false,
               file: localoptions.fileName,
               locale: locale,
               type: 'get',
@@ -139,9 +144,10 @@ export default defineNuxtModule<ModuleOptions>({
             name: `openapi-${localoptions.path}/${localoptions.fileName}/${locale}-components`,
             path: `/${localoptions.path}/${localoptions.fileName}/${locale}/components`,
             // @ts-ignore
-            component: resolve(nuxt.options.buildDir, `apidocs.${localoptions.fileName}.vue`),
-            file: resolve(nuxt.options.buildDir, `apidocs.${localoptions.fileName}.vue`),
+            component: path,
+            file: path,
             meta: {
+              nuxtI18n: false,
               file: localoptions.fileName,
               locale: locale,
               type: 'get',
@@ -158,9 +164,10 @@ export default defineNuxtModule<ModuleOptions>({
                 name: `openapi-${localoptions.path}/${localoptions.fileName}/${locale}-${item.type}-${item.path}`,
                 path: `/${localoptions.path}/${localoptions.fileName}/${locale}/${item.type}/${item.path}`,
                 // @ts-ignore
-                component: resolve(nuxt.options.buildDir, `apidocs.${localoptions.fileName}.vue`),
-                file: resolve(nuxt.options.buildDir, `apidocs.${localoptions.fileName}.vue`),
+                component: path,
+                file: path,
                 meta: {
+                  nuxtI18n: false,
                   file: localoptions.fileName,
                   locale: locale,
                   type: item.type,
@@ -173,7 +180,7 @@ export default defineNuxtModule<ModuleOptions>({
         })
 
       })
-    })
+    }
 
 
     if(isNuxt2(nuxt)) {
@@ -189,6 +196,6 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.options.css.push(resolver.resolve('./runtime/github.css'));
     // nuxt.options.css.push(resolver.resolve('./runtime/tailwindcss.css'));
-    nuxt.options.css.push(resolver.resolve('./styles.scss'));
+    nuxt.options.css.push(resolver.resolve('./runtime/styles.css'));
   }
 })

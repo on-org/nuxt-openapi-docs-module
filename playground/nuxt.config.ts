@@ -26,7 +26,6 @@ export default defineNuxtConfig({
             'petstore_extended': 'Petstore Extended Api',
             'localization': 'Localization',
             'no-access': 'no access',
-            'webhook': 'webhook',
 
             "additional-props": "additional-props",
             "allof": "allof",

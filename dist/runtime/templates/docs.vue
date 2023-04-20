@@ -1,5 +1,5 @@
 <template>
-  <% if (options.isNuxt3) {print('<NuxtLayout :name="layout">');} %>
+  <% if (options.isNuxt3 ?? false) {print('<NuxtLayout :name="layout">');} %>
     <div>
       <OpenApiInfo v-if="isInfo" :info="doc.info" :servers="doc.servers" :current-locale="currentLocale"></OpenApiInfo>
       <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="currentLocale"></OpenApiComponents>
@@ -8,17 +8,18 @@
       <NotFound v-else />
       <SearchBlock :current-locale="currentLocale" :doc="doc" :path="options.path" :file="file" />
     </div>
-  <% if (options.isNuxt3) {print('</NuxtLayout>');} %>
+  <% if (options.isNuxt3 ?? false) {print('</NuxtLayout>');} %>
 </template>
 
 <script>
-<% if (options.isNuxt3) {
+<% if (options.isNuxt3 ?? false) {
   print('import {useRoute} from "#app";');
 } %>
 
-const isNuxt3 = <%= options.isNuxt3 %>;
+const isNuxt3 = <%= options.isNuxt3 ?? false %>;
 export default {
   name: 'AppDocs',
+  nuxtI18n: false,
   layout: `<%= options.layoutName %>`,
   transition: {
     name: 'fade'
@@ -28,18 +29,12 @@ export default {
       return {
         title: `[${this.file}] - Info Docs`,
         description: '',
-        bodyAttrs: {
-          class: 'ggggg'
-        }
       };
     }
     if (this.isComponents) {
       return {
         title: `[${this.file}] - Components Docs`,
         description: '',
-        bodyAttrs: {
-          class: 'gggg'
-        }
       };
     }
 
@@ -109,7 +104,7 @@ export default {
 
       const link = document.createElement('a');
       link.href = url;
-      link.download = this.file + '.yaml';
+      link.download = this.file + '.json';
       document.body.appendChild(link);
 
       link.click();
