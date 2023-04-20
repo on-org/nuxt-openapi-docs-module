@@ -89,7 +89,7 @@ button.oapi-header-btn {
   &__content {
     margin-left: auto;
   }
-  &__menu-btn {
+  button#{&}__menu-btn {
     font-size: 1.5rem !important;
     margin-right: 8px !important;
     padding: 0 !important;
@@ -97,6 +97,7 @@ button.oapi-header-btn {
     svg {
       fill: #666;
     }
+
     @media screen and (min-width: 1110px) {
       display: none;
     }

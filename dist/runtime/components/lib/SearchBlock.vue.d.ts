@@ -32,7 +32,7 @@ declare namespace _default {
         function search(val: any): void;
     }
     function mounted(): void;
-    function beforeDestroy(): void;
+    function beforeUnmount(): void;
     namespace methods {
         export { tr };
         export function toggleSearch(): void;

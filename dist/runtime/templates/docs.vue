@@ -28,18 +28,12 @@ export default {
       return {
         title: `[${this.file}] - Info Docs`,
         description: '',
-        bodyAttrs: {
-          class: 'ggggg'
-        }
       };
     }
     if (this.isComponents) {
       return {
         title: `[${this.file}] - Components Docs`,
         description: '',
-        bodyAttrs: {
-          class: 'gggg'
-        }
       };
     }
 
@@ -109,7 +103,7 @@ export default {
 
       const link = document.createElement('a');
       link.href = url;
-      link.download = this.file + '.yaml';
+      link.download = this.file + '.json';
       document.body.appendChild(link);
 
       link.click();

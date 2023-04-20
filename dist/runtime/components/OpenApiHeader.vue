@@ -1,25 +1,41 @@
 <template>
-  <div class="right flex items-center">
-    <div class="files pr-4">
-      <OpenApiDarkModeToggle :value="isDarkMode" @change="() => $emit('toggleDarkMode')" />
+  <div class="oapi-header-actions">
+    <div
+      v-if="false"
+      class="files pr-4"
+    >
+      <OpenApiDarkModeToggle
+        :value="isDarkMode"
+        @change="() => $emit('toggleDarkMode')"
+      />
     </div>
-    <div class="yaml">
-      <button
-        @click="downloadJson"
-        type="button"
-        class="inline-flex justify-center items-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 bg-blue dark:bg-blue"
-        aria-haspopup="true"
-      >
-        Json
-      </button>
-    </div>
-    <div class="search">
-      <OpenApiSearch :current-locale="currentLocale" :file="file" :path="path" />
-    </div>
+    <button
+      type="button"
+      class="oapi-header-btn oapi-header-actions__json"
+      aria-haspopup="true"
+      @click="downloadJson"
+    >
+      Json
+      <svg
+        width="1em"
+        height="1em"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+      ><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" /></svg>
+    </button>
+    <OpenApiSearch
+      :current-locale="currentLocale"
+      :file="file"
+      :path="path"
+    />
   </div>
 </template>
 <script>
+import OpenApiDarkModeToggle from './lib/OpenApiDarkModeToggle.vue'
+import OpenApiSearch from './lib/OpenApiSearch.vue'
+
 export default {
+  components: { OpenApiDarkModeToggle, OpenApiSearch },
   props: {
     currentLocale: {
       type: String,
@@ -56,32 +72,18 @@ export default {
   },
 };
 </script>
-<style scoped>
-.fixed-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-  background-color: white;
-  opacity: 0.99;
-}
-
-.logo text {
-  font-size: 16px;
-  fill: #fff;
-}
-
-.right {
+<style>
+.oapi-header-actions {
   display: flex;
-  flex-direction: row;
   align-items: center;
 }
-
-.files, .locales, .yaml {
-  padding-right: 10px;
+.oapi-header-actions__json {
+  margin-right: 16px !important;
 }
-.selected {
-  background-color: #ccc;
+.oapi-header-actions__json svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-left: 8px;
+  fill: #666;
 }
 </style>

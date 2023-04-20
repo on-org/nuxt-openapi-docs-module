@@ -36,11 +36,10 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 <% if (options.isNuxt3) {
   print('import {useNuxtApp, showError, useRoute, useHead} from "#app";');
 } %>
-
 
 const isNuxt3 = <%= options.isNuxt3 %>;
 const isNuxt2 = <%= options.isNuxt2 %>;
@@ -64,6 +63,7 @@ export default {
           message: 'page not found',
         })
       }
+      // @ts-ignore
       const route = useRoute()
       return {
         currentLocale: route.params.locale ?? route.meta.locale ?? 'en',
@@ -107,6 +107,7 @@ export default {
       pathsByTags: <%= JSON.stringify(options.pathsByTags) %>,
       files: <%= JSON.stringify(options.files) %>,
       path_doc: '<%= options.path %>',
+      // @ts-ignore
       locales: <%= JSON.stringify(options.locales) %>,
       name: '<%= options.name %>',
       isMenuOpen: true,
@@ -134,7 +135,7 @@ export default {
     }
   },
   methods: {
-    foo(val: string) {
+    foo(val) {
       console.log(val.toUpperCase());
     },
     toggleMenu() {

@@ -1,4 +1,8 @@
 declare namespace _default {
+    namespace components {
+        export { MainLeftMenuSubMenu };
+        export { OpenApiDropdown };
+    }
     namespace props {
         namespace routes {
             const type: ObjectConstructor;
@@ -36,13 +40,20 @@ declare namespace _default {
         }
     }
     namespace computed {
+        function currentRouteName(): any;
+        function localesOptions(): {
+            value: string;
+            text: any;
+        }[];
         function isLocalization(): boolean;
-        function filesAccessor(): {};
+        function filesAccessor(): {
+            value: string;
+            text: any;
+        }[];
     }
     namespace methods {
         export { tr };
         export { getTagColor };
-        export function getRouteType(method: any): "" | "🔍 GET" | "💾 POST" | "💾 PUT" | "💾 PATCH" | "🗑️ DEL";
         export function genUrl(path: any): string;
         export function getRoute(path: any): {
             name: string;

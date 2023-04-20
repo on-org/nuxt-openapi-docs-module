@@ -1,4 +1,7 @@
 declare namespace _default {
+    namespace components {
+        export { OpenApiExampleObject };
+    }
     namespace props {
         namespace examples {
             const type: ObjectConstructor;

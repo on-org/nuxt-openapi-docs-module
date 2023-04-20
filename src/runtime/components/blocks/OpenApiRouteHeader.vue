@@ -88,6 +88,7 @@ export default {
     border-radius: 6px;
     margin-right: 6px;
     border: 2px solid #ddd;
+    font-size: 1.5rem;
   }
   &--deprecated &__title {
     opacity: .6;

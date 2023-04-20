@@ -6,3 +6,4 @@ export function getSchemaValsFromPath(ref: any): {
     path: any;
     name: any;
 };
+export function resolveAllOf(schema: any): any;

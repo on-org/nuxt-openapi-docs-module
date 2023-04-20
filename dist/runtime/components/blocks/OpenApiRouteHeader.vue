@@ -1,19 +1,36 @@
 <template>
-  <div class="border border-gray-300 rounded p-4 mb-8 doc-info">
-    <h1 class="text-2xl font-bold mb-2">
-      <span class="text-xl font-medium mr-2 px-2.5 py-0.5 rounded" :class="getTagColor(method)">{{ method }}</span>
+  <div
+    class="oapi-route-header"
+    :class="{'oapi-route-header--deprecated': deprecated}"
+  >
+    <h1 class="oapi-route-header__title">
+      <span
+        class="oapi-method-tag"
+        :class="`oapi-method-tag--${method}`"
+      >{{ method }}</span>
       {{ path }}
     </h1>
-    <div v-if="deprecated" class="flex p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-      <div>
-        <span class="font-medium">{{ $openapidoc.getLocaleText(currentLocale, 'Deprecated!') }}</span>
-      </div>
+    <div
+      v-if="deprecated"
+      class="oapi-route-header__deprecated"
+      role="alert"
+    >
+      <span>{{ $openapidoc.getLocaleText(currentLocale, 'Deprecated') }}</span>
     </div>
-    <h2 class="text-lg font-bold mb-2">{{ summary }}</h2>
-    <p class="mb-2">
-      <span v-for="(tag, index) in tags" :key="index" class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">{{ tag }}</span>
-    </p>
-    <p class="mb-2" v-html="description"></p>
+    <div class="oapi-route-header__summary">
+      {{ summary }}
+    </div>
+    <div class="oapi-route-header__tags">
+      <span
+        v-for="tag in tags"
+        :key="tag"
+        class="oapi-route-header__tag"
+      >{{ tag }}</span>
+    </div>
+    <div
+      class="oapi-route-header__description"
+      v-html="description"
+    />
   </div>
 </template>
 
@@ -23,11 +40,26 @@ import {getTagColor, tr} from "../helpers";
 
 export default {
   props: {
-    path: String,
-    method: String,
-    tags: Array,
-    summary: String,
-    description: String,
+    path: {
+      type: String,
+      required: true,
+    },
+    method: {
+      type: String,
+      required: true,
+    },
+    tags: {
+      type: Array,
+      default: () => ([]),
+    },
+    summary: {
+      type: String,
+      default: null,
+    },
+    description: {
+      type: String,
+      default: null,
+    },
     deprecated: Boolean,
     currentLocale: {
       type: String,
@@ -40,5 +72,51 @@ export default {
 };
 </script>
 
-
+<style>
+.oapi-route-header__title {
+  font-family: var(--oapi-mono) !important;
+}
+.oapi-route-header__summary {
+  color: #999;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.oapi-route-header .oapi-method-tag {
+  user-select: none;
+  border-radius: 6px;
+  margin-right: 6px;
+  border: 2px solid #ddd;
+  font-size: 1.5rem;
+}
+.oapi-route-header--deprecated .oapi-route-header__title {
+  opacity: 0.6;
+}
+.oapi-route-header__deprecated {
+  margin-bottom: 8px;
+}
+.oapi-route-header__deprecated span {
+  display: inline-block;
+  padding: 8px 16px;
+  background: #e1e1e1;
+  color: #666;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.oapi-route-header__tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 0 -4px 16px;
+}
+.oapi-route-header__tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 8px;
+  margin: 0 4px 4px;
+  border-radius: 4px;
+  line-height: 1;
+  border: 1px solid #ccc;
+}
+</style>
 

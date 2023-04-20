@@ -15,6 +15,7 @@ work with static and server target
 | Version | 	Supported Nuxt Version |
 |---------|-------------------------|
 | 3.0     | 	2.x and 3.x            |
+| 4.0     | 	2.x and 3.x            |
 
 
 for nuxt 3 need add vite.config.ts
@@ -37,10 +38,10 @@ export default defineConfig({
 - [🛠 Demo](https://on-org.github.io/nuxt-openapi-docs-module/)
 
 
-<img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/white.png"  width="400" alt="white image">
+<img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/white1.png"  width="400" alt="white image">
 <img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/white2.png"  width="400" alt="white image 2">
-<img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/black.png"  width="400" alt="black image">
-<img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/mobile.png"  width="400" alt="mobile image">
+<img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/mobile1.png"  width="400" alt="black image">
+<img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/mobile2.png"  width="400" alt="mobile image">
 
 ## Quick Setup
 

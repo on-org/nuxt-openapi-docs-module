@@ -1,7 +1,13 @@
 {
   "private": true,
   "name": "my-module-playground",
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "node --max-old-space-size=12192 node_modules/nuxt/bin/nuxt.js generate"
+  },
   "devDependencies": {
-    "nuxt": "^3.3.3"
+    "nuxt": "3.4.0"
   }
 }

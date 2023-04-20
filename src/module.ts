@@ -189,6 +189,6 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.options.css.push(resolver.resolve('./runtime/github.css'));
     // nuxt.options.css.push(resolver.resolve('./runtime/tailwindcss.css'));
-    nuxt.options.css.push(resolver.resolve('./styles.scss'));
+    nuxt.options.css.push(resolver.resolve('./runtime/styles.scss'));
   }
 })

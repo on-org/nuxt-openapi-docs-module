@@ -1,6 +1,6 @@
 {
   "name": "nuxt-openapi-docs-module",
-  "version": "3.5.10",
+  "version": "4.0.1",
   "description": "A plugin for Nuxt.js to generate pages from OpenAPI specifications",
   "homepage": "https://github.com/on-org/nuxt-openapi-docs-module#readme",
   "keywords": [
@@ -38,18 +38,19 @@
   "types": "./dist/types.d.ts",
   "scripts": {
     "prepack": "nuxt-module-build",
-    "dev": "nuxi dev playground",
-    "dev:3": "nuxi dev playground",
+    "dev": "cd playground && npx nuxi dev",
+    "dev:3": "cd playground && npx nuxi dev",
     "dev:2": "cd playground2 && npm run dev",
-    "dev:build": "nuxi build playground",
+    "dev:build": "cd playground && npx nuxi build",
     "dev:generate": "nuxi build generate",
-    "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground",
+    "dev:prepare": "nuxt-module-build --stub && cd playground && npx nuxi prepare",
     "docs:2": "cd playground2 && rm -rf dist .output && npm run generate && cd .. && rm -rf docs && mv playground2/dist docs && rm -rf playground2/dist && git add docs",
     "docs:3": "cd playground && rm -rf dist .output && npm run generate && cd .. && rm -rf docs && mv playground/.output/public docs && rm -rf playground/.output playground/dist playground/.nuxt && git add docs",
     "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
+    "cleanup": "rm -rf node_modules package-lock.json dist generate .nuxt playground/.nuxt playground/node_modules playground/package-lock.json playground2/.nuxt playground2/node_modules playground2/package-lock.json",
     "prepublish": "npm run prepack"
   },
   "dependencies": {
@@ -77,6 +78,7 @@
     "eslint": "^8.38.0",
     "flowbite": "^1.6.5",
     "fs-extra": "^11.1.1",
+    "nuxi": "^3.4.1",
     "postcss": "^8.4.22",
     "request-templater": "^1.2.1",
     "sass": "^1.62.0",

@@ -1,6 +1,16 @@
 declare namespace _default {
     const name: string;
-    const components: {};
+    namespace components {
+        export { OpenApiCallbacks };
+        export { OpenApiResponses };
+        export { OpenApiRequestBody };
+        export { OpenApiSecurity };
+        export { OpenApiParameters };
+        export { OpenApiExamples };
+        export { CodeSimples };
+        export { OpenApiServer };
+        export { OpenApiRouteHeader };
+    }
     namespace props {
         export namespace route {
             const type: (ArrayConstructor | ObjectConstructor)[];
@@ -68,6 +78,7 @@ declare namespace _default {
     namespace computed {
         function routeInfo(): any;
     }
+    function mounted(): void;
     namespace methods {
         export { tr };
         export function genParamsToSimple(): void;
@@ -75,7 +86,6 @@ declare namespace _default {
         export function handleNestedObject(property: any): {};
         export function convertStringFormatToMd(format: any, name: any): any;
     }
-    function mounted(): void;
 }
 export default _default;
 import { tr } from "./helpers";

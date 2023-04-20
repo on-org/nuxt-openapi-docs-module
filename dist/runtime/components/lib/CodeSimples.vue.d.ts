@@ -50,15 +50,15 @@ declare namespace _default {
         onPopupIndex: null;
         vals: never[];
     };
+    namespace computed {
+        function config(): any;
+    }
     const watch: {};
+    function mounted(): void;
     namespace methods {
         function copyToClipboard(e: any): void;
         function onLangClick(snippet: any, library?: null): void;
         function genCode(): void;
     }
-    namespace computed {
-        function config(): any;
-    }
-    function mounted(): void;
 }
 export default _default;

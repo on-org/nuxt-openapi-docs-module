@@ -1,14 +1,39 @@
 declare namespace _default {
     namespace props {
-        const path: StringConstructor;
-        const method: StringConstructor;
-        const tags: ArrayConstructor;
-        const summary: StringConstructor;
-        const description: StringConstructor;
-        const deprecated: BooleanConstructor;
-        namespace currentLocale {
+        namespace path {
             const type: StringConstructor;
             const required: boolean;
+        }
+        namespace method {
+            const type_1: StringConstructor;
+            export { type_1 as type };
+            const required_1: boolean;
+            export { required_1 as required };
+        }
+        namespace tags {
+            const type_2: ArrayConstructor;
+            export { type_2 as type };
+            function _default(): never[];
+            export { _default as default };
+        }
+        namespace summary {
+            const type_3: StringConstructor;
+            export { type_3 as type };
+            const _default_1: null;
+            export { _default_1 as default };
+        }
+        namespace description {
+            const type_4: StringConstructor;
+            export { type_4 as type };
+            const _default_2: null;
+            export { _default_2 as default };
+        }
+        const deprecated: BooleanConstructor;
+        namespace currentLocale {
+            const type_5: StringConstructor;
+            export { type_5 as type };
+            const required_2: boolean;
+            export { required_2 as required };
         }
     }
     namespace methods {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="oapi-route">
     <OpenApiRouteHeader
       :path="url"
       :method="method"
@@ -10,46 +10,81 @@
       :current-locale="currentLocale"
     />
 
-    <div v-if="route.servers">
-      <h3 class="text-lg font-bold">{{ $openapidoc.getLocaleText(currentLocale, 'Servers') }}</h3>
-      <ul class="list-disc list-inside">
-        <li v-for="server in route.servers" :key="server.url">
-          <a class="text-blue-500 hover:underline" :href="server.url">{{ server.url }}</a>
-        </li>
-      </ul>
+    <div v-if="route.servers" class="oapi-route__servers">
+      <h2>{{ $openapidoc.getLocaleText(currentLocale, 'Servers') }}</h2>
+      <OpenApiServer
+        v-for="routeServer in route.servers"
+        :key="routeServer.url"
+        :server="routeServer"
+        :current-locale="currentLocale"
+      />
     </div>
 
-    <div class="border border-gray-300 rounded p-4 mb-8 doc-info" v-if="routeInfo">
-      <h3 class="text-lg font-bold">{{ $openapidoc.getLocaleText(currentLocale, 'Info') }}:</h3>
-      <div v-html="routeInfo"></div>
+    <div
+      v-if="routeInfo"
+      class="oapi-doc-info"
+    >
+      <h2>
+        {{ $openapidoc.getLocaleText(currentLocale, 'Info') }}:
+      </h2>
+      <div v-html="routeInfo" />
     </div>
 
-    <OpenApiSecurity v-if="route.security" :security="route.security" :current-locale="currentLocale"
-                     :path_doc="path_doc" :file="file"/>
+    <OpenApiSecurity
+      v-if="route.security"
+      :security="route.security"
+      :path_doc="path_doc"
+      :file="file"
+      :current-locale="currentLocale"
+    />
 
-    <OpenApiParameters v-if="route.parameters" :parameters="route.parameters" :current-locale="currentLocale"
-                       :components="components"/>
+    <OpenApiParameters
+      v-if="route.parameters"
+      :parameters="route.parameters"
+      :current-locale="currentLocale"
+      :components="components"
+    />
 
-    <OpenApiParameters v-if="subParams" :parameters="subParams" :current-locale="currentLocale" :components="components"
-                       title="Global params"/>
+    <OpenApiParameters
+      v-if="subParams"
+      :parameters="subParams"
+      :current-locale="currentLocale"
+      :components="components"
+      title="Global params"
+    />
 
-    <OpenApiRequestBody v-if="route.requestBody" :requestBody="route.requestBody" :current-locale="currentLocale"
-                        :components="components"/>
+    <OpenApiRequestBody
+      v-if="route.requestBody"
+      :request-body="route.requestBody"
+      :current-locale="currentLocale"
+      :components="components"
+    />
+
+    <OpenApiResponses
+      v-if="route.responses"
+      :responses="route.responses"
+      :current-locale="currentLocale"
+      :components="components"
+    />
 
     <client-only v-if="url">
-      <h2 class="text-lg font-bold mb-2">{{ $openapidoc.getLocaleText(currentLocale, 'Code simple') }}:</h2>
+      <h2 class="text-lg font-bold mb-2">
+        {{ $openapidoc.getLocaleText(currentLocale, 'Code simple') }}:
+      </h2>
       <CodeSimples
         :url="url"
-        :baseUrl="server"
+        :base-url="server"
         :method="method"
         :mime-type="mimeType"
         :params="params"
-      ></CodeSimples>
+      />
     </client-only>
 
-    <OpenApiResponses v-if="route.responses" :responses="route.responses" :current-locale="currentLocale"
-                      :components="components"/>
-    <OpenApiExamples v-if="route.examples" :examples="route.examples" :current-locale="currentLocale"/>
+    <OpenApiExamples
+      v-if="route.examples"
+      :examples="route.examples"
+      :current-locale="currentLocale"
+    />
 
     <OpenApiCallbacks
       v-if="route.callbacks"
@@ -66,11 +101,29 @@
 </template>
 
 <script>
+import OpenApiCallbacks from './blocks/OpenApiCallbacks.vue'
+import OpenApiExamples from './blocks/OpenApiExamples.vue'
+import OpenApiParameters from './blocks/OpenApiParameters.vue'
+import OpenApiRequestBody from './blocks/OpenApiRequestBody.vue'
+import OpenApiResponses from './blocks/OpenApiResponses.vue'
+import OpenApiRouteHeader from './blocks/OpenApiRouteHeader.vue'
+import OpenApiSecurity from './blocks/OpenApiSecurity.vue'
+import OpenApiServer from './blocks/OpenApiServer.vue'
 import {tr} from "./helpers";
+import CodeSimples from './lib/CodeSimples.vue'
 
 export default {
   name: 'OpenApiRoute',
   components: {
+    OpenApiCallbacks,
+    OpenApiResponses,
+    OpenApiRequestBody,
+    OpenApiSecurity,
+    OpenApiParameters,
+    OpenApiExamples,
+    CodeSimples,
+    OpenApiServer,
+    OpenApiRouteHeader,
     // CodeSimples: () => import('./lib/CodeSimples.vue')
   },
   props: {
@@ -126,6 +179,9 @@ export default {
       return this.$openapidoc.getRouteInfo(this.file, this.url, this.method)
     },
   },
+  mounted() {
+    this.genParamsToSimple();
+  },
   methods: {
     tr,
     genParamsToSimple() {
@@ -133,7 +189,7 @@ export default {
 
       if (this.route.requestBody && Object.keys(this.route.requestBody).length) {
         const pos = Object.keys(this.route.requestBody)[0];
-        let req = this.route.requestBody[pos];
+        const req = this.route.requestBody[pos];
 
         if (req && Object.keys(req).length) {
           this.mimeType = Object.keys(req)[0];
@@ -206,7 +262,7 @@ export default {
         }
       }
 
-      for (let i in this.route.parameters) {
+      for (const i in this.route.parameters) {
         const param = this.route.parameters[i];
 
         const p_name = param.name ?? '';
@@ -240,7 +296,7 @@ export default {
 
       const globalParams = this.$openapidoc.getParams();
 
-      for (let i in globalParams) {
+      for (const i in globalParams) {
         const param = globalParams[i];
         if (param.value === '' && param.type) {
           param.value = this.convertStringFormatToMd(param.type, param.name);
@@ -322,9 +378,6 @@ export default {
           return format;
       }
     }
-  },
-  mounted() {
-    this.genParamsToSimple();
   }
 };
 </script>
