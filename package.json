@@ -37,7 +37,7 @@
   "main": "./dist/module.cjs",
   "types": "./dist/types.d.ts",
   "scripts": {
-    "prepack2": "nuxt-module-build",
+    "prepack": "nuxt-module-build",
     "dev": "nuxi dev playground",
     "dev:3": "nuxi dev playground",
     "dev:2": "cd playground2 && npm run dev",
@@ -50,7 +50,7 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "prepublish2": "npm run prepack"
+    "prepublish": "npm run prepack"
   },
   "dependencies": {
     "@nuxt/kit": "<=3.2.3",
