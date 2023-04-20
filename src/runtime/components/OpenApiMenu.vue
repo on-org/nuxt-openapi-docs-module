@@ -1,33 +1,31 @@
 <template>
   <div class="oapi-aside-content">
     <div class="oapi-aside-content__dds">
-      <div class="files">
-        <CustomDropdown
-          :placeholder="files[file]"
-          :options="filesAccessor"
-          :value="file"
-          :route-function="changeDoc"
-        >
-          <template #default="{ option, index, isSelected }">
-            {{ option }}
-          </template>
-        </CustomDropdown>
-      </div>
-      <div
-        v-if="isLocalization"
-        class="locales mt-4"
+      <OpenApiDropdown
+        class="oapi-aside-content__files"
+        :options="filesAccessor"
+        :placeholder="files[file]"
+        :value="file"
       >
-        <CustomDropdown
-          :placeholder="locales[currentLocale]"
-          :options="locales"
-          :value="currentLocale"
-          :route-function="changeLocale"
-        >
-          <template #default="{ option, index, isSelected }">
-            {{ option }}
-          </template>
-        </CustomDropdown>
-      </div>
+        <template #default="{ item }">
+          <nuxt-link :to="changeDoc(item.value)">
+            {{ item.text }}
+          </nuxt-link>
+        </template>
+      </OpenApiDropdown>
+      <OpenApiDropdown
+        v-if="isLocalization"
+        class="oapi-aside-content__locales"
+        :options="localesOptions"
+        :placeholder="locales[currentLocale]"
+        :value="currentLocale"
+      >
+        <template #default="{ item }">
+          <nuxt-link :to="changeLocale(item.value)">
+            {{ item.text }}
+          </nuxt-link>
+        </template>
+      </OpenApiDropdown>
     </div>
 
     <ul class="oapi-menu">
@@ -71,6 +69,7 @@
               <span
                 class="oapi-menu-item-tag"
                 :class="{[`oapi-menu-item-tag--${route.type.toLowerCase()}`]: true}"
+                v-if="route.type.toLowerCase() !== 'custom'"
               >
                 {{ route.type.toUpperCase() }}
               </span>
@@ -93,7 +92,10 @@
 
 <script>
 import {getTagColor, tr} from "./helpers";
+import MainLeftMenuSubMenu from './lib/MainLeftMenuSubMenu.vue'
+import OpenApiDropdown from './lib/OpenApiDropdown.vue'
 export default {
+  components: { MainLeftMenuSubMenu, OpenApiDropdown },
   props: {
     routes: {
       type: Object,
@@ -124,38 +126,28 @@ export default {
     currentRouteName() {
       return this.$route.name || '';
     },
+    localesOptions() {
+      return Object.keys(this.locales).map((key) => ({
+        value: key,
+        text: this.locales[key],
+      }));
+    },
     isLocalization() {
       return Object.keys(this.locales).length > 1;
     },
     filesAccessor() {
-      const result = {}
+      const arr = [];
       for (const i in this.files) {
         if (this.$openapidoc.hasAccess(i)) {
-          result[i] = this.files[i];
+          arr.push({ value: i, text: this.files[i]})
         }
       }
-      return result
+      return arr
     }
   },
   methods: {
     tr,
     getTagColor,
-    getRouteType(method) {
-      switch (method.toUpperCase()) {
-        case 'GET':
-          return '🔍 GET';
-        case 'POST':
-          return '💾 POST';
-        case 'PUT':
-          return '💾 PUT';
-        case 'PATCH':
-          return '💾 PATCH';
-        case 'DELETE':
-          return '🗑️ DEL';
-        default:
-          return '';
-      }
-    },
     genUrl(path) {
       return encodeURI(path)
     },
@@ -186,12 +178,36 @@ export default {
   &__dds {
     margin-bottom: 16px;
   }
+  &__files, &__locales {
+    margin-bottom: 8px;
+    .oapi-dd-popup__list-item {
+      position: relative;
+      a {
+        text-decoration: none;
+        color: inherit;
+        &::before {
+          position: absolute;
+          left: 0;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          content: '';
+        }
+      }
+    }
+  }
 }
 .oapi-menu {
-  margin: 0;
   font-size: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
   li {
     margin-bottom: 4px;
+  }
+  a {
+    text-decoration: none;
+    color: #777;
   }
 }
 .oapi-menu-item {
@@ -201,12 +217,13 @@ export default {
   margin-bottom: 0;
   color: #6e7281;
   border-radius: 6px;
+  font-weight: 600;
   &:not(&--is-active):hover {
     color: #000;
     background: rgba(#000, .03);
   }
   &--is-active {
-    background: #fff;
+    background: #fff !important;
     .oapi-menu-item-tag {
       color: #fff;
       &--get {

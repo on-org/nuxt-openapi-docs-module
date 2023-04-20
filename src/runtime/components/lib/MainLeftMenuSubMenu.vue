@@ -30,8 +30,14 @@
 <script>
 export default {
   props: {
-    title: String,
-    description: String,
+    title: {
+      type: String,
+      default: '',
+    },
+    description: {
+      type: String,
+      default: '',
+    },
     isOpen: Boolean,
   },
   data() {
@@ -59,9 +65,13 @@ export default {
 <style lang="scss">
 .oapi-sub-menu {
   ul {
-    padding-left: 12px;
-    margin-left: 12px;
+    margin: 0 0 0 12px;
+    padding: 0 0 0 12px;
+    list-style: none;
     border-left: 1px solid #ddd;
+  }
+  .oapi-menu-item {
+    font-weight: normal;
   }
 }
 .oapi-sub-menu-description {
@@ -77,6 +87,9 @@ export default {
   margin-bottom: 0;
   color: #6e7281;
   border-radius: 6px;
+  &__title {
+    font-weight: 600;
+  }
   &:not(&--is-active):hover {
     color: #000;
     background: rgba(#000, .03);

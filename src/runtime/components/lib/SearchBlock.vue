@@ -1,32 +1,63 @@
 <template>
-  <div class="relative">
-    <div class="fixed fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" v-if="isSearchOpen">
-      <div class="w-full max-w-lg mx-auto">
-        <div class="bg-white dark:bg-black rounded-lg shadow-lg overflow-hidden">
-          <div class="px-4 py-3 shadow border-gray-200 dark:border-gray-800" style="height: 300px; overflow-x: scroll">
-            <input type="text"
-                   v-model="search"
-                   class="w-full border-gray-200 dark:bg-black dark:border-gray-800 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                   placeholder="Search...">
+  <div class="oapi-search">
+    <div
+      v-if="isSearchOpen"
+      class="oapi-search-overlay"
+    >
+      <div class="oapi-search__wrapper">
+        <div class="oapi-search-box">
+          <div class="oapi-search-box__inner">
+            <input
+              v-model="search"
+              type="text"
+              class="oapi-search-box__input"
+              placeholder="Search..."
+            >
 
-            <div class="mt-4" v-for="item in list">
-              <nuxt-link :to="item.url">
-                <div class="mt-2">
-                  <div class="bg-gray-100 dark:bg-gray-900 rounded-md px-3 py-2">
-                    <h5 class="text-base font-medium text-gray-700" v-html="item.title"></h5>
-                    <p class="text-sm text-gray-400" style="font-size: 10px;" v-text="item.path"></p>
-                    <p class="text-sm text-gray-500" v-html="item.description"></p>
-                  </div>
+            <div
+              v-for="(item, i) in list"
+              :key="i"
+              class="oapi-search-box__list"
+            >
+              <nuxt-link
+                :to="item.url"
+                :active-class="''"
+              >
+                <div class="oapi-search-item">
+                  <h5
+                    class="oapi-search-item__title"
+                    v-html="item.title"
+                  />
+                  <p
+                    class="oapi-search-item__path"
+                    v-text="item.path"
+                  />
+                  <p
+                    class="oapi-search-item__text"
+                    v-html="item.description"
+                  />
                 </div>
               </nuxt-link>
-
             </div>
           </div>
         </div>
       </div>
-      <button class="absolute top-0 right-0 m-3 text-gray-800 hover:text-gray-900 shadow bg-white/50 dark:text-gray-300/75" @click="toggleSearch">
-        <svg class="w-10 h-10 shadow" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      <button
+        class="oapi-search__close"
+        @click="toggleSearch"
+      >
+        <svg
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
         </svg>
       </button>
     </div>
@@ -71,7 +102,7 @@ export default {
       this.$openapidocBus.$on('toggleSearchDoc', this.toggleSearch);
     }
   },
-  beforeDestroy() {
+  beforeUnmount() {
     this.$openapidocBus.$off('toggleSearchDoc', this.toggleSearch);
   },
   methods: {
@@ -90,13 +121,13 @@ export default {
 
       if(query === '') return;
 
-      let summary = this.tr(this.doc.info, 'title', this.currentLocale).toLowerCase();
-      let description = this.tr(this.doc.info, 'description', this.currentLocale).toLowerCase();
+      const summary = this.tr(this.doc.info, 'title', this.currentLocale).toLowerCase();
+      const description = this.tr(this.doc.info, 'description', this.currentLocale).toLowerCase();
 
-      let index = description.indexOf(query);
+      const index = description.indexOf(query);
       if (index !== -1) {
-        let start = Math.max(index - 50, 0);
-        let end = Math.min(index + query.length + 50, description.length);
+        const start = Math.max(index - 50, 0);
+        const end = Math.min(index + query.length + 50, description.length);
         let result = '...' + description.substring(start, end) + '...';
         result = result.replace(query, "<b>" + query + "</b>");
         this.list.push({
@@ -108,25 +139,25 @@ export default {
       }
 
 
-      for (let path in this.doc.paths) {
+      for (const path in this.doc.paths) {
         if(path === 'parameters') continue;
-        let paths = this.doc.paths[path];
-        for (let method in paths) {
-          let obj = paths[method];
+        const paths = this.doc.paths[path];
+        for (const method in paths) {
+          const obj = paths[method];
 
           let routePath = path
           if (routePath.startsWith('/')) routePath = routePath.substring(1);
           if (routePath.endsWith('/')) routePath = routePath.substring(-1);
           routePath = routePath.replace(/[/\\.?+=&{}]/gumi, '_').replace(/__+/, '_')
 
-          let summary = this.tr(obj, 'summary', this.currentLocale).toLowerCase();
-          let description = this.tr(obj, 'description', this.currentLocale).toLowerCase();
+          const summary = this.tr(obj, 'summary', this.currentLocale).toLowerCase();
+          const description = this.tr(obj, 'description', this.currentLocale).toLowerCase();
 
           let apper = null;
 
           let index = summary.indexOf(query);
           if (index !== -1) {
-            let result = description.substring(0, 100) + '...';
+            const result = description.substring(0, 100) + '...';
             apper = {
               path: path,
               title: summary.replace(query, "<b>" + query + "</b>"),
@@ -137,8 +168,8 @@ export default {
 
           index = description.indexOf(query);
           if (index !== -1) {
-            let start = Math.max(index - 50, 0);
-            let end = Math.min(index + query.length + 50, description.length);
+            const start = Math.max(index - 50, 0);
+            const end = Math.min(index + query.length + 50, description.length);
             let result = '...' + description.substring(start, end) + '...';
             result = result.replace(query, "<b>" + query + "</b>");
             if(!apper) {
@@ -164,4 +195,104 @@ export default {
   }
 };
 </script>
-<style> /* Add custom styles here */ </style>
+
+<style lang="scss">
+.oapi-search {
+  position: relative;
+  &__wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 32rem;
+  }
+  button#{&}__close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0.75rem;
+    padding: 0;
+    color: #1F2937;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    background-color: hsla(0,0%,100%,.5);
+    border: none;
+    cursor: pointer;
+
+    svg {
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+
+    &:hover {
+      color: #111827;
+    }
+  }
+}
+.oapi-search-overlay {
+  display: flex;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 50;
+  background-color: rgba(#000, .5);
+  justify-content: center;
+  align-items: center;
+}
+.oapi-search-box {
+  overflow: hidden;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  &__inner {
+    padding: 1.2rem;
+    border-color: #E5E7EB;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    height: 300px;
+    overflow-x: scroll
+  }
+  input#{&}__input {
+    appearance: none;
+    background-color: #fff;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    padding: 0.5rem 0.75rem;
+    width: 100%;
+    border-radius: 0.375rem;
+    border: 1px solid #E5E7EB;
+    &:focus {
+      border-color: #3B82F6;
+      outline: none;
+    }
+  }
+  &__list {
+    margin-top: 1rem;
+    a {
+      color: inherit;
+      text-decoration: inherit;
+    }
+  }
+}
+
+.oapi-search-item {
+  padding: 0.5rem 0.75rem;
+  background-color: #F3F4F6;
+  border-radius: 0.375rem;
+  &__title {
+    color: #374151;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 500;
+  }
+  &__path {
+    color: #9CA3AF;
+    font-size: 0.625rem;
+    line-height: 1.25rem;
+  }
+  &__text {
+    color: #6B7280;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+}
+</style>

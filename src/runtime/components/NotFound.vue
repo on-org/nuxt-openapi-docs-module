@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col items-center justify-center h-screen">
-    <h1 class="text-9xl font-bold text-gray-500 mb-0">404</h1>
-    <p class="text-lg text-gray-700 text-center">Not found</p>
+  <div class="oapi-not-found">
+    <h1 class="">404</h1>
+    <p class="oapi-not-found__msg">Not found</p>
   </div>
 </template>
 
@@ -10,3 +10,26 @@ export default{
   name: 'NotFound',
 };
 </script>
+
+<style lang="scss">
+.oapi-not-found {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  h1 {
+    margin-bottom: 2rem;
+    color: #6B7280;
+    font-size: 8rem;
+    line-height: 1;
+    font-weight: 700;
+  }
+  &__msg {
+    color: #374151;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    text-align: center;
+  }
+}
+</style>

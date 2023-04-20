@@ -15,14 +15,13 @@
     />
 
     <div v-if="servers">
-      <h2>Servers</h2>
-      <ul class="list-disc list-inside">
+      <h2>{{ $openapidoc.getLocaleText(currentLocale, 'Servers') }}</h2>
+      <ul>
         <li
           v-for="server in servers"
           :key="server.url"
         >
           <a
-            class="text-blue-500 hover:underline"
             :href="getUrl(server)"
           >{{ getUrl(server) }}</a> - <span v-if="server.description">{{ server.description }}</span>
         </li>
@@ -30,24 +29,17 @@
     </div>
 
     <h2 v-if="info.externalDocs">
-      External documentation
+      {{ $openapidoc.getLocaleText(currentLocale, 'External documentation') }}
     </h2>
     <ul
       v-if="info.externalDocs"
-      class="list-disc list-inside"
     >
       <li>
         <a
-          class="text-blue-500 hover:underline"
           :href="info.externalDocs.url"
         >{{ tr(info.externalDocs, 'description', currentLocale) }}</a>
       </li>
     </ul>
-    <div v-if="info.version">
-      <h2 class="text-lg font-bold">
-        version: {{ info.version }}
-      </h2>
-    </div>
   </div>
 </template>
 <script>

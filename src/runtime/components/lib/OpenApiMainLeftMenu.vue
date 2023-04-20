@@ -34,9 +34,18 @@ export default {
   align-self: stretch;
   width: var(--aside-width);
   background: #f6f8fa;
-  padding: 16px 24px 40px;
+  padding: 16px 12px 40px;
   overflow-y: auto;
-  height: 100%;
+  z-index: 15;
+  border-right: 1px solid #e2e2e2;
+
+  &--mobile-visible {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+  }
+
   &::after {
     content: '';
     position: absolute;
@@ -55,23 +64,10 @@ export default {
   }
 
   &::-webkit-scrollbar-thumb {
+    border: 4px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    border-radius: 9999px;
     background-color: #e1e1e1;
-    border-radius: 10px;
-    border-right: 8px solid #f6f8fa;
   }
-}
-
-.left-menu {
-  transition: transform .3s ease-out;
-  height: 100%;
-  border-color: #e1e1e1;
-}
-
-@media screen and (max-width: 640px) {
-  .left-menu {
-    font-size: 24px;
-    width: 100%;
-  }
-
 }
 </style>
