@@ -47,5 +47,6 @@
   "openapidoc.refresh_url": "Refresh URL",
   "openapidoc.scopes": "Scopes",
   "openapidoc.content_type": "Content Type",
+  "openapidoc.schemas": "Schemas",
   "openapidoc.variables": "Variables"
 }

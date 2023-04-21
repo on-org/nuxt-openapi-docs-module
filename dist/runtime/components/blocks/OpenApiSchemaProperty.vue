@@ -86,7 +86,7 @@
           v-if="resolvedSchema.maxLength !== undefined"
           class="oapi-prop-add-info"
         >
-          {{ $openapidoc.getLocaleText('openapidoc.Maximum string length') }}: <code>{{ resolvedSchema.maxLength }}</code>
+          {{ $openapidoc.getLocaleText('openapidoc.maximum') }}: <code>{{ resolvedSchema.maxLength }}</code>
         </div>
         <div
           v-if="resolvedSchema.minLength !== undefined"

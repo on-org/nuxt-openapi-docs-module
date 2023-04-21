@@ -45,7 +45,7 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     [
-      '../src/module',
+      'nuxt-openapi-docs-module',
       {
         folder: './docs/openapi',
         name: 'Api Docs',
@@ -186,6 +186,7 @@ export default {
                 "maximum_props": "Maximum number of properties",
                 "minimum_props": "Minimum number of properties",
                 "not": "Not",
+                "schemas": "Schemas",
                 "bearer_format": "Bearer format",
                 "authorization_url": "Authorization URL",
                 "token_url": "Token URL",
@@ -245,6 +246,7 @@ export default {
                 "token_url": "URL токена",
                 "refresh_url": "URL обновления",
                 "scopes": "Области",
+                "schemas": "Схемы",
                 "variables": "Переменные"
               }
             },
@@ -288,6 +290,7 @@ export default {
                 "responses": "Antworten",
                 "status": "Status",
                 "in": "In",
+                "schemas": "Schemas",
                 "minimum": "Minimale Zeichenlänge",
                 "maximum": "Maximale Anzahl von Elementen",
                 "maximum_props": "Maximale Anzahl von Eigenschaften",
