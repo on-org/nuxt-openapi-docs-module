@@ -45,7 +45,7 @@ declare namespace _default {
             value: string;
             text: any;
         }[];
-        function isLocalization(): boolean;
+        function isLocalization(): any;
         function filesAccessor(): {
             value: string;
             text: any;
@@ -58,16 +58,17 @@ declare namespace _default {
         export function getRoute(path: any): {
             name: string;
             meta: {
-                locale: string;
                 path: any;
                 file: any;
                 type: string;
             };
         };
-        export function getSubRoute(route: any): string | {
+        export function getSubRoute(route: any): {
+            name: string;
+            meta?: undefined;
+        } | {
             name: string;
             meta: {
-                locale: any;
                 path: string;
                 file: any;
                 type: any;
@@ -76,7 +77,6 @@ declare namespace _default {
         export function changeDoc(option: any): {
             name: string;
             meta: {
-                locale: string;
                 path: any;
                 type: string;
                 file: any;
@@ -85,7 +85,6 @@ declare namespace _default {
         export function changeLocale(option: any): {
             name: string;
             meta: {
-                locale: any;
                 path: any;
                 type: string;
                 file: any;

@@ -35,7 +35,7 @@
           class="oapi-menu-item"
           active-class="oapi-menu-item--is-active"
         >
-          {{ $openapidoc.getLocaleText(currentLocale, 'Info') }}
+          {{ $openapidoc.getLocaleText('openapidoc.info') }}
         </nuxt-link>
       </li>
       <li>
@@ -44,7 +44,7 @@
           class="oapi-menu-item"
           active-class="oapi-menu-item--is-active"
         >
-          {{ $openapidoc.getLocaleText(currentLocale, 'Components') }}
+          {{ $openapidoc.getLocaleText('openapidoc.components') }}
         </nuxt-link>
       </li>
       <MainLeftMenuSubMenu
@@ -133,7 +133,7 @@ export default {
       }));
     },
     isLocalization() {
-      return Object.keys(this.locales).length > 1;
+      return this.$openapidoc.hasI18n() && Object.keys(this.locales).length > 1;
     },
     filesAccessor() {
       const arr = [];
@@ -152,22 +152,22 @@ export default {
       return encodeURI(path)
     },
     getRoute(path) {
-      return {name: `openapi-${this.path}/${this.file}/${this.currentLocale}-${path}`, meta: {locale: 'en', path: path, file: this.file, type: 'get'}};
+      return {name: `openapi-${this.path}/${this.file}/${path}${this.$openapidoc.I18nLocaleSuffix()}`, meta: {path: path, file: this.file, type: 'get'}};
     },
     getSubRoute(route) {
       const path = this.genUrl(route.path);
       const type = route.type;
       if (route.type === 'custom') {
-        return `/${this.path}/${this.file}/${this.currentLocale}/${type}/${path}`
+        return {name: `${this.path}-${this.file}-${type}-${path}${this.$openapidoc.I18nLocaleSuffix()}`};
       }
 
-      return {name: `openapi-${this.path}/${this.file}/${this.currentLocale}-${type}-${path}`, meta: {locale: this.currentLocale, path: path, file: this.file, type: type}};
+      return {name: `openapi-${this.path}/${this.file}/${type}-${path}${this.$openapidoc.I18nLocaleSuffix()}`, meta: {path: path, file: this.file, type: type}};
     },
     changeDoc(option) {
-      return {name: `openapi-${this.path}/${option}/en-info`, meta: {locale: 'en', path: option, type: 'get',  file: this.file}};
+      return {name: `openapi-${this.path}/${option}/info${this.$openapidoc.I18nLocaleSuffix('en')}`, meta: {path: option, type: 'get',  file: this.file}};
     },
     changeLocale(option) {
-      return {name: `openapi-${this.path}/${this.file}/${option}-info`, meta: {locale: option, path: this.file, type: 'get',  file: this.file}};
+      return {name: `openapi-${this.path}/${this.file}/info${this.$openapidoc.I18nLocaleSuffix(option)}`, meta: {path: this.file, type: 'get',  file: this.file}};
     },
   },
 };

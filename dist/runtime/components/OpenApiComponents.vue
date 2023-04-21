@@ -2,7 +2,7 @@
   <div>
     <div v-if="components.schemas">
       <h2 id="schemas">
-        {{ $openapidoc.getLocaleText(currentLocale, 'Schemas') }}
+        {{ $openapidoc.getLocaleText('openapidoc.schemas') }}
       </h2>
       <div
         v-for="(schema, name) in components.schemas"
@@ -31,7 +31,7 @@
 
     <div v-if="components.examples">
       <h2 id="examples">
-        {{ $openapidoc.getLocaleText(currentLocale, 'Examples') }}
+        {{ $openapidoc.getLocaleText('openapidoc.examples') }}
       </h2>
       <div
         v-for="(example, name) in components.examples"
@@ -49,7 +49,7 @@
 
     <div v-if="components.requestBodies">
       <h2 id="request-bodies">
-        {{ $openapidoc.getLocaleText(currentLocale, 'Request bodies') }}
+        {{ $openapidoc.getLocaleText('openapidoc.request_bodies') }}
       </h2>
       <div
         v-for="(reqBody, name) in components.requestBodies"
@@ -58,7 +58,7 @@
       >
         <h3 v-text="name" />
         <div class="oapi-schema-block__required">
-          {{ $openapidoc.getLocaleText(currentLocale, 'Required') }}
+          {{ $openapidoc.getLocaleText('openapidoc.required') }}
         </div>
         <div
           v-if="reqBody.description"
@@ -74,7 +74,7 @@
 
     <div v-if="components.responses">
       <h2 id="responses">
-        {{ $openapidoc.getLocaleText(currentLocale, 'Responses') }}
+        {{ $openapidoc.getLocaleText('openapidoc.responses') }}
       </h2>
       <div
         v-for="(response, name) in components.responses"
@@ -96,7 +96,7 @@
 
     <div v-if="components.parameters">
       <h2 id="parameters">
-        {{ $openapidoc.getLocaleText(currentLocale, 'Parameters') }}
+        {{ $openapidoc.getLocaleText('openapidoc.rarameters') }}
       </h2>
       <div
         v-for="(parameter, name) in components.parameters"
@@ -119,7 +119,7 @@
 
     <div v-if="components.headers">
       <h2 id="headers">
-        {{ $openapidoc.getLocaleText(currentLocale, 'Headers') }}
+        {{ $openapidoc.getLocaleText('openapidoc.headers') }}
       </h2>
       <div
         v-for="(header, name) in components.headers"
@@ -143,7 +143,7 @@
 
     <div v-if="components.securitySchemes">
       <h2 id="security-schemes">
-        {{ $openapidoc.getLocaleText(currentLocale, 'Security schemes') }}
+        {{ $openapidoc.getLocaleText('openapidoc.security_schemes') }}
       </h2>
       <div
         v-for="(secScheme, name) in components.securitySchemes"

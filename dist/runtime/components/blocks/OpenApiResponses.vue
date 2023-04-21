@@ -4,7 +4,7 @@
       :is="isCb ? 'h3' : 'h2'"
       :id="`${hPrefix}responses`"
     >
-      {{ $openapidoc.getLocaleText(currentLocale, 'Responses') }}
+      {{ $openapidoc.getLocaleText('openapidoc.responses') }}
     </component>
 
     <div

@@ -10,7 +10,7 @@
       v-if="data.required"
       class="oapi-res-param__required"
     >
-      {{ $openapidoc.getLocaleText(currentLocale, 'Required') }}
+      {{ $openapidoc.getLocaleText('openapidoc.required') }}
     </div>
     <div
       v-if="flags.length"
@@ -32,26 +32,26 @@
       v-if="data.in"
       class="oapi-res-param__param"
     >
-      {{ $openapidoc.getLocaleText(currentLocale, 'In') }}: <code>{{ data.in }}</code>
+      {{ $openapidoc.getLocaleText('openapidoc.in') }}: <code>{{ data.in }}</code>
     </div>
     <div
       v-if="data.style"
       class="oapi-res-param__param"
     >
-      {{ $openapidoc.getLocaleText(currentLocale, 'Style') }}: <code>{{ data.style }}</code>
+      {{ $openapidoc.getLocaleText('openapidoc.style') }}: <code>{{ data.style }}</code>
     </div>
     <div
       v-if="data.example"
       class="oapi-res-param__param"
     >
-      {{ $openapidoc.getLocaleText(currentLocale, 'Example') }}: <br v-if="exampleString.includes('\n')"><code v-html="exampleString" />
+      {{ $openapidoc.getLocaleText('openapidoc.example') }}: <br v-if="exampleString.includes('\n')"><code v-html="exampleString" />
     </div>
     <div
       v-if="data.examples"
       class="oapi-res-param__examples"
     >
       <div class="oapi-res-param__muted">
-        {{ $openapidoc.getLocaleText(currentLocale, 'Examples') }}:
+        {{ $openapidoc.getLocaleText('openapidoc.examples') }}:
       </div>
       <div
         v-for="(example, exampleName) in data.examples"
@@ -86,7 +86,7 @@
       class="oapi-res-param__schema"
     >
       <div class="oapi-res-param__muted">
-        {{ $openapidoc.getLocaleText(currentLocale, 'Schema') }}:
+        {{ $openapidoc.getLocaleText('openapidoc.schema') }}:
       </div>
       <OpenApiObjectModel
         lite
@@ -100,7 +100,7 @@
       class="oapi-res-param__content"
     >
       <div class="oapi-res-param__muted">
-        {{ $openapidoc.getLocaleText(currentLocale, 'Content') }}:
+        {{ $openapidoc.getLocaleText('openapidoc.content') }}:
       </div>
       <OpenApiMediaTypes :current-locale="currentLocale" :data="data.content" />
     </div>

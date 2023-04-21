@@ -1,14 +1,12 @@
 import mitt from "mitt";
 import OpenApiPlugin from "./OpenApiPlugin.mjs";
-import ruLang from "./locales/ru.json";
-import deLang from "./locales/de.json";
-const OpenApiPlugins = ({ app }, inject) => {
+import enLang from "./locales/en.json";
+const OpenApiPlugins = (ctx, inject) => {
   const emitter = mitt();
-  const openapidoc = new OpenApiPlugin();
-  openapidoc.addLocale("ru", ruLang);
-  openapidoc.addLocale("de", deLang);
-  app.$openapidoc = openapidoc;
-  app.$openapidocBus = {
+  const openapidoc = new OpenApiPlugin(ctx.i18n);
+  openapidoc.addLocale(enLang);
+  ctx.app.$openapidoc = openapidoc;
+  ctx.app.$openapidocBus = {
     $on: emitter.on,
     $off: emitter.off,
     $emit: emitter.emit

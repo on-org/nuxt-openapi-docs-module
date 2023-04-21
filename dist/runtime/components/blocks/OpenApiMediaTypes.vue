@@ -2,7 +2,7 @@
   <div class="oapi-req-body-obj">
     <div class="oapi-req-body-obj-content-type">
       <span class="oapi-req-body-obj-content-type__label">
-        {{ $openapidoc.getLocaleText(currentLocale, 'Content type') }}:
+        {{ $openapidoc.getLocaleText('openapidoc.content_type') }}:
       </span>
       <OpenApiDropdown
         v-model="selectedMediaType"

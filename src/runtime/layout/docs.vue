@@ -63,9 +63,7 @@ export default {
       }
       // @ts-ignore
       const route = useRoute()
-      return {
-        currentLocale: route.params.locale ?? route.meta.locale ?? 'en',
-      }
+      return {}
     }
   },
   async fetch() {
@@ -73,8 +71,6 @@ export default {
       if(!this.$openapidoc.hasAccess(this.file)) {
         this.$nuxt.context.error({ status: 404, message: 'page not found' });
       }
-      const ctx = this.$nuxt.context
-      this.currentLocale = ctx.route.params.locale ?? ctx.route.meta[0].locale ?? 'en';
     } catch (e) {
       console.error(e)
     }
@@ -83,14 +79,6 @@ export default {
     if(this && this.$fetch) this.$fetch();
   },
   watch: {
-    '$route.meta': {
-      handler: function(val) {
-        if(val.locale) {
-          this.currentLocale = val.locale;
-        }
-      },
-      deep: true
-    },
     '$route': {
       handler: function(val) {
         if (this.isMobile) {
@@ -110,7 +98,6 @@ export default {
       name: '<%= options.name %>',
       isMenuOpen: true,
       isMobile: false,
-      currentLocale: 'en',
       file: '<%= options.fileName %>',
     };
   },
@@ -118,6 +105,9 @@ export default {
     return genHead();
   },
   computed: {
+    currentLocale() {
+      return this.$openapidoc.currentLocale()
+    },
     footer() {
       return this.$openapidoc.getFooter()
     },
@@ -132,9 +122,6 @@ export default {
     }
   },
   methods: {
-    foo(val) {
-      console.log(val.toUpperCase());
-    },
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
     },

@@ -4,10 +4,7 @@
       v-if="false"
       class="files pr-4"
     >
-      <OpenApiDarkModeToggle
-        :value="isDarkMode"
-        @change="() => $emit('toggleDarkMode')"
-      />
+      <OpenApiDarkModeToggle/>
     </div>
     <button
       type="button"
@@ -51,10 +48,6 @@ export default {
     },
     files: {
       type: Object,
-      required: true,
-    },
-    isDarkMode: {
-      type: Boolean,
       required: true,
     },
     locales: {

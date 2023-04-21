@@ -12,7 +12,7 @@
       v-if="response.headers"
       class="oapi-response__section"
     >
-      <strong class="oapi-response__section-title">{{ $openapidoc.getLocaleText(currentLocale, 'Headers') }}</strong>
+      <strong class="oapi-response__section-title">{{ $openapidoc.getLocaleText('openapidoc.headers') }}</strong>
       <div
         v-for="(header, name) in response.headers"
         :key="name"
@@ -35,7 +35,7 @@
       <strong
         v-if="response.headers"
         class="oapi-response__section-title"
-      >{{ $openapidoc.getLocaleText(currentLocale, 'Content') }}</strong>
+      >{{ $openapidoc.getLocaleText('openapidoc.content') }}</strong>
       <div class="oapi-response-media-types">
         <OpenApiMediaTypes
           :data="response.content"
@@ -51,7 +51,7 @@
       <strong
         v-if="response.headers || response.content"
         class="oapi-response__section-title"
-      >{{ $openapidoc.getLocaleText(currentLocale, 'Schema') }}</strong>
+      >{{ $openapidoc.getLocaleText('openapidoc.schema') }}</strong>
       <div class="oapi-response-media-types">
         <OpenApiObjectModel
           :schema="response.schema"

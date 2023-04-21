@@ -1,15 +1,14 @@
 import mitt from 'mitt';
 import OpenApiPlugin from "./OpenApiPlugin";
 
-import ruLang from './locales/ru.json'
-import deLang from './locales/de.json'
-import {defineNuxtPlugin} from "#app";
-export default defineNuxtPlugin((NuxtApp) => {
-  const emitter = mitt();
-  const openapidoc = new OpenApiPlugin()
+import enLang from './locales/en.json'
 
-  openapidoc.addLocale('ru', ruLang)
-  openapidoc.addLocale('de', deLang)
+import {defineNuxtPlugin} from "#app";
+export default defineNuxtPlugin((nuxtApp) => {
+  const emitter = mitt();
+  const openapidoc = new OpenApiPlugin(nuxtApp.$i18n)
+
+  openapidoc.addLocale(enLang)
 
   return {
     provide: {

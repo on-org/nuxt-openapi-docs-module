@@ -3,7 +3,7 @@
     v-if="callbacks"
     class="oapi-callbacks"
   >
-    <h2>{{ $openapidoc.getLocaleText(currentLocale, 'Callbacks') }}</h2>
+    <h2>{{ $openapidoc.getLocaleText('openapidoc.callbacks') }}</h2>
     <div class="oapi-callbacks__list">
       <div
         v-for="(item, name) in callbacks"

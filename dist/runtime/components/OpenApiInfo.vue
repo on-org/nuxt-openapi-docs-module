@@ -15,7 +15,7 @@
     />
 
     <div v-if="servers">
-      <h2>{{ $openapidoc.getLocaleText(currentLocale, 'Servers') }}</h2>
+      <h2>{{ $openapidoc.getLocaleText('openapidoc.servers') }}</h2>
       <ul>
         <li
           v-for="server in servers"
@@ -29,7 +29,7 @@
     </div>
 
     <h2 v-if="info.externalDocs">
-      {{ $openapidoc.getLocaleText(currentLocale, 'External documentation') }}
+      {{ $openapidoc.getLocaleText('openapidoc.external_documentation') }}
     </h2>
     <ul
       v-if="info.externalDocs"

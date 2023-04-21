@@ -95,7 +95,6 @@ export default defineNuxtModule<ModuleOptions>({
 
       localoptions.locales = parser.getLocales();
 
-
       const pathsByTags = parser.getPaths()
       localoptions.doc = parser.getDoc();
       localoptions.pathsByTags = parser.getPaths();
@@ -124,61 +123,55 @@ export default defineNuxtModule<ModuleOptions>({
       writeFileSync(path , template);
 
       extendPages((pages) => {
-        Object.keys(localoptions.locales).forEach((locale) => {
-          pages.push({
-            name: `openapi-${localoptions.path}/${localoptions.fileName}/${locale}-info`,
-            path: `/${localoptions.path}/${localoptions.fileName}/${locale}/info`,
-            // @ts-ignore
-            component: path,
-            file: path,
-            meta: {
-              nuxtI18n: false,
-              file: localoptions.fileName,
-              locale: locale,
-              type: 'get',
-              path: 'info',
-            },
-          })
-
-          pages.push({
-            name: `openapi-${localoptions.path}/${localoptions.fileName}/${locale}-components`,
-            path: `/${localoptions.path}/${localoptions.fileName}/${locale}/components`,
-            // @ts-ignore
-            component: path,
-            file: path,
-            meta: {
-              nuxtI18n: false,
-              file: localoptions.fileName,
-              locale: locale,
-              type: 'get',
-              path: 'components',
-            },
-          })
-
-          for (let tag in pathsByTags) {
-            if (tag === 'custom') continue;
-
-            for (let i in pathsByTags[tag].items) {
-              const item = pathsByTags[tag].items[i]
-              pages.push({
-                name: `openapi-${localoptions.path}/${localoptions.fileName}/${locale}-${item.type}-${item.path}`,
-                path: `/${localoptions.path}/${localoptions.fileName}/${locale}/${item.type}/${item.path}`,
-                // @ts-ignore
-                component: path,
-                file: path,
-                meta: {
-                  nuxtI18n: false,
-                  file: localoptions.fileName,
-                  locale: locale,
-                  type: item.type,
-                  path: item.path,
-                  url: item.name,
-                },
-              })
-            }
-          }
+        pages.push({
+          name: `openapi-${localoptions.path}/${localoptions.fileName}/info`,
+          path: `/${localoptions.path}/${localoptions.fileName}/info`,
+          // @ts-ignore
+          component: path,
+          file: path,
+          meta: {
+            nuxtI18n: false,
+            file: localoptions.fileName,
+            type: 'get',
+            path: 'info',
+          },
         })
 
+        pages.push({
+          name: `openapi-${localoptions.path}/${localoptions.fileName}/components`,
+          path: `/${localoptions.path}/${localoptions.fileName}/components`,
+          // @ts-ignore
+          component: path,
+          file: path,
+          meta: {
+            nuxtI18n: false,
+            file: localoptions.fileName,
+            type: 'get',
+            path: 'components',
+          },
+        })
+
+        for (let tag in pathsByTags) {
+          if (tag === 'custom') continue;
+
+          for (let i in pathsByTags[tag].items) {
+            const item = pathsByTags[tag].items[i]
+            pages.push({
+              name: `openapi-${localoptions.path}/${localoptions.fileName}/${item.type}-${item.path}`,
+              path: `/${localoptions.path}/${localoptions.fileName}/${item.type}/${item.path}`,
+              // @ts-ignore
+              component: path,
+              file: path,
+              meta: {
+                nuxtI18n: false,
+                file: localoptions.fileName,
+                type: item.type,
+                path: item.path,
+                url: item.name,
+              },
+            })
+          }
+        }
       })
     }
 

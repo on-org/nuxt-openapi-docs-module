@@ -20,7 +20,7 @@
               class="oapi-search-box__list"
             >
               <nuxt-link
-                :to="item.url"
+                :to="`${item.url}${$openapidoc.I18nLocaleSuffix()}`"
                 :active-class="''"
               >
                 <div class="oapi-search-item">

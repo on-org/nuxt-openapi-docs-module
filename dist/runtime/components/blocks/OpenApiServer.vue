@@ -16,7 +16,7 @@
       class="oapi-server-vars"
     >
       <div class="oapi-server-vars__title">
-        {{ $openapidoc.getLocaleText(currentLocale, 'Variables') }}
+        {{ $openapidoc.getLocaleText('openapidoc.variables') }}
       </div>
       <ul>
         <li
@@ -35,13 +35,13 @@
             v-if="varObj.default"
             class="oapi-server-var__default"
           >
-            {{ $openapidoc.getLocaleText(currentLocale, 'Default') }}: <code>{{ varObj.default }}</code>
+            {{ $openapidoc.getLocaleText('openapidoc.default') }}: <code>{{ varObj.default }}</code>
           </div>
           <div
             v-if="varObj.enum"
             class="oapi-server-var__enum"
           >
-            {{ $openapidoc.getLocaleText(currentLocale, 'Enum') }}:
+            {{ $openapidoc.getLocaleText('openapidoc.enum') }}:
             <span
               v-for="(enumVal) in varObj.enum"
               :key="enumVal"

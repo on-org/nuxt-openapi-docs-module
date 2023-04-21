@@ -26,17 +26,11 @@ declare namespace _default {
             const required_3: boolean;
             export { required_3 as required };
         }
-        namespace isDarkMode {
-            const type_4: BooleanConstructor;
+        namespace locales {
+            const type_4: ObjectConstructor;
             export { type_4 as type };
             const required_4: boolean;
             export { required_4 as required };
-        }
-        namespace locales {
-            const type_5: ObjectConstructor;
-            export { type_5 as type };
-            const required_5: boolean;
-            export { required_5 as required };
         }
     }
     const computed: {};

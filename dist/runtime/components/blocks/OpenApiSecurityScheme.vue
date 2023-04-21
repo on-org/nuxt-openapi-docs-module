@@ -7,19 +7,19 @@
       v-if="securityScheme.type === 'http' && securityScheme.scheme"
       class="oapi-sec-scheme__param"
     >
-      {{ $openapidoc.getLocaleText(currentLocale, 'Scheme') }}: <code>{{ securityScheme.scheme }}</code>
+      {{ $openapidoc.getLocaleText('openapidoc.scheme') }}: <code>{{ securityScheme.scheme }}</code>
     </div>
     <div
       v-if="securityScheme.type === 'http' && securityScheme.scheme === 'bearer' && securityScheme.bearerFormat"
       class="oapi-sec-scheme__param"
     >
-      {{ $openapidoc.getLocaleText(currentLocale, 'Bearer format') }}: <code>{{ securityScheme.bearerFormat }}</code>
+      {{ $openapidoc.getLocaleText('openapidoc.bearer_format') }}: <code>{{ securityScheme.bearerFormat }}</code>
     </div>
     <div
       v-if="securityScheme.type === 'apiKey' && securityScheme.in"
       class="oapi-sec-scheme__param"
     >
-      {{ $openapidoc.getLocaleText(currentLocale, 'In') }}: <code>{{ securityScheme.in }}</code>
+      {{ $openapidoc.getLocaleText('openapidoc.in') }}: <code>{{ securityScheme.in }}</code>
     </div>
     <div
       v-if="securityScheme.type === 'apiKey' && formattedIn && securityScheme.name"
@@ -42,25 +42,25 @@
           v-if="flowData.authorizationUrl"
           class="oapi-sec-scheme__param"
         >
-          {{ $openapidoc.getLocaleText(currentLocale, 'Authorization URL') }}: <code>{{ flowData.authorizationUrl }}</code>
+          {{ $openapidoc.getLocaleText('openapidoc.authorization_url') }}: <code>{{ flowData.authorizationUrl }}</code>
         </div>
         <div
           v-if="flowData.tokenUrl"
           class="oapi-sec-scheme__param"
         >
-          {{ $openapidoc.getLocaleText(currentLocale, 'Token URL') }}: <code>{{ flowData.tokenUrl }}</code>
+          {{ $openapidoc.getLocaleText('openapidoc.token_url') }}: <code>{{ flowData.tokenUrl }}</code>
         </div>
         <div
           v-if="flowData.refreshUrl"
           class="oapi-sec-scheme__param"
         >
-          {{ $openapidoc.getLocaleText(currentLocale, 'Refresh URL') }}: <code>{{ flowData.refreshUrl }}</code>
+          {{ $openapidoc.getLocaleText('openapidoc.refresh_url') }}: <code>{{ flowData.refreshUrl }}</code>
         </div>
         <div
           v-if="flowData.scopes && Object.keys(flowData.scopes).length"
           class="oapi-sec-scheme-scopes"
         >
-          <span class="oapi-sec-scheme-scopes__title">{{ $openapidoc.getLocaleText(currentLocale, 'Scopes') }}:</span>
+          <span class="oapi-sec-scheme-scopes__title">{{ $openapidoc.getLocaleText('openapidoc.scopes') }}:</span>
           <ul class="oapi-sec-scheme-scopes__list">
             <li
               v-for="(scopeDescription, scopeName) in flowData.scopes"

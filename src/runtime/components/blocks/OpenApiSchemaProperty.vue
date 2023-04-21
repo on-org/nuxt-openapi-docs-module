@@ -27,7 +27,7 @@
           v-if="required"
           class="oapi-prop__required"
         >
-          {{ $openapidoc.getLocaleText(currentLocale, 'Required') }}
+          {{ $openapidoc.getLocaleText('openapidoc.required') }}
         </div>
       </div>
       <div class="oapi-prop__content">
@@ -54,13 +54,13 @@
           <a
             :href="resolvedSchema.externalDocs.url"
             target="_blank"
-          >{{ $openapidoc.getLocaleText(currentLocale, 'External docs') }}</a>
+          >{{ $openapidoc.getLocaleText('openapidoc.external_docs') }}</a>
         </div>
         <div
           v-if="resolvedSchema.example"
           class="oapi-prop-add-info"
         >
-          {{ $openapidoc.getLocaleText(currentLocale, 'Example') }}:
+          {{ $openapidoc.getLocaleText('openapidoc.example') }}:
           <br v-if="exampleString.includes('\n')">
           <code v-html="exampleString" />
         </div>
@@ -68,7 +68,7 @@
           v-if="resolvedSchema.multipleOf !== undefined"
           class="oapi-prop-add-info"
         >
-          {{ $openapidoc.getLocaleText(currentLocale, 'Multiple of') }}: <code>{{ resolvedSchema.multipleOf }}</code>
+          {{ $openapidoc.getLocaleText('openapidoc.multiple_of') }}: <code>{{ resolvedSchema.multipleOf }}</code>
         </div>
         <div
           v-if="resolvedSchema.maximum !== undefined"
@@ -86,55 +86,55 @@
           v-if="resolvedSchema.maxLength !== undefined"
           class="oapi-prop-add-info"
         >
-          {{ $openapidoc.getLocaleText(currentLocale, 'Maximum string length') }}: <code>{{ resolvedSchema.maxLength }}</code>
+          {{ $openapidoc.getLocaleText('openapidoc.Maximum string length') }}: <code>{{ resolvedSchema.maxLength }}</code>
         </div>
         <div
           v-if="resolvedSchema.minLength !== undefined"
           class="oapi-prop-add-info"
         >
-          {{ $openapidoc.getLocaleText(currentLocale, 'Minimum string length') }}: <code>{{ resolvedSchema.minLength }}</code>
+          {{ $openapidoc.getLocaleText('openapidoc.minimum') }}: <code>{{ resolvedSchema.minLength }}</code>
         </div>
         <div
           v-if="resolvedSchema.maxItems !== undefined"
           class="oapi-prop-add-info"
         >
-          {{ $openapidoc.getLocaleText(currentLocale, 'Maximum number of items') }}: <code>{{ resolvedSchema.maxItems }}</code>
+          {{ $openapidoc.getLocaleText('openapidoc.maximum') }}: <code>{{ resolvedSchema.maxItems }}</code>
         </div>
         <div
           v-if="resolvedSchema.minItems !== undefined"
           class="oapi-prop-add-info"
         >
-          {{ $openapidoc.getLocaleText(currentLocale, 'Minimum number of items') }}: <code>{{ resolvedSchema.minItems }}</code>
+          {{ $openapidoc.getLocaleText('openapidoc.maximum') }}: <code>{{ resolvedSchema.minItems }}</code>
         </div>
         <div
           v-if="resolvedSchema.maxProperties !== undefined"
           class="oapi-prop-add-info"
         >
-          {{ $openapidoc.getLocaleText(currentLocale, 'Maximum number of properties') }}: <code>{{ resolvedSchema.maxProperties }}</code>
+          {{ $openapidoc.getLocaleText('openapidoc.maximum_props') }}: <code>{{ resolvedSchema.maxProperties }}</code>
         </div>
         <div
           v-if="resolvedSchema.minProperties !== undefined"
           class="oapi-prop-add-info"
         >
-          {{ $openapidoc.getLocaleText(currentLocale, 'Minimum number of properties') }}: <code>{{ resolvedSchema.minProperties }}</code>
+          {{ $openapidoc.getLocaleText('openapidoc.minimum_props') }}: <code>{{ resolvedSchema.minProperties }}</code>
         </div>
         <div
           v-if="resolvedSchema.additionalProperties !== undefined && typeof resolvedSchema.additionalProperties === 'boolean'"
           class="oapi-prop-add-info"
         >
-          {{ $openapidoc.getLocaleText(currentLocale, 'Additional properties') }}: <code>{{ !!resolvedSchema.additionalProperties }}</code>
+          {{ $openapidoc.getLocaleText('openapidoc.additional_properties') }}: <code>{{ !!resolvedSchema.additionalProperties }}</code>
         </div>
         <div
           v-if="resolvedSchema.pattern"
           class="oapi-prop-add-info"
         >
-          {{ $openapidoc.getLocaleText(currentLocale, 'Pattern') }}: <code v-html="resolvedSchema.pattern" />
+          {{ $openapidoc.getLocaleText('openapidoc.pattern') }}: <code v-html="resolvedSchema.pattern" />
         </div>
         <div
           v-if="resolvedSchema.enum"
           class="oapi-prop-add-info oapi-prop-add-info--enums"
         >
-          {{ $openapidoc.getLocaleText(currentLocale, 'Enum') }}:
+          {{ $openapidoc.getLocaleText('openapidoc.enum') }}:
           <span
             v-for="item in resolvedSchema.enum"
             :key="item"
@@ -156,7 +156,7 @@
       <OpenApiSchemaSubObject
         v-if="resolvedSchema.not && (!isObject || isOpen)"
         :current-locale="currentLocale"
-        :title="`${$openapidoc.getLocaleText(currentLocale, 'Not')}:`"
+        :title="`${$openapidoc.getLocaleText('openapidoc.not')}:`"
       >
         <OpenApiSchemaProperty
           :current-locale="currentLocale"
@@ -167,7 +167,7 @@
         v-if="isObject && isOpen && hasProperties"
         class="oapi-prop__props-title"
       >
-        {{ $openapidoc.getLocaleText(currentLocale, 'Properties') }}:
+        {{ $openapidoc.getLocaleText('openapidoc.properties') }}:
       </div>
     </div>
     <div
@@ -189,7 +189,7 @@
     </div>
     <OpenApiSchemaSubObject
       v-if="resolvedSchema.additionalProperties && typeof resolvedSchema.additionalProperties === 'object' && isObject"
-      :title="`${$openapidoc.getLocaleText(currentLocale, 'Additional properties')}:`"
+      :title="`${$openapidoc.getLocaleText('openapidoc.additional_properties')}:`"
       :current-locale="currentLocale"
     >
       <OpenApiSchemaProperty
@@ -201,8 +201,8 @@
       v-if="(isOneOf || isAnyOf) && isOpen"
       class="oapi-prop__props-title"
     >
-      <span v-if="isOneOf">{{ $openapidoc.getLocaleText(currentLocale, 'One of') }}:</span>
-      <span v-if="!isOneOf && isAnyOf">{{ $openapidoc.getLocaleText(currentLocale, 'Any of') }}:</span>
+      <span v-if="isOneOf">{{ $openapidoc.getLocaleText('openapidoc.one_of') }}:</span>
+      <span v-if="!isOneOf && isAnyOf">{{ $openapidoc.getLocaleText('openapidoc.any_of') }}:</span>
     </div>
     <ul
       v-if="(isOneOf || isAnyOf) && isOpen"

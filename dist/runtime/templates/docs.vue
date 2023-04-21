@@ -14,12 +14,15 @@
 <script>
 <% if (options.isNuxt3 ?? false) {
   print('import {useRoute} from "#app";');
+
 } %>
 
 const isNuxt3 = <%= options.isNuxt3 ?? false %>;
 export default {
   name: 'AppDocs',
-  nuxtI18n: false,
+  nuxtI18n: {
+    locales: <%= JSON.stringify(Object.keys(options.locales)) %>,
+  },
   layout: `<%= options.layoutName %>`,
   transition: {
     name: 'fade'
@@ -54,7 +57,6 @@ export default {
     if(isNuxt3) {
       const route = useRoute()
       return {
-        currentLocale: route.params.locale ?? route.meta.locale,
         type: route.params.type ?? route.meta.type,
         path: route.params.path ?? route.meta.path,
         url: route.params.url ?? route.meta.url
@@ -64,7 +66,6 @@ export default {
   async fetch() {
     const ctx = this.$nuxt.context
     try {
-      this.currentLocale = ctx.route.params.locale ?? ctx.route.meta[0].locale;
       this.type = ctx.route.params.type ?? ctx.route.meta[0].type;
       this.path = ctx.route.params.path ?? ctx.route.meta[0].path;
       this.url = ctx.route.params.url ?? ctx.route.meta[0].url;
@@ -88,7 +89,6 @@ export default {
   watch: {
     '$route.meta': {
       handler: function(val) {
-        this.currentLocale = val.locale;
         this.type = val.type;
         this.path = val.path;
         this.url = val.url;
@@ -115,6 +115,9 @@ export default {
     }
   },
   computed: {
+    currentLocale() {
+      return this.$openapidoc.currentLocale()
+    },
     doc() {
       return this.options.doc
     },

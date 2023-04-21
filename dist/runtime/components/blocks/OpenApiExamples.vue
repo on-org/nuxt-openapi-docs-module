@@ -1,7 +1,7 @@
 <template>
   <div class="openapi-examples">
     <h2 id="examples">
-      {{ $openapidoc.getLocaleText(currentLocale, 'Examples') }}
+      {{ $openapidoc.getLocaleText('openapidoc.examples') }}
     </h2>
     <div
       v-for="(example, name) in examples"

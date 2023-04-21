@@ -58,6 +58,7 @@ declare namespace _default {
     namespace methods {
         function copyToClipboard(e: any): void;
         function onLangClick(snippet: any, library?: null): void;
+        function getAbsoluteUrl(): any;
         function genCode(): void;
     }
 }

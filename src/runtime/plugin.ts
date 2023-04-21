@@ -2,8 +2,7 @@ import type { Plugin } from '@nuxt/types';
 import mitt from 'mitt';
 import OpenApiPlugin from "./OpenApiPlugin";
 
-import ruLang from './locales/ru.json'
-import deLang from './locales/de.json'
+import enLang from './locales/en.json'
 
 declare module 'vue/types/vue' {
   interface Vue {
@@ -22,15 +21,16 @@ declare module '@nuxt/types' {
 }
 
 
-const OpenApiPlugins: Plugin = ({ app }, inject) => {
+// @ts-ignore
+const OpenApiPlugins: Plugin = (ctx, inject) => {
   const emitter = mitt();
-  const openapidoc = new OpenApiPlugin()
+  // @ts-ignore
+  const openapidoc = new OpenApiPlugin(ctx.i18n)
 
-  openapidoc.addLocale('ru', ruLang)
-  openapidoc.addLocale('de', deLang)
+  openapidoc.addLocale(enLang)
 
-  app.$openapidoc = openapidoc
-  app.$openapidocBus = {
+  ctx.app.$openapidoc = openapidoc
+  ctx.app.$openapidocBus = {
     $on: emitter.on,
     $off: emitter.off,
     $emit: emitter.emit,

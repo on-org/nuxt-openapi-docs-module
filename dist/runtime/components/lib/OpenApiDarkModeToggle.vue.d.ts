@@ -1,10 +1,10 @@
 declare namespace _default {
-    namespace props {
-        namespace value {
-            export const type: BooleanConstructor;
-            const _default: boolean;
-            export { _default as default };
-        }
+    function data(): {
+        isDarkMode: boolean;
+    };
+    namespace methods {
+        function darkModeClick(): void;
     }
+    function mounted(): void;
 }
 export default _default;

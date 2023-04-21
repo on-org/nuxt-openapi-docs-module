@@ -4,13 +4,13 @@
       :is="isCb ? 'h3' : 'h2'"
       :id="`${hPrefix}request-body`"
     >
-      {{ $openapidoc.getLocaleText(currentLocale, 'Request body') }}
+      {{ $openapidoc.getLocaleText('openapidoc.request_body') }}
     </component>
     <div
       v-if="requestBody.required"
       class="oapi-req-body__required"
     >
-      {{ $openapidoc.getLocaleText(currentLocale, 'Required') }}
+      {{ $openapidoc.getLocaleText('openapidoc.required') }}
     </div>
     <div
       v-if="requestBody.description"

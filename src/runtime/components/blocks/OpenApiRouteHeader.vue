@@ -15,7 +15,7 @@
       class="oapi-route-header__deprecated"
       role="alert"
     >
-      <span>{{ $openapidoc.getLocaleText(currentLocale, 'Deprecated') }}</span>
+      <span>{{ $openapidoc.getLocaleText('openapidoc.deprecated') }}</span>
     </div>
     <div class="oapi-route-header__summary">
       {{ summary }}
