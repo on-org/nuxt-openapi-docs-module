@@ -45,7 +45,7 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     [
-      'nuxt-openapi-docs-module',
+      '../src/module',
       {
         folder: './docs/openapi',
         name: 'Api Docs',
@@ -61,7 +61,7 @@ export default {
               // 'test-yaml.yaml': 'yaml ext',
               // 'test-json.json': 'json ext',
               "external-refs.yaml": "external-refs.yaml",
-              "external-refs2.yaml": "external-refs2.yaml",
+              // "external-refs2.yaml": "external-refs2.yaml",
               // 'https://petstore.swagger.io/v2/swagger.json': 'petstore url',
             }
           }
@@ -193,7 +193,9 @@ export default {
                 "refresh_url": "Refresh URL",
                 "scopes": "Scopes",
                 "content_type": "Content Type",
-                "variables": "Variables"
+                "variables": "Variables",
+                "scheme": "Scheme",
+                "external_docs": "External Docs"
               }
             },
             ru: {
@@ -247,7 +249,9 @@ export default {
                 "refresh_url": "URL обновления",
                 "scopes": "Области",
                 "schemas": "Схемы",
-                "variables": "Переменные"
+                "variables": "Переменные",
+                "scheme": "Scheme",
+                "external_docs": "External Docs"
               }
             },
             de: {
@@ -301,7 +305,9 @@ export default {
                 "token_url": "Token-URL",
                 "refresh_url": "Aktualisierungs-URL",
                 "scopes": "Berechtigungen",
-                "variables": "Variablen"
+                "variables": "Variablen",
+                "scheme": "Scheme",
+                "external_docs": "External Docs"
               }
             }
           }

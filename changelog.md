@@ -5,13 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.1.1]- 2023-04-21
+## [4.1.1] - 2023-04-21
 
 ### Changed
 
 - add full support i18n
 
-## [4.0.6]- 2023-04-20
+## [4.0.6] - 2023-04-20
 
 ### Changed
 
@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - test fix i18n
 
-## [4.0.1]- 2023-04-20
+## [4.0.1] - 2023-04-20
 
 ### Changed
 
@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - block title
 
-## [3.5.10]- 2023-04-19
+## [3.5.10] - 2023-04-19
 
 ### Changed
 
@@ -41,7 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - block title
 
-## [3.5.9]- 2023-04-17
+## [3.5.9] - 2023-04-17
 
 ### Changed
 
@@ -51,7 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - allOf
 
-## [3.5.8]- 2023-04-16
+## [3.5.8] - 2023-04-16
 
 ### Added
 
@@ -63,7 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - allOf
 
-## [3.5.7]- 2023-04-14
+## [3.5.7] - 2023-04-14
 
 ### Fixed
 
@@ -71,13 +71,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - info and components path
 - nuxt 3 header
 
-## [3.5.2]- 2023-04-14
+## [3.5.2] - 2023-04-14
 
 ### Fixed
 
 - nuxt locale path
 
-## [3.5.1]- 2023-04-14
+## [3.5.1] - 2023-04-14
 
 ### Added
 
@@ -87,19 +87,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 nuxt 3 auth
 
-## [3.4.3]- 2023-04-13
+## [3.4.3] - 2023-04-13
 
 ### Removed
 
 description in menu
 
-## [3.4.2]- 2023-04-13
+## [3.4.2] - 2023-04-13
 
 ### Changed
 
 - add summary to menu(if exist) 
 
-## [3.4.1]- 2023-04-13
+## [3.4.1] - 2023-04-13
 
 ### Fixed
 

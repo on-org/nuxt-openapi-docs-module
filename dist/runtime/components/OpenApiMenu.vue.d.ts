@@ -45,6 +45,7 @@ declare namespace _default {
             value: string;
             text: any;
         }[];
+        function isMultipleFiles(): boolean;
         function isLocalization(): any;
         function filesAccessor(): {
             value: string;

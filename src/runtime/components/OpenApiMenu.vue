@@ -2,6 +2,7 @@
   <div class="oapi-aside-content">
     <div class="oapi-aside-content__dds">
       <OpenApiDropdown
+        v-if="isMultipleFiles"
         class="oapi-aside-content__files"
         :options="filesAccessor"
         :placeholder="files[file]"
@@ -131,6 +132,9 @@ export default {
         value: key,
         text: this.locales[key],
       }));
+    },
+    isMultipleFiles() {
+      return Object.keys(this.files).length > 1;
     },
     isLocalization() {
       return this.$openapidoc.hasI18n() && Object.keys(this.locales).length > 1;

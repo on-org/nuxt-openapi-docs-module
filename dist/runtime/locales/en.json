@@ -48,5 +48,7 @@
   "openapidoc.scopes": "Scopes",
   "openapidoc.content_type": "Content Type",
   "openapidoc.schemas": "Schemas",
-  "openapidoc.variables": "Variables"
+  "openapidoc.external_docs": "External Docs",
+  "openapidoc.variables": "Variables",
+  "openapidoc.scheme": "Scheme"
 }

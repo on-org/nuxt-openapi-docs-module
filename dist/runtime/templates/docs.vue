@@ -14,13 +14,13 @@
 <script>
 <% if (options.isNuxt3 ?? false) {
   print('import {useRoute} from "#app";');
-
 } %>
 
 const isNuxt3 = <%= options.isNuxt3 ?? false %>;
 export default {
   name: 'AppDocs',
   nuxtI18n: {
+    // @ignore
     locales: <%= JSON.stringify(Object.keys(options.locales)) %>,
   },
   layout: `<%= options.layoutName %>`,
@@ -30,13 +30,13 @@ export default {
   head() {
     if (this.isInfo) {
       return {
-        title: `[${this.file}] - Info Docs`,
+        title: '[' +this.file + '] - ' + 'Info Docs',
         description: '',
       };
     }
     if (this.isComponents) {
       return {
-        title: `[${this.file}] - Components Docs`,
+        title: '[' +this.file + '] - ' + 'Components Docs',
         description: '',
       };
     }
@@ -59,7 +59,8 @@ export default {
       return {
         type: route.params.type ?? route.meta.type,
         path: route.params.path ?? route.meta.path,
-        url: route.params.url ?? route.meta.url
+        url: route.params.url ?? route.meta.url,
+        file: route.params.file ?? route.meta.file,
       }
     }
   },
@@ -69,6 +70,7 @@ export default {
       this.type = ctx.route.params.type ?? ctx.route.meta[0].type;
       this.path = ctx.route.params.path ?? ctx.route.meta[0].path;
       this.url = ctx.route.params.url ?? ctx.route.meta[0].url;
+      this.file = ctx.route.params.file ?? ctx.route.meta[0].file;
     } catch (e) {
       console.error(e)
       console.error(ctx.route)
@@ -80,7 +82,7 @@ export default {
       layout: `<%= options.layoutName %>`,
       options: <%= JSON.stringify(options) %>,
       path_doc: '<%= options.path %>',
-      file: '<%= options.fileName %>',
+      // file: '<%= options.fileName %>',
       // currentLocale: 'en',
       // type: '',
       // path: '',

@@ -8,6 +8,7 @@ node_modules
 .temp
 .tmp
 .cache
+.sass-cache
 
 # Yarn
 **/.yarn/cache
