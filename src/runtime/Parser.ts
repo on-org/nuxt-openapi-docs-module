@@ -97,8 +97,8 @@ export default class Parser {
     if(!this.spec.tags) {
       this.spec.tags = []
     }
-    this.spec.tags.reduce((acc: {[key: string]: any}, tag: { name: string }) => {
-      acc[tag.name] = tag;
+    this.spec.tags = this.spec.tags.reduce((acc: {[key: string]: any}, tag: { name: string }) => {
+      acc[tag.name.toString().toLowerCase()] = tag;
       return acc;
     }, {});
   }
@@ -263,6 +263,7 @@ export default class Parser {
   private processCustomPaths(custom: any) {
     const pathsByTags: {[key: string]: PathByTag} = {};
     if (Object.keys(custom).length) {
+
       pathsByTags['custom'] = {
         name: custom.name ?? 'Custom',
         description: custom.description ?? '',
@@ -319,7 +320,7 @@ export default class Parser {
           if (method === 'parameters') return;
           if (method === 'servers') return;
           if (!pathsByTags[tag]) {
-            const tagInfo = openapi_item.tags[tag] ?? {}
+            const tagInfo = this.spec.tags[tag.toString().toLowerCase()] ?? {}
 
             const item: PathByTag = {
               name: tagInfo.name ?? tag,
