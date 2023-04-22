@@ -14,8 +14,10 @@
 
 <script>
 <% if (options.isNuxt3 ?? false) {
-  print('import {useRoute} from "#app";');
+  print('import {useRoute, useNuxtApp} from "#app";');
 } %>
+
+const options = <%= JSON.stringify(options) %>;
 
 const isNuxt3 = <%= options.isNuxt3 ?? false %>;
 export default {
@@ -57,6 +59,10 @@ export default {
   setup() {
     if(isNuxt3) {
       const route = useRoute()
+      const { $openapidocRef } = useNuxtApp()
+
+      $openapidocRef.setComponents(options.doc.components)
+      $openapidocRef.setDefinitions(options.doc.definitions)
       return {
         type: route.params.type ?? route.meta.type,
         path: route.params.path ?? route.meta.path,
@@ -72,6 +78,9 @@ export default {
       this.path = ctx.route.params.path ?? ctx.route.meta[0].path;
       this.url = ctx.route.params.url ?? ctx.route.meta[0].url;
       this.file = ctx.route.params.file ?? ctx.route.meta[0].file;
+
+      this.$openapidocRef.setComponents(options.doc.components)
+      this.$openapidocRef.setDefinitions(options.doc.definitions)
     } catch (e) {
       console.error(e)
       console.error(ctx.route)
@@ -81,7 +90,7 @@ export default {
   data() {
     return {
       layout: `<%= options.layoutName %>`,
-      options: <%= JSON.stringify(options) %>,
+      options: options,
       path_doc: '<%= options.path %>',
       // file: '<%= options.fileName %>',
       // currentLocale: 'en',

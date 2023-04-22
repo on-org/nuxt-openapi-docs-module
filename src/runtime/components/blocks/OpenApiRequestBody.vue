@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     tr,
-  }
+  },
 };
 </script>
 

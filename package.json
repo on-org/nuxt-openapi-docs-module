@@ -1,6 +1,6 @@
 {
   "name": "nuxt-openapi-docs-module",
-  "version": "4.1.4",
+  "version": "4.2.1",
   "description": "A plugin for Nuxt.js to generate pages from OpenAPI specifications",
   "homepage": "https://github.com/on-org/nuxt-openapi-docs-module#readme",
   "keywords": [
@@ -74,6 +74,7 @@
     "@nuxt/test-utils": "^3.4.1",
     "@nuxt/types": "^2.16.3",
     "@types/js-yaml": "^4.0.5",
+    "@types/json-schema-merge-allof": "^0.6.1",
     "@types/lodash.template": "^4.5.1",
     "@types/marked": "^4.0.8",
     "@types/sync-fetch": "^0.4.0",

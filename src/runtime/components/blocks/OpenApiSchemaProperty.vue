@@ -229,7 +229,7 @@
 </template>
 
 <script>
-import { resolveAllOf, tr } from '../helpers'
+import { tr } from '../helpers'
 import OpenApiExpandIcon from '../icons/OpenApiExpandIcon.vue'
 import OpenApiSchemaSubObject from './OpenApiSchemaSubObject.vue'
 
@@ -269,7 +269,7 @@ export default {
   },
   computed: {
     resolvedSchema() {
-      return resolveAllOf(this.schema);
+      return this.schema;
     },
     isPlainArray() {
       if (!this.resolvedSchema) return false;

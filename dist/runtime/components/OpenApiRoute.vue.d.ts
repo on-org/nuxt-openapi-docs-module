@@ -76,6 +76,7 @@ declare namespace _default {
         params: never[];
     };
     namespace computed {
+        function resolvedSchema(): any;
         function routeInfo(): any;
     }
     function mounted(): void;

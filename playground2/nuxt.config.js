@@ -54,6 +54,7 @@ export default {
           if(process.env.NODE_ENV !== 'production') {
             return {
               'petstore_extended': 'Petstore Extended Api',
+              "post-nobody": "post-nobody",
               'localization': 'Localization',
               'page': 'Custom Page',
               "array-and-object-nesting": "array-and-object-nesting",

@@ -16,7 +16,6 @@
 </template>
 
 <script>
-import { resolveAllOf } from '../helpers'
 import OpenApiSchemaProperty from './OpenApiSchemaProperty.vue'
 
 export default {
@@ -38,7 +37,7 @@ export default {
   },
   computed: {
     resolvedSchema() {
-      return resolveAllOf(this.schema);
+      return this.$openapidocRef.repReplace(this.schema)
     },
     requiredProps() {
       if (this.resolvedSchema.required && Array.isArray(this.resolvedSchema.required)) {

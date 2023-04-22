@@ -142,14 +142,14 @@ class Parser {
   }
   refReplace(obj) {
     if (Array.isArray(obj)) {
-      return obj.map((val) => this.refReplace(val));
+      return obj.map((val) => val);
     } else if (typeof obj === "object" && obj !== null) {
       return Object.entries(obj).reduce((acc, [key, value]) => {
         if (key === "$ref" && typeof value === "string") {
           if (!value.startsWith("#")) {
             return obj = this.refFileLoader(value);
           }
-          return obj = this.refLoader(value);
+          return obj = value;
         } else {
           acc[key] = this.refReplace(value);
         }

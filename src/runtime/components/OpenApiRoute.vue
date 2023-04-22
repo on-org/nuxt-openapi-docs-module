@@ -3,17 +3,17 @@
     <OpenApiRouteHeader
       :path="url"
       :method="method"
-      :tags="route.tags"
+      :tags="resolvedSchema.tags"
       :summary="tr(route, 'summary', currentLocale)"
       :description="tr(route, 'description', currentLocale)"
       :deprecated="route.deprecated"
       :current-locale="currentLocale"
     />
 
-    <div v-if="route.servers" class="oapi-route__servers">
+    <div v-if="resolvedSchema.servers" class="oapi-route__servers">
       <h2>{{ $openapidoc.getLocaleText('openapidoc.servers') }}</h2>
       <OpenApiServer
-        v-for="routeServer in route.servers"
+        v-for="routeServer in resolvedSchema.servers"
         :key="routeServer.url"
         :server="routeServer"
         :current-locale="currentLocale"
@@ -31,16 +31,16 @@
     </div>
 
     <OpenApiSecurity
-      v-if="route.security"
-      :security="route.security"
+      v-if="resolvedSchema.security"
+      :security="resolvedSchema.security"
       :path_doc="path_doc"
       :file="file"
       :current-locale="currentLocale"
     />
 
     <OpenApiParameters
-      v-if="route.parameters"
-      :parameters="route.parameters"
+      v-if="resolvedSchema.parameters"
+      :parameters="resolvedSchema.parameters"
       :current-locale="currentLocale"
       :components="components"
     />
@@ -54,15 +54,15 @@
     />
 
     <OpenApiRequestBody
-      v-if="route.requestBody"
-      :request-body="route.requestBody"
+      v-if="resolvedSchema.requestBody"
+      :request-body="resolvedSchema.requestBody"
       :current-locale="currentLocale"
       :components="components"
     />
 
     <OpenApiResponses
-      v-if="route.responses"
-      :responses="route.responses"
+      v-if="resolvedSchema.responses"
+      :responses="resolvedSchema.responses"
       :current-locale="currentLocale"
       :components="components"
     />
@@ -81,14 +81,14 @@
     </client-only>
 
     <OpenApiExamples
-      v-if="route.examples"
-      :examples="route.examples"
+      v-if="resolvedSchema.examples"
+      :examples="resolvedSchema.examples"
       :current-locale="currentLocale"
     />
 
     <OpenApiCallbacks
-      v-if="route.callbacks"
-      :callbacks="route.callbacks"
+      v-if="resolvedSchema.callbacks"
+      :callbacks="resolvedSchema.callbacks"
       :server="server"
       :current-locale="currentLocale"
       :components="components"
@@ -175,6 +175,9 @@ export default {
     }
   },
   computed: {
+    resolvedSchema() {
+      return this.$openapidocRef.repReplace(this.route)
+    },
     routeInfo() {
       return this.$openapidoc.getRouteInfo(this.file, this.url, this.method)
     },
@@ -187,9 +190,9 @@ export default {
     genParamsToSimple() {
       this.params = [];
 
-      if (this.route.requestBody && Object.keys(this.route.requestBody).length) {
-        const pos = Object.keys(this.route.requestBody)[0];
-        const req = this.route.requestBody[pos];
+      if (this.resolvedSchema.requestBody && Object.keys(this.resolvedSchema.requestBody).length) {
+        const pos = Object.keys(this.resolvedSchema.requestBody)[0];
+        const req = this.resolvedSchema.requestBody[pos];
 
         if (req && Object.keys(req).length) {
           this.mimeType = Object.keys(req)[0];
@@ -262,8 +265,8 @@ export default {
         }
       }
 
-      for (const i in this.route.parameters) {
-        const param = this.route.parameters[i];
+      for (const i in this.resolvedSchema.parameters) {
+        const param = this.resolvedSchema.parameters[i];
 
         const p_name = param.name ?? '';
         const p_in = param.in ?? '';

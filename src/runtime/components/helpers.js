@@ -47,15 +47,3 @@ export function getSchemaValsFromPath(ref) {
 
     return {type, path, name};
 }
-
-export function resolveAllOf(schema) {
-  if (typeof schema !== 'object' || !Array.isArray(schema.allOf)) return schema;
-  const originalRef = schema.$ref;
-  const result = mergeJsonSchema(schema);
-  if (originalRef) {
-    result.$ref = originalRef;
-  } else if (result.$ref) {
-    delete result.$ref;
-  }
-  return result;
-}

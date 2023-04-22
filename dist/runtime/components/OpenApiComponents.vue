@@ -144,16 +144,9 @@
 </template>
 
 <script>
-import OpenApiExampleObject from './blocks/OpenApiExampleObject.vue'
-import OpenApiMediaTypes from './blocks/OpenApiMediaTypes.vue'
-import OpenApiObjectModel from './blocks/OpenApiObjectModel.vue'
-import OpenApiParameter from './blocks/OpenApiParameter.vue'
-import OpenApiResponse from './blocks/OpenApiResponse.vue'
-import OpenApiSecurityScheme from './blocks/OpenApiSecurityScheme.vue'
 import { tr } from './helpers'
 
 export default {
-  components: { OpenApiParameter, OpenApiResponse, OpenApiSecurityScheme, OpenApiMediaTypes, OpenApiExampleObject, OpenApiObjectModel },
   props: {
     components: {
       type: Object,
