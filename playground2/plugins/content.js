@@ -7,7 +7,7 @@ const ContentPlugin = (context, inject) => {
   })
 
   context.$openapidoc.setRouteInfo((file, url, method) => {
-    if(file === 'petstore_extended' && url === 'pet') {
+    if(file === 'petstore_extended' && url === '/pet') {
       return "<b>your APIKEY:</b> aaaaaaaa";
     }
     return null;

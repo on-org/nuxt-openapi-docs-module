@@ -20,14 +20,11 @@
       />
     </div>
 
-    <div
-      v-if="routeInfo"
-      class="oapi-doc-info"
-    >
+    <div v-if="routeInfo">
       <h2>
-        {{ $openapidoc.getLocaleText('openapidoc.info') }}:
+        {{ $openapidoc.getLocaleText('openapidoc.info') }}
       </h2>
-      <div v-html="routeInfo" />
+      <div class="oapi-doc-info" v-html="routeInfo" />
     </div>
 
     <OpenApiSecurity
@@ -384,3 +381,11 @@ export default {
   }
 };
 </script>
+<style>
+.oapi-doc-info {
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  background: #eafffd;
+  padding: 8px 16px;
+}
+</style>
