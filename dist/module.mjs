@@ -409,6 +409,19 @@ const module = defineNuxtModule({
             path: "components"
           }
         });
+        pages.push({
+          name: `openapi-${localoptions.path}/${localoptions.fileName}/auth`,
+          path: `/${localoptions.path}/${localoptions.fileName}/auth`,
+          // @ts-ignore
+          component: path,
+          file: path,
+          meta: {
+            nuxtI18n: false,
+            file: localoptions.fileName,
+            type: "get",
+            path: "auth"
+          }
+        });
         for (let tag in pathsByTags) {
           if (tag === "custom")
             continue;

@@ -41,6 +41,15 @@
       </li>
       <li>
         <nuxt-link
+          :to="getRoute('auth')"
+          class="oapi-menu-item"
+          active-class="oapi-menu-item--is-active"
+        >
+          {{ $openapidoc.getLocaleText('openapidoc.auth') }}
+        </nuxt-link>
+      </li>
+      <li>
+        <nuxt-link
           :to="getRoute('components')"
           class="oapi-menu-item"
           active-class="oapi-menu-item--is-active"
@@ -48,6 +57,7 @@
           {{ $openapidoc.getLocaleText('openapidoc.components') }}
         </nuxt-link>
       </li>
+
       <MainLeftMenuSubMenu
         v-for="(sub_routes, tag) in routes"
         :key="tag"
