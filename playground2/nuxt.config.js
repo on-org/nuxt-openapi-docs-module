@@ -195,7 +195,8 @@ export default {
                 "content_type": "Content Type",
                 "variables": "Variables",
                 "scheme": "Scheme",
-                "external_docs": "External Docs"
+                "external_docs": "External Docs",
+                "auth": "Authorization"
               }
             },
             ru: {
@@ -251,7 +252,8 @@ export default {
                 "schemas": "Схемы",
                 "variables": "Переменные",
                 "scheme": "Scheme",
-                "external_docs": "External Docs"
+                "external_docs": "External Docs",
+                "auth": "Authorization"
               }
             },
             de: {
@@ -307,7 +309,8 @@ export default {
                 "scopes": "Berechtigungen",
                 "variables": "Variablen",
                 "scheme": "Scheme",
-                "external_docs": "External Docs"
+                "external_docs": "External Docs",
+                "auth": "Authorization"
               }
             }
           }

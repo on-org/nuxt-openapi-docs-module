@@ -2,6 +2,7 @@
   <% if (options.isNuxt3 ?? false) {print('<NuxtLayout :name="layout">');} %>
     <div>
       <OpenApiInfo v-if="isInfo" :info="doc.info" :servers="doc.servers" :current-locale="currentLocale"></OpenApiInfo>
+      <OpenApiAuth v-else-if="isAuth" :components="doc.components" :current-locale="currentLocale"></OpenApiAuth>
       <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="currentLocale"></OpenApiComponents>
       <OpenApiRoute v-else-if="activeRoute" :route="activeRoute" :current-locale="currentLocale" :method="type" :components="doc.components" :url="url" :path_doc="path_doc" :file="file" :server="server" :sub-params="subParams" />
       <OpenApiRoute v-else-if="activeWebhook" :route="activeWebhook" :current-locale="currentLocale" :method="type" :components="doc.components" :url="url" :path_doc="path_doc" :file="file" :server="server" :sub-params="subParams" />
@@ -128,6 +129,9 @@ export default {
     },
     isInfo() {
       return this.path === 'info'
+    },
+    isAuth() {
+      return this.path === 'auth'
     },
     isComponents() {
       return this.path === 'components'

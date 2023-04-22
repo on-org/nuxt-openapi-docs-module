@@ -50,5 +50,6 @@
   "openapidoc.schemas": "Schemas",
   "openapidoc.external_docs": "External Docs",
   "openapidoc.variables": "Variables",
-  "openapidoc.scheme": "Scheme"
+  "openapidoc.scheme": "Scheme",
+  "openapidoc.auth": "Authorization"
 }
