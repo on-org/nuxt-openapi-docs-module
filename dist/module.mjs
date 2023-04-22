@@ -81,8 +81,8 @@ class Parser {
     if (!this.spec.tags) {
       this.spec.tags = [];
     }
-    this.spec.tags.reduce((acc, tag) => {
-      acc[tag.name] = tag;
+    this.spec.tags = this.spec.tags.reduce((acc, tag) => {
+      acc[tag.name.toString().toLowerCase()] = tag;
       return acc;
     }, {});
   }
@@ -270,7 +270,7 @@ class Parser {
           if (method === "servers")
             return;
           if (!pathsByTags[tag]) {
-            const tagInfo = openapi_item.tags[tag] ?? {};
+            const tagInfo = this.spec.tags[tag.toString().toLowerCase()] ?? {};
             const item2 = {
               name: tagInfo.name ?? tag,
               description: marked.parse(tagInfo.description ?? ""),

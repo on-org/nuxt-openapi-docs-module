@@ -254,7 +254,7 @@ export default {
                 "variables": "Переменные",
                 "scheme": "Scheme",
                 "external_docs": "External Docs",
-                "auth": "Authorization"
+                "auth": "Авторизация"
               }
             },
             de: {
