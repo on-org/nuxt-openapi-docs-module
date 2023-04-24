@@ -79,12 +79,12 @@
             <div class="oapi-menu-item__title">
               <span
                 class="oapi-menu-item-tag"
-                :class="{[`oapi-menu-item-tag--${route.type.toLowerCase()}`]: true}"
+                :class="[`oapi-menu-item-tag--${route.type.toLowerCase()}`, {'deprecated': route.deprecated}]"
                 v-if="route.type.toLowerCase() !== 'custom'"
               >
                 {{ route.type.toUpperCase() }}
               </span>
-              <span class="oapi-mono">
+              <span class="oapi-mono bold">
                 {{ route.name }}
               </span>
             </div>

@@ -5,18 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.7] - 2023-04-24
 
-## [4.2.3] - 2023-04-22
+### Fixed
 
-### Added
-
-- info style
+- bold menu
+- deprecated menu
 
 ## [4.2.4] - 2023-04-24
 
 ### Fixed
 
 - fix locale
+
+## [4.2.3] - 2023-04-22
+
+### Added
+
+- info style
 
 ## [4.2.2] - 2023-04-22
 

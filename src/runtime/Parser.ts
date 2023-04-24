@@ -47,6 +47,7 @@ interface PathByTagItem {
   path: string,
   type: string|null,
   description: string|null,
+  deprecated?: boolean|null,
   icon: string|null,
   [key:string]: any
 }
@@ -136,41 +137,6 @@ export default class Parser {
     }
 
     return value;
-  }
-
-  private refLoader(value: string) {
-    if(this.refs[value]) return this.refs[value];
-
-    const link = this.getSchemaValsFromPath(value)
-
-    if(this.lastlink === value)
-      return {
-        type: "string",
-        title: link.path,
-        description: 'recursive'
-      }
-
-    if (link.type === 'definitions') {
-      if(this.definitions[link.path]) {
-        this.lastlink = value;
-
-        const item = this.definitions[link.path];
-        item.title = link.name
-
-        return this.refs[value] = this.refReplace(item);
-      }
-    }
-
-    if(this.components[link.path] && this.components[link.path][link.name]) {
-      this.lastlink = value;
-
-      const item = this.components[link.path][link.name];
-      item.title = link.name
-
-      return this.refs[value] = this.refReplace(item);
-    }
-
-    return this.refs[value] = value
   }
 
   private refReplace(obj: {[key: string]: any}|string): any {
@@ -346,6 +312,9 @@ export default class Parser {
             icon: openapi_item['x-icon'] ?? null,
             description: openapi_item.summary ?? null,
           };
+          if (openapi_item.deprecated) {
+            item.deprecated = openapi_item.deprecated;
+          }
           for (const i in this.locales) {
             if (openapi_item[`x-summary-${i}`]) {
               item[`x-description-${i}`] = openapi_item[`x-summary-${i}`];

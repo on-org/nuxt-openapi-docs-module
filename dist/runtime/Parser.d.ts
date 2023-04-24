@@ -3,6 +3,7 @@ interface PathByTagItem {
     path: string;
     type: string | null;
     description: string | null;
+    deprecated?: boolean | null;
     icon: string | null;
     [key: string]: any;
 }
@@ -36,7 +37,6 @@ export default class Parser {
     load(fileName: string): void;
     private getSchemaValsFromPath;
     private refFileLoader;
-    private refLoader;
     private refReplace;
     private replaceMarkdown;
     getLocales(): {

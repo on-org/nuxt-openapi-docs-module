@@ -188,3 +188,11 @@ html.oapi {
 .oapi-mono {
   font-family: var(--oapi-mono);
 }
+
+.bold {
+  font-weight: bold;
+}
+
+.deprecated {
+  text-decoration: line-through;
+}

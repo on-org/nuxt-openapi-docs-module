@@ -198,6 +198,7 @@ export default {
                 "scheme": "Scheme",
                 "external_docs": "External Docs",
                 "parameters": "Parameters",
+                "style": "Style",
                 "auth": "Authorization"
               }
             },
@@ -255,6 +256,7 @@ export default {
                 "scheme": "Scheme",
                 "external_docs": "External Docs",
                 "parameters": "Parameters",
+                "style": "Style",
                 "auth": "Авторизация"
               }
             },
@@ -312,6 +314,7 @@ export default {
                 "scheme": "Scheme",
                 "external_docs": "External Docs",
                 "parameters": "Parameters",
+                "style": "Style",
                 "auth": "Authorization"
               }
             }
