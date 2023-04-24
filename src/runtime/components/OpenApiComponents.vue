@@ -96,7 +96,7 @@
 
     <div v-if="components.parameters">
       <h2 id="parameters">
-        {{ $openapidoc.getLocaleText('openapidoc.rarameters') }}
+        {{ $openapidoc.getLocaleText('openapidoc.parameters') }}
       </h2>
       <div
         v-for="(parameter, name) in components.parameters"

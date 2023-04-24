@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - info style
 
+## [4.2.4] - 2023-04-24
+
+### Fixed
+
+- fix locale
+
 ## [4.2.2] - 2023-04-22
 
 ### Fixed
