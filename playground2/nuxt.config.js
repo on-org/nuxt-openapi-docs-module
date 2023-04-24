@@ -147,7 +147,6 @@ export default {
               welcome: 'Welcome',
               openapidoc: {
                 "api_documentation": "API documentation",
-                "select_route": "Select a route from the list below:",
                 "info": "Info",
                 "components": "Components",
                 "callbacks": "Callbacks",
@@ -198,6 +197,7 @@ export default {
                 "variables": "Variables",
                 "scheme": "Scheme",
                 "external_docs": "External Docs",
+                "parameters": "Parameters",
                 "auth": "Authorization"
               }
             },
@@ -205,7 +205,6 @@ export default {
               welcome: 'Добро пожаловать!',
               openapidoc: {
                 "api_documentation": "Документация по API",
-                "select_route": "Выберите маршрут из списка ниже:",
                 "info": "Информация",
                 "components": "Компоненты",
                 "callbacks": "Обратные вызовы",
@@ -255,6 +254,7 @@ export default {
                 "variables": "Переменные",
                 "scheme": "Scheme",
                 "external_docs": "External Docs",
+                "parameters": "Parameters",
                 "auth": "Авторизация"
               }
             },
@@ -262,7 +262,6 @@ export default {
               welcome: 'Willkommen!',
               openapidoc: {
                 "api_documentation": "API-Dokumentation",
-                "select_route": "Wählen Sie eine Route aus der Liste unten aus:",
                 "info": "Info",
                 "components": "Komponenten",
                 "callbacks": "Rückrufe",
@@ -312,6 +311,7 @@ export default {
                 "variables": "Variablen",
                 "scheme": "Scheme",
                 "external_docs": "External Docs",
+                "parameters": "Parameters",
                 "auth": "Authorization"
               }
             }

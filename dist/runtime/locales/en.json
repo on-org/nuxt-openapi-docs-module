@@ -1,6 +1,5 @@
 {
   "openapidoc.api_documentation": "API documentation",
-  "openapidoc.select_route": "Select a route from the list below:",
   "openapidoc.info": "Info",
   "openapidoc.components": "Components",
   "openapidoc.callbacks": "Callbacks",
@@ -51,5 +50,6 @@
   "openapidoc.external_docs": "External Docs",
   "openapidoc.variables": "Variables",
   "openapidoc.scheme": "Scheme",
+  "openapidoc.parameters": "Parameters",
   "openapidoc.auth": "Authorization"
 }
