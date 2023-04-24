@@ -56,7 +56,6 @@ export default {
               'petstore_extended': 'Petstore Extended Api',
               // "post-nobody": "post-nobody",
               'localization': 'Localization',
-              'Onlinesim-API-UN': 'Onlinesim-API-UN.yaml',
               // 'page': 'Custom Page',
               // "array-and-object-nesting": "array-and-object-nesting",
               // 'no-access': 'no access',
