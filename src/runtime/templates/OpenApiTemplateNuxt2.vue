@@ -1,33 +1,27 @@
 <template>
-  <% if (options.isNuxt3 ?? false) {print('<NuxtLayout :name="layout">');} %>
-    <div>
-      <OpenApiInfo v-if="isInfo" :info="doc.info" :servers="doc.servers" :current-locale="currentLocale"></OpenApiInfo>
-      <OpenApiAuth v-else-if="isAuth" :components="doc.components" :current-locale="currentLocale"></OpenApiAuth>
-      <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="currentLocale"></OpenApiComponents>
-      <OpenApiRoute v-else-if="activeRoute" :route="activeRoute" :current-locale="currentLocale" :method="type" :components="doc.components" :url="url" :path_doc="path_doc" :file="file" :server="server" :sub-params="subParams" />
-      <OpenApiRoute v-else-if="activeWebhook" :route="activeWebhook" :current-locale="currentLocale" :method="type" :components="doc.components" :url="url" :path_doc="path_doc" :file="file" :server="server" :sub-params="subParams" />
-      <NotFound v-else />
-      <SearchBlock :current-locale="currentLocale" :doc="doc" :path="options.path" :file="file" />
-    </div>
-  <% if (options.isNuxt3 ?? false) {print('</NuxtLayout>');} %>
+  <div>
+    <OpenApiInfo v-if="isInfo" :info="doc.info" :servers="doc.servers" :current-locale="currentLocale"></OpenApiInfo>
+    <OpenApiAuth v-else-if="isAuth" :components="doc.components" :current-locale="currentLocale"></OpenApiAuth>
+    <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="currentLocale"></OpenApiComponents>
+    <OpenApiRoute v-else-if="activeRoute" :route="activeRoute" :current-locale="currentLocale" :method="type" :components="doc.components" :url="url" :path_doc="path_doc" :file="file" :server="server" :sub-params="subParams" />
+    <OpenApiRoute v-else-if="activeWebhook" :route="activeWebhook" :current-locale="currentLocale" :method="type" :components="doc.components" :url="url" :path_doc="path_doc" :file="file" :server="server" :sub-params="subParams" />
+    <NotFound v-else />
+    <SearchBlock :current-locale="currentLocale" :doc="doc" :path="options.path" :file="file" />
+  </div>
 </template>
 
 <script>
-<% if (options.isNuxt3 ?? false) {
-  print('import {useRoute, useNuxtApp} from "#app";');
-} %>
-
+// eslint-disable-next-line @ts-ignore
 const options = <%= JSON.stringify(options) %>;
+// eslint-disable-next-line @ts-ignore
+const routePath = '<%= options.path %>';
+// eslint-disable-next-line @ts-ignore
+const pathDoc = '<%= options.path %>';
 
-const isNuxt3 = <%= options.isNuxt3 ?? false %>;
 export default {
   name: 'AppDocs',
-  nuxtI18n: {
-    // @ignore
-    locales: <%= JSON.stringify(Object.keys(options.locales)) %>,
-  },
   layout: `<%= options.layoutName %>`,
-  transition: {
+    transition: {
     name: 'fade'
   },
   head() {
@@ -56,25 +50,6 @@ export default {
       description: description,
     };
   },
-  setup() {
-    if(isNuxt3) {
-      const route = useRoute()
-      const { $openapidocRef } = useNuxtApp()
-
-      const file = route.params.file ?? route.meta.file;
-
-      $openapidocRef.setComponents(options.doc.components)
-      $openapidocRef.setDefinitions(options.doc.definitions)
-      $openapidocRef.setDocPath('<%= options.path %>')
-      $openapidocRef.setFile(file)
-      return {
-        type: route.params.type ?? route.meta.type,
-        path: route.params.path ?? route.meta.path,
-        url: route.params.url ?? route.meta.url,
-        file: file,
-      }
-    }
-  },
   async fetch() {
     const ctx = this.$nuxt.context
     try {
@@ -85,7 +60,7 @@ export default {
 
       this.$openapidocRef.setComponents(options.doc.components)
       this.$openapidocRef.setDefinitions(options.doc.definitions)
-      this.$openapidocRef.setDocPath('<%= options.path %>')
+      this.$openapidocRef.setDocPath(routePath)
       this.$openapidocRef.setFile(this.file)
     } catch (e) {
       console.error(e)
@@ -95,11 +70,9 @@ export default {
   created() { if(this && this.$fetch) this.$fetch(); },
   data() {
     return {
-      layout: `<%= options.layoutName %>`,
       options: options,
-      path_doc: '<%= options.path %>',
-      // file: '<%= options.fileName %>',
-      // currentLocale: 'en',
+      path_doc: pathDoc,
+      // file: '',
       // type: '',
       // path: '',
     };
@@ -189,6 +162,10 @@ export default {
   },
   destroyed() {
     this.$openapidocBus.$off('downloadJsonDoc', this.downloadJson);
+  },
+  nuxtI18n: {
+    // eslint-disable-next-line @ts-ignore
+    locales: <%= JSON.stringify(Object.keys(options.locales)) %>
   },
 }
 </script>

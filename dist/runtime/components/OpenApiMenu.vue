@@ -33,7 +33,7 @@
       <li>
         <nuxt-link
           :to="getRoute('info')"
-          class="oapi-menu-item"
+          class="oapi-menu-item oapi-menu-item-head"
           active-class="oapi-menu-item--is-active"
         >
           {{ $openapidoc.getLocaleText('openapidoc.info') }}
@@ -42,7 +42,7 @@
       <li>
         <nuxt-link
           :to="getRoute('auth')"
-          class="oapi-menu-item"
+          class="oapi-menu-item oapi-menu-item-head"
           active-class="oapi-menu-item--is-active"
         >
           {{ $openapidoc.getLocaleText('openapidoc.auth') }}
@@ -51,7 +51,7 @@
       <li>
         <nuxt-link
           :to="getRoute('components')"
-          class="oapi-menu-item"
+          class="oapi-menu-item oapi-menu-item-head"
           active-class="oapi-menu-item--is-active"
         >
           {{ $openapidoc.getLocaleText('openapidoc.components') }}
@@ -237,12 +237,15 @@ export default {
 
 .oapi-menu-item {
   display: block;
-  padding: 8px 12px;
+  padding: 2px 12px;
   line-height: 22px;
   margin-bottom: 0;
   color: #6e7281;
   border-radius: 6px;
   font-weight: 600;
+}
+.oapi-menu-item-head {
+  padding: 8px 12px;
 }
 .oapi-menu-item:not(.oapi-menu-item--is-active):hover {
   color: #000;

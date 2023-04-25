@@ -1,4 +1,4 @@
-import { defineNuxtModule, createResolver, addComponentsDir, isNuxt3, isNuxt2, addLayout, extendPages, addPlugin } from '@nuxt/kit';
+import { defineNuxtModule, createResolver, addComponentsDir, isNuxt2, addLayout, extendPages, addPlugin, isNuxt3 } from '@nuxt/kit';
 import { kebabCase } from 'scule';
 import { join, dirname, basename, extname, resolve } from 'path';
 import { marked } from 'marked';
@@ -334,8 +334,6 @@ const module = defineNuxtModule({
       // prefix: 'OA',
       extensions: ["vue"]
     });
-    options.isNuxt3 = isNuxt3(nuxt);
-    options.isNuxt2 = isNuxt2(nuxt);
     const filesClean = filesCleanup(options.files());
     const files = options.files();
     for (let filePath in files) {
@@ -351,15 +349,17 @@ const module = defineNuxtModule({
       localoptions.pathsByTags = parser.getPaths();
       localoptions.fileName = parser.getFilename();
       localoptions.layoutName = kebabCase(`apidocs-layout-${localoptions.fileName}`).replace(/["']/g, "");
+      const layoutName = isNuxt2(nuxt) ? "OpenApiLayoutNuxt2.vue" : "OpenApiLayoutNuxt3.vue";
       addLayout({
-        src: resolver.resolve("./runtime/layout/docs.vue"),
+        src: resolver.resolve(`./runtime/layout/${layoutName}`),
         filename: `apidocs.layout.${localoptions.fileName}.vue`,
         // @ts-ignore
         name: localoptions.layoutName,
         write: true,
         options: { ...localoptions, files: filesClean }
       }, localoptions.layoutName);
-      const srcContents = await promises.readFile(resolver.resolve("./runtime/templates/docs.vue"), "utf-8");
+      const templateName = isNuxt2(nuxt) ? "OpenApiTemplateNuxt2.vue" : "OpenApiTemplateNuxt3.vue";
+      const srcContents = await promises.readFile(resolver.resolve(`./runtime/templates/${templateName}`), "utf-8");
       const template = lodashTemplate(srcContents, {})({ options: { ...localoptions, files: filesClean } });
       if (!existsSync(join(__dirname, ".cache"))) {
         mkdirSync(join(__dirname, ".cache"));

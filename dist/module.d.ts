@@ -11,8 +11,6 @@ interface ModuleOptions {
     doc?: {
         [key: string]: any;
     };
-    isNuxt3?: boolean;
-    isNuxt2?: boolean;
 }
 declare const _default: _nuxt_schema.NuxtModule<ModuleOptions>;
 

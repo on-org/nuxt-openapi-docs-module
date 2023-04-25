@@ -4,6 +4,7 @@
     :class="{'oapi-route-header--deprecated': deprecated}"
   >
     <h1 class="oapi-route-header__title">
+
       <span
         class="oapi-method-tag"
         :class="`oapi-method-tag--${method}`"
@@ -15,8 +16,8 @@
       class="oapi-route-header__deprecated"
       role="alert"
     >
-      <span>{{ $openapidoc.getLocaleText('openapidoc.deprecated') }}</span>
-    </div>
+        <span>{{ $openapidoc.getLocaleText('openapidoc.deprecated') }}</span>
+      </div>
     <div class="oapi-route-header__summary">
       {{ summary }}
     </div>
@@ -98,8 +99,8 @@ export default {
 .oapi-route-header__deprecated span {
   display: inline-block;
   padding: 8px 16px;
-  background: #e1e1e1;
-  color: #666;
+  background: #f84545;
+  color: #fff;
   border-radius: 4px;
   font-weight: 600;
 }

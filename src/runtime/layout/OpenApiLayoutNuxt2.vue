@@ -11,20 +11,19 @@
           :current-locale="currentLocale"
           :files="files"
           :locales="locales"
-          :file="file"
+          :file="fileName"
           :path="path_doc"
         />
       </template>
     </OpenApiMainHeader>
     <div class="oapi-layout__body">
       <OpenApiMainLeftMenu :isMenuOpen="isMenuOpen" :isMobile="isMobile">
-        <OpenApiMenu :routes="pathsByTags" :current-locale="currentLocale" :file="file" :path="path_doc" :files="files" :locales="locales" :locales-reload="localesReload" />
+        <OpenApiMenu :routes="pathsByTags" :current-locale="currentLocale" :file="fileName" :path="path_doc" :files="files" :locales="locales" :locales-reload="localesReload" />
       </OpenApiMainLeftMenu>
 
       <OpenApiMainContent>
         <transition name="oapi-fade" tag="div">
-          <% if (options.isNuxt2) {print('<Nuxt />');} %>
-          <% if (options.isNuxt3) {print(' <div><slot></slot></div>');} %>
+          <Nuxt />
         </transition>
         <template #footer>
           <footer class="oapi-footer" v-if="footer" v-html="footer"></footer>
@@ -35,13 +34,20 @@
 </template>
 
 <script>
-<% if (options.isNuxt3 ?? false) {
-  print('import {useNuxtApp, showError, useRoute, useHead} from "#app";');
-} %>
-
-const isNuxt3 = <%= options.isNuxt3 ?? false %>;
-const isNuxt2 = <%= options.isNuxt2 ?? false %>;
+// eslint-disable-next-line @ts-ignore
 const localesReload = <%= options.localesReload ?? false %>;
+// eslint-disable-next-line @ts-ignore
+const pathsByTags = <%= JSON.stringify(options.pathsByTags) %>;
+// eslint-disable-next-line @ts-ignore
+const files = <%= JSON.stringify(options.files) %>;
+// eslint-disable-next-line @ts-ignore
+const path_doc = '<%= options.path %>';
+// eslint-disable-next-line @ts-ignore
+const locales = <%= JSON.stringify(options.locales) %>;
+// eslint-disable-next-line @ts-ignore
+const name = '<%= options.name %>';
+// eslint-disable-next-line @ts-ignore
+const fileName = '<%= options.fileName %>';
 
 function genHead() {
   return {
@@ -51,25 +57,9 @@ function genHead() {
 
 export default {
   name: 'openapi-docs',
-  setup() {
-    if(isNuxt3) {
-      const file = '<%= options.fileName %>';
-      const { $openapidoc } = useNuxtApp()
-      useHead(genHead());
-      if(!$openapidoc.hasAccess(file)) {
-        showError({
-          statusCode: 404,
-          message: 'page not found',
-        })
-      }
-      // @ts-ignore
-      const route = useRoute()
-      return {}
-    }
-  },
   async fetch() {
     try {
-      if(!this.$openapidoc.hasAccess(this.file)) {
+      if(!this.$openapidoc.hasAccess(this.fileName)) {
         this.$nuxt.context.error({ status: 404, message: 'page not found' });
       }
     } catch (e) {
@@ -91,16 +81,15 @@ export default {
   },
   data() {
     return {
-      pathsByTags: <%= JSON.stringify(options.pathsByTags) %>,
-      files: <%= JSON.stringify(options.files) %>,
-      path_doc: '<%= options.path %>',
-      // @ts-ignore
-      locales: <%= JSON.stringify(options.locales) %>,
-      name: '<%= options.name %>',
+      pathsByTags: pathsByTags,
+      files: files,
+      path_doc: path_doc,
+      locales: locales,
+      name: name,
       isMenuOpen: true,
       isMobile: false,
       localesReload: localesReload,
-      file: '<%= options.fileName %>',
+      fileName: fileName,
     };
   },
   head() {
@@ -116,12 +105,6 @@ export default {
     logo() {
       return this.$openapidoc.getLogo().replace(':name', this.name)
     },
-    isVue2(){
-      return isNuxt2
-    },
-    isVue3(){
-      return isNuxt3
-    }
   },
   methods: {
     toggleMenu() {
@@ -183,8 +166,8 @@ export default {
   }
 
   .doc-info a:hover {
-      color: #2c5282;
-      border-bottom: 1px solid #2c5282;
+    color: #2c5282;
+    border-bottom: 1px solid #2c5282;
   }
 
   .doc-info img {
