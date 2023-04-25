@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import {tr} from "../helpers";
 import OpenApiExampleObject from './OpenApiExampleObject.vue'
 
 export default {
@@ -34,9 +33,6 @@ export default {
       required: true,
     },
   },
-  methods: {
-    tr
-  }
 };
 </script>
 

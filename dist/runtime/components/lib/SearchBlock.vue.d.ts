@@ -34,10 +34,8 @@ declare namespace _default {
     function mounted(): void;
     function beforeUnmount(): void;
     namespace methods {
-        export { tr };
-        export function toggleSearch(): void;
-        export function searchInPaths(query: any): void;
+        function toggleSearch(): void;
+        function searchInPaths(query: any): void;
     }
 }
 export default _default;
-import { tr } from "../helpers";

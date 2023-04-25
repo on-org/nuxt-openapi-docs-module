@@ -30,14 +30,12 @@ declare namespace _default {
     }
     const computed: {};
     namespace methods {
-        export { tr };
-        export function assignAllOf(allOf: any): {
+        function assignAllOf(allOf: any): {
             properties: any;
         };
-        export function assign(allOf: any): {
+        function assign(allOf: any): {
             properties: any;
         };
     }
 }
 export default _default;
-import { tr } from "../helpers";

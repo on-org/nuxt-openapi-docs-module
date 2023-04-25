@@ -30,9 +30,5 @@ declare namespace _default {
     namespace computed {
         function valueFormatted(): string | null;
     }
-    namespace methods {
-        export { tr };
-    }
 }
 export default _default;
-import { tr } from "../helpers";

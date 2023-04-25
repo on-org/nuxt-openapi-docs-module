@@ -9,6 +9,7 @@ info:
   x-title-ru: Зоомагазин
   x-title-de: Tierhandlung
   version: 1.0.0
+  x-locales-reload: true
   x-locales:
     en: English
     ru: Русский
@@ -19,12 +20,16 @@ info:
     Petstore illustrate the typical design decisions and tradeoffs a developer makes when building an enterprise application.
     The demo shows how to document REST API services **OpenAPI format** and is based on
     [Petstore sample](http://petstore.swagger.io/)
+
+    - [Auth](/docs/localization/auth)
   x-description-ru: >
     # Введение
 
     Petstore иллюстрирует типичные дизайнерские решения и компромиссы, на которые разработчик идет при создании корпоративного приложения.
     Демонстрация показывает, как документировать службы REST API в формате **OpenAPI**, и основана на
     [Образец зоомагазина](http://petstore.swagger.io/)
+
+    - [Auth](/ru/docs/localization/auth)
   x-description-de: >
     # Einführung
 

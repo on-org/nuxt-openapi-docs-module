@@ -27,9 +27,5 @@ declare namespace _default {
             export { required_3 as required };
         }
     }
-    namespace methods {
-        export { tr };
-    }
 }
 export default _default;
-import { tr } from "../helpers";

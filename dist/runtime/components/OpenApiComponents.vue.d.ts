@@ -11,9 +11,5 @@ declare namespace _default {
             export const required: boolean;
         }
     }
-    namespace methods {
-        export { tr };
-    }
 }
 export default _default;
-import { tr } from "./helpers";

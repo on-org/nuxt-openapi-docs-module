@@ -36,7 +36,7 @@
 
 
 <script>
-import {getTagColor, tr} from "../helpers";
+import {getTagColor} from "../helpers";
 
 export default {
   props: {
@@ -67,7 +67,7 @@ export default {
     },
   },
   methods: {
-    tr, getTagColor
+    getTagColor
   }
 };
 </script>

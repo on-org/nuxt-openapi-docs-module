@@ -38,6 +38,12 @@ declare namespace _default {
             const required_5: boolean;
             export { required_5 as required };
         }
+        namespace localesReload {
+            const type_6: BooleanConstructor;
+            export { type_6 as type };
+            const required_6: boolean;
+            export { required_6 as required };
+        }
     }
     namespace computed {
         function currentRouteName(): any;
@@ -53,9 +59,9 @@ declare namespace _default {
         }[];
     }
     namespace methods {
-        export { tr };
         export { getTagColor };
         export function genUrl(path: any): string;
+        export function onLocalesReload(e: any): void;
         export function getRoute(path: any): {
             name: string;
             meta: {
@@ -94,5 +100,4 @@ declare namespace _default {
     }
 }
 export default _default;
-import { tr } from "./helpers";
 import { getTagColor } from "./helpers";

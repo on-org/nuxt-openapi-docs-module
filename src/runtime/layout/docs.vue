@@ -18,7 +18,7 @@
     </OpenApiMainHeader>
     <div class="oapi-layout__body">
       <OpenApiMainLeftMenu :isMenuOpen="isMenuOpen" :isMobile="isMobile">
-        <OpenApiMenu :routes="pathsByTags" :current-locale="currentLocale" :file="file" :path="path_doc" :files="files" :locales="locales" />
+        <OpenApiMenu :routes="pathsByTags" :current-locale="currentLocale" :file="file" :path="path_doc" :files="files" :locales="locales" :locales-reload="localesReload" />
       </OpenApiMainLeftMenu>
 
       <OpenApiMainContent>
@@ -41,6 +41,7 @@
 
 const isNuxt3 = <%= options.isNuxt3 ?? false %>;
 const isNuxt2 = <%= options.isNuxt2 ?? false %>;
+const localesReload = <%= options.localesReload ?? false %>;
 
 function genHead() {
   return {
@@ -98,6 +99,7 @@ export default {
       name: '<%= options.name %>',
       isMenuOpen: true,
       isMobile: false,
+      localesReload: localesReload,
       file: '<%= options.fileName %>',
     };
   },

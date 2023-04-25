@@ -6,7 +6,7 @@
     <div
       v-if="response.description && !lite"
       class="oapi-response__description"
-      v-html="tr(response, 'description', currentLocale)"
+      v-html="$openapidocRef.tr(response, 'description', currentLocale)"
     />
     <div
       v-if="response.headers"
@@ -64,7 +64,6 @@
 </template>
 
 <script>
-import { tr } from '../helpers'
 import OpenApiMediaTypes from './OpenApiMediaTypes.vue'
 import OpenApiObjectModel from './OpenApiObjectModel.vue'
 import OpenApiParameter from './OpenApiParameter.vue'
@@ -101,9 +100,6 @@ export default {
         && !this.response.schema;
     }
   },
-  created () {
-  },
-  methods: { tr },
 }
 </script>
 

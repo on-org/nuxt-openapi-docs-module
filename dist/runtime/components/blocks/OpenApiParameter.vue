@@ -25,7 +25,7 @@
     <div
       v-if="data.description && !hideDescription"
       class="oapi-res-param__description"
-      v-html="tr(data, 'description', currentLocale)"
+      v-html="$openapidocRef.tr(data, 'description', currentLocale)"
     />
 
     <div
@@ -65,12 +65,12 @@
           v-if="example.summary"
           class="oapi-res-param-example__summary"
         >
-          {{ tr(example, 'summary', currentLocale) }}
+          {{ $openapidocRef.tr(example, 'summary', currentLocale) }}
         </div>
         <div
           v-if="example.description"
           class="oapi-res-param-example__description"
-          v-html="tr(example, 'description', currentLocale)"
+          v-html="$openapidocRef.tr(example, 'description', currentLocale)"
         />
         <div
           v-if="example.value"
@@ -108,7 +108,6 @@
 </template>
 
 <script>
-import { tr } from '../helpers'
 import OpenApiMediaTypes from './OpenApiMediaTypes.vue'
 import OpenApiObjectModel from './OpenApiObjectModel.vue'
 
@@ -159,7 +158,6 @@ export default {
       return this.data.example.toString();
     },
   },
-  methods: { tr },
 }
 </script>
 

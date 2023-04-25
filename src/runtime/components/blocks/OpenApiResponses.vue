@@ -21,7 +21,7 @@
       </component>
       <div
         class="oapi-responses-item__description"
-        v-html="tr(response, 'description', currentLocale)"
+        v-html="$openapidocRef.tr(response, 'description', currentLocale)"
       />
       <OpenApiResponse
         lite
@@ -33,7 +33,6 @@
 </template>
 
 <script>
-import {tr} from "../helpers";
 import OpenApiResponse from './OpenApiResponse.vue'
 
 export default {
@@ -58,9 +57,6 @@ export default {
       default: () => ({}),
     },
   },
-  methods: {
-    tr
-  }
 };
 </script>
 

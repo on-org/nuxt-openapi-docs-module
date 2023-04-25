@@ -22,10 +22,5 @@ declare namespace _default {
     namespace computed {
         function isEmpty(): any;
     }
-    function created(): void;
-    namespace methods {
-        export { tr };
-    }
 }
 export default _default;
-import { tr } from "../helpers";

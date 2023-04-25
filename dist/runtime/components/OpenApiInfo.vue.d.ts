@@ -16,9 +16,7 @@ declare namespace _default {
         }
     }
     namespace methods {
-        export { tr };
-        export function getUrl(server: any): any;
+        function getUrl(server: any): any;
     }
 }
 export default _default;
-import { tr } from "./helpers";

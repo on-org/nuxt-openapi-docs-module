@@ -9,7 +9,7 @@
     <div
       v-if="server.description"
       class="oapi-server__description"
-      v-html="tr(server, 'description', currentLocale)"
+      v-html="$openapidocRef.tr(server, 'description', currentLocale)"
     />
     <div
       v-if="server.variables && Object.keys(server.variables).length"
@@ -29,7 +29,7 @@
           <div
             v-if="varObj.description"
             class="oapi-server-var__description"
-            v-html="tr(varObj, 'description', currentLocale)"
+            v-html="$openapidocRef.tr(varObj, 'description', currentLocale)"
           />
           <div
             v-if="varObj.default"
@@ -56,8 +56,6 @@
 </template>
 
 <script>
-import { tr } from '../helpers'
-
 export default {
   name: 'OpenApiServer',
   props: {
@@ -72,8 +70,7 @@ export default {
   },
   data () {
     return {}
-  },
-  methods: { tr },
+  }
 }
 </script>
 

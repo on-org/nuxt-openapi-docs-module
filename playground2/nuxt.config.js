@@ -45,7 +45,7 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     [
-      '../src/module',
+      'nuxt-openapi-docs-module',
       {
         folder: './docs/openapi',
         name: 'Api Docs',

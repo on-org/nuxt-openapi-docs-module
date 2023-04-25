@@ -1,9 +1,13 @@
 import mergeJsonSchema from "json-schema-merge-allof";
 export default class OpenApiRefPlugin {
-  constructor() {
+  constructor(i18n) {
     this.definitions = {};
     this.components = {};
     this.refs = {};
+    this.i18n = null;
+    this.doc_path = "docs";
+    this.file = "docs";
+    this.i18n = i18n;
   }
   setDefinitions(definitions) {
     this.definitions = definitions;
@@ -94,5 +98,24 @@ export default class OpenApiRefPlugin {
       delete result.$ref;
     }
     return result;
+  }
+  setDocPath(path) {
+    this.doc_path = path;
+  }
+  setFile(file) {
+    this.file = file;
+  }
+  tr(data, param, oldLocale) {
+    let locale = "en";
+    let defaultLocale = true;
+    if (this.i18n && this.i18n.locale) {
+      locale = this.i18n.locale;
+      defaultLocale = this.i18n.locale === this.i18n.defaultLocale;
+    }
+    let result = (data[`x-${param}-${locale}`] || data[param] || "").toString();
+    if (defaultLocale) {
+      result = result.replaceAll("/:locale", "").replaceAll(":locale", "");
+    }
+    return result.replaceAll(":path", this.doc_path).replaceAll(":file", this.file).replaceAll(":locale", locale);
   }
 }

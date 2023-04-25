@@ -61,13 +61,17 @@ export default {
       const route = useRoute()
       const { $openapidocRef } = useNuxtApp()
 
+      const file = route.params.file ?? route.meta.file;
+
       $openapidocRef.setComponents(options.doc.components)
       $openapidocRef.setDefinitions(options.doc.definitions)
+      $openapidocRef.setDocPath('<%= options.path %>')
+      $openapidocRef.setFile(file)
       return {
         type: route.params.type ?? route.meta.type,
         path: route.params.path ?? route.meta.path,
         url: route.params.url ?? route.meta.url,
-        file: route.params.file ?? route.meta.file,
+        file: file,
       }
     }
   },
@@ -81,6 +85,8 @@ export default {
 
       this.$openapidocRef.setComponents(options.doc.components)
       this.$openapidocRef.setDefinitions(options.doc.definitions)
+      this.$openapidocRef.setDocPath('<%= options.path %>')
+      this.$openapidocRef.setFile(this.file)
     } catch (e) {
       console.error(e)
       console.error(ctx.route)

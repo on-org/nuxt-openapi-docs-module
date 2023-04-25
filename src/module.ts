@@ -94,6 +94,7 @@ export default defineNuxtModule<ModuleOptions>({
       parser.load(filePath)
 
       localoptions.locales = parser.getLocales();
+      localoptions.localesReload = parser.getLocalesReload();
 
       const pathsByTags = parser.getPaths()
       localoptions.doc = parser.getDoc();

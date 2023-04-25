@@ -64,8 +64,6 @@
   </div>
 </template>
 <script>
-import {tr} from "../helpers";
-
 export default {
   props: {
     currentLocale: {
@@ -106,7 +104,6 @@ export default {
     this.$openapidocBus.$off('toggleSearchDoc', this.toggleSearch);
   },
   methods: {
-    tr,
     toggleSearch() {
       this.isSearchOpen = !this.isSearchOpen;
       if (this.isSearchOpen) {
@@ -121,8 +118,8 @@ export default {
 
       if(query === '') return;
 
-      const summary = this.tr(this.doc.info, 'title', this.currentLocale).toLowerCase();
-      const description = this.tr(this.doc.info, 'description', this.currentLocale).toLowerCase();
+      const summary = this.$openapidocRef.tr(this.doc.info, 'title', this.currentLocale).toLowerCase();
+      const description = this.$openapidocRef.tr(this.doc.info, 'description', this.currentLocale).toLowerCase();
 
       const index = description.indexOf(query);
       if (index !== -1) {
@@ -150,8 +147,8 @@ export default {
           if (routePath.endsWith('/')) routePath = routePath.substring(-1);
           routePath = routePath.replace(/[/\\.?+=&{}]/gumi, '_').replace(/__+/, '_')
 
-          const summary = this.tr(obj, 'summary', this.currentLocale).toLowerCase();
-          const description = this.tr(obj, 'description', this.currentLocale).toLowerCase();
+          const summary = this.$openapidocRef.tr(obj, 'summary', this.currentLocale).toLowerCase();
+          const description = this.$openapidocRef.tr(obj, 'description', this.currentLocale).toLowerCase();
 
           let apper = null;
 

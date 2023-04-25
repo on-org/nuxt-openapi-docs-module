@@ -29,9 +29,5 @@ declare namespace _default {
         }
         export { components_1 as components };
     }
-    namespace methods {
-        export { tr };
-    }
 }
 export default _default;
-import { tr } from "../helpers";

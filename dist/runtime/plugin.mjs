@@ -5,7 +5,7 @@ import OpenApiRefPlugin from "./OpenApiRefPlugin.mjs";
 const OpenApiPlugins = (ctx, inject) => {
   const emitter = mitt();
   const openapidoc = new OpenApiPlugin(ctx.i18n);
-  const openapidocRef = new OpenApiRefPlugin();
+  const openapidocRef = new OpenApiRefPlugin(ctx.i18n);
   openapidoc.addLocale(enLang);
   ctx.app.$openapidoc = openapidoc;
   ctx.app.$openapidocRef = openapidocRef;

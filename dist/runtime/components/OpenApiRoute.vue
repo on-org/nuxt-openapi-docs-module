@@ -4,8 +4,8 @@
       :path="url"
       :method="method"
       :tags="resolvedSchema.tags"
-      :summary="tr(route, 'summary', currentLocale)"
-      :description="tr(route, 'description', currentLocale)"
+      :summary="$openapidocRef.tr(route, 'summary', currentLocale)"
+      :description="$openapidocRef.tr(route, 'description', currentLocale)"
       :deprecated="route.deprecated"
       :current-locale="currentLocale"
     />
@@ -106,7 +106,6 @@ import OpenApiResponses from './blocks/OpenApiResponses.vue'
 import OpenApiRouteHeader from './blocks/OpenApiRouteHeader.vue'
 import OpenApiSecurity from './blocks/OpenApiSecurity.vue'
 import OpenApiServer from './blocks/OpenApiServer.vue'
-import {tr} from "./helpers";
 import CodeSimples from './lib/CodeSimples.vue'
 
 export default {
@@ -183,7 +182,6 @@ export default {
     this.genParamsToSimple();
   },
   methods: {
-    tr,
     genParamsToSimple() {
       this.params = [];
 

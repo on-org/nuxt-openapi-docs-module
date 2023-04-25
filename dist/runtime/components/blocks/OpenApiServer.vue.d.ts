@@ -13,9 +13,5 @@ declare namespace _default {
         }
     }
     function data(): {};
-    namespace methods {
-        export { tr };
-    }
 }
 export default _default;
-import { tr } from "../helpers";

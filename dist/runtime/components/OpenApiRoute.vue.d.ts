@@ -81,12 +81,10 @@ declare namespace _default {
     }
     function mounted(): void;
     namespace methods {
-        export { tr };
-        export function genParamsToSimple(): void;
-        export function handleNestedArrayOrObject(property: any, propertyName: any): any;
-        export function handleNestedObject(property: any): {};
-        export function convertStringFormatToMd(format: any, name: any): any;
+        function genParamsToSimple(): void;
+        function handleNestedArrayOrObject(property: any, propertyName: any): any;
+        function handleNestedObject(property: any): {};
+        function convertStringFormatToMd(format: any, name: any): any;
     }
 }
 export default _default;
-import { tr } from "./helpers";

@@ -1,9 +1,5 @@
 import mergeJsonSchema from 'json-schema-merge-allof';
 
-export function tr(data, param, locale) {
-    return data[`x-${param}-${locale}`] || data[param] || ''
-}
-
 export function getTagColor(method) {
   switch (method.toUpperCase()) {
     case 'GET':

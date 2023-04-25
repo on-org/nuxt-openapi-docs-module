@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import {tr} from "../helpers";
 import OpenApiParameter from './OpenApiParameter.vue'
 
 export default {
@@ -36,13 +35,6 @@ export default {
       default: () => ({}),
     },
   },
-  computed: {
-
-  },
-  methods: {
-    tr,
-  },
-
 };
 </script>
 

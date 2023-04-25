@@ -65,10 +65,8 @@ declare namespace _default {
     }
     function created(): void;
     namespace methods {
-        export { tr };
-        export function getType(schema: any): any;
-        export function toggle(): void;
+        function getType(schema: any): any;
+        function toggle(): void;
     }
 }
 export default _default;
-import { tr } from "../helpers";

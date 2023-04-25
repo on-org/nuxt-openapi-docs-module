@@ -15,7 +15,7 @@
     <div
       v-if="requestBody.description"
       class="oapi-req-body__description"
-      v-html="tr(requestBody, 'description', currentLocale)"
+      v-html="$openapidocRef.tr(requestBody, 'description', currentLocale)"
     />
 
     <OpenApiMediaTypes
@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import {tr} from "../helpers";
 import OpenApiMediaTypes from './OpenApiMediaTypes.vue'
 
 export default {
@@ -51,9 +50,6 @@ export default {
       type: String,
       default: '',
     }
-  },
-  methods: {
-    tr,
   },
 };
 </script>

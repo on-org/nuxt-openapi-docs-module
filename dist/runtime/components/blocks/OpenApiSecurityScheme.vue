@@ -83,8 +83,6 @@
 </template>
 
 <script>
-import {tr} from "../helpers";
-
 export default {
   props: {
     securityScheme: {
@@ -103,9 +101,6 @@ export default {
       return str.charAt(0).toUpperCase() + str.slice(1);
     }
   },
-  methods: {
-    tr
-  }
 };
 </script>
 

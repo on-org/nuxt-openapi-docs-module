@@ -6,7 +6,7 @@ import OpenApiRefPlugin from "./OpenApiRefPlugin.mjs";
 export default defineNuxtPlugin((nuxtApp) => {
   const emitter = mitt();
   const openapidoc = new OpenApiPlugin(nuxtApp.$i18n);
-  const openapidocRef = new OpenApiRefPlugin();
+  const openapidocRef = new OpenApiRefPlugin(nuxtApp.i18n);
   openapidoc.addLocale(enLang);
   if (process.server) {
     nuxtApp.payload.openapidocRefDefinitions = openapidocRef.definitions;

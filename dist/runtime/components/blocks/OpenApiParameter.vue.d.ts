@@ -24,9 +24,5 @@ declare namespace _default {
         function flags(): string[];
         function exampleString(): any;
     }
-    namespace methods {
-        export { tr };
-    }
 }
 export default _default;
-import { tr } from "../helpers";

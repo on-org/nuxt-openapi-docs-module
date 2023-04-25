@@ -30,7 +30,8 @@ const OpenApiPlugins: Plugin = (ctx, inject) => {
   const emitter = mitt();
   // @ts-ignore
   const openapidoc = new OpenApiPlugin(ctx.i18n)
-  const openapidocRef = new OpenApiRefPlugin()
+  // @ts-ignore
+  const openapidocRef = new OpenApiRefPlugin(ctx.i18n)
 
   openapidoc.addLocale(enLang)
 

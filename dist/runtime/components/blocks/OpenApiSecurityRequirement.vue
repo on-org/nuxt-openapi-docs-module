@@ -25,8 +25,6 @@
   </div>
 </template>
 <script>
-import {tr} from "../helpers";
-
 export default {
   name: 'OpenApiSecurityRequirement',
   props: {
@@ -48,7 +46,6 @@ export default {
     },
   },
   methods: {
-    tr,
     getRoute(scheme) {
       return {name: `openapi-${this.path_doc}/${this.file}/auth${this.$openapidoc.I18nLocaleSuffix()}`, hash: '#'+scheme, meta: {locale: 'en', path: 'components', file: this.file, type: 'get'}};
     }

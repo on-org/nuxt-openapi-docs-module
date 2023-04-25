@@ -5,43 +5,6 @@ import fs from "fs";
 import * as yaml from "js-yaml";
 import hljs from "highlight.js";
 
-
-function sanitizeText(text: string) {
-  const map = {
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#x27;',
-    '\\': '&#x5C;',
-    '|': '&#x7C;'
-  };
-  const reg = /[<>"'\\|]/gi;
-  return text.replace(reg, function (match) {
-    // @ts-ignore
-    return map[match];
-  });
-}
-
-const renderer = new marked.Renderer();
-renderer.text = function (text: string) {
-  return text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-};
-
-marked.setOptions({
-  renderer: renderer,
-  highlight: function(code: string, lang: string) {
-    const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-    return hljs.highlight(code, { language }).value;
-  },
-  langPrefix: 'hljs language-', // highlight.js css expects a top-level 'hljs' class.
-  pedantic: false,
-  gfm: true,
-  breaks: false,
-  sanitize: false,
-  smartypants: false,
-  xhtml: false
-});
-
 interface PathByTagItem {
   name: string,
   path: string,
@@ -62,16 +25,38 @@ interface PathByTag {
 
 export default class Parser {
   workDir: string;
-  lastlink: string|null = 'null';
   fileName: string = ''
   spec: {[key: string]: any} = {};
   components: {[key: string]: any} = {};
   definitions: {[key: string]: any} = {};
   locales: { [key: string]: string } = {'en': 'English'};
+  localesReload: boolean = false;
   refs: { [key: string]: any } = {};
 
   constructor(workDir: string) {
     this.workDir = workDir;
+
+
+    const renderer = new marked.Renderer();
+    renderer.text = function (text: string) {
+      return text.replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    };
+
+    marked.setOptions({
+      renderer: renderer,
+      highlight: function(code: string, lang: string) {
+        const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+        return hljs.highlight(code, { language }).value;
+      },
+      langPrefix: 'hljs language-', // highlight.js css expects a top-level 'hljs' class.
+      pedantic: false,
+      gfm: true,
+      breaks: false,
+      sanitize: false,
+      smartypants: false,
+      xhtml: false
+    });
   }
 
   load(fileName:string) {
@@ -90,6 +75,10 @@ export default class Parser {
     this.components = this.replaceMarkdown(this.components)
     this.spec = this.replaceMarkdown(this.spec)
 
+    this.localesReload = false;
+    if(this.spec && this.spec.info && this.spec.info['x-locales-reload']) {
+      this.localesReload = this.spec.info['x-locales-reload'] === 'true' || this.spec.info['x-locales-reload'] === true;
+    }
     this.locales = {en: 'English'};
     if(this.spec && this.spec.info && this.spec.info['x-locales']) {
       this.locales = {...{ en: 'English' }, ...this.spec.info['x-locales']};
@@ -102,6 +91,22 @@ export default class Parser {
       acc[tag.name.toString().toLowerCase()] = tag;
       return acc;
     }, {});
+  }
+
+  sanitizeText(text: string) {
+    const map = {
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#x27;',
+      '\\': '&#x5C;',
+      '|': '&#x7C;'
+    };
+    const reg = /[<>"'\\|]/gi;
+    return text.replace(reg, function (match) {
+      // @ts-ignore
+      return map[match];
+    });
   }
 
   private getSchemaValsFromPath(ref: string) {
@@ -129,8 +134,6 @@ export default class Parser {
 
     const link = this.getSchemaValsFromPath(refPath)
     if(spec && spec[link.path] && spec[link.path][link.name]) {
-      this.lastlink = value;
-
       const item = spec[link.path][link.name];
       item.title = link.path
       return this.refs[value] = this.refReplace(item);
@@ -166,7 +169,7 @@ export default class Parser {
       if (obj.match(/\[.*?\]\(.*?\)|^>/) || obj.match(/```|\*\*|:--|<a |## |------/)) {
         return marked.parse(obj);
       } else {
-        return sanitizeText(obj);
+        return this.sanitizeText(obj);
       }
     } else if (Array.isArray(obj)) {
       return obj.map((val) => this.replaceMarkdown(val));
@@ -187,6 +190,10 @@ export default class Parser {
 
   getLocales() {
     return this.locales;
+  }
+
+  getLocalesReload() {
+    return this.localesReload;
   }
 
   getPaths(): {[key: string]: PathByTag} {

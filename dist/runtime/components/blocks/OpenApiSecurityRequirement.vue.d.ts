@@ -25,8 +25,7 @@ declare namespace _default {
         }
     }
     namespace methods {
-        export { tr };
-        export function getRoute(scheme: any): {
+        function getRoute(scheme: any): {
             name: string;
             hash: string;
             meta: {
@@ -39,4 +38,3 @@ declare namespace _default {
     }
 }
 export default _default;
-import { tr } from "../helpers";

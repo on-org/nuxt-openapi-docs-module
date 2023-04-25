@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="oapi-info-head">
-      <h1>{{ tr(info, 'title', currentLocale) }}</h1>
+      <h1>{{ $openapidocRef.tr(info, 'title', currentLocale) }}</h1>
       <span
         v-if="info.version"
         class="oapi-info-head__version"
@@ -11,7 +11,7 @@
     </div>
     <div
       class="oapi-info-block"
-      v-html="tr(info, 'description', currentLocale)"
+      v-html="$openapidocRef.tr(info, 'description', currentLocale)"
     />
 
     <div v-if="servers">
@@ -37,13 +37,12 @@
       <li>
         <a
           :href="info.externalDocs.url"
-        >{{ tr(info.externalDocs, 'description', currentLocale) }}</a>
+        >{{ $openapidocRef.tr(info.externalDocs, 'description', currentLocale) }}</a>
       </li>
     </ul>
   </div>
 </template>
 <script>
-import {tr} from "./helpers";
 export default {
   props: {
     info: {
@@ -59,7 +58,6 @@ export default {
     },
   },
   methods: {
-    tr,
     getUrl(server) {
       let url = server.url;
       const variables = server.variables;

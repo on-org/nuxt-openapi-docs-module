@@ -13,12 +13,12 @@
         <div
           v-if="schema.title"
           class="oapi-schema-block__title"
-          v-html="tr(schema, 'title', currentLocale)"
+          v-html="$openapidocRef.tr(schema, 'title', currentLocale)"
         />
         <div
           v-if="schema.description"
           class="oapi-schema-block__description"
-          v-html="tr(schema, 'description', currentLocale)"
+          v-html="$openapidocRef.tr(schema, 'description', currentLocale)"
         />
         <OpenApiObjectModel
           class="oapi-schema-block__model"
@@ -63,7 +63,7 @@
         <div
           v-if="reqBody.description"
           class="oapi-schema-block__description"
-          v-html="tr(reqBody, 'description', currentLocale)"
+          v-html="$openapidocRef.tr(reqBody, 'description', currentLocale)"
         />
         <OpenApiMediaTypes
           :data="reqBody.content"
@@ -85,7 +85,7 @@
         <div
           v-if="response.description"
           class="oapi-schema-block__description"
-          v-html="tr(response, 'description', currentLocale)"
+          v-html="$openapidocRef.tr(response, 'description', currentLocale)"
         />
         <OpenApiResponse
           :response="response"
@@ -107,7 +107,7 @@
         <div
           v-if="parameter.description"
           class="oapi-schema-block__description"
-          v-html="tr(parameter, 'description', currentLocale)"
+          v-html="$openapidocRef.tr(parameter, 'description', currentLocale)"
         />
         <OpenApiParameter
           :data="parameter"
@@ -130,7 +130,7 @@
         <div
           v-if="header.description"
           class="oapi-schema-block__description"
-          v-html="tr(header, 'description', currentLocale)"
+          v-html="$openapidocRef.tr(header, 'description', currentLocale)"
         />
         <OpenApiParameter
           :data="header"
@@ -144,8 +144,6 @@
 </template>
 
 <script>
-import { tr } from './helpers'
-
 export default {
   props: {
     components: {
@@ -157,7 +155,6 @@ export default {
       required: true,
     },
   },
-  methods: { tr },
 };
 </script>
 

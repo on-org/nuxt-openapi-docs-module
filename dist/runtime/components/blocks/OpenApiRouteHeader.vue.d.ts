@@ -37,10 +37,8 @@ declare namespace _default {
         }
     }
     namespace methods {
-        export { tr };
         export { getTagColor };
     }
 }
 export default _default;
-import { tr } from "../helpers";
 import { getTagColor } from "../helpers";

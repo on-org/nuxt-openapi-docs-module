@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import {tr} from "../helpers";
 import OpenApiSecurityRequirement from './OpenApiSecurityRequirement.vue'
 
 export default {
@@ -44,9 +43,6 @@ export default {
       required: true,
     },
   },
-  methods: {
-    tr
-  }
 };
 </script>
 <style lang="scss">

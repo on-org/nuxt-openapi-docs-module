@@ -13,7 +13,7 @@
         <div
           v-if="secScheme.description"
           class="oapi-schema-block__description"
-          v-html="tr(secScheme, 'description', currentLocale)"
+          v-html="$openapidocRef.tr(secScheme, 'description', currentLocale)"
         />
         <OpenApiSecurityScheme
           :current-locale="currentLocale"
@@ -31,8 +31,6 @@ import OpenApiObjectModel from './blocks/OpenApiObjectModel.vue'
 import OpenApiParameter from './blocks/OpenApiParameter.vue'
 import OpenApiResponse from './blocks/OpenApiResponse.vue'
 import OpenApiSecurityScheme from './blocks/OpenApiSecurityScheme.vue'
-import { tr } from './helpers'
-
 export default {
   components: { OpenApiParameter, OpenApiResponse, OpenApiSecurityScheme, OpenApiMediaTypes, OpenApiExampleObject, OpenApiObjectModel },
   props: {
@@ -45,7 +43,6 @@ export default {
       required: true,
     },
   },
-  methods: { tr },
 };
 </script>
 

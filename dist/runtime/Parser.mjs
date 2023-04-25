@@ -4,49 +4,35 @@ import fetch from "sync-fetch";
 import fs from "fs";
 import * as yaml from "js-yaml";
 import hljs from "highlight.js";
-function sanitizeText(text) {
-  const map = {
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#x27;",
-    "\\": "&#x5C;",
-    "|": "&#x7C;"
-  };
-  const reg = /[<>"'\\|]/gi;
-  return text.replace(reg, function(match) {
-    return map[match];
-  });
-}
-const renderer = new marked.Renderer();
-renderer.text = function(text) {
-  return text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-};
-marked.setOptions({
-  renderer,
-  highlight: function(code, lang) {
-    const language = hljs.getLanguage(lang) ? lang : "plaintext";
-    return hljs.highlight(code, { language }).value;
-  },
-  langPrefix: "hljs language-",
-  // highlight.js css expects a top-level 'hljs' class.
-  pedantic: false,
-  gfm: true,
-  breaks: false,
-  sanitize: false,
-  smartypants: false,
-  xhtml: false
-});
 export default class Parser {
   constructor(workDir) {
-    this.lastlink = "null";
     this.fileName = "";
     this.spec = {};
     this.components = {};
     this.definitions = {};
     this.locales = { "en": "English" };
+    this.localesReload = false;
     this.refs = {};
     this.workDir = workDir;
+    const renderer = new marked.Renderer();
+    renderer.text = function(text) {
+      return text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    };
+    marked.setOptions({
+      renderer,
+      highlight: function(code, lang) {
+        const language = hljs.getLanguage(lang) ? lang : "plaintext";
+        return hljs.highlight(code, { language }).value;
+      },
+      langPrefix: "hljs language-",
+      // highlight.js css expects a top-level 'hljs' class.
+      pedantic: false,
+      gfm: true,
+      breaks: false,
+      sanitize: false,
+      smartypants: false,
+      xhtml: false
+    });
   }
   load(fileName) {
     const openApiSpec = this.parseYamlFile(this.workDir, fileName);
@@ -60,6 +46,10 @@ export default class Parser {
     this.definitions = this.replaceMarkdown(this.definitions);
     this.components = this.replaceMarkdown(this.components);
     this.spec = this.replaceMarkdown(this.spec);
+    this.localesReload = false;
+    if (this.spec && this.spec.info && this.spec.info["x-locales-reload"]) {
+      this.localesReload = this.spec.info["x-locales-reload"] === "true" || this.spec.info["x-locales-reload"] === true;
+    }
     this.locales = { en: "English" };
     if (this.spec && this.spec.info && this.spec.info["x-locales"]) {
       this.locales = { ...{ en: "English" }, ...this.spec.info["x-locales"] };
@@ -71,6 +61,20 @@ export default class Parser {
       acc[tag.name.toString().toLowerCase()] = tag;
       return acc;
     }, {});
+  }
+  sanitizeText(text) {
+    const map = {
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#x27;",
+      "\\": "&#x5C;",
+      "|": "&#x7C;"
+    };
+    const reg = /[<>"'\\|]/gi;
+    return text.replace(reg, function(match) {
+      return map[match];
+    });
   }
   getSchemaValsFromPath(ref) {
     const [type, path, name] = ref.replace("#/", "").split("/");
@@ -93,7 +97,6 @@ export default class Parser {
     }
     const link = this.getSchemaValsFromPath(refPath);
     if (spec && spec[link.path] && spec[link.path][link.name]) {
-      this.lastlink = value;
       const item = spec[link.path][link.name];
       item.title = link.path;
       return this.refs[value] = this.refReplace(item);
@@ -123,7 +126,7 @@ export default class Parser {
       if (obj.match(/\[.*?\]\(.*?\)|^>/) || obj.match(/```|\*\*|:--|<a |## |------/)) {
         return marked.parse(obj);
       } else {
-        return sanitizeText(obj);
+        return this.sanitizeText(obj);
       }
     } else if (Array.isArray(obj)) {
       return obj.map((val) => this.replaceMarkdown(val));
@@ -142,6 +145,9 @@ export default class Parser {
   }
   getLocales() {
     return this.locales;
+  }
+  getLocalesReload() {
+    return this.localesReload;
   }
   getPaths() {
     return JSON.parse(JSON.stringify({

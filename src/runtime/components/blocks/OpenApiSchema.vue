@@ -6,11 +6,11 @@
     </div>
     <div class="schema-row items-center" v-if="schema.title">
       <span class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText('openapidoc.title') }}:</span>
-      <span class="schema-row-value" v-html="tr(schema, 'title', currentLocale)"></span>
+      <span class="schema-row-value" v-html="$openapidocRef.tr(schema, 'title', currentLocale)"></span>
     </div>
     <div class="schema-row items-center" v-if="schema.description">
       <span class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText('openapidoc.description') }}:</span>
-      <span class="schema-row-value" v-html="tr(schema, 'description', currentLocale)"></span>
+      <span class="schema-row-value" v-html="$openapidocRef.tr(schema, 'description', currentLocale)"></span>
     </div>
     <div class="schema-row items-center" v-if="schema.type">
       <span class="schema-row-label font-bold mr-2">{{ $openapidoc.getLocaleText('openapidoc.type') }}:</span>
@@ -59,7 +59,7 @@
               <OpenApiTableColl :flex="1" style="display: block;">
                 <div class="schema-row items-center" v-if="property.title">
                   <span class="schema-row-label font-bold mr-2">Title:</span>
-                  <span class="schema-row-value" v-html="tr(property, 'title', currentLocale)"></span>
+                  <span class="schema-row-value" v-html="$openapidocRef.tr(property, 'title', currentLocale)"></span>
                 </div>
                 <div class="schema-row items-center" v-if="property.type">
                   <span class="schema-row-label font-bold mr-2">Type:</span>
@@ -67,7 +67,7 @@
                 </div>
                 <div class="schema-row items-center" v-if="property.description">
                   <span class="schema-row-label font-bold mr-2">Description:</span>
-                  <span class="schema-row-value" v-html="tr(property, 'description', currentLocale)"></span>
+                  <span class="schema-row-value" v-html="$openapidocRef.tr(property, 'description', currentLocale)"></span>
                 </div>
               </OpenApiTableColl>
 
@@ -126,8 +126,6 @@
 </template>
 
 <script>
-import {tr} from "../helpers";
-
 export default {
   name: 'OpenApiSchema',
   props: {
@@ -155,7 +153,6 @@ export default {
 
   },
   methods: {
-    tr,
     assignAllOf(allOf) {
       return {
         properties: allOf.reduce((acc, curr) => {

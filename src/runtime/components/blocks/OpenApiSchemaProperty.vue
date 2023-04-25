@@ -35,12 +35,12 @@
           v-if="resolvedSchema.title && !hideTitleDescription"
           class="oapi-prop__title"
         >
-          {{ tr(resolvedSchema, 'title', currentLocale) }}
+          {{ $openapidocRef.tr(resolvedSchema, 'title', currentLocale) }}
         </div>
         <div
           v-if="resolvedSchema.description && !hideTitleDescription"
           class="oapi-prop__description"
-          v-html="tr(resolvedSchema, 'description', currentLocale)"
+          v-html="$openapidocRef.tr(resolvedSchema, 'description', currentLocale)"
         />
         <div
           v-if="resolvedSchema.externalDocs"
@@ -49,7 +49,7 @@
           <div
             v-if="resolvedSchema.externalDocs.description"
             class="oapi-prop__ext-docs-md"
-            v-html="tr(resolvedSchema.externalDocs, 'description', currentLocale)"
+            v-html="$openapidocRef.tr(resolvedSchema.externalDocs, 'description', currentLocale)"
           />
           <a
             :href="resolvedSchema.externalDocs.url"
@@ -229,7 +229,6 @@
 </template>
 
 <script>
-import { tr } from '../helpers'
 import OpenApiExpandIcon from '../icons/OpenApiExpandIcon.vue'
 import OpenApiSchemaSubObject from './OpenApiSchemaSubObject.vue'
 
@@ -354,7 +353,6 @@ export default {
     }
   },
   methods: {
-    tr,
     getType(schema) {
       let defType = schema.type || 'any';
       if (!schema) return defType;

@@ -10,12 +10,12 @@
     <div
       v-if="example.summary"
       class="oapi-example-obj__summary"
-      v-html="tr(example, 'summary', currentLocale)"
+      v-html="$openapidocRef.tr(example, 'summary', currentLocale)"
     />
     <div
       v-if="example.description"
       class="oapi-example-obj__description"
-      v-html="tr(example, 'description', currentLocale)"
+      v-html="$openapidocRef.tr(example, 'description', currentLocale)"
     />
     <div
       v-if="valueFormatted"
@@ -27,8 +27,6 @@
 </template>
 
 <script>
-import { tr } from '../helpers'
-
 export default {
   name: 'OpenApiExampleObject',
   props: {
@@ -58,8 +56,7 @@ export default {
       if (!this.example.value) return null;
       return JSON.stringify(this.example.value, null, 2);
     }
-  },
-  methods: { tr },
+  }
 }
 </script>
 

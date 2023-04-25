@@ -16,7 +16,6 @@ interface PathByTag {
 }
 export default class Parser {
     workDir: string;
-    lastlink: string | null;
     fileName: string;
     spec: {
         [key: string]: any;
@@ -30,11 +29,13 @@ export default class Parser {
     locales: {
         [key: string]: string;
     };
+    localesReload: boolean;
     refs: {
         [key: string]: any;
     };
     constructor(workDir: string);
     load(fileName: string): void;
+    sanitizeText(text: string): string;
     private getSchemaValsFromPath;
     private refFileLoader;
     private refReplace;
@@ -42,6 +43,7 @@ export default class Parser {
     getLocales(): {
         [key: string]: string;
     };
+    getLocalesReload(): boolean;
     getPaths(): {
         [key: string]: PathByTag;
     };

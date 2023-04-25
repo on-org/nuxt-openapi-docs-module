@@ -22,7 +22,7 @@
         :value="currentLocale"
       >
         <template #default="{ item }">
-          <nuxt-link :to="changeLocale(item.value)">
+          <nuxt-link :to="changeLocale(item.value)" @click.native="onLocalesReload">
             {{ item.text }}
           </nuxt-link>
         </template>
@@ -62,8 +62,8 @@
         v-for="(sub_routes, tag) in routes"
         :key="tag"
         class="sub-menu"
-        :title="tr(sub_routes, 'name', currentLocale)"
-        :description="tr(sub_routes, 'description', currentLocale)"
+        :title="$openapidocRef.tr(sub_routes, 'name', currentLocale)"
+        :description="$openapidocRef.tr(sub_routes, 'description', currentLocale)"
         :is-open="sub_routes.isOpen"
       >
         <li
@@ -89,10 +89,10 @@
               </span>
             </div>
             <div
-              v-if="tr(route, 'description', currentLocale)"
+              v-if="$openapidocRef.tr(route, 'description', currentLocale)"
               class="oapi-menu-description"
             >
-              {{ tr(route, 'description', currentLocale) }}
+              {{ $openapidocRef.tr(route, 'description', currentLocale) }}
             </div>
           </nuxt-link>
         </li>
@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import {getTagColor, tr} from "./helpers";
+import {getTagColor} from "./helpers";
 import MainLeftMenuSubMenu from './lib/MainLeftMenuSubMenu.vue'
 import OpenApiDropdown from './lib/OpenApiDropdown.vue'
 export default {
@@ -130,6 +130,10 @@ export default {
     },
     locales: {
       type: Object,
+      required: true,
+    },
+    localesReload: {
+      type: Boolean,
       required: true,
     },
   },
@@ -160,10 +164,16 @@ export default {
     }
   },
   methods: {
-    tr,
     getTagColor,
     genUrl(path) {
       return encodeURI(path)
+    },
+    onLocalesReload(e) {
+      if(this.localesReload) {
+        this.$nextTick(() => {
+          location.reload();
+        })
+      }
     },
     getRoute(path) {
       return {name: `openapi-${this.path}/${this.file}/${path}${this.$openapidoc.I18nLocaleSuffix()}`, meta: {path: path, file: this.file, type: 'get'}};
