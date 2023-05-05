@@ -251,6 +251,8 @@ export default {
   }
   &--is-active {
     background: #fff !important;
+    color: black !important;
+
     .oapi-menu-item-tag {
       color: #fff;
       &--get {
