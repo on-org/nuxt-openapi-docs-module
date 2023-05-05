@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - drop single vue version, make two versions
 - update styles
 
+## [4.3.2] - 2023-05-05
+
+### Changed
+
+- new logo
+
 ## [4.2.9] - 2023-04-25
 
 ### Changed
