@@ -85,7 +85,7 @@
                 {{ route.type.toUpperCase() }}
               </span>
               <span class="oapi-mono bold" :class="{deprecated: route.deprecated}">
-                {{ route.name }}
+                {{ $openapidocRef.tr(route, 'name', currentLocale) }}
               </span>
             </div>
             <div

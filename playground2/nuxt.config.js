@@ -56,7 +56,7 @@ export default {
               'petstore_extended': 'Petstore Extended Api',
               // "post-nobody": "post-nobody",
               'localization': 'Localization',
-              // 'page': 'Custom Page',
+              'page': 'Custom Page',
               // "array-and-object-nesting": "array-and-object-nesting",
               // 'no-access': 'no access',
               // 'test-yaml.yaml': 'yaml ext',

@@ -203,11 +203,11 @@ class Parser {
         items: []
       };
       for (const i in this.locales) {
-        if (custom[`x-summary-${i}`]) {
-          pathsByTags[`x-description-${i}`] = custom[`x-summary-${i}`];
+        if (custom[`x-description-${i}`]) {
+          pathsByTags["custom"][`x-description-${i}`] = custom[`x-description-${i}`];
         }
         if (custom[`x-name-${i}`]) {
-          pathsByTags[`x-name-${i}`] = custom[`x-name-${i}`];
+          pathsByTags["custom"][`x-name-${i}`] = custom[`x-name-${i}`];
         }
       }
       for (const path in custom.paths) {
@@ -219,11 +219,11 @@ class Parser {
           icon: custom.paths[path]["x-icon"] ?? null
         };
         for (const i in this.locales) {
-          if (custom[`x-summary-${i}`]) {
-            pathsByTags[`x-description-${i}`] = custom[`x-summary-${i}`];
+          if (custom.paths[path][`x-description-${i}`]) {
+            item[`x-description-${i}`] = custom.paths[path][`x-description-${i}`];
           }
-          if (custom[`x-name-${i}`]) {
-            pathsByTags[`x-name-${i}`] = custom[`x-name-${i}`];
+          if (custom.paths[path][`x-title-${i}`]) {
+            item[`x-name-${i}`] = custom.paths[path][`x-title-${i}`];
           }
         }
         pathsByTags["custom"].items.push(item);

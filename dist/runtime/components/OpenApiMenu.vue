@@ -85,7 +85,7 @@
                 {{ route.type.toUpperCase() }}
               </span>
               <span class="oapi-mono bold" :class="{deprecated: route.deprecated}">
-                {{ route.name }}
+                {{ $openapidocRef.tr(route, 'name', currentLocale) }}
               </span>
             </div>
             <div
@@ -253,6 +253,7 @@ export default {
 }
 .oapi-menu-item--is-active {
   background: #fff !important;
+  color: black !important;
 }
 .oapi-menu-item--is-active .oapi-menu-item-tag {
   color: #fff;
