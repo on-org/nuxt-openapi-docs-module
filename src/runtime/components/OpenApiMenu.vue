@@ -105,8 +105,9 @@
 import {getTagColor} from "./helpers";
 import MainLeftMenuSubMenu from './lib/MainLeftMenuSubMenu.vue'
 import OpenApiDropdown from './lib/OpenApiDropdown.vue'
+
 export default {
-  components: { MainLeftMenuSubMenu, OpenApiDropdown },
+  components: {MainLeftMenuSubMenu, OpenApiDropdown},
   props: {
     routes: {
       type: Object,
@@ -157,7 +158,7 @@ export default {
       const arr = [];
       for (const i in this.files) {
         if (this.$openapidoc.hasAccess(i)) {
-          arr.push({ value: i, text: this.files[i]})
+          arr.push({value: i, text: this.files[i]})
         }
       }
       return arr
@@ -169,14 +170,17 @@ export default {
       return encodeURI(path)
     },
     onLocalesReload(e) {
-      if(this.localesReload) {
+      if (this.localesReload) {
         this.$nextTick(() => {
           location.reload();
         })
       }
     },
     getRoute(path) {
-      return {name: `openapi-${this.path}/${this.file}/${path}${this.$openapidoc.I18nLocaleSuffix()}`, meta: {path: path, file: this.file, type: 'get'}};
+      return {
+        name: `openapi-${this.path}/${this.file}/${path}${this.$openapidoc.I18nLocaleSuffix()}`,
+        meta: {path: path, file: this.file, type: 'get'}
+      };
     },
     getSubRoute(route) {
       const path = this.genUrl(route.path);
@@ -185,13 +189,24 @@ export default {
         return {name: `${this.path}-${this.file}-${type}-${path}${this.$openapidoc.I18nLocaleSuffix()}`};
       }
 
-      return {name: `openapi-${this.path}/${this.file}/${type}-${path}${this.$openapidoc.I18nLocaleSuffix()}`, meta: {path: path, file: this.file, type: type}};
+
+      return {
+        name: `openapi-${this.path}/${this.file}/type-path${this.$openapidoc.I18nLocaleSuffix()}`,
+        meta: {path: path, file: this.file, type: type},
+        params: { type: type, path: path }
+      };
     },
     changeDoc(option) {
-      return {name: `openapi-${this.path}/${option}/info${this.$openapidoc.I18nLocaleSuffix('en')}`, meta: {path: option, type: 'get',  file: this.file}};
+      return {
+        name: `openapi-${this.path}/${option}/info${this.$openapidoc.I18nLocaleSuffix('en')}`,
+        meta: {path: option, type: 'get', file: this.file}
+      };
     },
     changeLocale(option) {
-      return {name: `openapi-${this.path}/${this.file}/info${this.$openapidoc.I18nLocaleSuffix(option)}`, meta: {path: this.file, type: 'get',  file: this.file}};
+      return {
+        name: `openapi-${this.path}/${this.file}/info${this.$openapidoc.I18nLocaleSuffix(option)}`,
+        meta: {path: this.file, type: 'get', file: this.file}
+      };
     },
   },
 };
@@ -202,13 +217,17 @@ export default {
   &__dds {
     margin-bottom: 16px;
   }
+
   &__files, &__locales {
     margin-bottom: 8px;
+
     .oapi-dd-popup__list-item {
       position: relative;
+
       a {
         text-decoration: none;
         color: inherit;
+
         &::before {
           position: absolute;
           left: 0;
@@ -221,19 +240,23 @@ export default {
     }
   }
 }
+
 .oapi-menu {
   font-size: 16px;
   margin: 0;
   padding: 0;
   list-style: none;
+
   li {
     margin-bottom: 4px;
   }
+
   a {
     text-decoration: none;
     color: #777;
   }
 }
+
 .oapi-menu-item {
   display: block;
   padding: 2px 12px;
@@ -242,46 +265,56 @@ export default {
   color: #6e7281;
   border-radius: 6px;
   font-weight: 600;
+
   &-head {
     padding: 8px 12px;
   }
+
   &:not(&--is-active):hover {
     color: #000;
     background: rgba(#000, .03);
   }
+
   &--is-active {
     background: #fff !important;
     color: black !important;
 
     .oapi-menu-item-tag {
       color: #fff;
+
       &--get {
         background: #72AFF8;
         border-color: #72AFF8;
       }
+
       &--post {
         background: #70C995;
         border-color: #70C995;
       }
+
       &--patch {
         background: #7CE0C3;
         border-color: #7CE0C3;
       }
+
       &--put {
         background: #F0A44B;
         border-color: #F0A44B;
       }
+
       &--delete {
         background: #E64F47;
         border-color: #E64F47;
       }
     }
   }
+
   &__title {
     display: flex;
     align-items: center;
     font-size: 14px;
     overflow: hidden;
+
     span {
       white-space: nowrap;
       overflow: hidden;
@@ -294,12 +327,14 @@ export default {
   padding-top: 4px;
   color: #868a8d;
   font-size: 12px !important;
+
   * {
     font-size: 12px !important;
-    margin-bottom: 0  !important;
+    margin-bottom: 0 !important;
     margin-top: 0 !important;
   }
 }
+
 .oapi-menu-item-tag {
   min-width: 45px;
   flex: 0 0 auto;
@@ -314,21 +349,27 @@ export default {
   border: 1px solid #ddd;
   font-family: monospace, monospace;
   font-weight: 600;
+
   &--get, &--post, &--put, &--patch, &--delete {
     border-color: currentColor;
   }
+
   &--get {
     color: #72AFF8;
   }
+
   &--post {
     color: #70C995
   }
+
   &--patch {
     color: #7CE0C3;
   }
+
   &--put {
     color: #F0A44B;
   }
+
   &--delete {
     color: #E64F47;
   }
@@ -338,6 +379,7 @@ export default {
   width: 24px;
   display: inline-block;
 }
+
 .method-tag {
   width: 45px;
   display: inline-block;
@@ -349,6 +391,7 @@ export default {
   padding-top: 1px;
   padding-bottom: 1px;
 }
+
 .rotate-icon {
   transition: transform 0.3s ease-in-out;
 }

@@ -370,6 +370,7 @@ const module = defineNuxtModule({
         pages.push({
           name: `openapi-${localoptions.path}/${localoptions.fileName}/info`,
           path: `/${localoptions.path}/${localoptions.fileName}/info`,
+          // path: `/${localoptions.path}/${localoptions.fileName}/info`,
           // @ts-ignore
           component: path,
           file: path,
@@ -406,28 +407,33 @@ const module = defineNuxtModule({
             path: "auth"
           }
         });
-        for (let tag in pathsByTags) {
-          if (tag === "custom")
-            continue;
-          for (let i in pathsByTags[tag].items) {
-            const item = pathsByTags[tag].items[i];
-            pages.push({
-              name: `openapi-${localoptions.path}/${localoptions.fileName}/${item.type}-${item.path}`,
-              path: `/${localoptions.path}/${localoptions.fileName}/${item.type}/${item.path}`,
-              // @ts-ignore
-              component: path,
-              file: path,
-              meta: {
-                nuxtI18n: false,
-                file: localoptions.fileName,
-                type: item.type,
-                path: item.path,
-                url: item.name
-              }
-            });
+        pages.push({
+          name: `openapi-${localoptions.path}/${localoptions.fileName}/type-path`,
+          path: `/${localoptions.path}/${localoptions.fileName}/:type/:path`,
+          // @ts-ignore
+          component: path,
+          file: path,
+          meta: {
+            nuxtI18n: false,
+            file: localoptions.fileName
           }
-        }
+        });
       });
+      const routes = nuxt.options.generate.routes;
+      nuxt.options.generate.routes = Array.isArray(nuxt.options.generate.routes) ? nuxt.options.generate.routes : [];
+      if (routes instanceof Function) {
+        if (routes instanceof Function) {
+          routes.push(...await routes() || []);
+        }
+      }
+      for (let tag in pathsByTags) {
+        if (tag === "custom")
+          continue;
+        for (let i in pathsByTags[tag].items) {
+          const item = pathsByTags[tag].items[i];
+          nuxt.options.generate.routes.push(`/${localoptions.path}/${localoptions.fileName}/${item.type}/${item.path}`);
+        }
+      }
     }
     if (isNuxt2(nuxt)) {
       addPlugin({

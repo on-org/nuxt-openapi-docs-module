@@ -73,12 +73,17 @@ declare namespace _default {
         export function getSubRoute(route: any): {
             name: string;
             meta?: undefined;
+            params?: undefined;
         } | {
             name: string;
             meta: {
                 path: string;
                 file: any;
                 type: any;
+            };
+            params: {
+                type: any;
+                path: string;
             };
         };
         export function changeDoc(option: any): {

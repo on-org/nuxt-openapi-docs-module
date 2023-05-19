@@ -53,9 +53,8 @@ export default {
   async fetch() {
     const ctx = this.$nuxt.context
     try {
-      this.type = ctx.route.params.type ?? ctx.route.meta[0].type;
+      this.type = ctx.route.params.type ?? ctx.route.meta[0].type ?? 'get';
       this.path = ctx.route.params.path ?? ctx.route.meta[0].path;
-      this.url = ctx.route.params.url ?? ctx.route.meta[0].url;
       this.file = ctx.route.params.file ?? ctx.route.meta[0].file;
 
       this.$openapidocRef.setComponents(options.doc.components)
@@ -72,9 +71,10 @@ export default {
     return {
       options: options,
       path_doc: pathDoc,
-      // file: '',
-      // type: '',
-      // path: '',
+      file: '',
+      type: '',
+      path: '',
+      url: '',
     };
   },
   watch: {
@@ -82,7 +82,6 @@ export default {
       handler: function(val) {
         this.type = val.type;
         this.path = val.path;
-        this.url = val.url;
       },
       deep: true
     },
@@ -124,26 +123,49 @@ export default {
     isComponents() {
       return this.path === 'components'
     },
-    activeRoute() {
+    activePath() {
       if(!this.options.doc.paths) return null;
-      if(!this.options.doc.paths[this.url]) return null;
-      return this.options.doc.paths[this.url][this.type] ?? null
+      for (let path in this.options.doc.paths) {
+        let routePath = path;
+        if (routePath.startsWith('/')) routePath = routePath.substring(1);
+        if (routePath.endsWith('/')) routePath = routePath.substring(-1);
+        routePath = routePath.replace(/[/\\.?+=&{}]/gumi, '_').replace(/__+/, '_')
+
+        if(routePath === this.path) {
+          this.url = path;
+          return this.options.doc.paths[path] ?? null
+        }
+      }
+      return null;
+    },
+    activeRoute() {
+      if(!this.activePath) return null;
+      return this.activePath[this.type] ?? null;
+    },
+    subParams() {
+      if(!this.activePath) return null;
+      return this.activePath['parameters'] ?? null;
     },
     activeWebhook() {
       if(!this.options.doc.webhooks) return null;
-      if(!this.options.doc.webhooks[this.url]) return null;
-      return this.options.doc.webhooks[this.url][this.type] ?? null
-    },
+      for (let path in this.options.doc.webhooks) {
+        let routePath = path;
+        if (routePath.startsWith('/')) routePath = routePath.substring(1);
+        if (routePath.endsWith('/')) routePath = routePath.substring(-1);
+        routePath = routePath.replace(/[/\\.?+=&{}]/gumi, '_').replace(/__+/, '_')
 
-    subParams() {
-      if(!this.options.doc.paths) return null;
-      if(!this.options.doc.paths[this.url]) return null;
-      return this.options.doc.paths[this.url]['parameters'] ?? null
+        if(routePath === this.path) {
+          this.url = path;
+          return this.options.doc.webhooks[path][this.type] ?? null
+        }
+      }
+
+      return null;
     },
 
     server() {
-      if(this.options.doc.paths && this.options.doc.paths[this.url] && this.options.doc.paths[this.url]['servers'] && this.options.doc.paths[this.url]['servers'][0]) {
-        return this.options.doc.paths[this.url]['servers'][0].url ?? null
+      if(this.activePath && this.activePath['servers'] && this.activePath['servers'][0]) {
+        return this.activePath['servers'][0].url ?? null
       }
 
       if (!this.options.doc.servers || !this.options.doc.servers[0]) {

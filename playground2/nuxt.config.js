@@ -57,6 +57,7 @@ export default {
               // "post-nobody": "post-nobody",
               'localization': 'Localization',
               'page': 'Custom Page',
+              "additional-props": "additional-props",
               // "array-and-object-nesting": "array-and-object-nesting",
               // 'no-access': 'no access',
               // 'test-yaml.yaml': 'yaml ext',
