@@ -51,6 +51,9 @@ export default defineNuxtModule<ModuleOptions>({
     files: () => { return {}},
   },
   async setup (options, nuxt) {
+    // @ts-ignore
+    const isSSG = nuxt.options.dev === false && (nuxt.options.target === 'static' || nuxt.options._generate)
+
     const resolver = createResolver(import.meta.url)
     if(options.debug) {
       // @ts-ignore
@@ -185,13 +188,15 @@ export default defineNuxtModule<ModuleOptions>({
         }
       }
 
-      for (let tag in pathsByTags) {
-        if (tag === 'custom') continue;
+      if (isSSG) {
+        for (let tag in pathsByTags) {
+          if (tag === 'custom') continue;
 
-        for (let i in pathsByTags[tag].items) {
-          const item = pathsByTags[tag].items[i]
+          for (let i in pathsByTags[tag].items) {
+            const item = pathsByTags[tag].items[i]
 
-          nuxt.options.generate.routes.push(`/${localoptions.path}/${localoptions.fileName}/${item.type}/${item.path}`)
+            nuxt.options.generate.routes.push(`/${localoptions.path}/${localoptions.fileName}/${item.type}/${item.path}`)
+          }
         }
       }
     }
