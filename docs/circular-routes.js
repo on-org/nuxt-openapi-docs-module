@@ -1,0 +1,1 @@
+export default {"Circular References":{"name":"Circular References","description":"","isOpen":true,"items":[{"name":"/books","path":"books","type":"get","icon":null,"description":"List all books"}]}}

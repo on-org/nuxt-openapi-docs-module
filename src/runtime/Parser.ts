@@ -15,7 +15,7 @@ interface PathByTagItem {
   [key:string]: any
 }
 
-interface PathByTag {
+export interface PathByTag {
   name: string,
   description: string,
   isOpen: boolean,

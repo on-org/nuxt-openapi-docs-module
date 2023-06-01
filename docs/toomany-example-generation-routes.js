@@ -1,0 +1,1 @@
+export default {"Many Examples":{"name":"Many Examples","description":"","isOpen":true,"items":[{"name":"/getPlayer","path":"getPlayer","type":"get","icon":null,"description":"Possibility of generatiing 1024 Examples"},{"name":"/getTennisMatch","path":"getTennisMatch","type":"get","icon":null,"description":"Possibility of generatiing 1 million Examples"}]}}

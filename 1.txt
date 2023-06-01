@@ -1,1 +1,0 @@
-{path:"/openapi_docs/News-API/get/news_slug_",component:te,meta:{nuxtI18n:!1,file:"News-API",type:"get",path:"news_slug_",url:"/news/{slug}"}

@@ -1,0 +1,1 @@
+export default {"other":{"name":"other","description":"","isOpen":true,"items":[{"name":"/xml-generated-from-schema","path":"xml-generated-from-schema","type":"get","icon":null,"description":"XML (Generated From Schema)"}]}}

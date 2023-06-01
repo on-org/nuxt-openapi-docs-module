@@ -1,0 +1,1 @@
+export default {"Form Params":{"name":"Form Params","description":"","isOpen":true,"items":[{"name":"/dynamic-form-parameters","path":"dynamic-form-parameters","type":"post","icon":null,"description":"Dynamic Params"},{"name":"/fixed-form-parameters","path":"fixed-form-parameters","type":"post","icon":null,"description":"Fixed Params"}]}}

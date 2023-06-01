@@ -1,0 +1,1 @@
+export default {"other":{"name":"other","description":"","isOpen":true,"items":[{"name":"/api-server-template","path":"api-server-template","type":"get","icon":null,"description":"Dynamic API Server."}]}}

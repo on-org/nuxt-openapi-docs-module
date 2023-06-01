@@ -1,0 +1,1 @@
+export default {"other":{"name":"other","description":"","isOpen":true,"items":[{"name":"/item-price","path":"item-price","type":"post","icon":null,"description":"Multiple Request body"}]}}

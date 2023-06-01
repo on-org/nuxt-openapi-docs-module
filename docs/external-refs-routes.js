@@ -1,0 +1,1 @@
+export default {"other":{"name":"other","description":"","isOpen":true,"items":[{"name":"/external-refs","path":"external-refs","type":"get","icon":null,"description":"External Refs"}]}}

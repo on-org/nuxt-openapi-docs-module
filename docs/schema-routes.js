@@ -1,0 +1,1 @@
+export default {"other":{"name":"other","description":"","isOpen":true,"items":[{"name":"/schema/person","path":"schema_person","type":"get","icon":null,"description":"Person Schema"}]}}

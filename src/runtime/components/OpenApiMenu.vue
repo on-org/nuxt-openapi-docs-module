@@ -171,9 +171,9 @@ export default {
     },
     onLocalesReload(e) {
       if (this.localesReload) {
-        this.$nextTick(() => {
+        setTimeout(() => {
           location.reload();
-        })
+        }, 1000)
       }
     },
     getRoute(path) {

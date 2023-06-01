@@ -22,16 +22,3 @@ paths:
     servers:
       - url: 'http://example.com/api'
         description: Test server
-      - url: '/api'
-      - url: '{protocol}://dev.com/api'
-        description: Server with Variable
-        variables:
-          protocol:
-            default: https          
-            description: >
-              Server choices:
-                * `http` Not Secured server
-                * `https` Secured server
-            enum:
-              - http
-              - https

@@ -1,0 +1,1 @@
+export default {"other":{"name":"other","description":"","isOpen":true,"items":[{"name":"/dogs","path":"dogs","type":"get","icon":null,"description":"Return an array of the petstore&#x27;s dogs."}]}}

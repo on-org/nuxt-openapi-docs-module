@@ -1,0 +1,1 @@
+export default {"other":{"name":"other","description":"","isOpen":true,"items":[{"name":"/code","path":"code","type":"get","icon":null,"description":"Syntax Highlighting in Markdown"},{"name":"/code","path":"code","type":"post","icon":null,"description":"Request body"}]}}

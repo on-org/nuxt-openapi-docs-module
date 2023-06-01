@@ -80,6 +80,8 @@ module.exports = {
 }
 ```
 
+3. create `docs/openapi` folder in root project dir(not src) or change path - `folder` parameter
+
 ## Configuration
 You can customize the behavior of the module by providing options in the nuxt.config.js file.
 
