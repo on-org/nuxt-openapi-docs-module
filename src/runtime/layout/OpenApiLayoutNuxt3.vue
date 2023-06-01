@@ -192,4 +192,8 @@ export default {
   padding: 8px 0;
   font-size: 0.875rem;
 }
+
+p, .p {
+  font-weight: 400;
+}
 </style>

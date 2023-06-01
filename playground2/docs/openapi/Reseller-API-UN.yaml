@@ -1,0 +1,2174 @@
+openapi: 3.0.0
+x-stoplight:
+  id: 536nof0m2g1sn
+x-custom-path:
+  name: 'Custom'
+  x-name-ru: 'Прочее'
+  paths:
+    countries:
+      title: 'Countries'
+      x-title-ru: 'Страны'
+    services:
+      title: 'Services'
+      x-title-ru: 'Сервисы'
+    operators:
+      title: 'Operators'
+      x-title-ru: 'Операторы'
+    testing:
+      title: 'Testing'
+      x-title-ru: 'Тестирование'
+info:
+  title: Reseller API
+  x-title-ru: API для партнеров
+  x-locales:
+    en: English
+    ru: Русский
+  x-locales-reload: true
+  version: '1.0'
+  x-description-ru: |-
+    ## Общее описание
+    Данное API предназначено для текущих и потенциальных партнеров Onlinesim. Оно позволяет монетизировать Ваши номера,
+    предоставляя их нашим клиентам для приема SMS от различных сервисов и приложений.
+
+    На данный момент реализовано две версии API:
+
+    * v1 служит для запросов у Вашего сервера номеров с определенными параметрами;
+    * v2 имеет обратную схему: Вы отправляете нам все имеющиеся номера, которые становятся доступны для использования клиентами.
+
+    >**Оба API требуют активации партнерского аккаунта Onlinesim!**<br>Вам необходимо зарегистрировать профиль Onlinesim и связаться с поддержкой для получении информации о подключении, чтобы получить доступ к этим API. В этой документации мы будем использовать аутентификацию по API ключу для простоты, однако помимо этого доступны и другие методы аутентификации (более подробно можно посмотреть в разделе <a href="#Авторизация">"Авторизация"</a>).
+
+    ### v1 API
+    Соединение и конфигурация для этого API индивидуальны, поэтому Вам нужно связаться с техподдержкой для уточнения подробностей интеграции
+    Все взаимодействие происходит через HTTP POST и/или GET запросы между указанным Вами и нашей поддержкой endpoint'ами.
+
+    #### Чек-лист для интеграции:
+
+    1. Необходимо реализовать 3 запроса и webhook.
+       <br><a href="#post-/getServicesEndpointPlaceholder">GET_SERVICES</a> - запрашивает у Вашего сервера количество номеров по странам и сервисам
+       <br><a href="#post-/getNumberEndpointPlaceholder">GET_NUMBER</a> - резервирует номер на 15 минут с заданными параметрами для получения SMS сообщений от одного конкретного сервиса за указанную сумму
+       <br><a href="#post-/pushSmsEndpointPlaceholder">PUSH_SMS (webhook)</a> - при получении номером SMS, Ваш сервер отправляет на наш сервер поступившие на этот номер сообщения
+       <br><a href="#post-/finishActivationEndpointPlaceholder">FINISH_ACTIVATION</a> - закрывает операцию с определенными параметрами (в зависимости от результата)
+    2. Написать нам на e-mail или в Telegram для создания профиля партнера, предоставления URL для запросов с нашей стороны, получения ссылки для webhook'a и тестирования номеров.
+    3. После успешно проведенных тестов Ваши номера будут доступны нашим клиентам в течение нескольких часов
+
+    #### Требования для v1:
+    1. *Формат запроса / ответа: JSON4*
+    2. *Кодировка: UTF-8*
+    3. *Убедитесь, что user-agent включен в заголовки запроса*
+    4. *Все запросы / ответы используют метод компрессии gzip*
+
+    ### v2 API
+    OnlineSim API дает возможность интегрировать Ваше оборудование и номера для их последующего использования клиентами под прием SMS через наш сайт. Для этого вам
+    необходимо:
+
+    1. Реализовать 2 запроса:
+      - `sendNumbersOnline` - передает список Ваших номеров к нам на сервер, данный запрос должен отправляться каждые 5 минут для обновления списка номеров и как подтверждение аптайма Вашего сервера;
+      - `addMessage` - пересылает полученные Вашим сервером сообщения нам.
+      При наличии большого количества номеров и невозможности/сложности отправления запроса `sendNumbersOnline` каждые 5 минут в качестве подтверждения аптайма, Вы можете воспользоваться альтернативным вариантом - запросом `checkWork`.
+    2. Связаться с поддержкой, чтобы получить `_SERVER_URL_`
+    3. Остальные запросы опциональны, реализовывать их необязательно, но их описание доступно в документации.
+    4. У запросов есть необязательный параметр "test", который может быть использован для тестирования. Он может принимать значения 'test1' и 'test2', будучи равным первому, он позволит запросу дойти до сервера, однако изменений в данные не внесет. Если ему задать второе значение ('test2'), то он просто распечатает Ваш запрос в ответе.
+
+    После того как Вы получите ответ об успешно выполненном запросе `sendNumbersOnline`, сотрудники партнерской поддержки
+    проверят, получает ли наш сервер сообщения с помощью запроса `addMessage`. В случае успеха Ваши номера будут доступны
+    нашим клиентам уже через нескольких часов.
+
+    ## **Attachments**
+
+    ### **#1 Countries list**
+
+    [See here](./countries)
+
+    ### **#2 Services list**
+
+    [See here](./services)
+
+    ### **#3 Operators list**
+
+    [See here](./operators)
+
+    ### **#4 Workflow**
+
+    ![workflow](/docs/workflow_smshub.png)
+  description: |-
+    ## General description
+    This API allows you to provide us with numbers for SMS activations and turn your SIM cards into profitable asset by
+    forwarding SMS codes from different websites and apps.
+
+    We currently have 2 versions of API with two different approaches:
+
+    * v1 is designed for requesting numbers with specific parameters from your server;
+    * v2 is designed to accept from your server a list of numbers that can be purchased by our clients for various services
+
+    >**Both API require Onlinesim partner account!**<br>You will need to register Onlinesim profile and contact partner support to get access to these APIs. Several methods of authentication are available (<a href="#Authorization">Authentication</a>), but we will use API key authentication in this documentation for reasons of simplicity.
+
+    ### v1 API
+    Connection and configuration are specific for each individual partner, so you should contact our tech
+    support to get the details of integration. All interaction between our servers is happening as a series of POST and/or GET requests on agreed endpoints.
+
+    #### Integration checklist:
+
+    1. Make 3 requests and a webhook.
+       <br><a href="#post-/getServicesEndpointPlaceholder">GET_SERVICES</a> requests from your server amount of available numbers by country and service
+       <br><a href="#post-/getNumberEndpointPlaceholder">GET_NUMBER</a> reserves a number for 15 minutes with specific parameters for SMS reception from a single service
+       <br><a href="#post-/pushSmsEndpointPlaceholder">PUSH_SMS (webhook)</a> - once a reserved number receives a message, your server should forward it to us
+       <br><a href="#post-/finishActivationEndpointPlaceholder">FINISH_ACTIVATION</a> closes operation with specified parameters (depending on the result)
+    2. Contact us via email or Telegram to create a partner profile, provide endpoint URL on your server and receive one
+       from us. Our support specialists will also run a few tests to make sure everything is working as expected.
+    3. If tests are successful, your numbers will become available for our clients in a few hours.
+
+    #### Requirements for v1:
+    1. *Requests and responses come in JSON4 format*
+    2. *Encode scheme: UTF-8*
+    3. *Make sure that user-agent is included in request headers*
+    4. *All requests / responses use gzip compression method*
+
+    ### v2 API
+    OnlineSim API allows you to integrate your device with our site. It will allow your numbers to be purchased for SMS
+    activations by our clients. We tried to make it as simple as possible, you only need to follow steps below:
+
+    1. Create 2 requests:
+      - `sendNumbersOnline` - sends a list of numbers that you want to provide us with, this request should be sent every 5 minutes to update a list and to confirm that your server is online;
+      - `addMessage` - forwards SMS from your server to ours.
+    >If you have a large quantity of numbers and sending `sendNumbersOnline` request every 5 minutes as uptime confirmation is not suitable for you, you can use alternative option - `checkWork` request.
+    2. Contact tech support to get `_SERVER_URL_`.
+    3. Other requests are optional, you may never need it, but their description is available in documentation.
+    4. Requests have optional parameter "test" that can used for testing purposes. It's value can be either 'test1' or 'test2', while being equal to first value it will allow the request to be passed, however the data won't be saved by our server, if it will be equal to 'test2' the response will print out your request's payload.
+
+    When request `sendNumbersOnline` will be executed successfully, please contact partner support specialists, so they can test if your messages are forwarded correctly with `addMessage` request. When we confirm
+    that everything is working as intended, we will add your numbers to the pool, and they will be available
+    for purchase in a few hours.
+
+    ## **Attachments**
+
+    ### **#1 Countries list**
+
+    [See here](./countries)
+
+    ### **#2 Services list**
+
+    [See here](./services)
+
+    ### **#3 Operators list**
+
+    [See here](./operators)
+
+    ### **#4 Workflow**
+
+    ![workflow](/docs/workflow_smshub.png)
+  contact:
+    name: Egor Stabilov
+    email: partners@onlinesim.ru
+    url: 'https://onlinesim.ru'
+  termsOfService: 'https://onlinesim.ru/documentation/offer'
+  license:
+    name: 'GNU General Public License, version 3.0'
+    url: 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+servers:
+  - url: '{yourserver}'
+    x-description-ru: URL Вашего сервера
+    description: Your server URL
+    variables:
+      yourserver:
+        default: 'https://www.example.net'
+paths:
+  /getServicesEndpointPlaceholder:
+    parameters: []
+    post:
+      summary: GET_SERVICES
+      operationId: GET_SERVICES
+      responses:
+        '200':
+          x-description-ru: 'Ответ Вашего сервера на запрос GET_SERVICES должен быть в следующем формате:'
+          description: 'The response for GET_SERVICES request from your server should be in following format:'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  countryList:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        '#countryname#':
+                          type: string
+                          x-description-ru: Название страны
+                          description: Country name
+                        operatorMap:
+                          type: object
+                          properties:
+                            any:
+                              type: object
+                              x-description-ru: Количество номеров оператора "any" должно быть равно сумме доступных номеров всех других операторов этой страны по данному сервису
+                              description: Operator "any" should contain the total amount available numbers for this country
+                              properties:
+                                '#service_name#':
+                                  type: integer
+                                  x-description-ru: Название сервиса и соответствующее количество доступных номеров
+                                  description: Service name and corresponding amount of available numbers for this service
+                            '#operator_name#':
+                              type: object
+                              properties:
+                                '#service_name#':
+                                  type: integer
+                                  x-description-ru: Название сервиса и соответствующее количество доступных номеров
+                                  description: Service name and corresponding amount of available numbers for this service
+                  status:
+                    type: string
+                    x-description-ru: Статус выполнения запроса (SUCCESS or ERROR)
+                    description: Request status (SUCCESS or ERROR)
+                    enum:
+                      - SUCCESS
+                      - ERROR
+                    example: SUCCESS
+              examples:
+                Response example from your server:
+                  value:
+                    countryList:
+                      - country: russia
+                        operatorMap:
+                          any:
+                            vk: 10
+                            ok: 25
+                            wa: 52
+                          beeline:
+                            vk: 10
+                            ok: 15
+                            wa: 20
+                          megafon:
+                            vk: 0
+                            ok: 10
+                            wa: 32
+                      - country: ukraine
+                        operatorMap:
+                          any:
+                            vk: 10
+                            ok: 50
+                            wa: 132
+                          life:
+                            vk: 0
+                            ok: 10
+                            wa: 32
+                          vodafone:
+                            vk: 10
+                            ok: 10
+                            wa: 0
+                          kyivstar:
+                            vk: 0
+                            ok: 30
+                            wa: 100
+                    status: SUCCESS
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                default: application/json; charset=utf-8
+                enum:
+                  - application/json; charset=utf-8
+                example: application/json; charset=utf-8
+              x-description-ru: Заголовок "Content type" и кодировка
+              description: Content type and encoding scheme
+      x-description-ru: |-
+        Этот запрос отправляется **от сервера Onlinesim на Ваш сервер** для получения списка доступных номеров. Ваш сервер должен вернуть список номеров в формате, описанном ниже.
+
+        Для аутентификации будет использован Ваш API ключ партнера, который будет передан в теле запроса.
+
+        >**ВАЖНО!** <br>Необходимо, чтобы Ваш сервер возвращал актуальное количество одновременно доступных номеров. Например, если у Вас есть SIM банк на 512 портов и только 64 GSM-модуля в оборудовании, Вам необходимо вернуть 64 номера, а не 512. Нарушение этого условия повлечет автоматическую блокировку системой выдачу Ваших номеров на 30 минут.
+
+        >**ВАЖНО!** <br>OperatorMap должен содержать оператора 'any', количество номеров которого является суммой номеров всех доступных операторов по каждому сервису.
+      description: |-
+        This request is sent **from Onlinesim server to yours** to get a list of available numbers. Your server should return a list of numbers in format described below.
+
+        Your partner's API key will be passed in the request in a payload.
+
+        >**IMPORTANT NOTE!** <br>It is necessary to return actual number of simultaneously available numbers. For example, if you have SIM bank with 512 ports and only 64 GSM-modules, then you should return 64, not 512. Violation of this condition cause the system to automatically block receiving numbers from you for 30 minutes.
+
+        >**IMPORTANT NOTE!** <br>OperatorMap should contain operator 'any' that includes numbers of all available operators for each service
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  action: GET_SERVICES
+                  key: apiKey
+              properties:
+                action:
+                  type: string
+                  x-description-ru: 'Имя метода, в данном случае GET_SERVICES'
+                  description: 'Method name, in this case GET_SERVICES'
+                  example: GET_SERVICES
+                  default: GET_SERVICES
+                  enum:
+                    - GET_SERVICES
+                key:
+                  type: string
+                  x-description-ru: API ключ Вашего профиля партнера Onlinesim
+                  description: API key of your Onlinesim partner's profile
+              required:
+                - action
+                - key
+            examples:
+              Example payload of Onlinesim server GET_SERVICES request:
+                value:
+                  action: GET_SERVICES
+                  key: apiKey
+        x-description-ru: Тело запроса от сервера Onlinesim
+        description: Request payload from Onlinesim server
+      tags:
+        - v1
+  /getNumberEndpointPlaceholder:
+    post:
+      summary: GET_NUMBER
+      operationId: GET_NUMBER
+      responses:
+        '200':
+          x-description-ru: 'Ответ Вашего сервера на запрос GET_NUMBER должен быть в следующем формате:'
+          description: 'The response for GET_NUMBER request from your server should be in following format:'
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                default: application/json; charset=utf-8
+                enum:
+                  - application/json; charset=utf-8
+                example: application/json; charset=utf-8
+              x-description-ru: Заголовок "Content type" и кодировка
+              description: Content type and encoding scheme
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    number: 79281234567
+                    activationId: 355
+                    status: SUCCESS
+                properties:
+                  number:
+                    type: integer
+                    x-description-ru: 'Номер телефона в международном формате, согласно указанным в запросе параметрам'
+                    description: Phone number in international format according to the requested parameters
+                    example: 79088081050
+                  activationId:
+                    type: integer
+                    x-description-ru: ID операции (присваивается Вашим сервером)
+                    description: Operation ID (assigned by your server)
+                    example: 355
+                    minimum: 1
+                  status:
+                    type: string
+                    x-description-ru: Статус выполнения запроса (SUCCESS or ERROR)
+                    description: Request status (SUCCESS or ERROR)
+                    enum:
+                      - SUCCESS
+                      - ERROR
+                    example: SUCCESS
+              examples:
+                Response example from your server:
+                  value:
+                    number: 79281234567
+                    activationId: 355
+                    status: SUCCESS
+      tags:
+        - v1
+      x-description-ru: |-
+        Запрос для заказа номер для приема SMS от указанного сервиса.
+
+        Данный запрос отправляется на Ваш сервер для заказа номера на 15 минут с указанными параметрами для получения SMS от одного сервиса. Операция может быть закрыта досрочно (смотри <a href="#post-/finishActivationEndpointPlaceholder">FINISH_ACTIVATION</a>).
+      description: |-
+        Request for ordering a number for SMS reception from a specified service.
+
+        This request is sent to your server to order a number for 15 minutes with specific parameters to receive SMS from a single service. The operation can be close prematurely (check <a href="#post-/finishActivationEndpointPlaceholder">FINISH_ACTIVATION</a>).
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  action: GET_NUMBER
+                  country: russia
+                  operator: any
+                  service: vk
+                  sum: 40
+                  key: test
+              properties:
+                action:
+                  type: string
+                  x-description-ru: 'Имя метода, в данном случае GET_NUMBER'
+                  description: 'Method name, in this case GET_NUMBER'
+                  default: GET_NUMBER
+                  example: GET_NUMBER
+                  enum:
+                    - GET_NUMBER
+                country:
+                  type: string
+                  x-description-ru: 'Название страны, enum <br>(смотри <a href="#countries">список стран</a>)'
+                  description: 'Country name, enum (See <a href="#countries">country list</a>)'
+                  example: germany
+                operator:
+                  type: string
+                  x-description-ru: 'Название оператора, enum <br>(смотри <a href="#operators">список операторов</a>)'
+                  description: 'Operator name, enum. <br>See <a href="#operators">operator list </a>'
+                  example: any
+                service:
+                  type: string
+                  x-description-ru: 'Название сервиса, enum <br>(смотри <a href="#services">список сервисов</a>)'
+                  description: 'Service name, enum<br>See <a href="#services">service list</a>'
+                  example: facebook
+                sum:
+                  type: number
+                  example: 40
+                  x-description-ru: 'Цена сервиса, в рублях (эта сумма будет начислена на Ваш аккаунт партнера Onlinesim)'
+                  description: 'Service price, in RUB (this sum will be credited to your Onlinesim account)'
+                key:
+                  type: string
+                  x-description-ru: API ключ Вашего профиля партнера Onlinesim
+                  description: API key of your Onlinesim partner's profile
+                exceptionPhoneSet:
+                  type: array
+                  x-description-ru: 'Список префиксов-исключений для масок номеров, которые НЕ должны выдаваться при запросе номера. Формат: код страны + несколько цифр номера. Например, при переданном значении 46950 не должны выдаваться номера Швеции, начинающиеся с +46950*'
+                  description: 'List of exception prefixes that should NOT be issued when number is requested. Format: country code + several digits of a number. For example, if 46950 value is passed, your server should not issue numbers of Sweden that starts with +46950*'
+                  items:
+                    type: integer
+                    example: 46950
+              required:
+                - action
+                - country
+                - operator
+                - service
+                - sum
+                - key
+            examples:
+              Example payload of Onlinesim server GET_NUMBER request:
+                value:
+                  action: GET_NUMBER
+                  country: russia
+                  operator: any
+                  service: vk
+                  sum: 40
+                  key: apiKey
+        x-description-ru: Тело запроса от сервера Onlinesim
+        description: Request payload from Onlinesim server
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+  /pushSmsEndpointPlaceholder:
+    post:
+      servers:
+        - url: 'https://www.ourserver.com'
+      summary: PUSH_SMS
+      operationId: PUSH_SMS
+      responses:
+        '200':
+          x-description-ru: Ответ сервера Onlinesim.
+          description: Onlinesim server response.
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    status: SUCCESS
+                properties:
+                  status:
+                    type: string
+                    x-description-ru: Статус ответа сервера Onlinesim
+                    description: Onlinesim server response status
+                    enum:
+                      - SUCCESS
+                      - ERROR
+                    example: SUCCESS
+              examples:
+                Onlinesim server reponse example for successfuly received SMS:
+                  value:
+                    status: SUCCESS
+          headers: {}
+      tags:
+        - v1
+      x-description-ru: |-
+        >**ВАЖНО!** <br>URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки<br>
+        >Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку
+        Это webhook для отправки сообщения на сервер Onlinesim. Этот запрос должен выполняться лишь тогда, когда Ваш номер
+        получил сообщение на заказанный номер для его (сообщения) последующей передачи на сервер Onlinesim.
+
+        Если Вы получили ответ со статусом 200(OK), в Вашей базе данных SMS может быть помечено как успешно доставленное (повторно отправлять
+        запрос не нужно), если код статуса отличен от 200(OK), то необходимо повторно отправить запрос с тем же контентом через 10 секунд.
+
+        >**ВАЖНО!** <br>Заголовок запроса 'Content-Type' должен содержать utf-8 кодировку в качестве значения<br>('Content-Type': 'application/json; charset=utf-8').
+      description: |-
+        >**IMPORTANT NOTE!** <br>URL of Onlinesim server is provided by Onlinesim partner support specialists<br>
+        >Please note, that the URL in the example is just a placeholder
+        This is a webhook for sending messages to Onlinesim server. This request should be made only when your number has
+        received a message on ordered number to forward it to Onlinesim server.
+
+        If you get a response with 200(OK) status, SMS can be marked in your database as successfully delivered (don't send message again)
+        . If response is different from 200, then in 10 seconds another request with the same context should be sent.
+
+        >**IMPORTANT NOTE!** <br>Request header should have utf-8 encode scheme placed in 'Content-Type'<br>('Content-Type': 'application/json; charset=utf-8').
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                smsId:
+                  type: integer
+                  x-description-ru: ID операции (присваивается Вашим сервером)
+                  description: Operation ID (assigned by your server)
+                  example: 355
+                  minimum: 1
+                phoneFrom:
+                  type: string
+                  x-description-ru: Имя или номер отправителя
+                  description: Name or number of a sender
+                  example: Instagram
+                phone:
+                  type: string
+                  x-description-ru: 'Номер телефона, который был заказан для операции'
+                  description: 'Phone number, that has been ordered'
+                  example: '79088081050'
+                text:
+                  type: string
+                  x-description-ru: Текст сообщения
+                  description: Message text
+                  example: Your verification code is 800142
+                action:
+                  type: string
+                  x-description-ru: 'Имя метода, в данном случае PUSH_SMS'
+                  description: 'Method name, in this case PUSH_SMS'
+                  default: PUSH_SMS
+                  enum:
+                    - PUSH_SMS
+                  example: PUSH_SMS
+                key:
+                  type: string
+                  x-description-ru: API ключ Вашего профиля партнера Onlinesim
+                  description: API key of your Onlinesim partner's profile
+              required:
+                - smsId
+                - phoneFrom
+                - phone
+                - text
+                - action
+                - key
+            examples:
+              Example payload of your server PUSH_SMS request:
+                value:
+                  smsId: 124971
+                  phoneFrom: vk
+                  phone: '79104041216'
+                  text: Your OTP 46875
+                  action: PUSH_SMS
+                  key: apiKey
+        x-description-ru: 'PUSH_SMS webhook: Ваш сервер должен отправлять этот запрос лишь при наступлении события (когда заказанный номер получил сообщение).'
+        description: 'PUSH_SMS webhook: your server should only send this request when an event is triggered (when the ordered number has received a message).'
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/Content-Type'
+    parameters: []
+  /finishActivationEndpointPlaceholder:
+    post:
+      summary: FINISH_ACTIVATION
+      operationId: FINISH_ACTIVATION
+      responses:
+        '200':
+          x-description-ru: 'Ответ Вашего сервера на запрос FINISH_ACTIVATION должен быть в следующем формате:'
+          description: 'The response for FINISH_ACTIVATION request from your server should be in following format:'
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    status: SUCCESS
+                properties:
+                  status:
+                    type: string
+                    x-description-ru: Статус выполнения запроса (SUCCESS or ERROR)
+                    description: Request status (SUCCESS or ERROR)
+                    enum:
+                      - SUCCESS
+                      - ERROR
+                    example: SUCCESS
+              examples:
+                Response example from your server:
+                  value:
+                    status: SUCCESS
+      x-description-ru: |-
+        Данный запрос отправляется сервером Onlinesim для закрытия текущей операции с определенным статусом (который зависит от результатов
+        операции). Запрос может быть отправлен по истечению времени (15 минут), при досрочном закрытии операции (SMS от заказанного сервиса было
+        успешно получено) или при отмене операции (SMS от заказанного сервиса не было получено).
+      description: |-
+        This request is sent by Onlinesim server to close current operation with a certain status (which depends on the result
+        of operation). Request can be sent after the time for operation runs out (15 minutes), if the operation was closed
+        prematurely (SMS has been received) or if operation has been cancelled (SMS hasn't been received).
+      tags:
+        - v1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  action: FINISH_ACTIVATION
+                  activationId: 313922603105007
+                  status: 4
+                  key: test
+              properties:
+                action:
+                  type: string
+                  x-description-ru: 'Имя метода, в данном случае FINISH_ACTIVATION'
+                  description: 'Method name, in this case FINISH_ACTIVATION'
+                  default: FINISH_ACTIVATION
+                  enum:
+                    - FINISH_ACTIVATION
+                  example: FINISH_ACTIVATION
+                activationId:
+                  type: integer
+                  x-description-ru: ID операции (присваивается Вашим сервером)
+                  description: Operation ID (assigned by your server)
+                  minimum: 1
+                  example: 355
+                status:
+                  type: integer
+                  x-description-ru: 'Код статуса операции, enum.<br>1 - Номер не был заказан под текущий сервис<br>3 - Операция завершена успешно<br>4 - Операция была отменена, сообщение не было получено<br>5 - По операции был совершен возврат, в случае ошибок и проблем с сообщением.'
+                  description: 'Status code of the operation, enum.<br>1 - This number was not ordered for the current service<br>3 - Successfully sold<br>4 - Canceled, message was not delivered<br>5 - Refunded, in case of errors and message problems'
+                  example: 3
+                  enum:
+                    - 1
+                    - 3
+                    - 4
+                    - 5
+                key:
+                  type: string
+                  x-description-ru: API ключ Вашего профиля партнера Onlinesim
+                  description: API key of your Onlinesim partner's profile
+              required:
+                - action
+                - activationId
+                - status
+                - key
+            examples:
+              Example payload of Onlinesim server FINISH_ACTIVATION request:
+                value:
+                  action: FINISH_ACTIVATION
+                  activationId: 75489
+                  status: 3
+                  key: apiKey
+        x-description-ru: Тело запроса от сервера Onlinesim
+        description: Request payload from Onlinesim server
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+  /getServicesRentEndpointPlaceholder:
+    parameters: []
+    post:
+      summary: GET_SERVICES (RENT)
+      operationId: GET_SERVICES_RENT
+      responses:
+        '200':
+          x-description-ru: Ответ Вашего сервера на запрос GET_SERVICES должен быть в следующем формате
+          description: 'The response for GET_SERVICES request from your server should be in following format:'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  countryList:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        '#countryname#':
+                          type: string
+                          x-description-ru: Название страны
+                          description: Country name
+                        operatorMap:
+                          type: object
+                          properties:
+                            any:
+                              type: object
+                              x-description-ru: Количество номеров оператора "any" должно быть равно сумме доступных номеров всех других операторов этой страны по аренде
+                              description: Operator "any" should contain the total amount available numbers for this countr
+                              properties:
+                                '#service_name#':
+                                  type: integer
+                                  nullable: true
+                                  x-description-ru: 'Название сервиса и соответствующее количество доступных номеров (все операторы, общее количество)'
+                                  description: 'Service name and corresponding amount of available numbers for this service (all operators, total)'
+                                rent:
+                                  type: integer
+                                  x-description-ru: 'Количество доступных для аренды номеров (все операторы, общее количество)'
+                                  description: 'Amount of available numbers for rent (all operators, total)'
+                            '#operator_name#':
+                              type: object
+                              properties:
+                                '#service_name#':
+                                  type: integer
+                                  nullable: true
+                                  x-description-ru: Название сервиса и соответствующее количество доступных номеров
+                                  description: Service name and corresponding amount of available numbers for this service
+                                rent:
+                                  type: integer
+                                  x-description-ru: Количество доступных для аренды номеров
+                                  description: Amount of available numbers for rent
+                  status:
+                    type: string
+                    x-description-ru: Статус выполнения запроса (SUCCESS or ERROR)
+                    description: Request status (SUCCESS or ERROR)
+                    enum:
+                      - SUCCESS
+                      - ERROR
+                    example: SUCCESS
+              examples:
+                Response example from your server (shared endpoint for rent and single-service activations):
+                  value:
+                    countryList:
+                      - country: russia
+                        operatorMap:
+                          any:
+                            vk: 10
+                            ok: 25
+                            wa: 52
+                            rent: 19
+                          beeline:
+                            vk: 10
+                            ok: 15
+                            wa: 20
+                            rent: 9
+                          megafon:
+                            vk: 0
+                            ok: 10
+                            wa: 32
+                            rent: 10
+                      - country: ukraine
+                        operatorMap:
+                          any:
+                            vk: 10
+                            ok: 50
+                            wa: 132
+                            rent: 21
+                          life:
+                            vk: 0
+                            ok: 10
+                            wa: 32
+                            rent: 2
+                          vodafone:
+                            vk: 10
+                            ok: 10
+                            wa: 0
+                            rent: 14
+                          kyivstar:
+                            vk: 0
+                            ok: 30
+                            wa: 100
+                            rent: 5
+                    status: SUCCESS
+                Response example from your server (dedicated endpoint for rent):
+                  value:
+                    countryList:
+                      - country: russia
+                        operatorMap:
+                          any:
+                            rent: 19
+                          beeline:
+                            rent: 9
+                          megafon:
+                            rent: 10
+                      - country: ukraine
+                        operatorMap:
+                          any:
+                            rent: 21
+                          life:
+                            rent: 2
+                          vodafone:
+                            rent: 14
+                          kyivstar:
+                            rent: 5
+                    status: SUCCESS
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                default: application/json; charset=utf-8
+                enum:
+                  - application/json; charset=utf-8
+                example: application/json; charset=utf-8
+              x-description-ru: Заголовок "Content type" и кодировка
+              description: Content type and encoding scheme
+      x-description-ru: |-
+        Данный запрос отправляется **с сервера Onlinesim на Ваш сервер** для получения списка доступных для аренды номеров. Ваш сервер должен вернуть список номеров в формате, описанном ниже.
+
+        Для аутентификации будет использован Ваш API ключ партнера, который будет передан в теле запроса.
+
+        >**ВАЖНО!** <br>Вы можете добавить информацию о доступных для аренды номерах на тот же endpoint, который Вы используете для приема SMS (GET_SERVICES, v1) или создать отдельный endpoint для аренды.
+
+        >**ВАЖНО!** <br>Необходимо, чтобы Ваш сервер возвращал актуальное количество одновременно доступных номеров. Например, если у Вас есть SIM банк на 512 портов и только 64 GSM-модуля в оборудовании, Вам необходимо вернуть 64 номера, а не 512. Нарушение этого условия повлечет автоматическую блокировку системой выдачу Ваших номеров на 30 минут.
+
+        >**ВАЖНО!** <br>OperatorMap должен содержать оператора 'any', количество номеров которого является суммой номеров всех доступных операторов по аренде.
+      description: |-
+        This request is sent **from Onlinesim server to yours** to get a list of available for rent numbers. Your server should return a list of numbers in format described below.
+
+        Your partner's API key will be passed in the request in a payload.
+
+        >**IMPORTANT NOTE!** <br>You can add information on available numbers for rent to your GET_SERVICES endpoint (v1) or create a new endpoint for rent only.
+
+        >**IMPORTANT NOTE!** <br>It is necessary to return actual number of simultaneously available numbers. For example, if you have SIM bank with 512 ports and only 64 GSM-modules, then you should return 64, not 512. Violation of this condition cause the system to automatically block receiving numbers from you for 30 minutes.
+
+        >**IMPORTANT NOTE!** <br>OperatorMap should contain operator 'any' that includes numbers of all available operators for rent.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  action: GET_SERVICES
+                  key: apiKey
+              properties:
+                action:
+                  type: string
+                  x-description-ru: 'Имя метода, в данном случае GET_SERVICES'
+                  description: 'Method name, in this case GET_SERVICES'
+                  example: GET_SERVICES
+                  default: GET_SERVICES
+                  enum:
+                    - GET_SERVICES
+                key:
+                  type: string
+                  x-description-ru: API ключ Вашего профиля партнера Onlinesim
+                  description: API key of your Onlinesim partner's profile
+              required:
+                - action
+                - key
+            examples:
+              Example payload of Onlinesim server GET_SERVICES request (for rent):
+                value:
+                  action: GET_SERVICES
+                  key: apiKey
+        x-description-ru: Тело запроса от сервера Onlinesim
+        description: Request payload from Onlinesim server
+      tags:
+        - v1 rent
+  /getNumberRentEndpointPlaceholder:
+    post:
+      summary: GET_NUMBER (RENT)
+      operationId: GET_NUMBER_RENT
+      responses:
+        '200':
+          x-description-ru: 'Ответ Вашего сервера на запрос GET_NUMBER должен быть в следующем формате:'
+          description: 'The response for GET_NUMBER request from your server should be in following format:'
+          headers:
+            Content-Type:
+              schema:
+                type: string
+                default: application/json; charset=utf-8
+                enum:
+                  - application/json; charset=utf-8
+                example: application/json; charset=utf-8
+              x-description-ru: Заголовок "Content type" и кодировка
+              description: Content type and encoding scheme
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    number: 79281234567
+                    activationId: 355
+                    status: SUCCESS
+                properties:
+                  number:
+                    type: integer
+                    x-description-ru: 'Номер телефона, который был заказан для операции, в международном формате'
+                    description: Phone number in international format according to the requested parameters
+                    example: 79088081050
+                  activationId:
+                    type: integer
+                    x-description-ru: ID операции (присваивается Вашим сервером)
+                    description: Operation ID (assigned by your server)
+                    example: 355
+                    minimum: 1
+                  status:
+                    type: string
+                    x-description-ru: Статус выполнения запроса (SUCCESS or ERROR)
+                    description: Request status (SUCCESS or ERROR)
+                    enum:
+                      - SUCCESS
+                      - ERROR
+                    example: SUCCESS
+              examples:
+                Response example from your server (for rent operation):
+                  value:
+                    number: 79281234567
+                    activationId: 355
+                    status: SUCCESS
+      x-description-ru: |-
+        Этот запрос создает новую операцию аренды, которая позволяет использовать номер для приема SMS от любых
+        сервисов и других мобильных номеров в течение длительного периода (от 1 дня до нескольких месяцев). Не прерывайте операцию до получения по ней запроса FINISH_ACTIVATION.
+
+        >**ВАЖНО!** <br>Вы можете использовать тот же endpoint, который использовали для запроса GET_NUMBER (v1) под прием SMS от отдельных сервисов или создать новый endpoint только для операций аренды.
+
+        Если номер не получит SMS в течение 20 минут после создания операции, она будет отменена автоматически, а номер вновь
+        станет доступен для другой операции аренды. Если номер трижды не сможет получить SMS в течение 20 минут после создания
+        операции, он будет заблокирован нашим сервером. Данные баны автоматически снимаются каждые 24 часа.
+
+        Аренда может быть продлена клиентом, но доход начисляется только по завершению операции (по истечению срока или закрытию операции клиентом самостоятельно).
+
+        >**ВАЖНО!**<br>Мы блокируем сообщения от банков, платежных систем и кредитных организаций, чтобы оградить партнеров от каких-либо юридических последствий, которые могут возникнуть при использовании таких сервисов клиентами.<br>В то же время аренда не поддерживает возможность добавлять какие-либо сервисы в список исключений, поскольку мы не знаем заранее какие сервисы могут быть использованы клиентами. Пожалуйста, обратите внимание, что SMS от сервисов, добавленных Вами в исключения при аренде БУДУТ передаваться клиентам.
+      description: |-
+        This request creates a new rent operation, which will allow to use a number to receive SMS from any
+        service and other mobile numbers for a long period of time (from 1 day to several months). Don't interrupt operation before FINISH_ACTIVATION request.
+
+        >**IMPORTANT NOTE!** <br>You can use the same GET_NUMBER endpoint as for single-service activations (v1) or create a new endpoint for rent orders only.
+
+        If number won't receive SMS within 20 minutes after operation is created, the operation will be cancelled automatically,
+        making it available for another operation. If number fails 3 operations to receive SMS within 15 minutes, it will be
+        banned by our server. These bans are lifted automatically every 24 hours.
+
+        Rent can be prolonged by the client, income is credited when the operation is closed (upon rent expiration or termination).
+
+        >**Important note!**<br>We're blocking messages from banks, payment systems and credit institutions to prevent any legal consequences for our partners.<br>At the same time long term rental does not support any exceptions for services as we don't know beforehand which service may or may not be used by our clients. Please keep in mind that any exceptions you may add for your account will not be applied for rent.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  action: GET_NUMBER
+                  country: russia
+                  operator: any
+                  service: vk
+                  sum: 40
+                  key: test
+              properties:
+                action:
+                  type: string
+                  x-description-ru: 'Имя метода, в данном случае GET_NUMBER'
+                  description: 'Method name, in this case GET_NUMBER'
+                  default: GET_NUMBER
+                  example: GET_NUMBER
+                  enum:
+                    - GET_NUMBER
+                key:
+                  type: string
+                  x-description-ru: API ключ Вашего профиля партнера Onlinesim
+                  description: API key of your Onlinesim partner's profile
+                country:
+                  type: string
+                  x-description-ru: 'Название страны, enum <br>(смотри <a href="#countries">список стран</a>)'
+                  description: 'Country name, enum (See <a href="#countries">country list</a>)'
+                  example: germany
+                operator:
+                  type: string
+                  x-description-ru: 'Название оператора, enum. <br>(смотри <a href="#operators">список операторов</a>)'
+                  description: 'Operator name, enum. <br>See <a href="#operators">operator list </a>'
+                  example: any
+                service:
+                  type: string
+                  x-description-ru: Название сервиса. Для аренды всегда "rent"
+                  description: 'Service name, enum. In this case "rent"'
+                  example: rent
+                  enum:
+                    - rent
+                sum:
+                  example: 320
+                  x-description-ru: 'Первоначальная стоимость аренды, в рублях (эта сумма будет начислена на Ваш аккаунт партнера Onlinesim по завершению операции аренды)'
+                  description: 'Initial service price, in RUB (this sum will be credited to your Onlinesim account upon closing the operation)'
+                  type: number
+                exceptionPhoneSet:
+                  type: array
+                  x-description-ru: 'Список префиксов-исключений для масок номеров, которые НЕ должны выдаваться при запросе номера. Формат: код страны + несколько цифр номера. Например, при переданном значении 46950 не должны выдаваться номера Швеции, начинающиеся с +46950*'
+                  description: 'List of exception prefixes that should NOT be issued when number is requested. Format: country code + several digits of a number'
+                  items:
+                    type: integer
+                    example: 46950
+              required:
+                - action
+                - key
+                - country
+                - operator
+                - service
+                - sum
+            examples:
+              Example payload of Onlinesim server GET_NUMBER request (for rent):
+                value:
+                  action: GET_NUMBER
+                  key: apiKey
+                  country: germany
+                  operator: any
+                  service: rent
+                  sum: 400
+        x-description-ru: Тело запроса от сервера Onlinesim для операции аренды
+        description: Request payload from Onlinesim server for rent operation
+      tags:
+        - v1 rent
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+    parameters: []
+  /pushSmsRentEndpointPlaceholder:
+    post:
+      servers:
+        - url: 'https://www.ourserver.com'
+      summary: PUSH_SMS (RENT)
+      operationId: PUSH_SMS_RENT
+      responses:
+        '200':
+          x-description-ru: Ответ сервера Onlinesim.
+          description: Onlinesim server response.
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    status: SUCCESS
+                properties:
+                  status:
+                    type: string
+                    x-description-ru: Статус ответа сервера Onlinesim
+                    description: Onlinesim server response status
+                    enum:
+                      - SUCCESS
+                      - ERROR
+                    example: SUCCESS
+              examples:
+                Onlinesim server reponse example for PUSH_SMS request (for rental number):
+                  value:
+                    status: SUCCESS
+          headers: {}
+      x-description-ru: |-
+        >**ВАЖНО!** <br>URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки<br>
+        >Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку
+        Если Вы получили ответ со статусом 200(OK), в Вашей базе данных SMS может быть помечено как успешно доставленное (повторно отправлять
+        запрос не нужно), если код статуса отличен от 200(OK), то необходимо повторно отправить запрос с тем же контентом через 10 секунд.
+
+        >**ВАЖНО!** <br>Заголовок запроса 'Content-Type' должен содержать utf-8 кодировку в качестве значения<br>('Content-Type': 'application/json; charset=utf-8').
+      description: |-
+        >**IMPORTANT NOTE!** <br>URL of Onlinesim server is provided by Onlinesim partner support specialists<br>
+        >Please note, that the URL in the example is just a placeholder
+        If you get a response with 200(OK) status, SMS can be marked in your database as successfully delivered (don't send message again)
+        . If response is different from 200, then in 10 seconds another request with the same context should be sent.
+
+        >**IMPORTANT NOTE!** <br>Request header should have utf-8 encode scheme placed in 'Content-Type'<br>('Content-Type': 'application/json; charset=utf-8').
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                smsId:
+                  type: integer
+                  x-description-ru: ID операции (присваивается Вашим сервером)
+                  description: Operation ID (assigned by your server)
+                  example: 355
+                  minimum: 1
+                phoneFrom:
+                  type: string
+                  x-description-ru: Имя или номер отправителя
+                  description: Name or number of a sender
+                  example: Instagram
+                phone:
+                  type: string
+                  x-description-ru: 'Номер телефона, который был заказан для операции'
+                  description: 'Phone number, that has been ordered'
+                  example: '79088081050'
+                text:
+                  type: string
+                  x-description-ru: Текст сообщения
+                  description: Message text
+                  example: Your verification code is 800142
+                action:
+                  type: string
+                  x-description-ru: 'Имя метода, в данном случае PUSH_SMS'
+                  description: 'Method name, in this case PUSH_SMS'
+                  default: PUSH_SMS
+                  enum:
+                    - PUSH_SMS
+                  example: PUSH_SMS
+                key:
+                  type: string
+                  x-description-ru: API ключ Вашего профиля партнера Onlinesim
+                  description: API key of your Onlinesim partner's profile
+                service:
+                  type: string
+                  x-description-ru: Название сервиса. Для аренды всегда "rent"
+                  description: 'Service name, for long term rental always "rent"'
+                  enum:
+                    - rent
+                  example: rent
+              required:
+                - smsId
+                - phoneFrom
+                - phone
+                - text
+                - action
+                - key
+                - service
+            examples:
+              Example payload of your server request (for rental number):
+                value:
+                  smsId: 124980
+                  phoneFrom: instagram
+                  phone: '4605028040'
+                  text: 784958 is your secret code
+                  action: PUSH_SMS
+                  key: apiKey
+                  service: rent
+        x-description-ru: 'PUSH_SMS webhook: Ваш сервер должен отправлять этот запрос лишь при наступлении события (когда заказанный номер получил сообщение).'
+        description: 'PUSH_SMS webhook: your server should only send this request when an event is triggered (when the ordered number has received a message).'
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/Content-Type'
+      tags:
+        - v1 rent
+    parameters: []
+  /finishActivationRentEndpointPlaceholder:
+    post:
+      summary: FINISH_ACTIVATION (RENT)
+      operationId: FINISH_ACTIVATION_RENT
+      responses:
+        '200':
+          x-description-ru: 'Ответ Вашего сервера на запрос FINISH_ACTIVATION должен быть в следующем формате:'
+          description: 'The response for FINISH_ACTIVATION request from your server should be in following format:'
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    status: SUCCESS
+                properties:
+                  status:
+                    type: string
+                    x-description-ru: Статус выполнения запроса (SUCCESS or ERROR)
+                    description: Request status (SUCCESS or ERROR)
+                    enum:
+                      - SUCCESS
+                      - ERROR
+                    example: SUCCESS
+              examples:
+                Response example from your server (when the rental operation was successfuly closed on your server):
+                  value:
+                    status: SUCCESS
+      x-description-ru: |-
+        Данный запрос отправляется сервером Onlinesim для закрытия текущей операции аренды с определенным статусом (который зависит от результатов
+        операции). Запрос может быть отправлен по истечению времени (15 минут), при досрочном закрытии операции (SMS от заказанного сервиса было
+        успешно получено) или при отмене операции (SMS от заказанного сервиса не было получено).
+
+        >**ВАЖНО!** <br>Вы можете использовать тот же endpoint, что и для закрытия операций по приему SMS (FINISH_ACTIVATION, v1), либо использовать отдельный endpoint исключительно для операций аренды.
+      description: |-
+        This request is sent by Onlinesim server to close current rent operation with a specific status (which depends on the result
+        of operation). Request can be sent on operation timeout, if the operation was closed
+        prematurely (SMS has been received) or if operation has been cancelled (SMS hasn't been received).
+
+        >**IMPORTANT NOTE!** <br>You can use the same FINISH_ACTIVATION endpoint as for single-service activations (v1) or create a new endpoint for rent orders only.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  action: FINISH_ACTIVATION
+                  activationId: 313922603105007
+                  status: 4
+                  key: test
+              properties:
+                action:
+                  type: string
+                  x-description-ru: 'Имя метода, в данном случае FINISH_ACTIVATION'
+                  description: 'Method name, in this case FINISH_ACTIVATION'
+                  default: FINISH_ACTIVATION
+                  enum:
+                    - FINISH_ACTIVATION
+                  example: FINISH_ACTIVATION
+                activationId:
+                  type: integer
+                  x-description-ru: ID операции (присваивается Вашим сервером)
+                  description: Operation ID (assigned by your server)
+                  minimum: 1
+                  example: 355
+                status:
+                  type: integer
+                  x-description-ru: 'Код статуса операции, enum.<br><br>1 - Номер не был заказан под текущий сервис<br>3 - Операция завершена успешно<br>4 - Операция была отменена, сообщение не было получено'
+                  description: 'Status code of the operation, enum.<br>1 - This number was not ordered for the current service<br>3 - Successfully sold<br>4 - Canceled, message was not delivered'
+                  example: 3
+                  enum:
+                    - 1
+                    - 3
+                    - 4
+                key:
+                  type: string
+                  x-description-ru: API ключ Вашего профиля партнера Onlinesim
+                  description: API key of your Onlinesim partner's profile
+                service:
+                  type: string
+                  x-description-ru: Название сервиса. Для аренды всегда "rent"
+                  description: 'Service name, in this case "rent"'
+                  enum:
+                    - rent
+                  example: rent
+                sum:
+                  type: number
+                  x-description-ru: 'Общая стоимость аренды, включая все периоды продления, в рублях (эта сумма будет начислена на Ваш аккаунт партнера Onlinesim при закрытии операции аренды)'
+                  description: 'Total service price, including all prolongation periods, in RUB (this sum will be credited to your Onlinesim account)'
+                  example: 870
+              required:
+                - action
+                - activationId
+                - status
+                - key
+                - service
+                - sum
+            examples:
+              Example payload of Onlinesim server FINISH_ACTIVATION request (for closing rent operation):
+                value:
+                  action: FINISH_ACTIVATION
+                  activationId: 75491
+                  status: 3
+                  key: apiKey
+                  service: rent
+                  sum: 2408
+        x-description-ru: Тело запроса от сервера Onlinesim
+        description: Request payload from Onlinesim server
+      tags:
+        - v1 rent
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+    parameters: []
+  /api/resellers/sendNumbersOnline:
+    post:
+      servers:
+        - url: 'https://www.ourserver.com'
+      summary: sendNumbersOnline
+      operationId: sendNumbersOnline
+      responses:
+        '200':
+          x-description-ru: Ответ сервера Onlinesim.
+          description: Onlinesim server response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    oneOf:
+                      - type: string
+                      - type: integer
+                    x-description-ru: '1, если запрос был выполнен успешно, либо выведет сообщение об ошибке'
+                    description: '1, if request was successful, or error message'
+                    example: 1
+                  ids:
+                    type: object
+                    properties:
+                      '#number#':
+                        type: integer
+                        nullable: true
+                        x-description-ru: 'ID номеров, номер: id - возвращает ID для текущего номера (или присваивает ID для нового номера), либо присваивает null для удаленных номеров'
+                        description: 'Numbers IDs, number: id - returns id for current number (or assigns id for a new one) or assigns null for removed numbers'
+              examples:
+                Onlinesim server reponse example:
+                  value:
+                    response: 1
+                    ids:
+                      '+234112233445': 1042
+                      '+234112233446': 1043
+                      '+234112233447': 1044
+        '400':
+          x-description-ru: Bad Request
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                type: string
+                x-description-ru: Описание исключения
+                description: Exception description
+              examples:
+                Incorrect format number passed:
+                  value: NUMBER_FORMAT_ERROR
+                date_start format error:
+                  value: ERROR_DATE
+      x-description-ru: |-
+        >**ВАЖНО!** <br>URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки<br>
+        >Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку
+        В этом запросе следует передавать все доступные для продажи номера. Данный запрос должен отправляться на сервер Onlinesim каждые 5 минут (для подтверждения аптайма Вашего сервера) и после
+        каждого изменения списка номеров: после добавления новых номеров или удаления каких-либо ранее переданных. Однако, есть альтернативный вариант: для подтверждения аптайма, Вы можете воспользоваться запросом <a href="#get-/api/resellers">checkWork</a>, а для добавления и удаления номеров - запросами <a href="#post-/api/resellers/addNumber">addNumber</a> и <a href="#delete-/api/resellers/removeNumber">removeNumber</a> соответственно.
+
+        >**ВАЖНО!** <br>Необходимо, чтобы Ваш сервер возвращал актуальное количество одновременно доступных номеров. Например, если у Вас есть SIM банк на 512 портов и только 64 GSM-модуля в оборудовании, Вам необходимо вернуть 64 номера, а не 512. Нарушение этого условия повлечет автоматическую блокировку системой выдачу Ваших номеров на 30 минут.
+
+        >**ВАЖНО!** <br>Включение параметра "rent" (присваиванием ему значения `1`) позволяет клиентам арендовать Ваши номера на длительный период, значительно увеличивая Ваш доход. Однако Вам необходимо связаться с партнерской поддержкой для получиения подробной информации об условиях и требованиях к арендным номерам, перед тем, как мы включим этот функционал на Вашем аккаунте.
+      description: |-
+        >**IMPORTANT NOTE!** <br>URL of Onlinesim server is provided by Onlinesim partner support specialists<br>
+        >Please note, that the URL in the example is just a placeholder
+        In this request all numbers available for sale should be passed. This request should be sent to Onlinesim server every 5 minutes (to ensure that your server is up and running) and after
+        any change in the number list: after adding new numbers or removing any of previously passed ones. However, there is another way: you can send <a href="#get-/api/resellers">checkWork</a> request every 5 minutes (as confirmation that your server is up and running), and use <a href="#post-/api/resellers/addNumber">addNumber</a> and <a href="#delete-/api/resellers/removeNumber">removeNumber</a> to add or delete numbers respectively.
+
+        >**IMPORTANT NOTE!** <br>Only list of active numbers should be passed in this request. If you have a 32 port device and a 512 port SIM bank, you should send a list with 32 numbers that currently in the ports.
+
+        >**IMPORTANT NOTE!** <br>Enabling "rent" parameter (by assigning value `1` to it) allows clients to rent your number for a longer period, significantly increasing your income. However you need to contact partner support to get a detailed information on terms and requirements before we enable it for your account.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  numbers:
+                    - number: '+234112233445'
+                      country_id: 234
+                    - number: '+234112233446'
+                      country_id: 234
+                      date_start: 1543907600
+                      operator: 28967
+              properties:
+                numbers:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      number:
+                        type: string
+                        x-description-ru: Номер телефона в международном формате
+                        description: Phone number in international format
+                        example: '+46050910804'
+                      country_id:
+                        type: integer
+                        x-description-ru: 'Код страны (согласно стандарту E.164, без знака "+")'
+                        description: 'Country code (Е.164 standard, without "+" sign)'
+                        example: 46
+                      operator:
+                        type: integer
+                        x-description-ru: MCC + MNC коды оператора (эти коды содержатся в первых 5 или 6 цифрах IMSI)
+                        description: MCC + MNC operator code (these codes are contained in the first digits of IMSI)
+                        example: 24012
+                      date_start:
+                        type: integer
+                        x-description-ru: Дата и время размещения номера (UNIX timestamp)
+                        description: Date and time of placement (UNIX timestamp)
+                        example: 1658209063
+                      port_id:
+                        type: string
+                        x-description-ru: 'Уникальное имя порта, которое будет отображаться в нашем интерфейсе на странице управления Вашими номерами. Значение по умолчанию совпадает с номером телефона (значением параметра ''number'')'
+                        description: 'Unique port name, this name will be displayed in our interface on your personal web-page. Default value: phone number (value of ''number'' parameter)'
+                        example: Port1
+                        maxLength: 100
+                      rent:
+                        type: integer
+                        description: 'Rent mode:<br>`1` - enabled, `0` - disabled'
+                        enum:
+                          - 0
+                          - 1
+                        example: 0
+                    required:
+                      - number
+                      - country_id
+                test:
+                  type: string
+                  x-description-ru: 'Параметр для тестов. Может принимать два значения: ''test1'' или ''test2''. Будучи равным ''test1'' отправит запрос на сервер, но данные, переданные таким запросом не будут сохранены нашим сервером. Если параметр будет равен ''test2'', то сервер Onlinesim в ответе вернет тело Вашего запроса.'
+                  description: 'Testing parameter. It''s value can be either ''test1'' or ''test2'', while being equal to first value it will allow the request to be passed, however the data won''t be saved by our server, if it will be equal to ''test2'' the response will print out your request''s payload.'
+                  enum:
+                    - test1
+                    - test2
+            examples:
+              Example payload of your server `sendNumbersOnline` request:
+                value:
+                  numbers:
+                    - number: '+234112233445'
+                      country_id: 234
+                    - number: '+234112233446'
+                      country_id: 234
+                      operator: 28967
+                      date_start: 1543907600
+                    - number: '+234112233447'
+                      country_id: 234
+                      operator: 28967
+                      date_start: 1543907600
+                      port_id: Port1
+        x-description-ru: 'Ваш сервер должен посылать данный запрос каждые 5 минут в качестве подверждения аптайма, либо при изменении списка доступных номеров (при добавлении новых номеров или удалении каких-либо, ранее переданных).'
+        description: Your server should send this request every 5 minutes as a confirmation of uptime or when the list of available numbers is changed (when new numbers are added or previously passed ones are removed).
+      tags:
+        - v2
+  /api/resellers/addMessage:
+    post:
+      servers:
+        - url: 'https://www.ourserver.com'
+      summary: addMessage
+      operationId: addMessage
+      responses:
+        '200':
+          x-description-ru: Ответ сервера Onlinesim.
+          description: Onlinesim server response.
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    response: 1
+                properties:
+                  response:
+                    oneOf:
+                      - type: string
+                      - type: integer
+                    x-description-ru: '1, если запрос был выполнен успешно, либо выведет сообщение об ошибке'
+                    description: '1, if the request has been completed successfully, or an error message'
+                    example: 1
+              examples:
+                Onlinesim server reponse example for `addMessage` request (message successfuly received):
+                  value:
+                    response: 1
+        '400':
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                type: string
+              examples:
+                Number is missing:
+                  value: NO_NUMBER
+                Invalid parameters in request:
+                  value: ERROR_PARAMS
+                Invalid number format:
+                  value: NUMBER_FORMAT_ERROR
+      x-description-ru: |-
+        >**ВАЖНО!** <br>URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки<br>
+        >Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку
+        Этот запрос пересылает сообщения которые были получены Вашими номерами на сервер Onlinesim. Вы можете отфильтровать сообщения перед отправкой запроса (отсылать только SMS от заказанного сервиса) или отсылать все сообщения, а мы произведем фильтрацию на своей стороне.
+
+        Вы также можете заблокировать все входящие SMS, содержащие конфиденциальную информацию и персональные данные, такие как пароль для входа в личный кабинет на сайте мобильного оператора и другие SMS.
+      description: |-
+        >**IMPORTANT NOTE!** <br>URL of Onlinesim server is provided by Onlinesim partner support specialists<br>
+        >Please note, that the URL in the example is just a placeholder
+        This requests forwards messages that were received by your numbers to our server. You can filter the messages before sending a request (send only SMS from ordered service) or send all messages, and we will filter them on our side.
+
+        You can also block all incoming SMS containing confidential or sensitive information such as SMS with credentials of private account on mobile operator's site and other SMS.
+      tags:
+        - v2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  date: '1546934787'
+                  number: '+234112233445'
+                  from: VKcom
+                  message: VKcom 111111
+              properties:
+                date:
+                  type: string
+                  x-description-ru: Дата и время приема сообщения (в формате UNIX timestamp)
+                  description: Date and time when SMS was received (UNIX timestamp)
+                  example: '1658209069'
+                number:
+                  type: string
+                  x-description-ru: Номер телефона в международном формате или ID номера (смотри ответ сервера на запрос <a href="#post-/api/resellers/sendNumbersOnline">sendNumbersOnline</a>)
+                  description: Phone number in international format or number's ID (see <a href="#post-/api/resellers/sendNumbersOnline">sendNumbersOnline</a> server response)
+                  example: '+234112233445'
+                from:
+                  type: string
+                  x-description-ru: Имя или номер отправителя
+                  description: Name or number of a sender
+                  example: Instagram
+                message:
+                  type: string
+                  x-description-ru: Текст сообщения
+                  description: Text of the message
+                  example: Your OTP is 785094
+                test:
+                  type: string
+                  x-description-ru: 'Параметр для тестов. Может принимать два значения: ''test1'' или ''test2''. Будучи равным ''test1'' отправит запрос на сервер, но данные, переданные таким запросом не будут сохранены нашим сервером. Если параметр будет равен ''test2'', то сервер Onlinesim в ответе вернет тело Вашего запроса.'
+                  description: 'Testing parameter. It''s value can be either ''test1'' or ''test2'', while being equal to first value it will allow the request to be passed, however the data won''t be saved by our server, if it will be equal to ''test2'' the response will print out your request''s payload.'
+                  enum:
+                    - test1
+                    - test2
+              required:
+                - date
+                - number
+                - from
+                - message
+            examples:
+              Example payload of your server `addMessage` request:
+                value:
+                  date: '1546934787'
+                  number: '+234112233445'
+                  from: VKcom
+                  message: VKcom 111111
+        x-description-ru: Ваш сервер должен отослать этот запрос как только заказанный номер получит сообщение.
+        description: Your server should send this request as soon as ordered number receives the message.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/Content-Type'
+  /api/resellers/takeOffNumbers:
+    get:
+      servers:
+        - url: 'https://www.ourserver.com'
+      summary: takeOffNumbers
+      tags:
+        - v2
+      responses:
+        '200':
+          x-description-ru: Ответ сервера Onlinesim.
+          description: Onlinesim server response.
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    response: 1
+                    list:
+                      - id: '40516575'
+                        number: '2203833346'
+                        sum: '75.76'
+                        country: '220'
+                      - id: '40516576'
+                        number: '2203833341'
+                        sum: '75.76'
+                        country: '220'
+                      - id: '40516577'
+                        number: '2203132613'
+                        sum: '75.76'
+                        country: '220'
+                      - id: '40516579'
+                        number: '2202759574'
+                        sum: '118.14'
+                        country: '220'
+                      - id: '40516583'
+                        number: '2202082904'
+                        sum: '54.38'
+                        country: '220'
+                      - id: '40572705'
+                        number: '2203796711'
+                        sum: '110.27'
+                        country: '220'
+                properties:
+                  response:
+                    oneOf:
+                      - type: string
+                      - type: integer
+                    x-description-ru: '1, если запрос был выполнен успешно, либо выведет сообщение об ошибке'
+                    description: '1, if the request has been completed successfully, or an error message'
+                    example: 1
+                  list:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          x-description-ru: ID номера
+                          description: Number ID
+                          example: '10001'
+                        number:
+                          type: string
+                          x-description-ru: Номер телефона в международном формате
+                          description: Phone number in international format
+                          example: '+4605091080'
+                        sum:
+                          type: string
+                          x-description-ru: 'Общая сумма дохода, заработанная номером'
+                          description: Total income earned by this number
+                          example: '75.76'
+                        country:
+                          type: string
+                          x-description-ru: 'Код страны (согласно стандарту E.164, без знака "+")'
+                          description: 'Country code (Е.164 standard, without "+" sign)'
+                          example: '46'
+              examples:
+                Example response of Onlinesim server for takeOffNumbers request:
+                  value:
+                    response: 1
+                    list:
+                      - id: '40516575'
+                        number: '2203830000'
+                        sum: '75.76'
+                        country: '220'
+                      - id: '40516576'
+                        number: '2203830001'
+                        sum: '58.76'
+                        country: '220'
+        '400':
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                type: string
+              examples:
+                Invalid parameters:
+                  value: ERROR_PARAMS
+      operationId: takeOffNumbers
+      x-description-ru: |-
+        >**ВАЖНО!** <br>URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки<br>
+        >Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку
+        Этот запрос опционален, Вы можете не реализовывать его. Запрос возвращает информацию о доходе Ваших текущих номеров, эти данные также доступны в Вашем личном кабинете. При переданном параметре <span style="color:#39ac39">sum</span>, возвращает список номеров, чей доход
+        превышает переданное значение.
+
+        Этот запрос может быть использован, чтобы быстро получить информацию о том, какие номера достигли желаемого Вами дохода и могут быть заменены на новые.
+      description: |-
+        >**IMPORTANT NOTE!** <br>URL of Onlinesim server is provided by Onlinesim partner support specialists<br>
+        >Please note, that the URL in the example is just a placeholder
+        This request is optional, and you can skip this part. It returns income information of your online numbers, this data is also available on your personal page. It returns a list of numbers which income is greater than
+        specified <span style="color:#39ac39">sum</span> parameter.
+
+        This request can be used to quickly obtain information on what online numbers has reached desired income and can be replaced with new ones.
+      parameters:
+        - schema:
+            type: string
+            default: '50'
+          in: query
+          name: sum
+          x-description-ru: 'Фильтр по значению дохода, в рублях. Например: при sum = 37.5, запрос вернет список активных номеров, чей доход равен или превышает 37.5 рублей.'
+          description: 'Filter income value, in rubles. Example: if sum = 37.5, the request will return a list of online numbers which income is equal to 37.5 RUB or more'
+        - $ref: '#/components/parameters/Authorization'
+  /api/resellers/addNumber:
+    post:
+      servers:
+        - url: 'https://www.ourserver.com'
+      summary: addNumber
+      operationId: addNumber
+      responses:
+        '200':
+          x-description-ru: Ответ сервера Onlinesim.
+          description: Onlinesim server response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    oneOf:
+                      - type: string
+                      - type: integer
+                    x-description-ru: '1, если запрос был выполнен успешно, либо выведет сообщение об ошибке'
+                    description: '1, if request was successful, or error message'
+                    example: 1
+                  ids:
+                    type: object
+                    properties:
+                      '#number#':
+                        type: integer
+                        x-description-ru: 'ID номеров, номер: id - возвращает ID для текущего номера (или присваивает ID для нового номера), либо присваивает null для удаленных номеров'
+                        description: 'Numbers IDs, number: id - returns id for current number (or assigns id for a new one) or assigns null for removed numbers'
+              examples:
+                Onlinesim server reponse example (successfuly added new numbers):
+                  value:
+                    response: 1
+                    ids:
+                      '+234112233445': 1042
+                      '+234112233446': 1043
+                      '+234112233447': 1044
+        '400':
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                type: string
+              examples:
+                Incorrect format number passed:
+                  value: NUMBER_FORMAT_ERROR
+                date_start format error:
+                  value: ERROR_DATE
+      tags:
+        - v2
+      x-description-ru: |
+        >**ВАЖНО!** <br>URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки<br>
+        >Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку
+        Данный запрос позволяет Вам добавлять номера на сервер Onlinesim по одному, в противоположность `sendNumbersOnline`, который отсылает все активные номера в виде цельного списка. Это может быть особенно полезно если Вам необходимо добавить новые номера к списку уже существующих, вместо передачи измененного списка каждый раз, когда Вы добавляете номера.
+
+        >**ВАЖНО!** <br>Включение параметра "rent" (присваиванием ему значения `1`) позволяет клиентам арендовать Ваши номера на длительный период, значительно увеличивая Ваш доход. Однако Вам необходимо связаться с партнерской поддержкой для получиения подробной информации об условиях и требованиях к арендным номерам, перед тем, как мы включим этот функционал на Вашем аккаунте.
+      description: |
+        >**IMPORTANT NOTE!** <br>URL of Onlinesim server is provided by Onlinesim partner support specialists<br>
+        >Please note, that the URL in the example is just a placeholder
+        This request allows you to add numbers to the Onlinesim server by one at a time, on the contrary to `sendNumbersOnline` that sends all active numbers as a list. This could be especially reasonable if you need to add new numbers to the list of existing ones, instead of passing the modified list every time when you add new numbers.
+
+        >**IMPORTANT NOTE!** <br>Enabling "rent" parameter (by assigning value `1` to it) allows clients to rent your number for a longer period, significantly increasing your income. However you need to contact partner support to get a detailed information on terms and requirements before we enable it for your account.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  number: '+234112233447'
+                  country_id: 234
+                  operator: 28967
+                  date_start: 1543907600
+                  port_id: Port1
+              x-description-ru: Схема тела запроса
+              description: Payload schema
+              properties:
+                number:
+                  type: string
+                  x-description-ru: Номер телефона в международном формате (со знаком "+")
+                  description: Number in international format (with "+" sign)
+                  example: '+4695000051'
+                country_id:
+                  type: integer
+                  x-description-ru: 'Country code (Е.164 standard, without "+" sign)'
+                  description: 'Country code (Е.164 standard, without "+" sign)'
+                  example: 46
+                  minimum: 1
+                port_id:
+                  type: string
+                  x-description-ru: 'Уникальное имя порта, которое будет отображаться в нашем интерфейсе на странице управления Вашими номерами. Значение по умолчанию совпадает с номером телефона (значением параметра ''number'')'
+                  description: 'Unique port name, this name will be displayed in our interface on your personal web-page. Default value: phone number (value of ''number'' parameter)'
+                  example: Port1
+                  maxLength: 100
+                rent:
+                  type: integer
+                  x-description-ru: 'Режим аренды для этого номера:<br>`1` - включен,<br>`0` - выключен'
+                  description: 'Rent mode for this number:<br>`1` - enabled,<br>`0` - disabled'
+                  enum:
+                    - 0
+                    - 1
+                  example: 0
+                operator:
+                  type: integer
+                  x-description-ru: MCC + MNC коды оператора (эти коды содержатся в первых 5 или 6 цифрах IMSI)
+                  description: MCC + MNC operator code (these codes are contained in the first digits of IMSI)
+                  example: 24012
+                date_start:
+                  type: integer
+                  x-description-ru: Дата и время размещения номера (UNIX timestamp)
+                  description: Date and time of placement (UNIX timestamp)
+                  example: 1658209063
+              required:
+                - number
+                - country_id
+                - rent
+            examples:
+              Payload example for  `addNumber` from your server:
+                value:
+                  number: '+46050910804'
+                  country_id: 46
+                  operator: 24012
+                  date_start: 1658209063
+                  port_id: Port1
+                  rent: 0
+                  test: test1
+        x-description-ru: Добавление Ваших новых номеров к списку существующих на сервер Onlinesim.
+        description: Adding new numbers to the list of existing ones on Onlinesim server.
+  /api/resellers/checkNumber:
+    get:
+      servers:
+        - url: 'https://www.ourserver.com'
+      summary: checkNumber
+      tags:
+        - v2
+      responses:
+        '200':
+          x-description-ru: Ответ сервера Onlinesim.
+          description: Onlinesim server response.
+          content:
+            application/json:
+              schema:
+                type: object
+                x-examples:
+                  example-1:
+                    id: 40516583
+                    balance: 0
+                    country_id: 220
+                    errors: 0
+                    number: '2202082904'
+                    port_id: AlizeeTel30_dongle-15
+                    sum: 54
+                    used_service:
+                      'telegram ': tg
+                      'whatsapp ': wa
+                    banned_service:
+                      whatsapp: wa
+                    banned: false
+                    reseller_id: 2322
+                    rent: null
+                    status: 1
+                    status_text: work
+                    clearable: true
+                    created_at:
+                      date: '2022-07-13 06:10:00.000000'
+                      timezone_type: 3
+                      timezone: Europe/Moscow
+                    response: 1
+                properties:
+                  id:
+                    type: integer
+                    x-description-ru: ID номера
+                    description: Number ID
+                    example: 110251
+                  balance:
+                    type: number
+                    x-description-ru: Баланс номера
+                    description: Number balance
+                  country_id:
+                    type: integer
+                    x-description-ru: 'Код страны (согласно стандарту E.164, без знака "+")'
+                    description: 'Country code (Е.164 standard, without "+" sign)'
+                    example: 46
+                  errors:
+                    type: integer
+                    x-description-ru: 'Какое количество раз номер был заказан, но не сумел получить SMS'
+                    description: How many times the number was ordered but was unable to receive SMS
+                    example: 0
+                  number:
+                    type: string
+                    x-description-ru: Номер телефона в международном формате
+                    description: Phone number in international format
+                    example: '4605091080'
+                  port_id:
+                    type: string
+                    x-description-ru: 'Уникальное имя порта, которое будет отображаться в нашем интерфейсе на странице управления Вашими номерами. Значение по умолчанию совпадает с номером телефона (значением параметра ''number'')'
+                    description: 'Unique port name, this name will be displayed in our interface on your personal web-page. Default value: phone number (value of ''number'' parameter)'
+                    maxLength: 100
+                    example: Port1
+                  sum:
+                    type: number
+                    x-description-ru: 'Общий доход, полученный данным номером, в рублях'
+                    description: 'Total income earned by this number, in RUB'
+                    example: 76.25
+                  used_service:
+                    type: object
+                    x-description-ru: Список использованных на этом номере сервисов
+                    description: List of used services on this number
+                    properties:
+                      '#service_name# ':
+                        type: string
+                        x-description-ru: 'Имя сервиса : slug сервиса (короткое имя сервиса)'
+                        description: 'Service name : service slug'
+                        example: wa
+                  banned_service:
+                    type: object
+                    x-description-ru: Список заблокированных на этом номере сервисов
+                    description: List of banned services on this number
+                    properties:
+                      '#service_name# ':
+                        type: string
+                        x-description-ru: 'Имя сервиса : slug сервиса (короткое имя сервиса)'
+                        description: 'Service name : service slug'
+                        example: tg
+                  banned:
+                    type: boolean
+                    x-description-ru: 'Если `true`, номер заблокирован (блокировка применяется автоматически, после трех проваленных операций)'
+                    description: If `true` the number is banned (ban is applied after 3 failed operations)
+                  reseller_id:
+                    type: integer
+                    x-description-ru: ID аккаунта партнера Onlinesim
+                    description: Partner's account ID
+                  rent:
+                    type: boolean
+                    x-description-ru: 'Если `true`, аренда включена для данного партнерского аккаунта'
+                    description: If `true` - rent is enabled for account
+                    nullable: true
+                  status:
+                    type: integer
+                    x-description-ru: 'Текущий статус номера, enum:<br>`1` - номер работает<br>`2` - номер загружается на сервер (после добавления в список номеров)<br>`3` - номер оффлайн (при изъятии номера из списка номеров партнером, либо в результате неисправности)<br>`4` - указанный Вами номер отсутствует на Вашем аккаунте (некорректный номер)<br>`6` - ошибка аренды: данный номер ранее был успешно использован для аренды и больше не будет генерировать доход. Вам необходимо заменить номер на новый.<br>`7` - номер перезагружается сервером'
+                    description: 'Current status of the number, enum:<br>`1` - number is working<br>`2` - number is queued up/loading (after the placement)<br>`3` - number is offline (was taken out by the partner or malfunction happened)<br>`4` - no such number on your account (invalid entry)<br>`6` - error rent: this number was successfully used for rent and won''t generate the profit anymore. You need to replace the number with a new one.<br>`7` - number is reloading by the server'
+                    enum:
+                      - 1
+                      - 2
+                      - 3
+                      - 4
+                      - 6
+                      - 7
+                  status_text:
+                    type: string
+                    x-description-ru: 'Текущий статус номера, текстовое описание'
+                    description: 'Current status of the number, textual description'
+                    example: work
+                  clearable:
+                    type: boolean
+                    x-description-ru: Доступность функции "Сброс банов"/"Clean all banned services" (доступно раз в 24 часа)
+                    description: '"Reset bans"/"Clean all banned services" function availability (available once in 24 hours)'
+                  created_at:
+                    type: object
+                    properties:
+                      date:
+                        type: string
+                        x-description-ru: Дата и время размещения номера
+                        description: Date and time of placement
+                      timezone_type:
+                        type: integer
+                        x-description-ru: Часовой пояс времени сервера
+                        description: Timezone
+                      timezone:
+                        type: string
+                        x-description-ru: Часовой пояс времени сервера (в текстовом формате)
+                        description: Timezone (text)
+                  response:
+                    oneOf:
+                      - type: string
+                      - type: integer
+                    x-description-ru: '1, если запрос был выполнен успешно, либо выведет сообщение об ошибке'
+                    description: '1, if request was successful, or error message'
+                    example: 1
+              examples:
+                Exmaple response from Onlinesim server (successfuly retrieved information on the number):
+                  value:
+                    id: 110251
+                    balance: 0
+                    country_id: 46
+                    errors: 0
+                    number: '4605091080'
+                    port_id: Port1
+                    sum: 76.25
+                    used_service:
+                      whatsapp: wa
+                    banned_service:
+                      telegram: tg
+                    banned: true
+                    reseller_id: 241
+                    rent: true
+                    status: 1
+                    status_text: work
+                    clearable: true
+                    created_at:
+                      date: '2022-07-22 15:21:16.000000'
+                      timezone_type: 3
+                      timezone: Europe/Moscow
+                    response: 1
+      operationId: checkNumber
+      x-description-ru: |-
+        >**ВАЖНО!** <br>URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки<br>
+        >Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку
+        Данный запрос возвращает подробную информацию о номере.
+
+        Вы можете использовать его для получения данных, например, для анализа статистики номеров.
+      description: |-
+        >**IMPORTANT NOTE!** <br>URL of Onlinesim server is provided by Onlinesim partner support specialists<br>
+        >Please note, that the URL in the example is just a placeholder
+        This request retrieves detailed information about the number.
+
+        You might need it to gather the data to analyse the statistic.
+      parameters:
+        - schema:
+            type: string
+            example: '+460509081050'
+          in: query
+          name: number
+          required: true
+          x-description-ru: Номер телефона в международном формате (включая код страны)
+          description: Phone number in international format (including country code)
+        - $ref: '#/components/parameters/Authorization'
+  /api/resellers:
+    get:
+      servers:
+        - url: 'https://www.ourserver.com'
+      summary: checkWork
+      tags:
+        - v2
+      responses:
+        '200':
+          x-description-ru: Ответ сервера Onlinesim.
+          description: Onlinesim server response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    oneOf:
+                      - type: string
+                      - type: integer
+                    x-description-ru: '1, если запрос был выполнен успешно, либо выведет сообщение об ошибке'
+                    description: '1, if request was successful, or error message'
+                    example: 1
+              examples:
+                Example response from Onlinesim server (successfuly received uptime confirmation from your server):
+                  value:
+                    response: 1
+      operationId: checkWork
+      x-description-ru: |
+        >**ВАЖНО!** <br>URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки<br>
+        >Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку
+        Данный запрос служит для подтверждения работоспособности Вашего сервера. Это альтернативный вариант отсылки запроса `sendNumbersOnline` каждые 5 минут на сервер Onlinesim, Вы можете отсылать запрос `checkWork` без каких-либо дополнительных параметров с тем же временным интервалом.
+      description: |
+        >**IMPORTANT NOTE!** <br>URL of Onlinesim server is provided by Onlinesim partner support specialists<br>
+        >Please note, that the URL in the example is just a placeholder
+        This request serves as confirmation that your server is up and running. This is alternative to sending `sendNumbersOnline` every 5 minutes, you can send `checkWork` request with no additional parameters with same time interval.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+  /api/resellers/removeNumber:
+    delete:
+      servers:
+        - url: 'https://www.ourserver.com'
+      summary: removeNumber
+      operationId: removeNumber
+      responses:
+        '200':
+          x-description-ru: Ответ сервера Onlinesim.
+          description: Onlinesim server response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    oneOf:
+                      - type: string
+                      - type: integer
+                    x-description-ru: '1, если запрос был выполнен успешно, либо выведет сообщение об ошибке'
+                    description: '1, if request was successful, or error message'
+                    example: 1
+              examples:
+                Example response from Onlinesim server when numbers were successfuly removed from the list:
+                  value:
+                    response: 1
+      x-description-ru: |-
+        >**ВАЖНО!** <br>URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки<br>
+        >Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку
+        Этот запрос позволяет удалять конкретные номера из списка Ваших текущих номеров.
+
+        Вы можете использовать этот запрос вместо `sendNumbersOnline` для изменения списка номеров, удаляя некоторые ранее переданные номера из списка.
+      description: |-
+        >**IMPORTANT NOTE!** <br>URL of Onlinesim server is provided by Onlinesim partner support specialists<br>
+        >Please note, that the URL in the example is just a placeholder
+        This request allows to delete specific numbers from the list of your current numbers.
+
+        You can use it instead of `sendNumbersOnline` request to modify the list of numbers precisely, by deleting the numbers that are on the list.
+      tags:
+        - v2
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - schema:
+            type: string
+            example: '+460509081050'
+          in: query
+          name: number
+          x-description-ru: Номер телефона в международном формате (включая код страны)
+          description: Phone number in international format (including country code)
+          required: true
+        - schema:
+            type: string
+            enum:
+              - test1
+              - test2
+          in: query
+          name: test
+          x-description-ru: 'Параметр для тестов. Может принимать два значения: ''test1'' или ''test2''. Будучи равным ''test1'' отправит запрос на сервер, но данные, переданные таким запросом не будут сохранены нашим сервером. Если параметр будет равен ''test2'', то сервер Onlinesim в ответе вернет тело Вашего запроса.'
+          description: 'Testing parameter. It''s value can be either ''test1'' or ''test2'', while being equal to first value it will allow the request to be passed, however the data won''t be saved by our server, if it will be equal to ''test2'' the response will print out your request''s payload.'
+  /api/auth/me:
+    post:
+      servers:
+        - url: 'https://www.ourserver.com'
+      summary: saveConfig
+      operationId: saveConfig
+      responses:
+        '200':
+          x-description-ru: Ответ сервера Onlinesim.
+          description: Onlinesim server response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    oneOf:
+                      - type: string
+                      - type: integer
+                    x-description-ru: '1, если запрос был выполнен успешно, либо выведет сообщение об ошибке'
+                    description: '1, if request was successful, or error message'
+                    example: 1
+              examples:
+                Example response from Onlinesim server for successfuly modified service blacklist:
+                  value:
+                    response: 1
+      tags:
+        - v2
+      x-description-ru: |-
+        >**ВАЖНО!** <br>URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки<br>
+        >Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку
+        Этот запрос позволяет добавлять сервисы в список исключений, запрещая выдавать Ваши номера клиентам для приема SMS от указанных сервисов.
+
+        Данный запрос может пригодиться, когда Вы используете свои номера для SMS верификации отдельных сервисов для своих собственных нужд или проектов. Этот запрос заблокирует возможность использовать все номера Вашего аккаунта для данных сервисов, немедленно присваивая им статус "USED" и не допуская их выдачи клиентам под указанные сервисы.
+
+        >**ВАЖНО!**<br>Этот запрос изменяет список исключений полностью, поэтому если Вы хотите добавить дополнительный сервис к уже существующему списку, Вам необходимо передавать в запросе тот список сервисов, который уже был передан ранее и новый сервис для блокировки.
+      description: |-
+        >**IMPORTANT NOTE!** <br>URL of Onlinesim server is provided by Onlinesim partner support specialists<br>
+        >Please note, that the URL in the example is just a placeholder
+        This request allows to add services to the blacklist preventing them to be used for SMS activation on your numbers.
+
+        This request might come in handy when you use your numbers for SMS verification for your own purposes or projects. It will block these services on your account entirely immediately assigning them "USED" status and preventing them to be issued to the clients.
+
+        >**IMPORTANT NOTE!**<br>This request modifies the whole blacklist, so if you want to add a new service to it, you should also include those services that were on the list before.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              x-examples:
+                example-1:
+                  disabled_service:
+                    aaaa: aaaa
+                    bbbbb: bbbb
+              properties:
+                disabled_service:
+                  type: object
+                  properties:
+                    '#service_name#':
+                      type: string
+                      x-description-ru: Имя сервиса и его значение должны совпадать
+                      description: Service name and it's value must be identical
+            examples:
+              Example payload for adding VKcom and Facebook to the blacklist:
+                value:
+                  disabled_service:
+                    vkcom: vkcom
+                    facebook: facebook
+        x-description-ru: Тело запроса saveConfig
+        description: Payload for saveConfig request
+components:
+  schemas: {}
+  securitySchemes:
+    APIkey:
+      name: Bearer apiKey
+      type: apiKey
+      in: header
+      x-description-ru: 'API ключ Вашего партнерского аккаунта Onlinesim, должен соответствовать схеме "Bearer apiKey", где apiKey - Ваш API ключ'
+      description: 'API key of your Onlinesim partner''s profile, must match "Bearer apiKey" schema'
+  parameters:
+    Authorization:
+      name: Authorization
+      in: header
+      required: true
+      schema:
+        type: string
+        example: Bearer apiKey
+      x-description-ru: API ключ должен быть передан в заголовке этого запроса
+      description: API key should be passed in the header of this request
+    Content-Type:
+      name: Content-Type
+      in: header
+      required: false
+      schema:
+        type: string
+        enum:
+          - application/json; charset=utf-8
+        example: application/json; charset=utf-8
+      x-description-ru: Заголовок "Content type" и кодировка
+      description: Content type and encoding scheme
+  responses: {}
+tags:
+  - name: v1
+    description: v1 API for partners (our server requests numbers from yours)
+    x-description-ru: v1 API для партнеров (сервер Onlinesim запрашивает номера у Вашего)
+  - name: v1 rent
+    description: v1 API for renting your numbers (our server requests numbers from yours)
+    x-description-ru: v1 API для аренды Ваших номеров (сервер Onlinesim запрашивает номера у Вашего)
+  - name: v2
+    description: v2 API for partners (your server sends all available numbers to our server)
+    x-description-ru: v2 API для партнеров (Ваш сервер отсылает все доступные для продажи номера на сервер Onlinesim)
