@@ -36,11 +36,10 @@ export default class Parser {
   constructor(workDir: string) {
     this.workDir = workDir;
 
-
+    const self = this;
     const renderer = new marked.Renderer();
     renderer.text = function (text: string) {
-      return text.replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+      return self.replaceAngleBracketsInText(text)
     };
 
     marked.setOptions({
@@ -56,6 +55,12 @@ export default class Parser {
       sanitize: false,
       smartypants: false,
       xhtml: false
+    });
+  }
+
+  replaceAngleBracketsInText(text: string) {
+    return text.replace(/(?<=[^=])<|>(?=[^=])/g, function (match) {
+      return match === '<' ? '&lt;' : '&gt;';
     });
   }
 
@@ -94,15 +99,15 @@ export default class Parser {
   }
 
   sanitizeText(text: string) {
+    text = this.replaceAngleBracketsInText(text);
+
     const map = {
-      '<': '&lt;',
-      '>': '&gt;',
       '"': '&quot;',
       "'": '&#x27;',
       '\\': '&#x5C;',
       '|': '&#x7C;'
     };
-    const reg = /[<>"'\\|]/gi;
+    const reg = /["'\\|]/gi;
     return text.replace(reg, function (match) {
       // @ts-ignore
       return map[match];
@@ -166,7 +171,7 @@ export default class Parser {
 
   private replaceMarkdown(obj: {[key: string]: any}|string): any {
     if (typeof obj === 'string') {
-      if (obj.match(/\[.*?\]\(.*?\)|^>/) || obj.match(/```|\*\*|:--|<a |## |------/)) {
+      if (obj.match(/\[.*?\]\(.*?\)|^>/) || obj.match(/```|\*\*|:--|<a |## |------|`..?`/)) {
         return marked.parse(obj);
       } else {
         return this.sanitizeText(obj);

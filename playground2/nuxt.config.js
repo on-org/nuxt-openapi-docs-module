@@ -199,7 +199,8 @@ export default {
                 "external_docs": "External Docs",
                 "parameters": "Parameters",
                 "style": "Style",
-                "auth": "Authorization"
+                "auth": "Authorization",
+                "headers": "Headers"
               }
             },
             ru: {
@@ -257,7 +258,8 @@ export default {
                 "external_docs": "External Docs",
                 "parameters": "Parameters",
                 "style": "Style",
-                "auth": "Авторизация"
+                "auth": "Авторизация",
+                "headers": "Headers"
               }
             },
             de: {
@@ -315,7 +317,8 @@ export default {
                 "external_docs": "External Docs",
                 "parameters": "Parameters",
                 "style": "Style",
-                "auth": "Authorization"
+                "auth": "Authorization",
+                "headers": "Headers"
               }
             }
           }
