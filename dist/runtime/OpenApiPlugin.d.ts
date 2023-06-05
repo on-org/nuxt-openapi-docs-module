@@ -26,6 +26,7 @@ export default class OpenApiPlugin {
     hasI18n(): boolean;
     currentLocale(): any;
     I18nLocaleSuffix(locale?: string | null): string;
+    I18nLocalePathPrefix(locale?: string | null): string;
     hasAccess(file: string): boolean;
     setAccess(accessor: (file: string) => boolean): void;
     getFooter(): string | null;
