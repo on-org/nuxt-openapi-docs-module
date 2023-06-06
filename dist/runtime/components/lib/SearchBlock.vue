@@ -20,7 +20,7 @@
               class="oapi-search-box__list"
             >
               <nuxt-link
-                :to="`${item.url}`"
+                :to="item.route"
                 :active-class="''"
               >
                 <div class="oapi-search-item">
@@ -131,7 +131,11 @@ export default {
           path: 'info',
           title: summary,
           description: result,
-          url: `${this.$openapidoc.I18nLocalePathPrefix()}/${this.path}/${this.file}/info`,
+          route: {
+            name: `openapi-${this.path}/${this.file}/type-path${this.$openapidoc.I18nLocaleSuffix()}`,
+            meta: { path: 'info', file: this.file, type: 'get' },
+            params: { type: 'get', path: 'info' }
+          }
         });
       }
 
@@ -159,7 +163,11 @@ export default {
               path: path,
               title: summary.replace(query, "<b>" + query + "</b>"),
               description: result + '...',
-              url: `${this.$openapidoc.I18nLocalePathPrefix()}/${this.path}/${this.file}/${method}/${routePath}`,
+              route: {
+                name: `openapi-${this.path}/${this.file}/type-path${this.$openapidoc.I18nLocaleSuffix()}`,
+                meta: {path: routePath, file: this.file, type: method},
+                params: { type: method, path: routePath }
+              }
             };
           }
 
@@ -174,7 +182,11 @@ export default {
                 path: path,
                 title: summary,
                 description: result,
-                url: `${this.$openapidoc.I18nLocalePathPrefix()}/${this.path}/${this.file}/${method}/${routePath}`,
+                route: {
+                  name: `openapi-${this.path}/${this.file}/type-path${this.$openapidoc.I18nLocaleSuffix()}`,
+                  meta: {path: routePath, file: this.file, type: method},
+                  params: { type: method, path: routePath }
+                }
               };
             } else {
               apper.description = result;
