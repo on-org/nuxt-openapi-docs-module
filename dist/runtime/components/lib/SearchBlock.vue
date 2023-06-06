@@ -20,7 +20,7 @@
               class="oapi-search-box__list"
             >
               <nuxt-link
-                :to="`${item.url}${$openapidoc.I18nLocaleSuffix()}`"
+                :to="item.route"
                 :active-class="''"
               >
                 <div class="oapi-search-item">
@@ -131,7 +131,9 @@ export default {
           path: 'info',
           title: summary,
           description: result,
-          url: `/${this.path}/${this.file}/${this.currentLocale}/info`,
+          route: {
+            name: `openapi-${this.path}/${this.file}/info${this.$openapidoc.I18nLocaleSuffix()}`,
+          }
         });
       }
 
@@ -159,7 +161,10 @@ export default {
               path: path,
               title: summary.replace(query, "<b>" + query + "</b>"),
               description: result + '...',
-              url: `/${this.path}/${this.file}/${this.currentLocale}/${method}/${routePath}`,
+              route: {
+                name: `openapi-${this.path}/${this.file}/type-path${this.$openapidoc.I18nLocaleSuffix()}`,
+                params: { type: method, path: routePath }
+              }
             };
           }
 
@@ -174,7 +179,10 @@ export default {
                 path: path,
                 title: summary,
                 description: result,
-                url: `/${this.path}/${this.file}/${this.currentLocale}/${method}/${routePath}`,
+                route: {
+                  name: `openapi-${this.path}/${this.file}/type-path${this.$openapidoc.I18nLocaleSuffix()}`,
+                  params: { type: method, path: routePath }
+                }
               };
             } else {
               apper.description = result;
