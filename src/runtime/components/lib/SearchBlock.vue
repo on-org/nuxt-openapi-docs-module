@@ -132,9 +132,7 @@ export default {
           title: summary,
           description: result,
           route: {
-            name: `openapi-${this.path}/${this.file}/type-path${this.$openapidoc.I18nLocaleSuffix()}`,
-            meta: { path: 'info', file: this.file, type: 'get' },
-            params: { type: 'get', path: 'info' }
+            name: `openapi-${this.path}/${this.file}/info${this.$openapidoc.I18nLocaleSuffix()}`,
           }
         });
       }
@@ -165,7 +163,6 @@ export default {
               description: result + '...',
               route: {
                 name: `openapi-${this.path}/${this.file}/type-path${this.$openapidoc.I18nLocaleSuffix()}`,
-                meta: {path: routePath, file: this.file, type: method},
                 params: { type: method, path: routePath }
               }
             };
@@ -184,7 +181,6 @@ export default {
                 description: result,
                 route: {
                   name: `openapi-${this.path}/${this.file}/type-path${this.$openapidoc.I18nLocaleSuffix()}`,
-                  meta: {path: routePath, file: this.file, type: method},
                   params: { type: method, path: routePath }
                 }
               };
