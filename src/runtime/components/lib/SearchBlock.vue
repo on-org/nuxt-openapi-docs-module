@@ -18,6 +18,7 @@
               v-for="(item, i) in list"
               :key="i"
               class="oapi-search-box__list"
+              @click="toggleSearch"
             >
               <nuxt-link
                 :to="item.route"

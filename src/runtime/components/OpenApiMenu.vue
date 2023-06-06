@@ -22,9 +22,11 @@
         :value="currentLocale"
       >
         <template #default="{ item }">
-          <nuxt-link :to="changeLocale(item.value)" @click.native="onLocalesReload">
-            {{ item.text }}
-          </nuxt-link>
+          <div @click="onLocalesReload">
+            <nuxt-link :to="changeLocale(item.value)">
+              {{ item.text }}
+            </nuxt-link>
+          </div>
         </template>
       </OpenApiDropdown>
     </div>
