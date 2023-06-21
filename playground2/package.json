@@ -19,7 +19,7 @@
     "@nuxt/typescript-build": "^3.0.1",
     "@types/node": "^18.15.11",
     "cross-env": "^7.0.3",
-    "nuxt": "^2.16.2",
+    "nuxt": "^3.4.3",
     "sass": "1.33.0",
     "sass-loader": "^10.1.1",
     "ts-loader": "^8.4.0",
