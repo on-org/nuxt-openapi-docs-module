@@ -196,4 +196,37 @@ export default {
 p, .p {
   font-weight: 400;
 }
+
+.table {
+  background-color: white;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  transition: box-shadow .1s;
+  width: 100%;
+
+  border-collapse: collapse !important;
+
+  td,th,tr {
+    border: 1px solid #dae1e7;
+  }
+
+  td:hover,th:hover,tr:hover {
+    background-color: #f8fafc;
+  }
+
+  td,th {
+    padding: 0.2rem 0.5rem;
+  }
+
+  th {
+    background-color: #2396f3;
+    color: #ffffff;
+    border-width: 1px;
+    border-color: #ffffff;
+  }
+  th:hover {
+    background-color: #158eef;
+  }
+}
 </style>

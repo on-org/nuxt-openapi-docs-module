@@ -100,4 +100,8 @@ export default {
   border-radius: 6px;
   white-space: nowrap;
 }
+
+.oapi-info-block p img {
+  width: 100%;
+}
 </style>

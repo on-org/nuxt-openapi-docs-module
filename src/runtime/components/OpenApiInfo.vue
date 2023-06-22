@@ -100,4 +100,12 @@ export default {
     white-space: nowrap;
   }
 }
+
+.oapi-info-block {
+  p {
+    img {
+      width: 100%;
+    }
+  }
+}
 </style>

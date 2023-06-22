@@ -192,4 +192,32 @@ export default {
 p, .p {
   font-weight: 400;
 }
+
+.table {
+  background-color: white;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  transition: box-shadow 0.1s;
+  width: 100%;
+  border-collapse: collapse !important;
+}
+.table td, .table th, .table tr {
+  border: 1px solid #dae1e7;
+}
+.table td:hover, .table th:hover, .table tr:hover {
+  background-color: #f8fafc;
+}
+.table td, .table th {
+  padding: 0.2rem 0.5rem;
+}
+.table th {
+  background-color: #2396f3;
+  color: #ffffff;
+  border-width: 1px;
+  border-color: #ffffff;
+}
+.table th:hover {
+  background-color: #158eef;
+}
 </style>

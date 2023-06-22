@@ -41,6 +41,10 @@ export default class Parser {
     renderer.text = function (text: string) {
       return self.replaceAngleBracketsInText(text)
     };
+    renderer.table = function (header, body) {
+      return '<table class="table">\n' + header + body + '</table>\n';
+    };
+
 
     marked.setOptions({
       renderer: renderer,
