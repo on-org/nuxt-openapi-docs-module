@@ -1,12 +1,12 @@
 import mergeJsonSchema from "json-schema-merge-allof";
 export default class OpenApiRefPlugin {
-  definitions = {};
-  components = {};
-  refs = {};
-  i18n = null;
-  doc_path = "docs";
-  file = "docs";
   constructor(i18n) {
+    this.definitions = {};
+    this.components = {};
+    this.refs = {};
+    this.i18n = null;
+    this.doc_path = "docs";
+    this.file = "docs";
     this.i18n = i18n;
   }
   setDefinitions(definitions) {

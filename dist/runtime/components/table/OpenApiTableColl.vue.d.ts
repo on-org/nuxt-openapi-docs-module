@@ -1,15 +1,15 @@
 declare namespace _default {
-    let name: string;
+    const name: string;
     namespace props {
         namespace flex {
-            export let type: NumberConstructor;
-            let _default: number;
+            export const type: NumberConstructor;
+            const _default: number;
             export { _default as default };
         }
         namespace min {
-            let type_1: BooleanConstructor;
+            const type_1: BooleanConstructor;
             export { type_1 as type };
-            let _default_1: boolean;
+            const _default_1: boolean;
             export { _default_1 as default };
         }
     }

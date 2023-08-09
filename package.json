@@ -1,6 +1,6 @@
 {
   "name": "nuxt-openapi-docs-module",
-  "version": "4.4.9",
+  "version": "4.4.10",
   "description": "A plugin for Nuxt.js to generate pages from OpenAPI specifications",
   "homepage": "https://github.com/on-org/nuxt-openapi-docs-module#readme",
   "keywords": [
@@ -55,7 +55,7 @@
     "prepublish": "npm run prepack"
   },
   "dependencies": {
-    "@nuxt/kit": "<=3.2.3",
+    "@nuxt/kit": "3.2.3",
     "highlight.js": "^11.7.0",
     "isomorphic-dompurify": "^1.6.0",
     "js-yaml": "^4.1.0",
@@ -69,8 +69,8 @@
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^0.1.1",
-    "@nuxt/module-builder": "^0.3.1",
-    "@nuxt/schema": "<=3.2.3",
+    "@nuxt/module-builder": "0.3.1",
+    "@nuxt/schema": "3.2.3",
     "@nuxt/test-utils": "^3.5.2",
     "@nuxt/types": "^2.16.3",
     "@types/js-yaml": "^4.0.5",

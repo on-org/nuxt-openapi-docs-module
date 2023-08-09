@@ -1,17 +1,17 @@
 declare namespace _default {
     namespace props {
         namespace title {
-            export let type: StringConstructor;
-            let _default: string;
+            export const type: StringConstructor;
+            const _default: string;
             export { _default as default };
         }
         namespace description {
-            let type_1: StringConstructor;
+            const type_1: StringConstructor;
             export { type_1 as type };
-            let _default_1: string;
+            const _default_1: string;
             export { _default_1 as default };
         }
-        let isOpen: BooleanConstructor;
+        const isOpen: BooleanConstructor;
     }
     function data(): {
         open: boolean;

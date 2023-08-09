@@ -4,7 +4,6 @@ import enLang from "./locales/en.json";
 import { defineNuxtPlugin } from "#app";
 import OpenApiRefPlugin from "./OpenApiRefPlugin.mjs";
 class I18nLinker {
-  i18n;
   constructor(i18n) {
     this.i18n = i18n;
   }

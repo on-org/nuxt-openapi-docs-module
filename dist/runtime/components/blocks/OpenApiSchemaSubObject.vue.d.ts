@@ -1,18 +1,18 @@
 declare namespace _default {
-    let name: string;
+    const name: string;
     namespace props {
         namespace title {
-            export let type: StringConstructor;
-            let _default: string;
+            export const type: StringConstructor;
+            const _default: string;
             export { _default as default };
         }
         namespace currentLocale {
-            let type_1: StringConstructor;
+            const type_1: StringConstructor;
             export { type_1 as type };
-            export let required: boolean;
+            export const required: boolean;
         }
     }
     function data(): {};
-    let methods: {};
+    const methods: {};
 }
 export default _default;

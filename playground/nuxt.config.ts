@@ -83,15 +83,5 @@ export default defineNuxtConfig({
         }
       }
     ],
-    [
-      '@nuxtjs/i18n',
-      {
-        locales: ['en', 'ru', 'de'],
-        defaultLocale: 'en',
-        locale: 'en',
-        detectBrowserLanguage: false,
-        seo: false,
-      }
-    ],
   ],
 })

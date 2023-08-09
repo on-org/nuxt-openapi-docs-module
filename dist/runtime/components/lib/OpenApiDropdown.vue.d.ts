@@ -1,39 +1,39 @@
 declare namespace _default {
-    let name: string;
+    const name: string;
     namespace components {
         export { OpenApiExpandIcon };
     }
     namespace model {
-        let prop: string;
-        let event: string;
+        const prop: string;
+        const event: string;
     }
     namespace props {
         namespace modelValue {
-            export let type: (StringConstructor | NumberConstructor)[];
-            let _default: null;
+            export const type: (StringConstructor | NumberConstructor)[];
+            const _default: null;
             export { _default as default };
         }
         namespace options {
-            let type_1: ArrayConstructor;
+            const type_1: ArrayConstructor;
             export { type_1 as type };
-            export let required: boolean;
+            export const required: boolean;
         }
         namespace valueProp {
-            let type_2: StringConstructor;
+            const type_2: StringConstructor;
             export { type_2 as type };
-            let _default_1: string;
+            const _default_1: string;
             export { _default_1 as default };
         }
         namespace textProp {
-            let type_3: StringConstructor;
+            const type_3: StringConstructor;
             export { type_3 as type };
-            let _default_2: string;
+            const _default_2: string;
             export { _default_2 as default };
         }
         namespace placeholder {
-            let type_4: StringConstructor;
+            const type_4: StringConstructor;
             export { type_4 as type };
-            let _default_3: null;
+            const _default_3: null;
             export { _default_3 as default };
         }
     }

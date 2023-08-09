@@ -1,8 +1,8 @@
 declare namespace _default {
     namespace props {
         namespace items {
-            let type: ObjectConstructor;
-            let required: boolean;
+            const type: ObjectConstructor;
+            const required: boolean;
         }
     }
     function data(): {

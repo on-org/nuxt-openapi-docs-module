@@ -5,15 +5,14 @@ import fs from "fs";
 import * as yaml from "js-yaml";
 import hljs from "highlight.js";
 export default class Parser {
-  workDir;
-  fileName = "";
-  spec = {};
-  components = {};
-  definitions = {};
-  locales = { "en": "English" };
-  localesReload = false;
-  refs = {};
   constructor(workDir) {
+    this.fileName = "";
+    this.spec = {};
+    this.components = {};
+    this.definitions = {};
+    this.locales = { "en": "English" };
+    this.localesReload = false;
+    this.refs = {};
     this.workDir = workDir;
     const self = this;
     const renderer = new marked.Renderer();

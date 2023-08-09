@@ -1,7 +1,7 @@
 declare namespace _default {
     namespace props {
-        let isMenuOpen: BooleanConstructor;
-        let isMobile: BooleanConstructor;
+        const isMenuOpen: BooleanConstructor;
+        const isMobile: BooleanConstructor;
     }
     namespace computed {
         function shouldRender(): any;

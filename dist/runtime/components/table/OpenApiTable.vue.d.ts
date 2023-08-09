@@ -1,12 +1,12 @@
 declare namespace _default {
-    let name: string;
+    const name: string;
     function data(): {
         tableShow: boolean;
     };
     namespace props {
         namespace open {
-            export let type: BooleanConstructor;
-            let _default: boolean;
+            export const type: BooleanConstructor;
+            const _default: boolean;
             export { _default as default };
         }
     }
