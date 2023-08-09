@@ -1,8 +1,8 @@
 declare namespace _default {
     namespace props {
         namespace isMenuOpen {
-            const type: BooleanConstructor;
-            const required: boolean;
+            let type: BooleanConstructor;
+            let required: boolean;
         }
     }
     namespace methods {

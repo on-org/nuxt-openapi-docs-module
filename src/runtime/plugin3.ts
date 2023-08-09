@@ -5,10 +5,26 @@ import enLang from './locales/en.json'
 
 import {defineNuxtPlugin} from "#app";
 import OpenApiRefPlugin from "./OpenApiRefPlugin";
+
+class I18nLinker {
+  private i18n: any;
+  constructor(i18n: any) {
+    this.i18n = i18n
+  }
+
+  get locale() {
+    return this.i18n.locale.value
+  }
+
+  t(val: string) {
+    return this.i18n.t(val)
+  }
+}
 export default defineNuxtPlugin((nuxtApp) => {
   const emitter = mitt();
-  const openapidoc = new OpenApiPlugin(nuxtApp.$i18n)
-  const openapidocRef = new OpenApiRefPlugin(nuxtApp.i18n)
+  const i18nLinker =  nuxtApp.$i18n ? new I18nLinker(nuxtApp.$i18n) : null;
+  const openapidoc = new OpenApiPlugin(i18nLinker)
+  const openapidocRef = new OpenApiRefPlugin(i18nLinker)
 
   openapidoc.addLocale(enLang)
 

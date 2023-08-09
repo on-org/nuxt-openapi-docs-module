@@ -1,5 +1,5 @@
 declare namespace _default {
-    const name: string;
+    let name: string;
     namespace components {
         export { OpenApiResponses };
         export { OpenApiRequestBody };
@@ -7,18 +7,18 @@ declare namespace _default {
     }
     namespace props {
         export namespace callbacks {
-            export const type: ObjectConstructor;
+            export let type: ObjectConstructor;
             function _default(): {};
             export { _default as default };
         }
         export namespace currentLocale {
-            const type_1: StringConstructor;
+            let type_1: StringConstructor;
             export { type_1 as type };
-            const _default_1: string;
+            let _default_1: string;
             export { _default_1 as default };
         }
         export namespace components_1 {
-            const type_2: ObjectConstructor;
+            let type_2: ObjectConstructor;
             export { type_2 as type };
             function _default_2(): {};
             export { _default_2 as default };
