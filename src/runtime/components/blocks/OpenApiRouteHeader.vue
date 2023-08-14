@@ -11,6 +11,9 @@
       >{{ method }}</span>
       {{ path }}
     </h1>
+    <div class="oapi-url__path" @click="(e) => copyToClipboard(requestUrl, e)" >
+      <code v-text="requestUrl"></code>
+    </div>
     <div
       v-if="deprecated"
       class="oapi-route-header__deprecated"
@@ -38,6 +41,7 @@
 
 <script>
 import {getTagColor} from "../helpers";
+import {copyToClipboard} from '../helpers';
 
 export default {
   props: {
@@ -66,9 +70,20 @@ export default {
       type: String,
       required: true,
     },
+    server: {
+      type: String,
+      required: false,
+      default: ''
+    },
+  },
+  computed: {
+    requestUrl() {
+      return this.server + '' + this.path
+    }
   },
   methods: {
-    getTagColor
+    getTagColor,
+    copyToClipboard
   }
 };
 </script>
@@ -120,6 +135,15 @@ export default {
     border-radius: 4px;
     line-height: 1;
     border: 1px solid #ccc;
+  }
+}
+
+.oapi-url__path {
+  margin-bottom: 3px;
+  cursor: pointer;
+
+  code {
+    font-size: 11px;
   }
 }
 </style>

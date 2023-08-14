@@ -3,6 +3,7 @@
     <OpenApiRouteHeader
       :path="url"
       :method="method"
+      :server="server"
       :tags="resolvedSchema.tags"
       :summary="$openapidocRef.tr(route, 'summary', currentLocale)"
       :description="$openapidocRef.tr(route, 'description', currentLocale)"
