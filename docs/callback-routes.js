@@ -1,1 +1,0 @@
-export default {"other":{"name":"other","description":"","isOpen":true,"items":[{"name":"/streams","path":"streams","type":"post","icon":null,"description":null}]}}

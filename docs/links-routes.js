@@ -1,1 +1,0 @@
-export default {"other":{"name":"other","description":"","isOpen":true,"items":[{"name":"/users","path":"users","type":"get","icon":null,"description":null},{"name":"/users","path":"users","type":"post","icon":null,"description":null},{"name":"/users/{userId}","path":"users_userId_","type":"get","icon":null,"description":null}]}}

@@ -100,6 +100,7 @@
       </h2>
       <div
         v-for="(parameter, name) in components.parameters"
+        v-if="name !== 'Authorization'"
         :key="name"
         class="oapi-schema-block"
       >

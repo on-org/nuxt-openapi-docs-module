@@ -1,1 +1,0 @@
-export default {"Query Params":{"name":"Query Params","description":"","isOpen":true,"items":[{"name":"/dynamic-query-params","path":"dynamic-query-params","type":"get","icon":null,"description":"Various ways to pass query params"}]}}

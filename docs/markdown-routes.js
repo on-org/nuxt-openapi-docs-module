@@ -1,1 +1,0 @@
-export default {"other":{"name":"other","description":"","isOpen":true,"items":[{"name":"/markdown","path":"markdown","type":"get","icon":null,"description":"Markdown in Description."}]}}

@@ -1,1 +1,0 @@
-export default {"other":{"name":"other","description":"","isOpen":true,"items":[{"name":"/foo/{bar_id}/baz","path":"foo_bar_id__baz","type":"get","icon":null,"description":null}]}}

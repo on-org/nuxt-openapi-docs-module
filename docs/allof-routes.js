@@ -1,1 +1,0 @@
-export default {"other":{"name":"other","description":"","isOpen":true,"items":[{"name":"/all-of/employee","path":"all-of_employee","type":"get","icon":null,"description":"List of employees"}]}}

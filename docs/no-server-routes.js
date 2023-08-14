@@ -1,1 +1,0 @@
-export default {"other":{"name":"other","description":"","isOpen":true,"items":[{"name":"/simple","path":"simple","type":"get","icon":null,"description":"When no server is specified in the spec."}]}}

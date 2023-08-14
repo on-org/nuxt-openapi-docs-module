@@ -1,1 +1,0 @@
-export default {"webhooks":{"name":"webhooks","description":"","isOpen":true,"items":[{"name":"newPet","path":"newPet","type":"post","icon":null,"description":null}]},"other":{"name":"other","description":"","isOpen":true,"items":[{"name":"/person","path":"person","type":"post","icon":null,"description":"Demonstrates data-types and constraints"}]}}

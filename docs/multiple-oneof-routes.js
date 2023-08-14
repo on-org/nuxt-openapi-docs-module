@@ -1,1 +1,0 @@
-export default {"other":{"name":"other","description":"","isOpen":true,"items":[{"name":"/multiple-one-of","path":"multiple-one-of","type":"get","icon":null,"description":"Multiple One of"}]}}

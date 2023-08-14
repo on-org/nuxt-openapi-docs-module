@@ -1,1 +1,0 @@
-export default {"other":{"name":"other","description":"","isOpen":true,"items":[{"name":"/api/test","path":"api_test","type":"get","icon":null,"description":"Test API"},{"name":"/connect/userinfo","path":"connect_userinfo","type":"get","icon":null,"description":"Get User Info"}]}}
