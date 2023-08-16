@@ -104,6 +104,15 @@ export default {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
     },
+    setScrollPosition() {
+      const route = this.$route;
+      if (route.hash) return;
+
+      const el = document.querySelector('.oapi-content');
+      if (!el) return;
+
+      el.scrollTop = 0;
+    },
     onChangeServer(option) {
       this.currentServer = option
     }
@@ -188,6 +197,7 @@ export default {
     if(process.client) {
       this.$openapidocBus.$on('downloadJsonDoc', this.downloadJson);
       this.$openapidocBus.$on('changeServer', this.onChangeServer);
+      this.setScrollPosition()
     }
   },
   unmounted() {
