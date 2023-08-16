@@ -18,7 +18,7 @@
     </OpenApiMainHeader>
     <div class="oapi-layout__body">
       <OpenApiMainLeftMenu :isMenuOpen="isMenuOpen" :isMobile="isMobile">
-        <OpenApiMenu :routes="pathsByTags" :current-locale="currentLocale" :file="fileName" :path="path_doc" :files="files" :locales="locales" :locales-reload="localesReload" />
+        <OpenApiMenu :routes="pathsByTags" :current-locale="currentLocale" :file="fileName" :path="path_doc" :files="files" :locales="locales" :locales-reload="localesReload" :servers="servers" />
       </OpenApiMainLeftMenu>
 
       <OpenApiMainContent>
@@ -48,6 +48,8 @@ const locales = <%= JSON.stringify(options.locales) %>;
 const name = '<%= options.name %>';
 // eslint-disable-next-line @ts-ignore
 const fileName = '<%= options.fileName %>';
+// eslint-disable-next-line @ts-ignore
+const servers = <%= JSON.stringify(options.doc.servers ?? {}) %>;
 
 function genHead() {
   return {
@@ -86,6 +88,7 @@ export default {
       path_doc: path_doc,
       locales: locales,
       name: name,
+      servers: servers,
       isMenuOpen: true,
       isMobile: false,
       localesReload: localesReload,

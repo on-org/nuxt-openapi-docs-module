@@ -35,10 +35,23 @@ declare namespace _default {
             const required_2: boolean;
             export { required_2 as required };
         }
+        namespace server {
+            const type_6: StringConstructor;
+            export { type_6 as type };
+            const required_3: boolean;
+            export { required_3 as required };
+            const _default_3: string;
+            export { _default_3 as default };
+        }
+    }
+    namespace computed {
+        function requestUrl(): string;
     }
     namespace methods {
         export { getTagColor };
+        export { copyToClipboard };
     }
 }
 export default _default;
 import { getTagColor } from "../helpers";
+import { copyToClipboard } from "../helpers";

@@ -2,7 +2,7 @@
   <div class="oapi-aside-content">
     <div class="oapi-aside-content__dds">
       <OpenApiDropdown
-        v-if="isMultipleFiles"
+        v-if="hasMultipleFiles"
         class="oapi-aside-content__files"
         :options="filesAccessor"
         :placeholder="files[file]"
@@ -15,7 +15,7 @@
         </template>
       </OpenApiDropdown>
       <OpenApiDropdown
-        v-if="isLocalization"
+        v-if="hasLocalization"
         class="oapi-aside-content__locales"
         :options="localesOptions"
         :placeholder="locales[currentLocale]"
@@ -26,6 +26,19 @@
             <nuxt-link :to="changeLocale(item.value)">
               {{ item.text }}
             </nuxt-link>
+          </div>
+        </template>
+      </OpenApiDropdown>
+      <OpenApiDropdown
+          v-if="hasServers"
+          class="oapi-aside-content__locales"
+          :options="serversOptions"
+          :placeholder="servers[currentServer].description ?? servers[currentServer].url"
+          :value="currentServer"
+      >
+        <template #default="{ item }">
+          <div @click="changeServer(item.value)">
+            {{ item.text }}
           </div>
         </template>
       </OpenApiDropdown>
@@ -110,6 +123,11 @@ import OpenApiDropdown from './lib/OpenApiDropdown.vue'
 
 export default {
   components: {MainLeftMenuSubMenu, OpenApiDropdown},
+  data() {
+    return {
+      currentServer: 0,
+    };
+  },
   props: {
     routes: {
       type: Object,
@@ -135,6 +153,10 @@ export default {
       type: Object,
       required: true,
     },
+    servers: {
+      type: Array,
+      required: true,
+    },
     localesReload: {
       type: Boolean,
       required: true,
@@ -150,11 +172,20 @@ export default {
         text: this.locales[key],
       }));
     },
-    isMultipleFiles() {
+    serversOptions() {
+      return Object.keys(this.servers).map((key) => ({
+        value: key,
+        text: this.servers[key].description ??  this.servers[key].url,
+      }));
+    },
+    hasMultipleFiles() {
       return Object.keys(this.files).length > 1;
     },
-    isLocalization() {
+    hasLocalization() {
       return this.$openapidoc.hasI18n() && Object.keys(this.locales).length > 1;
+    },
+    hasServers() {
+      return Object.keys(this.servers).length > 1;
     },
     filesAccessor() {
       const arr = [];
@@ -203,6 +234,10 @@ export default {
         name: `openapi-${this.path}/${option}/info${this.$openapidoc.I18nLocaleSuffix('en')}`,
         meta: {path: option, type: 'get', file: this.file}
       };
+    },
+    changeServer(option) {
+      this.currentServer = option
+      this.$openapidocBus.$emit('changeServer', option);
     },
     changeLocale(option) {
       return {
