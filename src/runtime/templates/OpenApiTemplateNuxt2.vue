@@ -102,6 +102,15 @@ export default {
       // Очистить ссылку и объект URL после скачивания файла
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
+    },
+    setScrollPosition() {
+      const route = this.$route;
+      if (route.hash) return;
+
+      const el = document.querySelector('.oapi-content');
+      if (!el) return;
+
+      el.scrollTop = 0;
     }
   },
   computed: {
@@ -177,6 +186,7 @@ export default {
   mounted() {
     if(process.client) {
       this.$openapidocBus.$on('downloadJsonDoc', this.downloadJson);
+      this.setScrollPosition()
     }
   },
   unmounted() {
