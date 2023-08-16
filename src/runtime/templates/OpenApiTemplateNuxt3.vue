@@ -182,6 +182,14 @@ export default {
       if (!this.options.doc.servers || !this.options.doc.servers[currentServer]) {
         return null;
       }
+
+      if (this.options.doc.servers[currentServer].variables) {
+        const variables = Object.values(this.options.doc.servers[currentServer].variables);
+        if (variables && variables.length && variables[0].default) {
+          return variables[0].default
+        }
+      }
+
       return this.options.doc.servers[currentServer].url ?? null
     },
   },
