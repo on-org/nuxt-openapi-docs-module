@@ -69,6 +69,7 @@ export default {
   created() { if(this && this.$fetch) this.$fetch(); },
   data() {
     return {
+      currentServer: 0,
       options: options,
       path_doc: pathDoc,
       file: '',
@@ -111,6 +112,9 @@ export default {
       if (!el) return;
 
       el.scrollTop = 0;
+    },
+    onChangeServer(option) {
+      this.currentServer = option
     }
   },
   computed: {
@@ -177,23 +181,32 @@ export default {
         return this.activePath['servers'][0].url ?? null
       }
 
-      if (!this.options.doc.servers || !this.options.doc.servers[0]) {
+      let currentServer = this.currentServer;
+
+      if (currentServer > 0 && this.options.doc.servers && !this.options.doc.servers[currentServer]) {
+        currentServer = 0;
+      }
+
+      if (!this.options.doc.servers || !this.options.doc.servers[currentServer]) {
         return null;
       }
-      return this.options.doc.servers[0].url ?? null
+      return this.options.doc.servers[currentServer].url ?? null
     },
   },
   mounted() {
     if(process.client) {
       this.$openapidocBus.$on('downloadJsonDoc', this.downloadJson);
+      this.$openapidocBus.$on('changeServer', this.onChangeServer);
       this.setScrollPosition()
     }
   },
   unmounted() {
     this.$openapidocBus.$off('downloadJsonDoc', this.downloadJson);
+    this.$openapidocBus.$off('changeServer', this.onChangeServer);
   },
   destroyed() {
     this.$openapidocBus.$off('downloadJsonDoc', this.downloadJson);
+    this.$openapidocBus.$off('changeServer', this.onChangeServer);
   },
   nuxtI18n: {
     // eslint-disable-next-line @ts-ignore

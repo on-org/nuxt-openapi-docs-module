@@ -4,14 +4,13 @@
     :class="{'oapi-route-header--deprecated': deprecated}"
   >
     <h1 class="oapi-route-header__title">
-
       <span
         class="oapi-method-tag"
         :class="`oapi-method-tag--${method}`"
       >{{ method }}</span>
-      {{ path }}
+      {{ title }}
     </h1>
-    <div class="oapi-url__path" @click="(e) => copyToClipboard(requestUrl, e)" >
+    <div class="oapi-route-header__path" @click="(e) => copyToClipboard(requestUrl, e)" >
       <code v-text="requestUrl"></code>
     </div>
     <div
@@ -20,9 +19,6 @@
       role="alert"
     >
         <span>{{ $openapidoc.getLocaleText('openapidoc.deprecated') }}</span>
-      </div>
-    <div class="oapi-route-header__summary">
-      {{ summary }}
     </div>
     <div class="oapi-route-header__tags">
       <span
@@ -79,6 +75,12 @@ export default {
   computed: {
     requestUrl() {
       return this.server + '' + this.path
+    },
+    title() {
+      if (this.summary && this.summary !== '') {
+        return this.summary
+      }
+      return this.path
     }
   },
   methods: {
@@ -92,9 +94,13 @@ export default {
 .oapi-route-header__title {
   font-family: var(--oapi-mono) !important;
 }
-.oapi-route-header__summary {
-  color: #999;
-  font-size: 1.1rem;
+.oapi-route-header__path {
+  margin-bottom: 3px;
+  cursor: pointer;
+}
+.oapi-route-header__path code {
+  color: #696969;
+  font-size: 0.8rem;
   font-weight: 600;
   margin-bottom: 16px;
 }
@@ -133,14 +139,6 @@ export default {
   border-radius: 4px;
   line-height: 1;
   border: 1px solid #ccc;
-}
-
-.oapi-url__path {
-  margin-bottom: 3px;
-  cursor: pointer;
-}
-.oapi-url__path code {
-  font-size: 11px;
 }
 </style>
 

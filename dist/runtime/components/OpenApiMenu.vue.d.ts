@@ -3,6 +3,9 @@ declare namespace _default {
         export { MainLeftMenuSubMenu };
         export { OpenApiDropdown };
     }
+    function data(): {
+        currentServer: number;
+    };
     namespace props {
         namespace routes {
             const type: ObjectConstructor;
@@ -38,11 +41,17 @@ declare namespace _default {
             const required_5: boolean;
             export { required_5 as required };
         }
-        namespace localesReload {
-            const type_6: BooleanConstructor;
+        namespace servers {
+            const type_6: ArrayConstructor;
             export { type_6 as type };
             const required_6: boolean;
             export { required_6 as required };
+        }
+        namespace localesReload {
+            const type_7: BooleanConstructor;
+            export { type_7 as type };
+            const required_7: boolean;
+            export { required_7 as required };
         }
     }
     namespace computed {
@@ -51,8 +60,13 @@ declare namespace _default {
             value: string;
             text: any;
         }[];
-        function isMultipleFiles(): boolean;
-        function isLocalization(): any;
+        function serversOptions(): {
+            value: string;
+            text: any;
+        }[];
+        function hasMultipleFiles(): boolean;
+        function hasLocalization(): any;
+        function hasServers(): boolean;
         function filesAccessor(): {
             value: string;
             text: any;
@@ -94,6 +108,7 @@ declare namespace _default {
                 file: any;
             };
         };
+        export function changeServer(option: any): void;
         export function changeLocale(option: any): {
             name: string;
             meta: {

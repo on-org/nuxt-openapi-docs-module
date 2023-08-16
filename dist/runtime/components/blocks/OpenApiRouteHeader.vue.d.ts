@@ -46,6 +46,7 @@ declare namespace _default {
     }
     namespace computed {
         function requestUrl(): string;
+        function title(): any;
     }
     namespace methods {
         export { getTagColor };

@@ -8,7 +8,7 @@
         class="oapi-method-tag"
         :class="`oapi-method-tag--${method}`"
       >{{ method }}</span>
-      {{ summary }}
+      {{ title }}
     </h1>
     <div class="oapi-route-header__path" @click="(e) => copyToClipboard(requestUrl, e)" >
       <code v-text="requestUrl"></code>
@@ -75,6 +75,12 @@ export default {
   computed: {
     requestUrl() {
       return this.server + '' + this.path
+    },
+    title() {
+      if (this.summary && this.summary !== '') {
+        return this.summary
+      }
+      return this.path
     }
   },
   methods: {

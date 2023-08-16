@@ -69,6 +69,7 @@ export default {
   },
   data() {
     return {
+      currentServer: 0,
       layout: layoutName,
       options: options,
       path_doc: pathDoc,
@@ -103,6 +104,9 @@ export default {
       // Очистить ссылку и объект URL после скачивания файла
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
+    },
+    onChangeServer(option) {
+      this.currentServer = option
     }
   },
   computed: {
@@ -169,22 +173,31 @@ export default {
         return this.activePath['servers'][0].url ?? null
       }
 
-      if (!this.options.doc.servers || !this.options.doc.servers[0]) {
+      let currentServer = this.currentServer;
+
+      if (currentServer > 0 && this.options.doc.servers && !this.options.doc.servers[currentServer]) {
+        currentServer = 0;
+      }
+
+      if (!this.options.doc.servers || !this.options.doc.servers[currentServer]) {
         return null;
       }
-      return this.options.doc.servers[0].url ?? null
+      return this.options.doc.servers[currentServer].url ?? null
     },
   },
   mounted() {
     if(process.client) {
       this.$openapidocBus.$on('downloadJsonDoc', this.downloadJson);
+      this.$openapidocBus.$on('changeServer', this.onChangeServer);
     }
   },
   unmounted() {
     this.$openapidocBus.$off('downloadJsonDoc', this.downloadJson);
+    this.$openapidocBus.$off('changeServer', this.onChangeServer);
   },
   destroyed() {
     this.$openapidocBus.$off('downloadJsonDoc', this.downloadJson);
+    this.$openapidocBus.$off('changeServer', this.onChangeServer);
   },
   nuxtI18n: {
     // eslint-disable-next-line @ts-ignore

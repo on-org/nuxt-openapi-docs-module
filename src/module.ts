@@ -58,15 +58,15 @@ export default defineNuxtModule<ModuleOptions>({
     if(options.debug) {
       // @ts-ignore
       nuxt.hook('generate:route', (route: any) => {
-        console.log(`[GENERATE DEBUG] Generating route: ${route.route}`)
+        console.log(`[DEBUG] [nuxt-openapi-docs-module] Generating route: ${route.route}`)
       })
       // @ts-ignore
       nuxt.hook('generate:routeCreated', (route: any) => {
-        console.log(`[GENERATE DEBUG] Route created: ${route.route}`)
+        console.log(`[DEBUG] [nuxt-openapi-docs-module] Route created: ${route.route}`)
       })
       // @ts-ignore
       nuxt.hook('generate:routeFailed', (route: any, errors: Error) => {
-        console.error(`[GENERATE DEBUG] Route failed: ${route.route}`)
+        console.error(`[DEBUG] [nuxt-openapi-docs-module] Route failed: ${route.route}`)
         console.error(errors)
       })
     }
@@ -82,7 +82,7 @@ export default defineNuxtModule<ModuleOptions>({
     const files = options.files();
 
     for (let filePath in files) {
-      console.log('Generate: ' + filePath)
+      console.log('[nuxt-openapi-docs-module] Generate: ' + filePath)
       const localoptions = JSON.parse(JSON.stringify(options));
       const workDir = resolve(nuxt.options.rootDir, localoptions.folder);
 
