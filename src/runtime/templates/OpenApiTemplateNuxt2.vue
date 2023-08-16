@@ -177,8 +177,14 @@ export default {
     },
 
     server() {
-      if(this.activePath && this.activePath['servers'] && this.activePath['servers'][0]) {
-        return this.activePath['servers'][0].url ?? null
+      if (this.activePath) {
+        if(this.activePath.servers && this.activePath.servers[0]) {
+          return this.activePath.servers[0].url ?? null
+        }
+
+        if(this.activePath[this.type] && this.activePath[this.type].servers && this.activePath[this.type].servers[0]) {
+          return this.activePath[this.type].servers[0].url ?? null
+        }
       }
 
       let currentServer = this.currentServer;
