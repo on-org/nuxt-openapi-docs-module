@@ -82,6 +82,8 @@ module.exports = {
 
 3. create `docs/openapi` folder in root project dir(not src) or change path - `folder` parameter
 
+4. You can use [Vue Devtools](https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) "Routes" section to see new routes.
+
 ## Configuration
 You can customize the behavior of the module by providing options in the nuxt.config.js file.
 
