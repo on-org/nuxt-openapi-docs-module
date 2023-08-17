@@ -9,6 +9,7 @@
           <div class="oapi-search-box__inner">
             <input
               v-model="search"
+              ref="input"
               type="text"
               class="oapi-search-box__input"
               placeholder="Search..."
@@ -109,6 +110,11 @@ export default {
       this.isSearchOpen = !this.isSearchOpen;
       if (this.isSearchOpen) {
         document.body.style.overflow = 'hidden';
+
+        setTimeout(() => {
+          console.log(this.$refs)
+          this.$refs.input.focus()
+        }, 100)
       } else {
         document.body.style.overflow = 'auto';
       }
@@ -134,6 +140,7 @@ export default {
           description: result,
           route: {
             name: `openapi-${this.path}/${this.file}/info${this.$openapidoc.I18nLocaleSuffix()}`,
+            query: {query}
           }
         });
       }
@@ -164,7 +171,8 @@ export default {
               description: result + '...',
               route: {
                 name: `openapi-${this.path}/${this.file}/type-path${this.$openapidoc.I18nLocaleSuffix()}`,
-                params: { type: method, path: routePath }
+                params: { type: method, path: routePath },
+                query: {query}
               }
             };
           }
@@ -182,7 +190,8 @@ export default {
                 description: result,
                 route: {
                   name: `openapi-${this.path}/${this.file}/type-path${this.$openapidoc.I18nLocaleSuffix()}`,
-                  params: { type: method, path: routePath }
+                  params: { type: method, path: routePath },
+                  query: {query}
                 }
               };
             } else {

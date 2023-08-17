@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="contentContainer">
     <OpenApiInfo v-if="isInfo" :info="doc.info" :servers="doc.servers" :current-locale="currentLocale"></OpenApiInfo>
     <OpenApiAuth v-else-if="isAuth" :components="doc.components" :current-locale="currentLocale"></OpenApiAuth>
     <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="currentLocale"></OpenApiComponents>
@@ -72,6 +72,7 @@ export default {
       currentServer: 0,
       options: options,
       path_doc: pathDoc,
+      query: '',
       file: '',
       type: '',
       path: '',
@@ -79,13 +80,29 @@ export default {
     };
   },
   watch: {
-    '$route.meta': {
+    '$route.query': {
       handler: function(val) {
-        this.type = val.type;
-        this.path = val.path;
+        if(val.query) this.query = val.query;
       },
       deep: true
     },
+    '$route.params': {
+      handler: function(val) {
+        if(val.type) this.type = val.type;
+        if(val.path) this.path = val.path;
+      },
+      deep: true
+    },
+    '$route.meta': {
+      handler: function(val) {
+        if(val.type) this.type = val.type;
+        if(val.path) this.path = val.path;
+      },
+      deep: true
+    },
+    query(val) {
+      this.highlightText()
+    }
   },
   methods: {
     downloadJson() {
@@ -115,7 +132,32 @@ export default {
     },
     onChangeServer(option) {
       this.currentServer = option
-    }
+    },
+    highlightText(node = this.$refs.contentContainer) {
+      if(!this.query) return;
+      const query = this.query.replace('#', '');
+      const regex = new RegExp(query, 'gi');
+
+      if (node.nodeType === Node.TEXT_NODE) {
+        const matches = node.textContent.match(regex);
+
+        if (matches) {
+          const span = document.createElement('span');
+          span.classList.add('highlighted');
+
+          const replacedText = node.textContent.replace(regex, `<span class="highlighted">$&</span>`);
+          const fragment = document.createRange().createContextualFragment(replacedText);
+
+          node.parentNode.replaceChild(fragment, node);
+        }
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        const childNodes = node.childNodes;
+
+        for (let i = 0; i < childNodes.length; i++) {
+          this.highlightText(childNodes[i]);
+        }
+      }
+    },
   },
   computed: {
     currentLocale() {
@@ -205,7 +247,7 @@ export default {
       }
 
       return this.options.doc.servers[currentServer].url ?? null
-    },
+    }
   },
   mounted() {
     if(process.client) {
@@ -213,6 +255,7 @@ export default {
       this.$openapidocBus.$on('changeServer', this.onChangeServer);
       this.setScrollPosition()
     }
+    this.query = this.$route.query.query;
   },
   unmounted() {
     this.$openapidocBus.$off('downloadJsonDoc', this.downloadJson);
@@ -230,4 +273,8 @@ export default {
 </script>
 
 <style>
+.highlighted {
+  background-color: yellow;
+  font-weight: bold;
+}
 </style>
