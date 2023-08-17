@@ -133,7 +133,7 @@ export default {
           const span = document.createElement('span');
           span.classList.add('highlighted');
 
-          const replacedText = node.textContent.replace(regex, `<span class="highlighted">$&</span>`);
+          const replacedText = node.textContent.replace(regex, '<span class="highlighted">$&</span>');
           const fragment = document.createRange().createContextualFragment(replacedText);
 
           node.parentNode.replaceChild(fragment, node);
