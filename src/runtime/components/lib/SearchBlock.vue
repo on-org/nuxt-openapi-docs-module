@@ -101,7 +101,7 @@ export default {
     if(process.client) {
       this.$openapidocBus.$on('toggleSearchDoc', this.toggleSearch);
 
-      this.search = this.$route.query.query;
+      this.search = (this.$route.query?.query ?? '').toString();
       this.highlightText();
     }
   },
@@ -115,7 +115,6 @@ export default {
         const highlightedElements = document.querySelectorAll('.highlighted');
         for (let i = 0; i < highlightedElements.length; i++) {
           const element = highlightedElements[i];
-          console.log(111, element)
           element.classList.remove('highlighted');
         }
 
@@ -133,7 +132,7 @@ export default {
           const span = document.createElement('span');
           span.classList.add('highlighted');
 
-          const replacedText = node.textContent.replace(regex, '<span class="highlighted">$&</span>');
+          const replacedText = node.textContent.replace(regex, match => `<span class="highlighted">${match}</span>`);
           const fragment = document.createRange().createContextualFragment(replacedText);
 
           node.parentNode.replaceChild(fragment, node);
