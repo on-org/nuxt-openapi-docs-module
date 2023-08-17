@@ -26,9 +26,9 @@ info:
   x-locales-reload: true
   version: '1.0'
   x-description-ru: >
-    Общее описание
+    # Общее описание
 
-    --------------
+    -------------------
 
 
     Данное API предназначено для текущих и потенциальных партнеров Onlinesim. Оно позволяет монетизировать Ваши номера,предоставляя их нашим клиентам для приема SMS от различных сервисов и приложений.
@@ -40,16 +40,19 @@ info:
     *   v2 имеет обратную схему: Вы отправляете нам все имеющиеся номера, которые становятся доступны для использования клиентами.
 
 
-    > **Счет клиенту выставляется за операцию, а не за отдельные SMS. Зачисление средств производится при успешном завершении операции.**  
+    >**Счет клиенту выставляется за операцию, а не за отдельные SMS. Зачисление средств производится при успешном завершении операции.**
+    
+    
+    >Операция может длится от 15 минут (для услуги "Прием SMS") до нескольких месяцев (для услуги "Аренда номера") и включать в себя несколько SMS.
 
-    Операция может длится от 15 минут (для услуги "Прием SMS") до нескольких месяцев (для услуги "Аренда номера") и включать в себя несколько SMS.
 
-    > **Обратите внимание, что продолжая, Вы соглашаетесь с данным условием!**
- 
-    > **Оба API требуют активации партнерского аккаунта Onlinesim!**
+    >**Обратите внимание, что продолжая, Вы соглашаетесь с данным условием!**
 
-    Вам необходимо зарегистрировать профиль Onlinesim и связаться с поддержкой для получении информации о подключении, чтобы получить доступ к этим API.
-    В этой документации мы будем использовать аутентификацию по API ключу для простоты, однако помимо этого доступны и другие методы аутентификации (более подробно можно посмотреть в соответствующем разделе ([Авторизация](/ru/openapi_docs/Reseller-API-UN/auth)).
+
+    >**Оба API требуют активации партнерского аккаунта Onlinesim!**
+
+
+    >Вам необходимо зарегистрировать профиль Onlinesim и связаться с поддержкой для получении информации о подключении, чтобы получить доступ к этим API. В этой документации мы будем использовать аутентификацию по API ключу для простоты, однако помимо этого доступны и другие методы аутентификации (более подробно можно посмотреть в соответствующем разделе ([Авторизация](/ru/openapi_docs/Reseller-API-UN/auth)).
 
 
 
@@ -59,11 +62,11 @@ info:
 
     Соединение и конфигурация для каждого партнера индивидуальны индивидуальны, поэтому Вам нужно связаться с техподдержкой для уточнения подробностей интеграции.
 
-    Все взаимодействие происходит через HTTP POST и/или GET запросы между указанным Вами и нашей поддержкой endpoint'ами.  
+    Все взаимодействие происходит через HTTP POST и/или GET запросы между указанным Вами и нашей поддержкой endpoint'ами.
     ![API v1](https://onlinesim.io/assets/schemes/Interaction%20scheme%20(RU)%20[info].png)
 
 
-    > **Это API также потребует имплементации функционала для исключения выдачи номеров по их маскам.**
+    >**Это API также потребует имплементации функционала для исключения выдачи номеров по их маскам.**
 
 
     #### Требования для v1:
@@ -77,14 +80,14 @@ info:
 
     4.  _Все запросы / ответы используют метод компрессии gzip_
 
-    5.  _Используемые названия стран и сервисов в ответе GET_SERVICES должны совпадать с соответсвующими списками [стран](/ru/openapi_docs/Reseller-API-UN/custom/countries) и
+    5.  _Используемые названия стран и сервисов в ответе [GET_SERVICES](/ru/openapi_docs/Reseller-API-UN/post/getServices) должны совпадать с соответсвующими списками [стран](/ru/openapi_docs/Reseller-API-UN/custom/countries) и
     [сервисов](/ru/openapi_docs/Reseller-API-UN/custom/services)_
 
     6.  _Один номер должен использоваться только для одной операции одновременно: Ваш сервер может выдать этот же номер для другого сервиса только после того, как предыдущая операция будет завершена_
 
-    7.  _Необходимо реализовать функционал для исключения выдачи номеров с определенными масками: если в запросе указана маска исключения, номера с такой последовательностью цифр не должны выдаваться [для запроса GET_NUMBER](/ru/openapi_docs/Reseller-API-UN/post/getNumber)_
+    7.  _Необходимо реализовать функционал для исключения выдачи номеров с определенными масками: если в запросе указана маска исключения, номера с такой последовательностью цифр не должны выдаваться (для запроса [GET_NUMBER](/ru/openapi_docs/Reseller-API-UN/post/getNumber))_
 
-    8.  _Webhook [PUSH\_SMS](/ru/openapi_docs/Reseller-API-UN/post/pushSms): Ваш сервер должен автоматически пересылать SMS, полученные номерами с активными операциями, на сервер Onlinesim_
+    8.  _Webhook [PUSH_SMS](/ru/openapi_docs/Reseller-API-UN/post/pushSms): Ваш сервер должен автоматически пересылать SMS, полученные номерами с активными операциями, на сервер Onlinesim_
 
     9.  _Фильтрация может производиться как на нашей, так и на Вашей стороне. Перед интреграцией сообщите, какой из вариантов является предпочтительным для Вас_
 
@@ -95,15 +98,15 @@ info:
 
 
     1.  Необходимо реализовать 3 метода и webhook:
-    
-        [GET\_SERVICES](/ru/openapi_docs/Reseller-API-UN/post/getServices) - запрашивает у Вашего сервера количество номеров по странам и сервисам
-        
-        [GET\_NUMBER](/ru/openapi_docs/Reseller-API-UN/post/getNumber) - резервирует номер на 15 минут с заданными параметрами для получения SMS сообщений от одного конкретного сервиса за указанную сумму
-        
-        [PUSH\_SMS (webhook)](/ru/openapi_docs/Reseller-API-UN/post/pushSms) - при получении SMS зарезервированным номером, Ваш сервер отправляет их к нам на сервер
-        
-        [FINISH\_ACTIVATION](/ru/openapi_docs/Reseller-API-UN/post/finishActivation) - закрывает операцию с определенными параметрами (в зависимости от результата)
-        
+
+        [GET_SERVICES](/ru/openapi_docs/Reseller-API-UN/post/getServices) - запрашивает у Вашего сервера количество номеров по странам и сервисам
+
+        [GET_NUMBER](/ru/openapi_docs/Reseller-API-UN/post/getNumber) - резервирует номер на 15 минут с заданными параметрами для получения SMS сообщений от одного конкретного сервиса за указанную сумму
+
+        [PUSH_SMS (webhook)](/ru/openapi_docs/Reseller-API-UN/post/pushSms) - при получении SMS зарезервированным номером, Ваш сервер отправляет их к нам на сервер
+
+        [FINISH_ACTIVATION](/ru/openapi_docs/Reseller-API-UN/post/finishActivation) - закрывает операцию с определенными параметрами (в зависимости от результата)
+
     2.  Написать нам на e-mail или в Telegram для создания профиля партнера, предоставления URL для запросов с нашей стороны, получения ссылки для webhook'a и тестирования номеров.
 
     3.  После успешно проведенных тестов Ваши номера будут доступны нашим клиентам в течение нескольких часов
@@ -122,7 +125,7 @@ info:
 
     * [sendNumbersOnline](/ru/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline) - передает список Ваших номеров к нам на сервер, данный запрос должен отправляться каждые 5 минут для обновления списка номеров и как подтверждение аптайма Вашего сервера;
 
-        > Если Вы планируете использовать большое количество номеров и отправка [sendNumbersOnline](/ru/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline) каждые 5 минут в качестве подтверждения аптайма для Вас будет затруднительна, мы рекомендуем воспользоваться альтернативным вариантом - запросом [checkWork](/ru/openapi_docs/Reseller-API-UN/post/api_resellers_checkWork).
+        >Если Вы планируете использовать большое количество номеров и отправка [sendNumbersOnline](/ru/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline) каждые 5 минут в качестве подтверждения аптайма для Вас будет затруднительна, мы рекомендуем воспользоваться альтернативным вариантом - запросом [checkWork](/ru/openapi_docs/Reseller-API-UN/get/api_resellers).
 
     * [addMessage](/ru/openapi_docs/Reseller-API-UN/post/api_resellers_addMessage) - пересылает полученные Вашим сервером сообщения нам.
 
@@ -134,58 +137,7 @@ info:
 
 
 
-    После того как Вы получите ответ об успешно выполненном запросе [sendNumbersOnline](/ru/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline), свяжитесь с партнерской поддержкой, чтобы сотрудники проверили, получает ли наш сервер сообщения с помощью запроса [addMessage](/ru/openapi_docs/Reseller-API-UN/post/api_resellers_addMessage). В случае успеха Ваши номера будут доступнынашим клиентам уже через нескольких часов. 
-
-
-
-     ---
-
-     # Авторизация
-     
-     ---
-     
-
-     ## Общая информация
-     
-      Авторизация запросов происходит через API key - секретный ключ, используемый для упрощенной авторизации в Reseller API. API ключ необходимо передавать в его теле запроса (для v1), либо в его заголовке (для v2). Отправка неавторизованных запросов вызовет ошибку 401 Unauthorized.
-     
-     ---
-     
-     #### Как получить API ключ:
-     
-     1. Авторизоваться в [личном кабинете](/auth/login), перейти настройки профиля, выбрать вкладку 'API'.
-     2. Ключ будет указан в строке 'API key', который необходимо скопировать.
-     
-     ---
-     
-     #### Как использовать:
-     
-     1. Все запросы к Reseller API должны содержать API ключ.
-     
-     2. В зависимости от используемой Вами версии API, ключ должен включаться:
-
-     * если Вы используете v1 Reseller API - в тело всех запросов, в поле 'key',
-
-            {
-            "action": "GET_SERVICES",
-            "key": "apikey"
-            }
-
-     * если Вы используете v2 Reseller API - в заголовок запроса с помощью Bearer schema.
-
-            Authorization: Bearer {{key}}  
-            User-Agent: PostmanRuntime/7.29.2  
-            Accept: */\*  
-            Cache-Control: no-cache  
-            Postman-Token: 948bc880-8d25-4298-994f-fe6e22ada339  
-            Host: onlinesim.ru  
-            Accept-Encoding: gzip, deflate, br  
-            Connection: keep-alive  
-            Cookie: xxxx  
-
-     Вы также можете использовать API ключ как query параметр 'apikey' при отправке запроса для обоих API.
-
-            https://onlinesim.ru/api/getNumbersStats.php?apikey={{api_key}}
+    После того как Вы получите ответ об успешно выполненном запросе [sendNumbersOnline](/ru/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline), свяжитесь с партнерской поддержкой, чтобы сотрудники проверили, получает ли наш сервер сообщения с помощью запроса [addMessage](/ru/openapi_docs/Reseller-API-UN/post/api_resellers_addMessage). В случае успеха Ваши номера будут доступнынашим клиентам уже через нескольких часов.
 
 
 
@@ -195,32 +147,20 @@ info:
     ---------------
 
 
-    ### **#1 Список стран**
-    [См. здесь](./countries)
-
-
-    ### **#2 Список сервисов**
-    [См. здесь](./services)
-
-
-    ### **#3 Список операторов**
-    [См. здесь](./operators)
-
-
-    ### **#4 Схема процесса**
+    ### **Схема процесса**
     ![workflow](/docs/workflow_smshub.png)
 
 
 
   description: >
-  
+
     # General description
 
     -------------------
 
 
-    This API allows you to provide us with numbers for SMS activations and turn your SIM cards into profitable assets by forwarding SMS codes from different websites and apps.  
-    
+    This API allows you to provide us with numbers for SMS activations and turn your SIM cards into profitable assets by forwarding SMS codes from different websites and apps.
+
     We currently have 2 versions of API with two different approaches:
 
     *   v1 is designed for requesting numbers with specific parameters from your
@@ -230,51 +170,53 @@ info:
     purchased by our clients for various services
 
 
-    > **We're chargning clients per operation, not per SMS. Funds are credited upon successful completion of operation**  
+    >**We're chargning clients per operation, not per SMS. Funds are credited upon successful completion of operation.**
     
-    Operations can lasts from 15 minutes (for single-service activations) to several month (for long term rental) during which clients can receive several SMS.
-    
-    
-    > **Please note, that by proceeding you comply with these terms!**
+
+    >Operations can lasts from 15 minutes (for single-service activations) to several month (for long term rental) during which clients can receive several SMS.
 
 
-    > **Both APIs requires Onlinesim partner account!**  
+    >**Please note, that by proceeding you comply with these terms!**
 
-    You will need to register Onlinesim profile and contact partner support to
-    get access to these APIs. Several methods of authentication are available ([Authentication](/openapi_docs/Reseller-API-UN/auth)), but we will use API key authentication in this documentation for the reasons of simplicity.
+
+    >**Both APIs requires Onlinesim partner account!**
+    
+    
+    >You will need to register Onlinesim profile and contact partner support to
+    get access to these APIs. Several methods of authentication are available ([Authentication](/openapi_docs/Reseller-API-UN/auth)).
 
 
     ### v1 API
 
 
     Connection and configuration are specific for each individual partner, so you need to contact our tech support to get the details of integration.
-    
-    All interaction between our servers is happening as a series of POST and/or GET requests on agreed endpoints via HTTP.  
-    ![API v1](https://onlinesim.io/assets/schemes/Interaction%20scheme%20(EN)%20[info].png)
-    
 
-    > **This API will also require to implement number exception functionality on your side!**
+    All interaction between our servers is happening as a series of POST and/or GET requests on agreed endpoints via HTTP.
+    ![API v1](https://onlinesim.io/assets/schemes/Interaction%20scheme%20(EN)%20[info].png)
+
+
+    >**This API will also require to implement number exception functionality on your side!**
 
 
     #### Requirements for v1:
 
 
-    1.  _Requests and responses come in JSON4 format_  
-    
-    2.  _Encode scheme: UTF-8_  
-    
-    3.  _Make sure that user-agent is included in request headers_  
-    
-    4.  _All requests / responses use gzip compression method_  
-    
-    5.  _All country and service names in the GET_SERVICES response must use values from the corresponding lists of [countries](/openapi_docs/Reseller-API-UN/custom/countries) and [services](/openapi_docs/Reseller-API-UN/custom/services)_  
-    
-    6.  _Each number can be used for one operation simultaneously: your server can issue the same number for other service only after the previous operation is completed_  
-    
-    7.  _You need to implement number exception functionality: if requested, numbers with certain sequence of digits (mask) should not be issued [for GET_NUMBER request](/openapi_docs/Reseller-API-UN/post/getNumber)_  
-    
-    8.  _Webhook [PUSH\_SMS](/openapi_docs/Reseller-API-UN/post/pushSms): your server have to forward to OnlineSIM server any SMS received by numbers with active operations as soon as they get them_  
-    
+    1.  _Requests and responses come in JSON4 format_
+
+    2.  _Encode scheme: UTF-8_
+
+    3.  _Make sure that user-agent is included in request headers_
+
+    4.  _All requests / responses use gzip compression method_
+
+    5.  _All country and service names in the [GET_SERVICES](/openapi_docs/Reseller-API-UN/post/getServices) response must use values from the corresponding lists of [countries](/openapi_docs/Reseller-API-UN/custom/countries) and [services](/openapi_docs/Reseller-API-UN/custom/services)_
+
+    6.  _Each number can be used for one operation simultaneously: your server can issue the same number for other service only after the previous operation is completed_
+
+    7.  _You need to implement number exception functionality: if requested, numbers with certain sequence of digits (mask) should not be issued [for GET_NUMBER request](/openapi_docs/Reseller-API-UN/post/getNumber)_
+
+    8.  _Webhook [PUSH_SMS](/openapi_docs/Reseller-API-UN/post/pushSms): your server have to forward to OnlineSIM server any SMS received by numbers with active operations as soon as they get them_
+
     9.  _Filtering and spam checking can be done either on our side or yours. Please let us know which flow is preferable for your before the integration_
 
 
@@ -283,18 +225,18 @@ info:
 
 
 
-    1.  Create 3 methods and a webhook:  
-    
-        [GET\_SERVICES](/openapi_docs/Reseller-API-UN/post/getServices) requests from your server amount of available numbers by country and service  
-        
-        [GET\_NUMBER](/openapi_docs/Reseller-API-UN/post/getNumber) reserves a number for 15 minutes with specific parameters for SMS reception  
-        
-        [PUSH\_SMS (webhook)](/openapi_docs/Reseller-API-UN/post/pushSms) - once a reserved number receives a message, your server should forward it to us  
-        
-        [FINISH\_ACTIVATION](/openapi_docs/Reseller-API-UN/post/finishActivation) closes operation with specified parameters (based on the result)  
-        
+    1.  Create 3 methods and a webhook:
+
+        [GET_SERVICES](/openapi_docs/Reseller-API-UN/post/getServices) requests from your server amount of available numbers by country and service
+
+        [GET_NUMBER](/openapi_docs/Reseller-API-UN/post/getNumber) reserves a number for 15 minutes with specific parameters for SMS receiving
+
+        [PUSH_SMS (webhook)](/openapi_docs/Reseller-API-UN/post/pushSms) - once a reserved number receives a message, your server should forward it to us
+
+        [FINISH_ACTIVATION](/openapi_docs/Reseller-API-UN/post/finishActivation) closes operation with specified parameters (based on the result)
+
     2.  Contact us via email or Telegram to create a partner profile, provide endpoint URL on your server and receive one from us. Our support specialists will also run a few tests to make sure everything is working as expected.
-    
+
     3.  If tests are successful, your numbers will become available for our clients in a few hours.
 
 
@@ -306,104 +248,41 @@ info:
     Reseller API v2 allows you to integrate your device with our website. It will allow your numbers to be purchased by our clients for SMS activations. We tried to make it as simple as possible, you only need to follow steps below:
 
 
-    1.  Create 2 methods:  
+    1.  Create 2 methods:
 
     * [sendNumbersOnline](/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline) - sends a list of numbers that you want to provide us with. This request should be sent every 5 minutes to update a list and to confirm that your server is online;
-            
-      > If you have a large quantity of numbers and sending [sendNumbersOnline](/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline) request every 5 minutes as uptime confirmation is not suitable for you, you can use alternative option - [checkWork](/openapi_docs/Reseller-API-UN/post/api_resellers_checkWork) request.
 
-    * [addMessage](/openapi_docs/Reseller-API-UN/post/api_resellers_addMessage) - forwards SMS from your server to ours.  
+        >If you have a large quantity of numbers and sending [sendNumbersOnline](/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline) request every 5 minutes as uptime confirmation is not suitable for you, you can use alternative option - [checkWork](/openapi_docs/Reseller-API-UN/get/api_resellers) request.
 
-    2.  Contact tech support to get `_SERVER_URL_`.  
+    * [addMessage](/openapi_docs/Reseller-API-UN/post/api_resellers_addMessage) - forwards SMS from your server to ours.
 
-    3.  Other requests are optional, you may never need it, but their description is available in the documentation.  
+    2.  Contact tech support to get `_SERVER_URL_`.
+
+    3.  Other requests are optional, you may never need it, but their description is available in the documentation.
 
     4.  Requests have optional parameter `test` that can be used for testing purposes. It's value can be either `test1` or `test2`, while being equal to `test1`, it will allow the request to be passed, however the data won't be saved by our server (the function will not be executed by this request), if it's value is `test2` it will print out your request's payload in response.
 
 
 
     When request [sendNumbersOnline](/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline) will be executed successfully, please contact partner support specialists, so they can test if your messages are forwarded correctly with [addMessage](/openapi_docs/Reseller-API-UN/post/api_resellers_addMessage) request. When we confirm that everything is working as intended, we will add your numbers to the pool, and they will be available for purchase in a few hours.
-    
-
-    
-    ---
-
-    # Authorization
-
-    ---
 
 
-
-    ## General Information
-
-
-    Requests are authenticated with API key - a secret personal key assigned by our server to identify calls to Reseller API from users. API key should be passed in request's body (v1 Reseller API) or request's header (v2 Reseller API). Unauthenticated calls will result in 401 Unauthorized error.
-
-    ---
-
-    #### How to get an API key:
-
-    1. [Log in](/auth/login) to personal account, go to the 'User Profile' and click on 'API' tab.
-
-    2. Copy the key from the 'API Key' field.
-
-    ---
-
-    #### How to use it:
-
-    1. All Reseller API requests must contain an API key.
-
-    2. Based on version, all API calls must contain the key:
-
-    * if you are using v1 Reseller API - it has to be in the 'key' field inside the body of each request,
-
-            {
-            "action": "GET_SERVICES",
-            "key": "apikey"
-            }
-
-    * if you are using v2 Reseller API - it has to be in the header of each request.
-
-            Authorization: Bearer {{key}}  
-            User-Agent: PostmanRuntime/7.29.2  
-            Accept: */\*  
-            Cache-Control: no-cache  
-            Postman-Token: 948bc880-8d25-4298-994f-fe6e22ada339  
-            Host: onlinesim.ru  
-            Accept-Encoding: gzip, deflate, br  
-            Connection: keep-alive  
-            Cookie: xxxx  
-    
-    API key can also be specified as a query parameter ('apikey') for both API versions.
-
-          >https://onlinesim.ru/api/getNumbersStats.php?apikey={{api_key}}
 
     **Attachments**
+
 
     ---------------
 
 
-    ### **#1 Countries list**
-    [See here](/openapi_docs/Reseller-API-UN/custom/countries)
-
-
-    ### **#2 Services list**
-    [See here](/openapi_docs/Reseller-API-UN/custom/services)
-
-
-    ### **#3 Operators list**
-    [See here](/openapi_docs/Reseller-API-UN/custom/operators)
-
-
-    ### **#4 Workflow**
+    ### **Workflow**
     ![workflow](/docs/workflow_smshub.png)
 
-    
+
   contact:
     name: Egor Stabilov
     email: partners@onlinesim.ru
-    url: 'https://onlinesim.ru'
-  termsOfService: 'https://onlinesim.ru/documentation/offer'
+    url: 'https://onlinesim.io'
+  termsOfService: 'https://onlinesim.io/documentation/offer'
   license:
     name: 'GNU General Public License, version 3.0'
     url: 'https://www.gnu.org/licenses/gpl-3.0.en.html'
@@ -413,13 +292,7 @@ servers:
     description: Your server URL
     variables:
       yourserver:
-        default: 'https://www.example.net'
-  - url: '{testServer}'
-    x-description-ru: URL сервера для получения списка стран и сервисов
-    description: Server URL to getting service and country list
-    variables:
-      testServer:
-        default: 'https://onlinesim.io/api/v1/info/'
+        default: 'https://{yourserver.com}'
 paths:
   /getServices:
     parameters: []
@@ -538,70 +411,57 @@ paths:
               x-description-ru: Заголовок `Content type` и кодировка
               description: '`Content type` header and encoding scheme'
       x-description-ru: >
-        Этот запрос отправляется **от сервера Onlinesim на Ваш сервер** каждые 2
-        минуты для получения актуального количества доступных номеров. Ваш сервер
-        должен вернуть количество номеров в формате списка, описанном ниже.
+        Этот запрос отправляется **от сервера Onlinesim на Ваш сервер** каждые 2 минуты для получения актуального количества доступных номеров. Ваш сервер должен вернуть количество номеров в формате списка, описанном ниже.
 
 
-        Для аутентификации будет использован Ваш API ключ партнера, который
-        будет передан в теле запроса.
+        Для аутентификации будет использован Ваш API ключ партнера, который будет передан в теле запроса.
 
 
-        > **ВАЖНО!**  
+        >**ВАЖНО!**
 
-        > Необходимо, чтобы Ваш сервер возвращал актуальное количество
-        одновременно доступных номеров. Например, если у Вас есть SIM банк на
-        512 портов и только 64 GSM-модуля в оборудовании, Вам необходимо вернуть 64 номера, а не 512. 
+
+        >Необходимо, чтобы Ваш сервер возвращал актуальное количество одновременно доступных номеров. Например, если у Вас есть SIM банк на 512 портов и только 64 GSM-модуля в оборудовании, Вам необходимо вернуть 64 номера, а не 512.
         
-        Нарушение этого условия повлечет автоматическую блокировку системой выдачу Ваших номеров на 30 минут.
+        
+        >Нарушение этого условия повлечет автоматическую блокировку системой выдачу Ваших номеров на 30 минут.
 
 
-        > **ВАЖНО!**  
-
-        > `operatorMap` должен содержать оператора `any`, количество номеров
-        которого является суммой номеров всех доступных операторов по каждому
-        сервису.
+        >**ВАЖНО!**
 
 
-        Каждая успешная операция должна уменьшать счетчик количества доступных
-        для этого сервиса номеров на 1. Если операция была отменена или неудачна
-        (SMS не пришло), счетчик остается без изменений.
+        >`operatorMap` должен содержать оператора `any`, количество номеров которого является суммой номеров всех доступных операторов по каждому сервису.
 
-        Результат операции зависит от значения параметра `status`, переданного в
-        запросе
-        [FINISH\_ACTIVATION](/ru/openapi_docs/Reseller-API-UN/post/finishActivation).
+
+        Каждая успешная операция должна уменьшать счетчик количества доступных для этого сервиса номеров на 1. Если операция была отменена или неудачна (SMS не пришло), счетчик остается без изменений.
+
+
+        Результат операции зависит от значения параметра `status`, переданного в запросе [FINISH_ACTIVATION](/ru/openapi_docs/Reseller-API-UN/post/finishActivation).
       description: >
-        This request is sent **from Onlinesim server to yours** every 2 minutes
-        to get a quantity of available numbers. Your server should return a relevant
-        list of available numbers in format described below.
+        This request is sent **from Onlinesim server to yours** every 2 minutes to get a quantity of available numbers. Your server should return a relevant list of available numbers in format described below.
 
 
         Your partner's API key will be passed in the request in a payload.
 
 
-        > **IMPORTANT NOTE!**  
-
-        > It is necessary to return actual number of simultaneously available
-        numbers. For example, if you have SIM bank with 512 ports and only 64
-        GSM-modules, then you should return 64, not 512.
-
-        Violation of this condition will cause the system to automatically block
-        receiving numbers from you for 30 minutes.
+        >**IMPORTANT NOTE!**
 
 
-        > **IMPORTANT NOTE!**  
-
-        > `operatorMap` should contain operator `any` that includes summarized
-        amount of numbers of all operators for each service
+        >It is necessary to return actual number of simultaneously available numbers. For example, if you have SIM bank with 512 ports and only 64 GSM-modules, then you should return 64, not 512.
 
 
-        Each successful operation has to reduce count of available numbers for
-        the service by 1. If operation was cancelled or failed (SMS hasn't been
-        received), the counter has to remain unchanged.
+        >Violation of this condition will cause the system to automatically block receiving numbers from you for 30 minutes.
 
-        Operation result is passed as `status` parameter in
-        [FINISH\_ACTIVATION](/openapi_docs/Reseller-API-UN/post/finishActivation)
-        request.
+
+        >**IMPORTANT NOTE!**
+
+
+        >`operatorMap` should contain operator `any` that includes summarized amount of numbers of all operators for each service
+
+
+        Each successful operation has to reduce count of available numbers for the service by 1. If operation was cancelled or failed (SMS hasn't been received), the counter has to remain unchanged.
+
+
+        Operation result is passed as `status` parameter in [FINISH_ACTIVATION](/openapi_docs/Reseller-API-UN/post/finishActivation) request.
       parameters:
         - $ref: '#/components/parameters/Authorization'
       requestBody:
@@ -646,11 +506,11 @@ paths:
         '200':
           x-description-ru: >-
             Ответ Вашего сервера на запрос
-            [GET\_NUMBER](/ru/openapi_docs/Reseller-API-UN/post/getNumber)
+            [GET_NUMBER](/ru/openapi_docs/Reseller-API-UN/post/getNumber)
             должен быть в следующем формате:
           description: >-
             The response of your server for
-            [GET\_NUMBER](/openapi_docs/Reseller-API-UN/post/getNumber)
+            [GET_NUMBER](/openapi_docs/Reseller-API-UN/post/getNumber)
             request must be in following format:
           headers:
             Content-Type:
@@ -707,77 +567,54 @@ paths:
         Запрос для заказа номера для приема SMS от указанного сервиса.
 
 
-        Данный запрос отправляется на Ваш сервер для заказа номера на 15 минут с
-        указанными параметрами для получения SMS от одного сервиса.
+        Данный запрос отправляется на Ваш сервер для заказа номера на 15 минут с указанными параметрами для получения SMS от одного сервиса.
 
-        Операция может быть закрыта досрочно (смотри
-        [FINISH\_ACTIVATION](/ru/openapi_docs/Reseller-API-UN/post/finishActivation)).
+        Операция может быть закрыта досрочно (смотри [FINISH_ACTIVATION](/ru/openapi_docs/Reseller-API-UN/post/finishActivation)).
 
 
-        > **ВАЖНО!**  
+        >**ВАЖНО!**
 
-        > Как упоминалось в описании, Вам необходимо будет реализовать
-        функционал по исключению масок номеров. Опциональный параметр
-        "exceptionPhoneSet" может содержать массив с набором масок для
-        исключений.  
 
-        > При их наличии (когда параметр передается), Ваш сервер должен
-        исключить из выдачи номера с масками, совпадающими в этом наборе.
-
-        > 
-
-        >   
-
-        > Например, при переданном значении \[46950\] не должны выдаваться
-        номера Швеции, начинающиеся с +46950\*
+        >Как упоминалось в описании, Вам необходимо будет реализовать функционал по исключению масок номеров. Опциональный параметр `exceptionPhoneSet` может содержать массив с набором масок для исключений. При их наличии (когда параметр передается), Ваш сервер должен исключить из выдачи номера с масками, совпадающими в этом наборе.
+        
+        
+        >Например, при переданном значении \[46950\] не должны выдаваться номера Швеции, начинающиеся с +46950\*
 
         ![Exception](https://onlinesim.io/assets/schemes/Mask%20exception%20scheme%20(RU)%20[GET_NUMBER].png)
 
 
-        > **ВАЖНО!**  
-
-        > Номера используемые в одной операции не могут быть использованы в
-        другой до тех пор, пока предыдущая операция не будет завершена (пока не
-        получен запрос
-        [FINISH\_ACTIVATION](/ru/openapi_docs/Reseller-API-UN/post/finishActivation)).
+        >**ВАЖНО!**
+        
+        
+        >Номера используемые в одной операции не могут быть использованы в другой до тех пор, пока предыдущая операция не будет завершена (пока не получен запрос [FINISH_ACTIVATION](/ru/openapi_docs/Reseller-API-UN/post/finishActivation)).
 
         ![Queue](https://onlinesim.io/assets/schemes/Number%20pool%20(RU)%20[GET_NUMBER].png)
       description: >
-        Request for ordering a number for SMS reception from a specified
+        Request for ordering a number for SMS receiving from a specified
         service.
 
 
-        This request is sent to your server to order a number with specific
-        parameters to receive SMS from a single service for 15 minutes.
+        This request is sent to your server to order a number with specific parameters to receive SMS from a single service for 15 minutes.
 
-        The operation can be closed prematurely (check
-        [FINISH\_ACTIVATION](/openapi_docs/Reseller-API-UN/post/finishActivation)).
+        The operation can be closed prematurely (check [FINISH_ACTIVATION](/openapi_docs/Reseller-API-UN/post/finishActivation)).
 
 
-        > **IMPORTANT!**  
-
-        > As we mentioned before, you will have to implement a fucntionality for
-        number's mask exception: optional parameter "exceptionPhoneSet" might
-        contain an array with exception set.  
-
-        > When one does, your server should exclude numbers with matching
-        patters from issuing them.
-
-        > 
-
-        >   
-
-        > For example, if \[46950\] value is passed, your server should not
-        issue numbers of Sweden that starts with +46950\*
+        >**IMPORTANT NOTE!**
+        
+        
+        >As we mentioned before, you will have to implement a fucntionality for number's mask exception: optional parameter `exceptionPhoneSet` might contain an array with exception set.
+        When one does, your server should exclude numbers with matching patters from issuing them.
+        
+        
+        >For example, if \[46950\] value is passed, your server should not issue numbers of Sweden that starts with +46950\*
 
         ![Exception](https://onlinesim.io/assets/schemes/Mask%20exception%20scheme%20(EN)%20[GET_NUMBER].png)
 
 
-        > **IMPORTANT!** 
+        >**IMPORTANT NOTE!**
 
-        > Numbers that are used in one operation cannot be used in other until
-        the previous operation is closed (until [FINISH\_ACTIVATION](/openapi_docs/Reseller-API-UN/post/finishActivation) request is
-        received).
+
+        >Numbers that are used in one operation cannot be used in other until the previous operation is closed (until [FINISH_ACTIVATION](/openapi_docs/Reseller-API-UN/post/finishActivation) request is received).
 
         ![Queue](https://onlinesim.io/assets/schemes/Number%20pool%20(EN)%20[GET_NUMBER].png)
       requestBody:
@@ -812,12 +649,12 @@ paths:
                   x-description-ru: >-
                     Название оператора (для примеров смотри [список
                     операторов](/ru/openapi_docs/Reseller-API-UN/custom/operators))
-                  description: 'Operator name (for examples take a look at [operator list](/openapi_docs/Reseller-API-UN/custom/operators)'
+                  description: 'Operator name (for examples take a look at [operator list](/openapi_docs/Reseller-API-UN/custom/operators))'
                   example: any
                 service:
                   type: string
                   x-description-ru: 'Название сервиса, enum (смотри [список сервисов](/ru/openapi_docs/Reseller-API-UN/custom/services))'
-                  description: 'Service name, enum [service list](/openapi_docs/Reseller-API-UN/custom/services)'
+                  description: 'Service name, enum ([service list](/openapi_docs/Reseller-API-UN/custom/services))'
                   example: facebook
                 sum:
                   type: number
@@ -869,7 +706,7 @@ paths:
   /pushSms:
     post:
       servers:
-        - url: 'https://www.ourserver.com'
+        - url: 'https://{ourserver.com}'
       summary: PUSH_SMS
       operationId: PUSH_SMS
       responses:
@@ -926,75 +763,53 @@ paths:
       tags:
         - v1
       x-description-ru: >
-        > **ВАЖНО!**  
+        >**ВАЖНО!**
 
-        > URL сервера Onlinesim предоставляется сотрудниками партнерской
-        поддержки  
 
-        > Обратите внимание, что URL сервера Onlinesim в примере заменен на
-        заглушку.
+        >URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки. Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку.
+
+
+
+        Это webhook  для отправки сообщения на сервер Onlinesim. Этот запрос должен выполняться лишь тогда, когда Ваш номер получил сообщение на заказанный номер для его (сообщения) последующей передачи на сервер Onlinesim.
+
+
+        Если Вы получили ответ со статусом 200(OK), в Вашей базе данных SMS может быть помечено как успешно доставленное (повторно отправлять запрос не нужно).
+
+
+        Если код статуса отличен от 200(OK), то необходимо повторно отправить запрос с тем же контентом через 10 секунд (за исключением получения ошибок `NO_OPERATION` или `BAD_SERVICE`).
+
+
+        >**ВАЖНО!**
+
+
+        >Заголовок запроса 'Content-Type' должен содержать utf-8 кодировку в качестве значения
         
         
-        
-        Это webhook  для отправки сообщения на сервер Onlinesim.
-
-        Этот запрос должен выполняться лишь тогда, когда Ваш номер получил
-        сообщение на заказанный номер для его (сообщения) последующей передачи
-        на сервер Onlinesim.
-
-
-
-        Если Вы получили ответ со статусом 200(OK), в Вашей базе данных SMS
-        может быть помечено как успешно доставленное (повторно отправлять запрос
-        не нужно).
-
-
-
-        Если код статуса отличен от 200(OK), то необходимо повторно отправить
-        запрос с тем же контентом через 10 секунд (за исключением получения
-        ошибок NO\_OPERATION или BAD\_SERVICE).
-
-
-        > **ВАЖНО!**  
-
-        > Заголовок запроса 'Content-Type' должен содержать utf-8 кодировку в
-        качестве значения
-
-        > ('Content-Type': 'application/json; charset=utf-8').
+        >('Content-Type': 'application/json; charset=utf-8').
       description: >
-        > **IMPORTANT NOTE!**  
+        >**IMPORTANT NOTE!**
 
-        > URL of Onlinesim server is provided by Onlinesim partner support
-        specialists  
 
-        > Please note, that the URL in the example is just a placeholder.
-        
-        
-        
-        This is
-        a webhook for sending messages to Onlinesim server.
-
-        This request should be sent automatically when your number with active
-        operation has received a message to forward it to Onlinesim server.
+        >URL of Onlinesim server is provided by Onlinesim partner support specialists. Please note, that the URL in the example is just a placeholder.
 
 
 
-        If you get a response with 200(OK) status, SMS can be marked in your
-        database as successfully delivered (don't send message again).
+        This is a webhook for sending messages to Onlinesim server. These requests should be sent automatically when your number with active operation has received a message to forward it to Onlinesim server.
 
 
-
-        If response is different from 200, then in 10 seconds another request
-        with the same context should be sent, unless it's NO\_OPERATION or
-        BAD\_SERVICE error.
+        If you get a response with 200(OK) status, SMS can be marked in your database as successfully delivered (don't send message again).
 
 
-        > **IMPORTANT NOTE!**  
+        If response is different from 200, then in 10 seconds another request with the same context should be sent, unless it's `NO_OPERATION` or `BAD_SERVICE` error.
 
-        > Request header should have utf-8 encode scheme placed in
-        'Content-Type'  
 
-        > ('Content-Type': 'application/json; charset=utf-8').
+        >**IMPORTANT NOTE!**
+
+
+        >Request header should have utf-8 encode scheme placed in 'Content-Type'
+
+
+        >('Content-Type': 'application/json; charset=utf-8').
       requestBody:
         content:
           application/json:
@@ -1026,8 +841,8 @@ paths:
                   example: Your verification code is 800142
                 action:
                   type: string
-                  x-description-ru: 'Имя метода, в данном случае `PUSH\_SMS`'
-                  description: 'Method name, in this case `PUSH\_SMS`'
+                  x-description-ru: 'Имя метода, в данном случае `PUSH_SMS`'
+                  description: 'Method name, in this case `PUSH_SMS`'
                   default: PUSH_SMS
                   enum:
                     - PUSH_SMS
@@ -1053,11 +868,11 @@ paths:
                   action: PUSH_SMS
                   key: apiKey
         x-description-ru: >-
-          [PUSH\_SMS](/ru/openapi_docs/Reseller-API-UN/post/pushSms)
+          [PUSH_SMS](/ru/openapi_docs/Reseller-API-UN/post/pushSms)
           webhook: Ваш сервер должен отправлять этот запрос при наступлении
           события (когда заказанный номер получил сообщение).
         description: >-
-          [PUSH\_SMS](/openapi_docs/Reseller-API-UN/post/pushSms) webhook:
+          [PUSH_SMS](/openapi_docs/Reseller-API-UN/post/pushSms) webhook:
           your server must send this request once an event is triggered (when
           the ordered number has received a message).
       parameters:
@@ -1098,14 +913,20 @@ paths:
                     status: SUCCESS
       x-description-ru: >
         Данный запрос отправляется сервером Onlinesim для закрытия текущей
-        операции с определенным статусом (который зависит от результатов операции). Запрос может быть отправлен по истечению времени (15 минут
+        операции с определенным статусом (который зависит от результатов операции).
+        
+
+        Запрос может быть отправлен по истечению времени (15 минут
         для услуги "Прием SMS"), при досрочном закрытии операции (SMS от
         заказанного сервиса было успешно получено) или при отмене операции (SMS от заказанного сервиса не было получено).
 
         ![Окончание операции](https://onlinesim.io/assets/schemes/Result%20scheme%20(RU)%20[FINISH_ACTIVATION].png)
       description: >
         This request is sent by Onlinesim server to close current operation with
-        a certain status (which depends on the result of operation). Request can be sent after the time for operation runs out (15 minutes for single-service activations), if the operation was closed prematurely (SMS has been received) or if operation has been cancelled (SMS hasn't been received).
+        a certain status (which depends on the result of operation).
+        
+
+        Request can be sent after the time for operation runs out (15 minutes for single-service activations), if the operation was closed prematurely (SMS has been received) or if operation has been cancelled (SMS hasn't been received).
 
         ![Operation closing](https://onlinesim.io/assets/schemes/Result%20scheme%20(EN)%20[FINISH_ACTIVATION].png)
       tags:
@@ -1139,33 +960,33 @@ paths:
                 status:
                   type: integer
                   x-description-ru: >
-                    Код статуса операции, enum.  
+                    Код статуса операции, enum.
 
                     1 - Номер не был заказан под указанный тип услуги (например,
                     Вы пытатесь отправить сообщение для услуги "Прием", когда
                     номер заказан для "Аренда")
 
-                    2 - (deprecated)  
+                    2 - (deprecated)
 
-                    3 - Операция завершена успешно  
+                    3 - Операция завершена успешно
 
-                    4 - Операция была отменена, сообщение не было получено  
+                    4 - Операция была отменена, сообщение не было получено
 
                     5 - По операции был совершен возврат, в случае ошибок и
                     проблем с сообщением.
                   description: >
-                    Status code of the operation, enum.  
+                    Status code of the operation, enum.
 
                     1 - This number was not ordered for the current service
                     (i.e., when you try to push SMS for "single-service
                     activation" service, while number has active "rent"
                     operation)
 
-                    2 - (deprecated)  
+                    2 - (deprecated)
 
-                    3 - Successfully sold  
+                    3 - Successfully sold
 
-                    4 - Cancelled, message was not delivered  
+                    4 - Cancelled, message was not delivered
 
                     5 - Refunded, in case of errors and message problems
                   example: 3
@@ -1354,65 +1175,57 @@ paths:
               x-description-ru: Заголовок `Content type` и кодировка
               description: '`Content type` header and encoding scheme'
       x-description-ru: >
-        Данный запрос отправляется **с сервера Onlinesim на Ваш сервер** для
-        получения списка доступных для аренды номеров. Ваш сервер должен вернуть
-        список номеров в формате, описанном ниже.
+        Данный запрос отправляется **с сервера Onlinesim на Ваш сервер** для получения списка доступных для аренды номеров. Ваш сервер должен вернуть список номеров в формате, описанном ниже.
 
 
-        Для аутентификации будет использован Ваш API ключ партнера, который
-        будет передан в теле запроса.
+        Для аутентификации будет использован Ваш API ключ партнера, который будет передан в теле запроса.
 
 
-        > **ВАЖНО!**  
-
-        > Вы можете добавить информацию о доступных для аренды номерах на тот же
-        endpoint, который Вы используете для приема SMS (GET\_SERVICES, v1) или
-        создать отдельный endpoint для аренды.
+        >**ВАЖНО!**
 
 
-        > **ВАЖНО!**  
+        >Вы можете добавить информацию о доступных для аренды номерах на тот же endpoint, который Вы используете для приема SMS (`GET_SERVICES`, v1) или создать отдельный endpoint для аренды.
 
-        > Необходимо, чтобы Ваш сервер возвращал актуальное количество
-        одновременно доступных номеров. Например, если у Вас есть SIM банк на
-        512 портов и только 64 GSM-модуля в оборудовании, Вам необходимо вернуть 64 номера, а не 512.
+
+        >**ВАЖНО!**
+
         
-        Нарушение этого условия повлечет автоматическую блокировку системой выдачу Ваших номеров на 30 минут.
+        >Необходимо, чтобы Ваш сервер возвращал актуальное количество одновременно доступных номеров. Например, если у Вас есть SIM банк на 512 портов и только 64 GSM-модуля в оборудовании, Вам необходимо вернуть 64 номера, а не 512.
+        
+        
+        >Нарушение этого условия повлечет автоматическую блокировку системой выдачу Ваших номеров на 30 минут.
 
 
-        > **ВАЖНО!**  
+        >**ВАЖНО!**
 
-        > `operatorMap` должен содержать оператора `any`, количество номеров
-        которого является суммой номеров всех доступных операторов по аренде.
+
+        >`operatorMap` должен содержать оператора `any`, количество номеров которого является суммой номеров всех доступных операторов по аренде.
       description: >
-        This request is sent **from Onlinesim server to yours** to get a list of
-        available for rent numbers. Your server should return a list of numbers
-        in format described below.
+        This request is sent **from Onlinesim server to yours** to get a list of available for rent numbers. Your server should return a list of numbers in format described below.
 
 
         Your partner's API key will be passed in the request in a payload.
 
 
-        > **IMPORTANT NOTE!**  
-
-        > You can either add a result field that contains quantity of available
-        numbers for rent to your existing GET\_SERVICES endpoint response for
-        singe-service activations (v1) or create a new endpoint for rent only.
+        >**IMPORTANT NOTE!**
 
 
-        > **IMPORTANT NOTE!**  
-
-        > It is necessary to return actual number of simultaneously available
-        numbers. For example, if you have SIM bank with 512 ports and only 64
-        GSM-modules, then you should return 64, not 512.
-
-        Violation of this condition will cause the system to automatically block
-        receiving numbers from you for 30 minutes.
+        >You can either add a result field that contains quantity of available numbers for rent to your existing `GET_SERVICES` endpoint response for singe-service activations (v1) or create a new endpoint for rent only.
 
 
-        > **IMPORTANT NOTE!**  
+        >**IMPORTANT NOTE!**
 
-        > `operatorMap` must contain operator `any` that includes summarized
-        amount of numbers of all operators listed for rent.
+
+        >It is necessary to return actual number of simultaneously available numbers. For example, if you have SIM bank with 512 ports and only 64 GSM-modules, then you should return 64, not 512.
+        
+        
+        >Violation of this condition will cause the system to automatically block receiving numbers from you for 30 minutes.
+
+
+        >**IMPORTANT NOTE!**
+
+
+        >`operatorMap` must contain operator `any` that includes summarized amount of numbers of all operators listed for rent.
       parameters:
         - $ref: '#/components/parameters/Authorization'
       requestBody:
@@ -1511,84 +1324,63 @@ paths:
                     activationId: 355
                     status: SUCCESS
       x-description-ru: >
-        Этот запрос создает новую операцию аренды, которая позволяет
-        использовать номер для приема SMS от любых сервисов и других мобильных
-        номеров в течение длительного периода (от 1 дня до нескольких месяцев).
-        **НЕ ЗАКРЫВАЙТЕ ОПЕРАЦИЮ** до получения по ней запроса
-        FINISH\_ACTIVATION.
+        Этот запрос создает новую операцию аренды, которая позволяет использовать номер для приема SMS от любых сервисов и других мобильных номеров в течение длительного периода (от 1 дня до нескольких месяцев). **НЕ ЗАКРЫВАЙТЕ ОПЕРАЦИЮ** до получения по ней запроса `FINISH_ACTIVATION`.
 
 
-        > **ВАЖНО!**  
-
-        > Вы можете использовать тот же endpoint, который использовали для
-        запроса GET\_NUMBER (v1) под услугу "Прием SMS" или создать
-        новый endpoint только для операций аренды.
-
-        Однако в последнем случае Вам необходимо модифицировать его, чтобы Ваш
-        сервер корректно обрабатывал запрос для создания операции аренды.
+        >**ВАЖНО!**
 
 
-        Если номер не получит SMS в течение 20 минут после создания операции,
-        она будет отменена автоматически, а номер вновь станет доступен для
-        другой операции аренды. Если номер трижды не сможет получить SMS в
-        течение 20 минут после создания операции, он будет заблокирован нашим
-        сервером. Данные баны автоматически снимаются каждые 24 часа.
+        >Вы можете использовать тот же endpoint, который использовали для запроса GET_NUMBER (v1) под услугу "Прием SMS" или создать новый endpoint только для операций аренды.
+        
+        
+        >Однако в последнем случае Вам необходимо модифицировать его, чтобы Ваш сервер корректно обрабатывал запрос для создания операции аренды.
 
 
-        Аренда может быть продлена клиентом, но доход начисляется только **ПО
-        ЗАВЕРШЕНИЮ ОПЕРАЦИИ** (по истечению срока или закрытию операции клиентом
-        самостоятельно).
+        Если номер не получит SMS в течение 20 минут после создания операции, она будет отменена автоматически, а номер вновь станет доступен для другой операции аренды. Если номер трижды не сможет получить SMS в течение 20 минут после создания операции, он будет заблокирован нашим сервером. Данные баны автоматически снимаются каждые 24 часа.
 
 
-        > **ВАЖНО!**  
+        Аренда может быть продлена клиентом, но доход **НАЧИСЛЯЕТСЯ ТОЛЬКО ПО ЗАВЕРШЕНИЮ ОПЕРАЦИИ** (по истечению срока или закрытию операции клиентом самостоятельно).
 
-        > Мы блокируем сообщения от банков, платежных систем и кредитных
-        организаций, чтобы оградить партнеров от каких-либо юридических
-        последствий, которые могут возникнуть при использовании таких сервисов
-        клиентами.  
 
-        > В то же время аренда не поддерживает возможность добавлять какие-либо
-        сервисы в список исключений, поскольку мы не знаем заранее какие сервисы
-        могут быть использованы клиентами. Пожалуйста, обратите внимание, что
-        SMS от сервисов, добавленных Вами в список исключений **ПРИ АРЕНДЕ БУДУТ
-        ПЕРЕДАВАТЬСЯ** клиентам.
+        >**ВАЖНО!**
+
+
+        >Мы блокируем сообщения от банков, платежных систем и кредитных организаций, чтобы оградить партнеров от каких-либо юридических последствий, которые могут возникнуть при использовании таких сервисов клиентами.
+        
+        
+        >В то же время аренда не поддерживает возможность добавлять какие-либо сервисы в список исключений, поскольку мы не знаем заранее какие сервисы могут быть использованы клиентами.
+        
+        
+        >Пожалуйста, обратите внимание, что **SMS ОТ СЕРВИСОВ, ДОБАВЛЕННЫХ ВАМИ В СПИСОК ИСКЛЮЧЕНИЙ ДЛЯ УСЛУГИ "ПРИЕМ SMS", ПРИ АРЕНДЕ БУДУТ ПЕРЕДАВАТЬСЯ КЛИЕНТАМ**.
       description: >
-        This request creates a new rent operation, which will allow to use a
-        number to receive SMS from any service and other mobile numbers for a
-        long period of time (from 1 day up to several months). **DO NOT** close
-        operation before FINISH\_ACTIVATION request.
+        This request creates a new rent operation, which will allow to use a number to receive SMS from any service and other mobile numbers for a long period of time (from 1 day up to several months). **DO NOT CLOSE** an operation before `FINISH_ACTIVATION` request.
 
 
-        > **IMPORTANT NOTE!**  
+        >**IMPORTANT NOTE!**
 
-        > You can use the same GET\_NUMBER endpoint as for single-service
-        activations (v1) or create a new endpoint for rent orders only.
-
-        However in the latter case you need to modify it so your server could
-        create the rental operation correctly.
-
-
-        If number won't receive SMS within 20 minutes after operation is
-        created, the operation will be cancelled automatically, making it
-        available for another operation. If number fails 3 consecutive operations to receive
-        SMS within 20 minutes, it will be banned by our server. These bans are
-        lifted automatically every 24 hours.
+        
+        >You can use the same GET_NUMBER endpoint as for single-service activations (v1) or create a new endpoint for rent orders only.
+        
+        
+        >However in the latter case you need to modify it so your server could create the rental operation correctly.
 
 
-        Rent can be prolonged by the client, but the income is **CREDITED UPON
-        OPERATION CLOSING** (upon rent expiration or termination).
+        If number won't receive SMS within 20 minutes after operation is created, the operation will be cancelled automatically, making it available for another operation. If number fails 3 consecutive operations to receive SMS within 20 minutes, it will be banned by our server. These bans are lifted automatically every 24 hours.
 
 
-        > **Important note!**  
+        Rent can be prolonged by the client, but the income is **CREDITED UPON OPERATION CLOSING** (upon rent expiration or termination).
 
-        > We're blocking messages from banks, payment systems and credit
-        institutions to prevent any legal consequences for our partners that
-        might be caused by unscrupulous customers.  
 
-        > At the same time long term rental does not support any exceptions for
-        services as we don't know beforehand which service may or may not be
-        used by our clients. Please keep in mind that **ANY BLACKLISTED SERVICES YOU MAY ADD
-        FOR YOUR ACCOUNT WILL NOT BE APPLIED FOR RENT**.
+        >**IMPORTANT NOTE!**
+
+        
+        >We're blocking messages from banks, payment systems and credit institutions to prevent any legal consequences for our partners that might be caused by unscrupulous customers.
+        
+        
+        >At the same time long term rental does not support any exceptions for services as we don't know beforehand which service may or may not be used by our clients.
+        
+        
+        >Please keep in mind that **ANY BLACKLISTED SERVICES YOU MAY ADD FOR SINGLE-SERVICE ACTIVATIONS WILL NOT BE APPLIED FOR RENT**.
       requestBody:
         content:
           application/json:
@@ -1624,8 +1416,8 @@ paths:
                   type: string
                   x-description-ru: >-
                     Название оператора (для примеров смотри [список
-                    операторов](/ru/openapi_docs/Reseller-API-UN/custom/operators)
-                  description: 'Operator name (for examples take a look at [operator list](/openapi_docs/Reseller-API-UN/custom/operators)'
+                    операторов](/ru/openapi_docs/Reseller-API-UN/custom/operators))
+                  description: 'Operator name (for examples take a look at [operator list](/openapi_docs/Reseller-API-UN/custom/operators))'
                   example: any
                 service:
                   type: string
@@ -1650,21 +1442,21 @@ paths:
                 exceptionPhoneSet:
                   type: array
                   x-description-ru: >
-                    'Список префиксов-исключений для масок номеров, которые
+                    Список префиксов-исключений для масок номеров, которые
                     **НЕ ДОЛЖНЫ ВЫДАВАТЬСЯ** при запросе номера.
 
                     Формат: код страны + следующие за ним цифры номера.
 
                     Например, при переданном значении 46950 не должны выдаваться
-                    номера Швеции, начинающиеся с +46950*'
+                    номера Швеции, начинающиеся с +46950*
                   description: >
-                    'List of exception prefixes that **SHOULD NOT BE ISSUED**
+                    List of exception prefixes that **SHOULD NOT BE ISSUED**
                     when the number is requested.
 
                     Format: country code + following digits of a number.
 
                     I.e, when value 46950 is passed, numbers of Sweden starting
-                    with +46950 shouldn't be issued'
+                    with +46950 shouldn't be issued
                   items:
                     type: integer
                     example: 46950
@@ -1694,7 +1486,7 @@ paths:
   /pushSmsRent:
     post:
       servers:
-        - url: 'https://www.ourserver.com'
+        - url: 'https://{ourserver.com}'
       summary: PUSH_SMS (RENT)
       operationId: PUSH_SMS_RENT
       responses:
@@ -1723,56 +1515,50 @@ paths:
                     status: SUCCESS
           headers: {}
       x-description-ru: >
-        > **ВАЖНО!**  
+        >**ВАЖНО!**
 
-        > URL сервера Onlinesim предоставляется сотрудниками партнерской
-        поддержки  
 
-        > Обратите внимание, что URL сервера Onlinesim в примере заменен на
+        >URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки. Обратите внимание, что URL сервера Onlinesim в примере заменен на
         заглушку.
-        
 
-        
+
+
         Если Вы получили ответ со статусом 200(OK), в Вашей базе данных SMS может быть помечено как успешно доставленное (повторно отправлять запрос не нужно).
+
+
+
+        Если код статуса отличен от 200(OK), то необходимо повторно отправить запрос с тем же контентом через 10 секунд (за исключением получения ошибок `NO_OPERATION` или `BAD_SERVICE`).
+
+
+        >**ВАЖНО!**
+
+
+        >Заголовок запроса 'Content-Type' должен содержать utf-8 кодировку в качестве значения
         
-
-
-        Если код статуса отличен от 200(OK), то необходимо повторно отправить запрос с тем же контентом через 10 секунд (за исключением получения ошибок NO\_OPERATION или BAD\_SERVICE).
-
-
-        > **ВАЖНО!**  
-
-        > Заголовок запроса 'Content-Type' должен содержать utf-8 кодировку в
-        качестве значения  
-
-        > ('Content-Type': 'application/json; charset=utf-8').
+        
+        >('Content-Type': 'application/json; charset=utf-8').
       description: >
-        > **IMPORTANT NOTE!**  
+        >**IMPORTANT NOTE!**
 
-        > URL of Onlinesim server is provided by Onlinesim partner support
-        specialists  
 
-        > Please note, that the URL in the example is just a placeholder.
-        
-        
-        
-        If you
-        get a response with 200(OK) status, SMS can be marked in your database as successfully delivered (don't send message again).
+        >URL of Onlinesim server is provided by Onlinesim partner support specialists. Please note, that the URL in the example is just a placeholder.
+
+
+        If you get a response with 200(OK) status, SMS can be marked in your database as successfully delivered (don't send message again).
 
 
 
 
-        If response is different from 200, then in 10 seconds another request
-        with the same context should be sent, unless it's NO\_OPERATION or
-        BAD\_SERVICE error.
+        If response is different from 200, then in 10 seconds another request with the same context should be sent, unless it's `NO_OPERATION` or `BAD_SERVICE` error.
 
 
-        > **IMPORTANT NOTE!**  
+        >**IMPORTANT NOTE!**
 
-        > Request header should have utf-8 encode scheme placed in
-        'Content-Type'  
 
-        > ('Content-Type': 'application/json; charset=utf-8').
+        >Request header should have utf-8 encode scheme placed in 'Content-Type'
+
+
+        >('Content-Type': 'application/json; charset=utf-8').
       requestBody:
         content:
           application/json:
@@ -1804,8 +1590,8 @@ paths:
                   example: Your verification code is 800142
                 action:
                   type: string
-                  x-description-ru: 'Имя метода, в данном случае `PUSH\_SMS`'
-                  description: 'Method name, in this case `PUSH\_SMS`'
+                  x-description-ru: 'Имя метода, в данном случае `PUSH_SMS`'
+                  description: 'Method name, in this case `PUSH_SMS`'
                   default: PUSH_SMS
                   enum:
                     - PUSH_SMS
@@ -1840,11 +1626,11 @@ paths:
                   key: apiKey
                   service: rent
         x-description-ru: >-
-          [PUSH\_SMS](/ru/openapi_docs/Reseller-API-UN/post/pushSmsRent)
+          [PUSH_SMS](/ru/openapi_docs/Reseller-API-UN/post/pushSmsRent)
           webhook: Ваш сервер должен отправлять этот запрос лишь при наступлении
           события (когда заказанный номер получил сообщение).
         description: >-
-          [PUSH\_SMS](/openapi_docs/Reseller-API-UN/post/pushSmsRent)
+          [PUSH_SMS](/openapi_docs/Reseller-API-UN/post/pushSmsRent)
           webhook: your server must send this request once an event is triggered
           (when the ordered number has received a message).
       parameters:
@@ -1886,40 +1672,31 @@ paths:
                   value:
                     status: SUCCESS
       x-description-ru: >
-        Данный запрос отправляется сервером Onlinesim для закрытия текущей
-        операции аренды с определенным статусом (который зависит от результатов
-        операции).
+        Данный запрос отправляется сервером Onlinesim для закрытия текущей операции аренды с определенным статусом (который зависит от результатов операции).
 
-        Запрос может быть отправлен по истечению времени (15 минут), при
-        досрочном закрытии операции (SMS от заказанного сервиса было успешно
-        получено) или при отмене операции (SMS от заказанного сервиса не было получено).
+        Запрос может быть отправлен по истечению времени (15 минут), при досрочном закрытии операции (SMS от заказанного сервиса было успешно получено) или при отмене операции (SMS от заказанного сервиса не было получено).
 
 
-        > **ВАЖНО!**  
+        >**ВАЖНО!**
 
-        > Вы можете использовать тот же endpoint, что и для закрытия операций по
-        приему SMS (FINISH\_ACTIVATION, v1), либо использовать отдельный
-        endpoint исключительно для операций аренды.
-
-        Однако в последнем случае Вам необходимо модифицировать его, чтобы Ваш
-        сервер корректно обрабатывал запрос для закрытия операции аренды.
+        
+        >Вы можете использовать тот же endpoint, что и для закрытия операций по приему SMS (`FINISH_ACTIVATION`, v1), либо использовать отдельный endpoint исключительно для операций аренды.
+        
+        
+        >Однако в последнем случае Вам необходимо модифицировать его, чтобы Ваш сервер корректно обрабатывал запрос для закрытия операции аренды.
       description: >
-        This request is sent by Onlinesim server to close current rent operation
-        with a specific status (which depends on the result of operation).
+        This request is sent by Onlinesim server to close current rent operation with a specific status (which depends on the result of operation).
 
-        Request can be sent on operation timeout, if the operation was closed
-        prematurely (SMS has been received) or if operation has been cancelled
-        (SMS hasn't been received).
+        Request can be sent on operation timeout, if the operation was closed prematurely (SMS has been received) or if operation has been cancelled (SMS hasn't been received).
 
 
-        > **IMPORTANT NOTE!**  
-
-        > You can either use your existing FINISH\_ACTIVATION endpoint for
-        single-service activations (v1) or create a new endpoint for the rent
-        only.
-
-        However in the latter case you need to modify it so your server could
-        process the closing of rental operations correctly. 
+        >**IMPORTANT NOTE!**
+        
+        
+        >You can either use your existing `FINISH_ACTIVATION` endpoint for single-service activations (v1) or create a new endpoint for the rent only.
+        
+        
+        >However in the latter case you need to modify it so your server could process the closing of rental operations correctly.
       requestBody:
         content:
           application/json:
@@ -1949,33 +1726,33 @@ paths:
                 status:
                   type: integer
                   x-description-ru: >
-                    Код статуса операции, enum.  
+                    Код статуса операции, enum.
 
                     1 - Номер не был заказан под указанный тип услуги (например,
                     Вы пытатесь отправить сообщение для услуги "Прием", когда
                     номер заказан для "Аренда")
 
-                    2 - (deprecated)  
+                    2 - (deprecated)
 
-                    3 - Операция завершена успешно  
+                    3 - Операция завершена успешно
 
-                    4 - Операция была отменена, сообщение не было получено  
+                    4 - Операция была отменена, сообщение не было получено
 
                     5 - По операции был совершен возврат, в случае ошибок и
                     проблем с сообщением.
                   description: >
-                    Status code of the operation, enum.  
+                    Status code of the operation, enum.
 
                     1 - This number was not ordered for the current service
                     (i.e., when you try to push SMS for "single-service
                     activation" service, while number has active "rent"
                     operation)
 
-                    2 - (deprecated)  
+                    2 - (deprecated)
 
-                    3 - Successfully sold  
+                    3 - Successfully sold
 
-                    4 - Canceled, message was not delivered  
+                    4 - Cancelled, message was not delivered
 
                     5 - Refunded, in case of errors and message problems
                   example: 3
@@ -2031,7 +1808,7 @@ paths:
   /api/resellers/sendNumbersOnline:
     post:
       servers:
-        - url: 'https://www.ourserver.com'
+        - url: 'https://{ourserver.com}'
       summary: sendNumbersOnline
       operationId: sendNumbersOnline
       responses:
@@ -2091,80 +1868,63 @@ paths:
                 date_start format error:
                   value: ERROR_DATE
       x-description-ru: >
-        > **ВАЖНО!**  
-
-        > URL сервера Onlinesim предоставляется сотрудниками партнерской
-        поддержки  
-
-        > Обратите внимание, что URL сервера Onlinesim в примере заменен на
-        заглушку В этом запросе следует передавать все доступные для продажи
-        номера. Данный запрос должен отправляться на сервер Onlinesim каждые 5
-        минут (для подтверждения аптайма Вашего сервера) и после каждого
-        изменения списка номеров: после добавления новых номеров или удаления
-        каких-либо ранее переданных. Однако, есть альтернативный вариант: для
-        подтверждения аптайма, Вы можете воспользоваться запросом
-        [checkWork](ru/openapi_docs/Reseller-API-UN/get/api_resellers), а для
-        добавления и удаления номеров - запросами
-        [addNumber](ru/openapi_docs/Reseller-API-UN/post/api_resellers_addNumber)
-        и
-        [removeNumber](ru//openapi_docs/Reseller-API-UN/delete/api_resellers_removeNumber)
-        соответственно.
+        >**ВАЖНО!**
 
 
-        > **ВАЖНО!**  
+        >URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки. Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку.
 
-        > Необходимо, чтобы Ваш сервер возвращал актуальное количество
-        одновременно доступных номеров. Например, если у Вас есть SIM банк на
-        512 портов и только 64 GSM-модуля в оборудовании, Вам необходимо вернуть
-        64 номера, а не 512.
+
+        В этом запросе следует передавать все доступные для продажи номера. Данный запрос должен отправляться на сервер Onlinesim каждые 5 минут (для подтверждения аптайма Вашего сервера) и после каждого изменения списка номеров: после добавления новых номеров или удаления каких-либо ранее переданных.
         
-        Нарушение этого условия повлечет автоматическую блокировку системой выдачу Ваших номеров на 30 минут.
+        
+        Однако, есть альтернативный вариант: для подтверждения аптайма, Вы можете воспользоваться запросом [checkWork](/ru/openapi_docs/Reseller-API-UN/get/api_resellers), а для добавления и удаления номеров - запросами [addNumber](/ru/openapi_docs/Reseller-API-UN/post/api_resellers_addNumber) и [removeNumber](ru//openapi_docs/Reseller-API-UN/delete/api_resellers_removeNumber) соответственно.
 
-        > **ВАЖНО!**  
 
-        > Включение параметра \`rent\` (присваиванием ему значения `1`)
-        позволяет клиентам арендовать Ваши номера на длительный период,
-        значительно увеличивая Ваш доход. Однако Вам необходимо связаться с
-        партнерской поддержкой для получиения подробной информации об условиях и
-        требованиях к арендным номерам, перед тем, как мы включим этот
-        функционал на Вашем аккаунте.
+        >**ВАЖНО!**
+
+
+        >Необходимо, чтобы Ваш сервер возвращал актуальное количество одновременно доступных номеров. Например, если у Вас есть SIM банк на 512 портов и только 64 GSM-модуля в оборудовании, Вам необходимо вернуть 64 номера, а не 512.
+        
+        
+        >Нарушение этого условия повлечет автоматическую блокировку системой выдачу Ваших номеров на 30 минут.
+
+
+        >**ВАЖНО!**
+
+
+        >Включение параметра `rent` (присваиванием ему значения `1`) позволяет клиентам арендовать Ваши номера на длительный период, значительно увеличивая Ваш доход.
+        
+        
+        >Однако Вам необходимо связаться с партнерской поддержкой для получиения подробной информации об условиях и требованиях к арендным номерам, перед тем, как мы включим этот функционал на Вашем аккаунте.
       description: >
-        > **IMPORTANT NOTE!**  
-
-        > URL of Onlinesim server is provided by Onlinesim partner support
-        specialists  
-
-        > Please note, that the URL in the example is just a placeholder In this
-        request all numbers available for sale should be passed. This request
-        should be sent to Onlinesim server every 5 minutes (to ensure that your
-        server is up and running) and after any change in the number list: after
-        adding new numbers or removing any of previously passed ones. However,
-        there is another way: you can send
-        [checkWork](openapi_docs/Reseller-API-UN/get/api_resellers) request
-        every 5 minutes (as confirmation that your server is up and running),
-        and use
-        [addNumber](openapi_docs/Reseller-API-UN/post/api_resellers_addNumber)
-        and
-        [removeNumber](/openapi_docs/Reseller-API-UN/delete/api_resellers_removeNumber)
-        to add or delete numbers respectively.
+        >**IMPORTANT NOTE!**
 
 
-        > **IMPORTANT NOTE!**  
+        >URL of Onlinesim server is provided by Onlinesim partner support specialists. Please note, that the URL in the example is just a placeholder.
 
-        > Only list of active numbers should be passed in this request. If you
-        have a 32 port device and a 512 port SIM bank, you should send a list
-        with 32 numbers that currently in the ports.
 
-        Violation of this condition will cause the system to automatically block
-        receiving numbers from you for 30 minutes.
+        In this request all numbers available for sale should be passed. This request should be sent to Onlinesim server every 5 minutes (to ensure that your server is up and running) and after any change in the number list: after adding new numbers or removing any of previously passed ones.
+        
+        
+        However, there is another way: you can send [checkWork](/openapi_docs/Reseller-API-UN/get/api_resellers) request every 5 minutes (as confirmation that your server is up and running), and use [addNumber](openapi_docs/Reseller-API-UN/post/api_resellers_addNumber) and [removeNumber](/openapi_docs/Reseller-API-UN/delete/api_resellers_removeNumber) to add or delete numbers respectively.
 
-        > **IMPORTANT NOTE!**  
 
-        > Enabling \`rent\` parameter (by assigning value `1` to it) allows
-        clients to rent your number for a longer period, significantly
-        increasing your income. However you need to contact partner support to
-        get a detailed information on terms and requirements before we enable it
-        for your account.
+        >**IMPORTANT NOTE!**
+
+
+        >Only list of active numbers should be passed in this request. If you have a 32 port device and a 512 port SIM bank, you should send a list with 32 numbers that currently in the ports.
+        
+        
+        >Violation of this condition will cause the system to automatically block receiving numbers from you for 30 minutes.
+
+
+        >**IMPORTANT NOTE!**
+
+
+        >Enabling `rent` parameter (by assigning value `1` to it) allows clients to rent your number for a longer period, significantly increasing your income.
+        
+        
+        >However you need to contact partner support to get a detailed information on terms and requirements before we enable it for your account.
       parameters:
         - $ref: '#/components/parameters/Authorization'
       requestBody:
@@ -2221,11 +1981,11 @@ paths:
                           Значение по умолчанию совпадает с номером телефона
                           (значением параметра `number`)
                         description: >
-                          'Unique port name, this name will be displayed in our
+                          Unique port name, this name will be displayed in our
                           interface on your personal web-page.
 
                           Unless specified, defaults to phone number value (value
-                          of `number` parameter)'
+                          of `number` parameter)
                         example: Port1
                         maxLength: 100
                       rent:
@@ -2235,8 +1995,8 @@ paths:
                           `1` - включен,
                           `0` - выключен,
                         description: |
-                          Rent mode:  
-                          `1` - enabled,  
+                          Rent mode:
+                          `1` - enabled,
                           `0` - disabled
                         enum:
                           - 0
@@ -2248,7 +2008,7 @@ paths:
                 test:
                   type: string
                   x-description-ru: >
-                    'Параметр для тестов. Может принимать одно из двух значений:
+                    Параметр для тестов. Может принимать одно из двух значений:
                     `test1` или `test2`.
 
                     Будучи равным `test1` отправит запрос на сервер, но данные,
@@ -2256,16 +2016,16 @@ paths:
                     (не вызовет исполнения функции).
 
                     Если параметр будет равен `test2`, то сервер Onlinesim в
-                    ответе вернет тело Вашего запроса.'
+                    ответе вернет тело Вашего запроса.
                   description: >
-                    'Testing parameter. Allowed values are `test1`, `test2`.
+                    Testing parameter. Allowed values are `test1`, `test2`.
 
                     While being assigned, `test1` value will allow the request
                     to be passed, however the data won't be saved by our server
                     (the function will not be executed by this request).
 
                     While being assigned, `test2` value will print out your
-                    request's payload in response.'
+                    request's payload in response.
                   enum:
                     - test1
                     - test2
@@ -2285,23 +2045,23 @@ paths:
                       date_start: 1543907600
                       port_id: Port1
         x-description-ru: >
-          'Ваш сервер должен посылать данный запрос каждые 5 минут в качестве
+          Ваш сервер должен посылать данный запрос каждые 5 минут в качестве
           подверждения аптайма, либо при изменении списка доступных номеров
 
           (при добавлении новых номеров или удалении каких-либо, ранее
-          переданных).'
+          переданных).
         description: >
-          'Your server should send this request every 5 minutes as a
+          Your server should send this request every 5 minutes as a
           confirmation of uptime or when the list of available numbers is
-          changed 
+          changed
 
-          (when new numbers are added or previously passed ones are removed).'
+          (when new numbers are added or previously passed ones are removed).
       tags:
         - v2
   /api/resellers/addMessage:
     post:
       servers:
-        - url: 'https://www.ourserver.com'
+        - url: 'https://{ourserver.com}'
       summary: addMessage
       operationId: addMessage
       responses:
@@ -2345,49 +2105,33 @@ paths:
                 Invalid number format (`number` value must have either a phone number in international format or a number's ID):
                   value: NUMBER_FORMAT_ERROR
       x-description-ru: >
-        > **ВАЖНО!**  
-
-        > URL сервера Onlinesim предоставляется сотрудниками партнерской
-        поддержки  
-
-        > Обратите внимание, что URL сервера Onlinesim в примере заменен на
-        заглушку
-        
-        
-        
-        Этот запрос пересылает сообщения которые были получены Вашими
-        номерами на сервер Onlinesim.
-
-        Вы можете отфильтровать сообщения перед отправкой запроса (отсылать
-        только SMS от заказанного сервиса) или отсылать все сообщения, а мы
-        произведем фильтрацию на своей стороне.
+        >**ВАЖНО!**
 
 
-        Вы также можете заблокировать все входящие SMS, содержащие
-        конфиденциальную информацию и персональные данные, такие как пароль для
-        входа в личный кабинет на сайте мобильного оператора и другие SMS.
+        >URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки. Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку.
+
+
+        Этот запрос пересылает сообщения, которые были получены Вашими номерами на сервер Onlinesim.
+
+
+        Вы можете отфильтровать сообщения перед отправкой запроса (отсылать только SMS от заказанного сервиса) или отсылать все сообщения, а мы произведем фильтрацию на своей стороне.
+
+
+        Вы также можете заблокировать все входящие SMS, содержащие конфиденциальную информацию и персональные данные, такие как пароль для входа в личный кабинет на сайте мобильного оператора и другие SMS.
       description: >
-        > **IMPORTANT NOTE!**  
-
-        > URL of Onlinesim server is provided by Onlinesim partner support
-        specialists  
-
-        > Please note, that the URL in the example is just a placeholder
-        
-        
-        
-        This
-        requests forwards messages that were received by your numbers to our
-        server.
-
-        You can filter the messages before sending a request (send only SMS from
-        ordered service) or send all messages, and we will filter them on our
-        side.
+        >**IMPORTANT NOTE!**
 
 
-        You can also block all incoming SMS containing confidential or sensitive
-        information such as SMS with credentials of private account on mobile
-        operator's website and other SMS.
+        >URL of Onlinesim server is provided by Onlinesim partner support specialists. Please note, that the URL in the example is just a placeholder.
+
+
+        This requests forwards messages that were received by your numbers to our server.
+
+
+        You can filter the messages before sending a request (send only SMS from ordered service) or send all messages, and we will filter them on our side.
+
+
+        You can also block all incoming SMS containing confidential or sensitive information such as SMS with credentials of private account on mobile operator's website and other SMS.
       tags:
         - v2
       requestBody:
@@ -2410,16 +2154,16 @@ paths:
                 number:
                   type: string
                   x-description-ru: >
-                    'Номер телефона в международном формате или ID номера
+                    Номер телефона в международном формате или ID номера
 
                     (смотри ответ сервера на запрос
-                    [sendNumbersOnline](/ru/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline))'
+                    [sendNumbersOnline](/ru/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline))
                   description: >
-                    'Phone number in international format or number's ID
+                    Phone number in international format or number's ID
 
                     (see
                     [sendNumbersOnline](/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline)
-                    server response)'
+                    server response)
                   example: '+234112233445'
                 from:
                   type: string
@@ -2479,7 +2223,7 @@ paths:
   /api/resellers/takeOffNumbers:
     get:
       servers:
-        - url: 'https://www.ourserver.com'
+        - url: 'https://{ourserver.com}'
       summary: takeOffNumbers
       tags:
         - v2
@@ -2582,44 +2326,27 @@ paths:
                   value: ERROR_PARAMS
       operationId: takeOffNumbers
       x-description-ru: >
-        > **ВАЖНО!**  
-
-        > URL сервера Onlinesim предоставляется сотрудниками партнерской
-        поддержки  
-
-        > Обратите внимание, что URL сервера Onlinesim в примере заменен на
-        заглушку
-        
-        
-        
-        Этот запрос опционален, Вы можете не реализовывать его. Запрос
-        возвращает информацию о доходе Ваших текущих номеров, эти данные также
-        доступны в Вашем личном кабинете. При переданном параметре `sum``,
-        возвращает список номеров, чей доход превышает переданное значение.
+        >**ВАЖНО!**
 
 
-        Этот запрос может быть использован, чтобы быстро получить информацию о
-        том, какие номера достигли желаемого Вами дохода и могут быть заменены
-        на новые.
+        >URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки. Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку.
+
+
+        Этот запрос опционален, Вы можете не реализовывать его. Запрос возвращает информацию о доходе Ваших текущих номеров, эти данные также доступны в Вашем личном кабинете. При переданном параметре `sum`, возвращает список номеров, чей доход превышает переданное значение.
+
+
+        Этот запрос может быть использован, чтобы быстро получить информацию о том, какие номера достигли желаемого Вами дохода и могут быть заменены на новые.
       description: >
-        > **IMPORTANT NOTE!**  
-
-        > URL of Onlinesim server is provided by Onlinesim partner support
-        specialists  
-
-        > Please note, that the URL in the example is just a placeholder
-        
-        
-        
-        This
-        request is optional, and you can skip this part. It returns income
-        information of your online numbers, this data is also available on your
-        personal page. It returns a list of numbers which income is greater than
-        specified `sum`` parameter.
+        >**IMPORTANT NOTE!**
 
 
-        This request can be used to quickly obtain information on what online
-        numbers has reached desired income and can be replaced with new ones.
+        >URL of Onlinesim server is provided by Onlinesim partner support specialists. Please note, that the URL in the example is just a placeholder.
+
+
+        This request is optional, and you can skip this part. It returns income  information of your online numbers, this data is also available on your personal page. It returns a list of numbers which income is greater than specified `sum` parameter value.
+
+
+        This request can be used to quickly obtain information on what online numbers has reached desired income and can be replaced with new ones.
       parameters:
         - schema:
             type: string
@@ -2627,18 +2354,18 @@ paths:
           in: query
           name: sum
           x-description-ru: >
-            'Фильтр по значению дохода, в рублях. Например: при sum = 37.5,
+            Фильтр по значению дохода, в рублях. Например: при sum = 37.5,
             запрос вернет список активных номеров, чей доход равен или превышает
-            37.5 рублей.'
+            37.5 рублей.
           description: >
-            'Filter income value, in rubles. Example: if sum = 37.5, the request
+            Filter income value, in rubles. Example: if sum = 37.5, the request
             will return a list of online numbers which income is equal to 37.5
-            RUB or more'
+            RUB or more
         - $ref: '#/components/parameters/Authorization'
   /api/resellers/addNumber:
     post:
       servers:
-        - url: 'https://www.ourserver.com'
+        - url: 'https://{ourserver.com}'
       summary: addNumber
       operationId: addNumber
       responses:
@@ -2696,60 +2423,43 @@ paths:
       tags:
         - v2
       x-description-ru: >
-        > **ВАЖНО!**  
+        >**ВАЖНО!**
 
-        > URL сервера Onlinesim предоставляется сотрудниками партнерской
-        поддержки  
 
-        > Обратите внимание, что URL сервера Onlinesim в примере заменен на
-        заглушку
+        >URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки. Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку.
+
+
+        Данный запрос позволяет Вам добавлять номера на сервер Onlinesim по одному, в противоположность [sendNumbersOnline](/ru/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline), который отсылает все активные номера в виде цельного списка.
         
         
+        Это может быть особенно полезно если Вам необходимо добавить новые номера к списку уже существующих, вместо передачи измененного списка каждый раз, когда Вы добавляете номера.
+
+        >**ВАЖНО!**
+
         
-        Данный запрос позволяет Вам добавлять номера на сервер
-        Onlinesim по одному, в противоположность
-        [sendNumbersOnline](/ru/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline),
-        который отсылает все активные номера в виде цельного списка. Это может
-        быть особенно полезно если Вам необходимо добавить новые номера к списку
-        уже существующих, вместо передачи измененного списка каждый раз, когда
-        Вы добавляете номера.
-
-
-        > **ВАЖНО!**  
-
-        > Включение параметра `rent` (присваиванием ему значения `1`) позволяет
-        клиентам арендовать Ваши номера на длительный период, значительно
-        увеличивая Ваш доход. Однако Вам необходимо связаться с партнерской
-        поддержкой для получиения подробной информации об условиях и требованиях
-        к арендным номерам, перед тем, как мы включим этот функционал на Вашем
-        аккаунте.
+        >Включение параметра `rent` (присваиванием ему значения `1`) позволяет клиентам арендовать Ваши номера на длительный период, значительно увеличивая Ваш доход.
+        
+        
+        >Однако Вам необходимо связаться с партнерской поддержкой для получиения подробной информации об условиях и требованиях к арендным номерам, перед тем, как мы включим этот функционал на Вашем аккаунте.
       description: >
-        > **IMPORTANT NOTE!**  
+        >**IMPORTANT NOTE!**
 
-        > URL of Onlinesim server is provided by Onlinesim partner support
-        specialists  
 
-        > Please note, that the URL in the example is just a placeholder
+        >URL of Onlinesim server is provided by Onlinesim partner support specialists. Please note, that the URL in the example is just a placeholder.
+
+
+        This request allows you to add numbers to the Onlinesim server by one at a time, on the contrary to [sendNumbersOnline](/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline) that sends all active numbers as a list.
         
         
+        This could be especially useful if you need to add new numbers to the list of existing ones, instead of passing the modified list every time when you add new numbers.
+
+        >**IMPORTANT NOTE!**
         
-        This
-        request allows you to add numbers to the Onlinesim server by one at a
-        time, on the contrary to
-        [sendNumbersOnline](/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline)
-        that sends all active numbers as a list. This could be especially
-        reasonable if you need to add new numbers to the list of existing ones,
-        instead of passing the modified list every time when you add new
-        numbers.
-
-
-        > **IMPORTANT NOTE!**  
-
-        > Enabling `rent` parameter (by assigning value `1` to it) allows
-        clients to rent your number for a longer period, significantly
-        increasing your income. However you need to contact partner support to
-        get a detailed information on terms and requirements before we enable it
-        for your account.
+        
+        >Enabling `rent` parameter (by assigning value `1` to it) allows clients to rent your number for a longer period, significantly increasing your income.
+        
+        
+        >However you need to contact partner support to get a detailed information on terms and requirements before we enable it for your account.
       parameters:
         - $ref: '#/components/parameters/Authorization'
       requestBody:
@@ -2781,17 +2491,17 @@ paths:
                 port_id:
                   type: string
                   x-description-ru: >
-                    'Уникальное имя порта, которое будет отображаться в нашем
+                    Уникальное имя порта, которое будет отображаться в нашем
                     интерфейсе на странице управления Вашими номерами.
 
                     Значение по умолчанию совпадает с номером телефона
-                    (значением параметра `number`)'
+                    (значением параметра `number`)
                   description: >
-                    'Unique port name, this name will be displayed in our
+                    Unique port name, this name will be displayed in our
                     interface on your personal web-page.
 
                     Unless specified defaults to phone number value (value of
-                    `number` parameter)'
+                    `number` parameter)
                   example: Port1
                   maxLength: 100
                 rent:
@@ -2801,8 +2511,8 @@ paths:
                     `1` - включен,
                     `0` - выключен,
                   description: |
-                    Rent mode for this number:  
-                    `1` - enabled,  
+                    Rent mode for this number:
+                    `1` - enabled,
                     `0` - disabled
                   enum:
                     - 0
@@ -2841,7 +2551,7 @@ paths:
   /api/resellers/checkNumber:
     get:
       servers:
-        - url: 'https://www.ourserver.com'
+        - url: 'https://{ourserver.com}'
       summary: checkNumber
       tags:
         - v2
@@ -2910,23 +2620,23 @@ paths:
                   port_id:
                     type: string
                     x-description-ru: >
-                      'Уникальное имя порта, которое будет отображаться в нашем
+                      Уникальное имя порта, которое будет отображаться в нашем
                       интерфейсе на странице управления Вашими номерами.
 
                       Значение по умолчанию совпадает с номером телефона
-                      (значением параметра `number`)'
+                      (значением параметра `number`)
                     description: >
-                      'Unique port name, this name will be displayed in our
+                      Unique port name, this name will be displayed in our
                       interface on your personal web-page.
 
                       Unless specified defaults to phone number value (value of
-                      `number` parameter)'
+                      `number` parameter)
                     maxLength: 100
                     example: Port1
                   sum:
                     type: number
-                    x-description-ru: 'Общий доход, полученный данным номером, в рублях'
-                    description: 'Total income earned by this number, in RUB'
+                    x-description-ru: Общий доход, полученный данным номером, в рублях
+                    description: Total income earned by this number, in RUB
                     example: 76.25
                   used_service:
                     type: object
@@ -2984,46 +2694,44 @@ paths:
                   status:
                     type: integer
                     x-description-ru: >
-                      'Текущий статус номера, enum:  
+                      Текущий статус номера, enum:
 
                       `1` - номер работает
 
                       `2` - номер загружается на сервер (после добавления в
-                      список номеров)  
+                      список номеров)
 
-                      `3` - номер оффлайн (при изъятии номера из списка номеров
-                      партнером, либо в результате неисправности)  
+                      `3` - (deprecated)
 
                       `4` - указанный Вами номер отсутствует на Вашем аккаунте
-                      (некорректный номер)  
+                      (некорректный номер)
 
                       `5` - (deprecated)
 
                       `6` - ошибка аренды: данный номер ранее был успешно
                       использован для аренды и больше не будет генерировать
-                      доход. Вам необходимо заменить номер на новый.  
+                      доход. Вам необходимо заменить номер на новый.
 
-                      `7` - номер перезагружается сервером'
+                      `7` - (deprecated)
                     description: >
-                      'Current status of the number, enum:  
+                      Current status of the number, enum:
 
                       `1` - number is working
 
-                      `2` - number is queued up/loading (after the placement)  
+                      `2` - number is queued up/loading (after the placement)
 
-                      `3` - number is offline (was taken out by the partner or
-                      malfunction happened)  
+                      `3` - (deprecated)
 
                       `4` - such number does not exist on your account (invalid
-                      entry)  
+                      entry)
 
                       `5` - (deprecated)
 
                       `6` - rent error: this number was successfully used for
                       long term rent and won't generate the profit anymore. You
-                      need to replace the number with a new one.  
+                      need to replace the number with a new one.
 
-                      `7` - number is reloading by the server'
+                      `7` - (deprecated)
                     enum:
                       - 1
                       - 2
@@ -3033,8 +2741,8 @@ paths:
                       - 7
                   status_text:
                     type: string
-                    x-description-ru: 'Текущий статус номера, текстовое описание'
-                    description: 'Current status of the number, textual description'
+                    x-description-ru: Текущий статус номера, текстовое описание
+                    description: Current status of the number, textual description
                     example: work
                   clearable:
                     type: boolean
@@ -3097,28 +2805,21 @@ paths:
                     response: 1
       operationId: checkNumber
       x-description-ru: >
-        > **ВАЖНО!**  
-
-        > URL сервера Onlinesim предоставляется сотрудниками партнерской
-        поддержки  
-
-        > Обратите внимание, что URL сервера Onlinesim в примере заменен на
-        заглушку Данный запрос возвращает подробную информацию о номере.
+        >**ВАЖНО!**
 
 
-        Вы можете использовать его для получения данных, например, для анализа
-        статистики номеров.
+        >URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки. Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку.
+
+
+        Данный запрос возвращает подробную информацию о номере. Вы можете использовать его для получения данных, например, для анализа статистики номеров.
       description: >
-        > **IMPORTANT NOTE!**  
-
-        > URL of Onlinesim server is provided by Onlinesim partner support
-        specialists  
-
-        > Please note, that the URL in the example is just a placeholder This
-        request retrieves detailed information about the number.
+        >**IMPORTANT NOTE!**
 
 
-        You might need it to gather the data to analyse the statistic.
+        >URL of Onlinesim server is provided by Onlinesim partner support specialists. Please note, that the URL in the example is just a placeholder.
+
+
+        This request retrieves detailed information about the number. You might need it to gather the data to analyse the statistic.
       parameters:
         - schema:
             type: string
@@ -3132,7 +2833,7 @@ paths:
   /api/resellers:
     get:
       servers:
-        - url: 'https://www.ourserver.com'
+        - url: 'https://{ourserver.com}'
       summary: checkWork
       tags:
         - v2
@@ -3162,45 +2863,33 @@ paths:
                     response: 1
       operationId: checkWork
       x-description-ru: >
-        > **ВАЖНО!**  
+        >**ВАЖНО!**
 
-        > URL сервера Onlinesim предоставляется сотрудниками партнерской
-        поддержки  
 
-        > Обратите внимание, что URL сервера Onlinesim в примере заменен на
-        заглушку
+        >URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки. Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку.
+
+
+        Данный запрос служит для подтверждения работоспособности Вашего сервера.
         
         
-
-        Данный запрос служит для подтверждения работоспособности Вашего
-        сервера. Это альтернативный вариант отсылки запроса
-        [sendNumbersOnline](/ru/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline)
-        каждые 5 минут на сервер Onlinesim, Вы можете отсылать запрос
-        [checkWork](ru/openapi_docs/Reseller-API-UN/get/api_resellers) без
-        каких-либо дополнительных параметров с тем же временным интервалом.
+        Это альтернативный вариант отсылки запроса [sendNumbersOnline](/ru/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline) каждые 5 минут на сервер Onlinesim, Вы можете отсылать запрос [checkWork](/ru/openapi_docs/Reseller-API-UN/get/api_resellers) без каких-либо дополнительных параметров с тем же временным интервалом.
       description: >
-        > **IMPORTANT NOTE!**  
+        >**IMPORTANT NOTE!**
 
-        > URL of Onlinesim server is provided by Onlinesim partner support
-        specialists  
 
-        > Please note, that the URL in the example is just a placeholder
+        >URL of Onlinesim server is provided by Onlinesim partner support specialists. Please note, that the URL in the example is just a placeholder.
+
+
+        This request serves as confirmation that your server is up and running.
         
         
-        
-        This
-        request serves as confirmation that your server is up and running. This
-        is alternative to sending
-        [sendNumbersOnline](/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline)
-        every 5 minutes, you can send
-        [checkWork](openapi_docs/Reseller-API-UN/get/api_resellers) request with
-        no additional parameters with same time interval.
+        This is alternative to sending [sendNumbersOnline](/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline) every 5 minutes, you can send [checkWork](/openapi_docs/Reseller-API-UN/get/api_resellers) request with no additional parameters with same time interval.
       parameters:
         - $ref: '#/components/parameters/Authorization'
   /api/resellers/removeNumber:
     delete:
       servers:
-        - url: 'https://www.ourserver.com'
+        - url: 'https://{ourserver.com}'
       summary: removeNumber
       operationId: removeNumber
       responses:
@@ -3228,43 +2917,27 @@ paths:
                   value:
                     response: 1
       x-description-ru: >
-        > **ВАЖНО!**  
-
-        > URL сервера Onlinesim предоставляется сотрудниками партнерской
-        поддержки  
-
-        > Обратите внимание, что URL сервера Onlinesim в примере заменен на
-        заглушку
-        
-        
-        
-        Этот запрос позволяет удалять конкретные номера из списка Ваших
-        текущих номеров.
+        >**ВАЖНО!**
 
 
-        Вы можете использовать этот запрос вместо
-        [sendNumbersOnline](/ru/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline)
-        для изменения списка номеров, удаляя некоторые ранее переданные номера
-        из списка.
+        >URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки. Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку.
+
+
+        Этот запрос позволяет удалять конкретные номера из списка Ваших текущих номеров.
+
+
+        Вы можете использовать этот запрос вместо [sendNumbersOnline](/ru/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline) для изменения списка номеров, удаляя некоторые ранее переданные номера из списка.
       description: >
-        > **IMPORTANT NOTE!**  
+        >**IMPORTANT NOTE!**
 
-        > URL of Onlinesim server is provided by Onlinesim partner support
-        specialists  
 
-        > Please note, that the URL in the example is just a placeholder
-                
+        >URL of Onlinesim server is provided by Onlinesim partner support specialists. Please note, that the URL in the example is just a placeholder.
+
+
+        This request allows to delete specific numbers from the list of your current numbers.
         
         
-        This
-        request allows to delete specific numbers from the list of your current
-        numbers.
-
-
-        You can use it instead of
-        [sendNumbersOnline](/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline)
-        request to modify the list of numbers precisely, by deleting the numbers
-        that are on the list.      
+        You can use it instead of [sendNumbersOnline](/openapi_docs/Reseller-API-UN/post/api_resellers_sendNumbersOnline) request to modify the list of numbers precisely, by deleting the numbers that are on the list.
       tags:
         - v2
       parameters:
@@ -3284,7 +2957,7 @@ paths:
           in: query
           name: test
           x-description-ru: >
-            'Параметр для тестов. Может принимать одно из двух значений: `test1`
+            Параметр для тестов. Может принимать одно из двух значений: `test1`
             или `test2`.
 
             Будучи равным `test1` отправит запрос на сервер, но данные,
@@ -3292,21 +2965,21 @@ paths:
             вызовет исполнения функции).
 
             Если параметр будет равен `test2`, то сервер Onlinesim в ответе
-            вернет тело Вашего запроса.'
+            вернет тело Вашего запроса.
           description: >
-            'Testing parameter. Allowed values are `test1`, `test2`.
+            Testing parameter. Allowed values are `test1`, `test2`.
 
             While being assigned, `test1` value will allow the request to be
             passed, however the data won't be saved by our server (the function
             will not be executed by this request).
 
             While being assigned, `test2` value will print out your request's
-            payload in response.'
+            payload in response.
         - $ref: '#/components/parameters/Authorization'
   /api/auth/me:
     post:
       servers:
-        - url: 'https://www.ourserver.com'
+        - url: 'https://{ourserver.com}'
       summary: saveConfig
       operationId: saveConfig
       responses:
@@ -3336,60 +3009,52 @@ paths:
       tags:
         - v2
       x-description-ru: >
-        > **ВАЖНО!**  
+        >**ВАЖНО!**
 
-        > URL сервера Onlinesim предоставляется сотрудниками партнерской
-        поддержки  
 
-        > Обратите внимание, что URL сервера Onlinesim в примере заменен на
-        заглушку
+        >URL сервера Onlinesim предоставляется сотрудниками партнерской поддержки. Обратите внимание, что URL сервера Onlinesim в примере заменен на заглушку.
+
+
+        Этот запрос позволяет добавлять сервисы в список исключений, запрещая выдавать Ваши номера клиентам для приема SMS от указанных сервисов.
+
+
+        Данный запрос может пригодиться, когда Вы используете свои номера для SMS верификации отдельных сервисов для своих собственных нужд или проектов. Этот запрос заблокирует возможность использовать все номера
+        Вашего аккаунта для данных сервисов, немедленно присваивая им статус `USED` и не допуская их выдачи клиентам под указанные сервисы.
+
+
+        >**ВАЖНО!**
+
+
+        >Этот запрос изменяет список исключений полностью, поэтому если Вы хотите добавить дополнительный сервис к уже существующему списку, Вам необходимо передавать в запросе тот список сервисов, который уже был передан ранее и новый сервис для блокировки.
+
+
+        >**ВАЖНО!**
+
         
-        
-        
-        Этот запрос позволяет добавлять сервисы в список исключений,
-        запрещая выдавать Ваши номера клиентам для приема SMS от указанных
-        сервисов.
-
-
-        Данный запрос может пригодиться, когда Вы используете свои номера для
-        SMS верификации отдельных сервисов для своих собственных нужд или
-        проектов. Этот запрос заблокирует возможность использовать все номера
-        Вашего аккаунта для данных сервисов, немедленно присваивая им статус
-        \`USED\` и не допуская их выдачи клиентам под указанные сервисы.
-
-
-        > **ВАЖНО!**  
-
-        > Этот запрос изменяет список исключений полностью, поэтому если Вы
-        хотите добавить дополнительный сервис к уже существующему списку, Вам
-        необходимо передавать в запросе тот список сервисов, который уже был
-        передан ранее и новый сервис для блокировки.
+        >Список исключений не работает для аренды: номера, использующиеся для аренды **БУДУТ ПРИНИМАТЬ SMS ОТ СЕРВИСОВ, НАХОДЯЩИХСЯ В СПИСКЕ ИСКЛЮЧЕНИЙ**.
       description: >
-        > **IMPORTANT NOTE!**  
-
-        > URL of Onlinesim server is provided by Onlinesim partner support
-        specialists  
-
-        > Please note, that the URL in the example is just a placeholder
-        
-        
-        
-        This
-        request allows to add services to the blacklist preventing them to be
-        used for SMS activation on your numbers.
+        >**IMPORTANT NOTE!**
 
 
-        This request might come in handy when you use your numbers for SMS
-        verification for your own purposes or projects. It will block these
-        services on your account entirely immediately assigning them \`USED\`
-        status and preventing them to be issued to the clients.
+        >URL of Onlinesim server is provided by Onlinesim partner support specialists. Please note, that the URL in the example is just a placeholder.
 
 
-        > **IMPORTANT NOTE!**  
+        This request allows to add services to the blacklist preventing them to be used for SMS activation on your numbers.
 
-        > This request modifies the whole blacklist, so if you want to add a new
-        service to it, you should also include those services that were on the
-        list before.
+
+        This request might come in handy when you use your numbers for SMS verification for your own purposes or projects. It will block these services on your account entirely immediately assigning them `USED` status and preventing them to be issued to the clients.
+
+
+        >**IMPORTANT NOTE!**
+
+
+        >This request modifies the whole blacklist, so if you want to add a new service to it, you should also include those services that were on the list before.
+
+
+        >**IMPORTANT NOTE!**
+
+
+        >This blacklist doesn't work for the rent: rental phone numbers **WILL BE ABLE TO RECEIVE SMS FROM BLACKLISTED SERVICES**.
       parameters:
         - $ref: '#/components/parameters/Authorization'
       requestBody:
@@ -3421,8 +3086,7 @@ paths:
   /services:
     get:
       servers:
-        - url: '{testServer}'
-          description: Server for current request
+        - url: 'https://onlinesim.io/api/v1/info/'
       summary: Service list
       tags:
         - v1
@@ -3474,8 +3138,9 @@ paths:
       x-description-ru: >
         Этот запрос возвращает список всех сервисов.
 
-        **Ответ Вашего сервера на запрос GET\_SERVICES должен использовать
-        указанные в этом списке значения названий сервисов.**
+
+        **Ответ Вашего сервера на запрос GET_SERVICES должен использовать указанные в этом списке значения названий сервисов.**
+
 
         Пожалуйста, обратите внимание, что некоторые сервисы могут быть
         отключены для определенной страны, поскольку ряд приложений и сайтов
@@ -3484,8 +3149,9 @@ paths:
       description: >
         This request returns a list of names for all services.
 
-        **Your GET\_SERVICES server response must use service names listed
-        here.**  
+
+        **Your GET_SERVICES server response must use service names listed here.**
+
 
         Please note that some services might be disabled for certain countries
         as some apps and websites target specifically one or a few regions,
@@ -3494,8 +3160,7 @@ paths:
   /countries:
     get:
       servers:
-        - url: '{testServer}'
-          description: Server for current request
+        - url: 'https://onlinesim.io/api/v1/info/'
       summary: Country list
       tags:
         - v1
@@ -3532,8 +3197,9 @@ paths:
       x-description-ru: >
         Этот запрос возвращает список названий стран.
 
-        **Ответ Вашего сервера на запрос GET\_SERVICES должен использовать
-        указанные в этом списке значения названий стран.**
+
+        **Ответ Вашего сервера на запрос GET_SERVICES должен использовать указанные в этом списке значения названий стран.**
+
 
         Пожалуйста, обратите внимание, что некоторые страны могут быть временно
         выключены на нашем сайте, поэтому при добавлении номеров стран, которые
@@ -3541,8 +3207,9 @@ paths:
       description: >
         This request returns a list of country names.
 
-        **Your GET\_SERVICES server response must use country names listed
-        here.**  
+
+        **Your GET_SERVICES server response must use country names listed here.**
+
 
         Note that some countries might be temporarily disabled on our website.
         Please inform us whenever you want to add numbers for the countries you
@@ -3555,16 +3222,114 @@ components:
       name: Bearer apiKey
       type: apiKey
       in: header
+      x-description-ru: |
+          ## Общая информация
+
+
+
+            Авторизация запросов происходит через API key - секретный ключ, используемый для упрощенной авторизации в Reseller API. API ключ необходимо передавать в его теле запроса (для v1), либо в его заголовке (для v2). Отправка неавторизованных запросов вызовет ошибку `401 Unauthorized`.
+
+          ---
+
+          #### Как получить API ключ:
+
+          1. Авторизоваться в [личном кабинете](/auth/login), перейти настройки профиля, выбрать вкладку 'API'.
+
+          2. Ключ будет указан в строке 'API key', который необходимо скопировать.
+
+          ---
+
+          #### Как использовать:
+
+          1. Все запросы к Reseller API должны содержать API ключ.
+
+          2. В зависимости от используемой Вами версии API, ключ должен включаться:
+
+          * если Вы используете v1 Reseller API - в тело всех запросов, в поле 'key',
+
+          ```json
+            {
+              "action": "GET_SERVICES",
+              "key": "apikey"
+            }
+          ```
+
+          * если Вы используете v2 Reseller API - в заголовок запроса с помощью схемы `Authorization: Bearer`.
+
+          ```
+            Authorization: Bearer {{key}}
+            User-Agent: PostmanRuntime/7.29.2
+            Accept: */\*
+            Cache-Control: no-cache
+            Postman-Token: 948bc880-8d25-4298-994f-fe6e22ada339
+            Host: onlinesim.io
+            Accept-Encoding: gzip, deflate, br
+            Connection: keep-alive
+            Cookie: xxxx
+          ```
+
+          Вы также можете использовать API ключ как query параметр `apikey` при отправке запроса для обоих API.
+
+                  https://onlinesim.io/api/getNumbersStats.php?apikey={{api_key}}
+      description: |
+        ## General Information
+
+
+
+          Requests are authenticated with API key - a secret personal key assigned by our server to identify calls to Reseller API from users. API key should be passed in request's body (v1 Reseller API) or request's header (v2 Reseller API). Unauthenticated calls will result in `401 Unauthorized error`.
+
+        ---
+
+        #### How to get an API key:
+
+        1. [Log in](/auth/login) to personal account, go to the 'User Profile' and click on 'API' tab.
+
+        2. Copy the key from the 'API Key' field.
+
+        ---
+
+        #### How to use it:
+
+        1. All Reseller API requests must contain an API key.
+
+        2. Based on version, all API calls must contain the key:
+
+        * if you are using v1 Reseller API - it has to be in the 'key' field inside the body of each request,
+
+        ```json
+          {
+            "action": "GET_SERVICES",
+            "key": "apikey"
+          }
+        ```
+
+        * if you are using v2 Reseller API - it has to be in the header of each request using `Authorization: Bearer` schema.
+
+        ```
+            Authorization: Bearer {{key}}
+            User-Agent: PostmanRuntime/7.29.2
+            Accept: */\*
+            Cache-Control: no-cache
+            Postman-Token: 948bc880-8d25-4298-994f-fe6e22ada339
+            Host: onlinesim.io
+            Accept-Encoding: gzip, deflate, br
+            Connection: keep-alive
+            Cookie: xxxx
+        ```
+
+        API key can also be specified as a query parameter (`apikey`) for both API versions.
+
+                  https://onlinesim.io/api/getNumbersStats.php?apikey={{api_key}}
   parameters:
     Authorization:
       name: Authorization
       in: header
       required: true
+      description: see more [here](/openapi_docs/Reseller-API-UN/auth)
+      x-description-ru: Смотрите подробнее [тут](/ru/openapi_docs/Reseller-API-UN/auth)
       schema:
         type: string
         example: Bearer apiKey
-      x-description-ru: API ключ должен быть передан в заголовке этого запроса
-      description: API key should be passed in the header of this request
     Content-Type:
       name: Content-Type
       in: header

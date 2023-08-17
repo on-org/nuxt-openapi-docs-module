@@ -1,12 +1,14 @@
 <template>
-  <div ref="contentContainer">
+  <div class="content-container">
     <OpenApiInfo v-if="isInfo" :info="doc.info" :servers="doc.servers" :current-locale="currentLocale"></OpenApiInfo>
     <OpenApiAuth v-else-if="isAuth" :components="doc.components" :current-locale="currentLocale"></OpenApiAuth>
     <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="currentLocale"></OpenApiComponents>
     <OpenApiRoute v-else-if="activeRoute" :route="activeRoute" :current-locale="currentLocale" :method="type" :components="doc.components" :url="url" :path_doc="path_doc" :file="file" :server="server" :sub-params="subParams" />
     <OpenApiRoute v-else-if="activeWebhook" :route="activeWebhook" :current-locale="currentLocale" :method="type" :components="doc.components" :url="url" :path_doc="path_doc" :file="file" :server="server" :sub-params="subParams" />
     <NotFound v-else />
-    <SearchBlock :current-locale="currentLocale" :doc="doc" :path="options.path" :file="file" />
+    <client-only>
+      <SearchBlock :current-locale="currentLocale" :doc="doc" :path="options.path" :file="file" />
+    </client-only>
   </div>
 </template>
 
@@ -72,7 +74,6 @@ export default {
       currentServer: 0,
       options: options,
       path_doc: pathDoc,
-      query: '',
       file: '',
       type: '',
       path: '',
@@ -80,12 +81,6 @@ export default {
     };
   },
   watch: {
-    '$route.query': {
-      handler: function(val) {
-        if(val.query) this.query = val.query;
-      },
-      deep: true
-    },
     '$route.params': {
       handler: function(val) {
         if(val.type) this.type = val.type;
@@ -100,9 +95,6 @@ export default {
       },
       deep: true
     },
-    query(val) {
-      this.highlightText()
-    }
   },
   methods: {
     downloadJson() {
@@ -132,31 +124,6 @@ export default {
     },
     onChangeServer(option) {
       this.currentServer = option
-    },
-    highlightText(node = this.$refs.contentContainer) {
-      if(!this.query) return;
-      const query = this.query.replace('#', '');
-      const regex = new RegExp(query, 'gi');
-
-      if (node.nodeType === Node.TEXT_NODE) {
-        const matches = node.textContent.match(regex);
-
-        if (matches) {
-          const span = document.createElement('span');
-          span.classList.add('highlighted');
-
-          const replacedText = node.textContent.replace(regex, `<span class="highlighted">$&</span>`);
-          const fragment = document.createRange().createContextualFragment(replacedText);
-
-          node.parentNode.replaceChild(fragment, node);
-        }
-      } else if (node.nodeType === Node.ELEMENT_NODE) {
-        const childNodes = node.childNodes;
-
-        for (let i = 0; i < childNodes.length; i++) {
-          this.highlightText(childNodes[i]);
-        }
-      }
     },
   },
   computed: {
@@ -255,7 +222,6 @@ export default {
       this.$openapidocBus.$on('changeServer', this.onChangeServer);
       this.setScrollPosition()
     }
-    this.query = this.$route.query.query;
   },
   unmounted() {
     this.$openapidocBus.$off('downloadJsonDoc', this.downloadJson);

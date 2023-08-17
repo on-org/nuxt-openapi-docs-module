@@ -34,6 +34,7 @@ declare namespace _default {
     function mounted(): void;
     function beforeUnmount(): void;
     namespace methods {
+        function highlightText(node?: null): void;
         function toggleSearch(): void;
         function searchInPaths(query: any): void;
     }

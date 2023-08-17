@@ -100,23 +100,63 @@ export default {
   mounted() {
     if(process.client) {
       this.$openapidocBus.$on('toggleSearchDoc', this.toggleSearch);
+
+      this.search = this.$route.query.query;
+      this.highlightText();
     }
   },
   beforeUnmount() {
     this.$openapidocBus.$off('toggleSearchDoc', this.toggleSearch);
   },
   methods: {
+    highlightText(node = null) {
+      if(!this.search || this.search === '') return;
+      if(!node) {
+        const highlightedElements = document.querySelectorAll('.highlighted');
+        for (let i = 0; i < highlightedElements.length; i++) {
+          const element = highlightedElements[i];
+          console.log(111, element)
+          element.classList.remove('highlighted');
+        }
+
+        node = document.querySelector('.content-container')
+      }
+
+      if(!node) return;
+      const query = this.search.replace('#', '');
+      const regex = new RegExp(query, 'gi');
+
+      if (node.nodeType === Node.TEXT_NODE) {
+        const matches = node.textContent.match(regex);
+
+        if (matches) {
+          const span = document.createElement('span');
+          span.classList.add('highlighted');
+
+          const replacedText = node.textContent.replace(regex, `<span class="highlighted">$&</span>`);
+          const fragment = document.createRange().createContextualFragment(replacedText);
+
+          node.parentNode.replaceChild(fragment, node);
+        }
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        const childNodes = node.childNodes;
+
+        for (let i = 0; i < childNodes.length; i++) {
+          this.highlightText(childNodes[i]);
+        }
+      }
+    },
     toggleSearch() {
       this.isSearchOpen = !this.isSearchOpen;
       if (this.isSearchOpen) {
         document.body.style.overflow = 'hidden';
 
         setTimeout(() => {
-          console.log(this.$refs)
           this.$refs.input.focus()
         }, 100)
       } else {
         document.body.style.overflow = 'auto';
+        this.highlightText();
       }
     },
     searchInPaths(query) {
@@ -207,7 +247,7 @@ export default {
 
       }
     }
-  }
+  },
 };
 </script>
 

@@ -100,23 +100,131 @@ export default {
   mounted() {
     if(process.client) {
       this.$openapidocBus.$on('toggleSearchDoc', this.toggleSearch);
+
+      this.search = this.$route.query.query;
+      this.highlightText();
     }
   },
   beforeUnmount() {
     this.$openapidocBus.$off('toggleSearchDoc', this.toggleSearch);
   },
   methods: {
+    highlightText(node = null) {
+      if(!this.search || this.search === '') return;
+      if(!node) {
+        const highlightedElements = document.querySelectorAll('.highlighted');
+        for (let i = 0; i < highlightedElements.length; i++) {
+          const element = highlightedElements[i];
+          console.log(111, element)
+          element.classList.remove('highlighted');
+        }
+
+        node = document.querySelector('.content-container')
+      }
+
+      if(!node) return;
+      const query = this.search.replace('#', '');
+      const regex = new RegExp(query, 'gi');
+
+      if (node.nodeType === Node.TEXT_NODE) {
+        const matches = node.textContent.match(regex);
+
+        if (matches) {
+          const span = document.createElement('span');
+          span.classList.add('highlighted');
+
+          const replacedText = node.textContent.replace(regex, `<span class="highlighted"><script>
+export default {
+  props: {
+    currentLocale: {
+      type: String,
+      required: true,
+    },
+    doc: {
+      type: Object,
+      required: true
+    },
+    file: {
+      type: String,
+      required: true,
+    },
+    path: {
+      type: String,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      isSearchOpen: false,
+      search: '',
+      list: []
+    }
+  },
+  watch: {
+    search(val) {
+      this.searchInPaths(val)
+    },
+  },
+  mounted() {
+    if(process.client) {
+      this.$openapidocBus.$on('toggleSearchDoc', this.toggleSearch);
+
+      this.search = this.$route.query.query;
+      this.highlightText();
+    }
+  },
+  beforeUnmount() {
+    this.$openapidocBus.$off('toggleSearchDoc', this.toggleSearch);
+  },
+  methods: {
+    highlightText(node = null) {
+      if(!this.search || this.search === '') return;
+      if(!node) {
+        const highlightedElements = document.querySelectorAll('.highlighted');
+        for (let i = 0; i < highlightedElements.length; i++) {
+          const element = highlightedElements[i];
+          console.log(111, element)
+          element.classList.remove('highlighted');
+        }
+
+        node = document.querySelector('.content-container')
+      }
+
+      if(!node) return;
+      const query = this.search.replace('#', '');
+      const regex = new RegExp(query, 'gi');
+
+      if (node.nodeType === Node.TEXT_NODE) {
+        const matches = node.textContent.match(regex);
+
+        if (matches) {
+          const span = document.createElement('span');
+          span.classList.add('highlighted');
+
+          const replacedText = node.textContent.replace(regex, `<span class="highlighted">$&</span>`);
+          const fragment = document.createRange().createContextualFragment(replacedText);
+
+          node.parentNode.replaceChild(fragment, node);
+        }
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        const childNodes = node.childNodes;
+
+        for (let i = 0; i < childNodes.length; i++) {
+          this.highlightText(childNodes[i]);
+        }
+      }
+    },
     toggleSearch() {
       this.isSearchOpen = !this.isSearchOpen;
       if (this.isSearchOpen) {
         document.body.style.overflow = 'hidden';
 
         setTimeout(() => {
-          console.log(this.$refs)
           this.$refs.input.focus()
         }, 100)
       } else {
         document.body.style.overflow = 'auto';
+        this.highlightText();
       }
     },
     searchInPaths(query) {
@@ -207,7 +315,123 @@ export default {
 
       }
     }
-  }
+  },
+};
+</script></span>`);
+          const fragment = document.createRange().createContextualFragment(replacedText);
+
+          node.parentNode.replaceChild(fragment, node);
+        }
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        const childNodes = node.childNodes;
+
+        for (let i = 0; i < childNodes.length; i++) {
+          this.highlightText(childNodes[i]);
+        }
+      }
+    },
+    toggleSearch() {
+      this.isSearchOpen = !this.isSearchOpen;
+      if (this.isSearchOpen) {
+        document.body.style.overflow = 'hidden';
+
+        setTimeout(() => {
+          this.$refs.input.focus()
+        }, 100)
+      } else {
+        document.body.style.overflow = 'auto';
+        this.highlightText();
+      }
+    },
+    searchInPaths(query) {
+      query = query.toLowerCase();
+      this.list = [];
+
+      if(query === '') return;
+
+      const summary = this.$openapidocRef.tr(this.doc.info, 'title', this.currentLocale).toLowerCase();
+      const description = this.$openapidocRef.tr(this.doc.info, 'description', this.currentLocale).toLowerCase();
+
+      const index = description.indexOf(query);
+      if (index !== -1) {
+        const start = Math.max(index - 50, 0);
+        const end = Math.min(index + query.length + 50, description.length);
+        let result = '...' + description.substring(start, end) + '...';
+        result = result.replace(query, "<b>" + query + "</b>");
+        this.list.push({
+          path: 'info',
+          title: summary,
+          description: result,
+          route: {
+            name: `openapi-${this.path}/${this.file}/info${this.$openapidoc.I18nLocaleSuffix()}`,
+            query: {query}
+          }
+        });
+      }
+
+
+      for (const path in this.doc.paths) {
+        if(path === 'parameters') continue;
+        const paths = this.doc.paths[path];
+        for (const method in paths) {
+          const obj = paths[method];
+
+          let routePath = path
+          if (routePath.startsWith('/')) routePath = routePath.substring(1);
+          if (routePath.endsWith('/')) routePath = routePath.substring(-1);
+          routePath = routePath.replace(/[/\\.?+=&{}]/gumi, '_').replace(/__+/, '_')
+
+          const summary = this.$openapidocRef.tr(obj, 'summary', this.currentLocale).toLowerCase();
+          const description = this.$openapidocRef.tr(obj, 'description', this.currentLocale).toLowerCase();
+
+          let apper = null;
+
+          let index = summary.indexOf(query);
+          if (index !== -1) {
+            const result = description.substring(0, 100) + '...';
+            apper = {
+              path: path,
+              title: summary.replace(query, "<b>" + query + "</b>"),
+              description: result + '...',
+              route: {
+                name: `openapi-${this.path}/${this.file}/type-path${this.$openapidoc.I18nLocaleSuffix()}`,
+                params: { type: method, path: routePath },
+                query: {query}
+              }
+            };
+          }
+
+          index = description.indexOf(query);
+          if (index !== -1) {
+            const start = Math.max(index - 50, 0);
+            const end = Math.min(index + query.length + 50, description.length);
+            let result = '...' + description.substring(start, end) + '...';
+            result = result.replace(query, "<b>" + query + "</b>");
+            if(!apper) {
+              apper = {
+                path: path,
+                title: summary,
+                description: result,
+                route: {
+                  name: `openapi-${this.path}/${this.file}/type-path${this.$openapidoc.I18nLocaleSuffix()}`,
+                  params: { type: method, path: routePath },
+                  query: {query}
+                }
+              };
+            } else {
+              apper.description = result;
+            }
+
+          }
+
+          if(apper) {
+            this.list.push(apper);
+          }
+        }
+
+      }
+    }
+  },
 };
 </script>
 
