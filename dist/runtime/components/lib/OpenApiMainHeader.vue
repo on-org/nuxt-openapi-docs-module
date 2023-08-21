@@ -61,16 +61,16 @@ button.oapi-header-btn {
   transition: 0.3s ease-in-out;
 }
 button.oapi-header-btn:hover {
-  background: #edf8ff;
+  background: rgba(0, 0, 0, 0.03);
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.05);
 }
 
 .oapi-header {
-  background: #f6f8fa;
+  background: #fefefe;
   border-bottom: 1px solid #e2e2e2;
   display: flex;
   align-items: center;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+  box-shadow: 0 0.5px 2px 0 rgba(0, 0, 0, 0.03), 0 0.5px 6px -1px rgba(0, 0, 0, 0.02), 0 1px 4px 0 rgba(0, 0, 0, 0.02);
   padding: 12px 32px 12px 12px;
   z-index: 10;
 }

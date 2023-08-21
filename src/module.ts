@@ -15,8 +15,6 @@ import Parser from "./runtime/Parser";
 import {promises, existsSync, writeFileSync, mkdirSync} from "node:fs";
 import lodashTemplate from "lodash.template";
 
-
-// Module options TypeScript interface definition
 export interface ModuleOptions {
   folder?: string,
   name?: string,
@@ -214,7 +212,6 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     nuxt.options.css.push(resolver.resolve('./runtime/github.css'));
-    // nuxt.options.css.push(resolver.resolve('./runtime/tailwindcss.css'));
     nuxt.options.css.push(resolver.resolve('./runtime/styles.css'));
   }
 })

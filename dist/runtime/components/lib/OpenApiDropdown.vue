@@ -169,7 +169,7 @@ export default {
   height: 16px;
 }
 .oapi-dd--empty .oapi-dd-container__content {
-  color: #999;
+  color: #7c7c7c;
 }
 .oapi-dd-popup {
   background: #fff;

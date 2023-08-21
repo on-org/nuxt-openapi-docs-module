@@ -169,7 +169,7 @@ export default {
     }
   }
   &--empty &-container__content {
-    color: #999;
+    color: #7c7c7c;
   }
   &-popup {
     background: #fff;
