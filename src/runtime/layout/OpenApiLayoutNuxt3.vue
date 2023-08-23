@@ -167,20 +167,22 @@ export default {
     border-left: 5px solid #ccc;
   }
 
-  .doc-info a {
-    color: #4299e1;
-    text-decoration: none;
-    border-bottom: 1px solid #4299e1;
-  }
+  &-route {
+    a {
+      color: #4299e1;
+      text-decoration: none;
+      border-bottom: 1px solid #4299e1;
+    }
 
-  .doc-info a:hover {
-    color: #2c5282;
-    border-bottom: 1px solid #2c5282;
-  }
+    a:hover {
+      color: #2c5282;
+      border-bottom: 1px solid #2c5282;
+    }
 
-  .doc-info img {
-    max-width: 100%;
-    margin: 1.5rem 0;
+    img {
+      max-width: 100%;
+      margin: 1.5rem 0;
+    }
   }
 }
 

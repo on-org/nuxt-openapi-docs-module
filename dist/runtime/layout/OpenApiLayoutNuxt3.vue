@@ -164,16 +164,16 @@ export default {
   padding-left: 10px;
   border-left: 5px solid #ccc;
 }
-.oapi .doc-info a {
+.oapi-route a {
   color: #4299e1;
   text-decoration: none;
   border-bottom: 1px solid #4299e1;
 }
-.oapi .doc-info a:hover {
+.oapi-route a:hover {
   color: #2c5282;
   border-bottom: 1px solid #2c5282;
 }
-.oapi .doc-info img {
+.oapi-route img {
   max-width: 100%;
   margin: 1.5rem 0;
 }

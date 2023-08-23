@@ -34,8 +34,8 @@ export default class Parser {
         [key: string]: any;
     };
     constructor(workDir: string);
-    replaceAngleBracketsInText(text: string): string;
     load(fileName: string): void;
+    replaceAngleBracketsInText(text: string): string;
     sanitizeText(text: string): string;
     private getSchemaValsFromPath;
     private refFileLoader;

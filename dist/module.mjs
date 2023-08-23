@@ -52,11 +52,6 @@ class Parser {
       xhtml: false
     });
   }
-  replaceAngleBracketsInText(text) {
-    return text.replace(/(?<=[^=])<|>(?=[^=])/g, function(match) {
-      return match === "<" ? "&lt;" : "&gt;";
-    });
-  }
   load(fileName) {
     const openApiSpec = this.parseYamlFile(this.workDir, fileName);
     this.spec = openApiSpec.openApiSpec;
@@ -85,15 +80,21 @@ class Parser {
       return acc;
     }, {});
   }
+  replaceAngleBracketsInText(text) {
+    return text.replace(/(?<=[^=])<|>(?=[^=])/g, function(match) {
+      return match === "<" ? "&lt;" : "&gt;";
+    });
+  }
   sanitizeText(text) {
     text = this.replaceAngleBracketsInText(text);
     const map = {
       '"': "&quot;",
       "'": "&#x27;",
       "\\": "&#x5C;",
-      "|": "&#x7C;"
+      "|": "&#x7C;",
+      "&br;": "<br>"
     };
-    const reg = /["'\\|]/gi;
+    const reg = /["'\\|]|&br;/gi;
     return text.replace(reg, function(match) {
       return map[match];
     });
