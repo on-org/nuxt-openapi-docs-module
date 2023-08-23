@@ -167,7 +167,7 @@ export default {
     border-left: 5px solid #ccc;
   }
 
-  &-route {
+  &-content__container {
     a {
       color: #4299e1;
       text-decoration: none;

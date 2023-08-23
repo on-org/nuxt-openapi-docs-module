@@ -1,11 +1,12 @@
 <template>
   <div
     class="oapi-dd"
+    ref="input"
     :class="classes"
   >
     <div
       class="oapi-dd-container"
-      @click.stop="toggle"
+      @click="toggle"
     >
       <span class="oapi-dd-container__content">{{ selectedOption ? selectedOption[textProp] : placeholder }}</span>
       <span class="oapi-dd-container__dd-icon">
@@ -103,6 +104,9 @@ export default {
     },
     handleOutsideClick(e) {
       if (!this.isOpen) return;
+      if (this.$refs.popup && (this.$refs.input === e.target || this.$refs.input.contains(e.target))) {
+        return;
+      }
       if (this.$refs.popup && (this.$refs.popup === e.target || this.$refs.popup.contains(e.target))) {
         return;
       }
