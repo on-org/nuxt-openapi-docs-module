@@ -96,10 +96,10 @@ export default class Parser {
     }, {});
   }
 
-  replaceAngleBracketsInText(text: string) {
+  replaceAngleBracketsInText(text: string): string {
     return text.replace(/(?<=[^=])<|>(?=[^=])/g, function (match) {
       return match === '<' ? '&lt;' : '&gt;';
-    });
+    }).replaceAll('&br;', '<br>');
   }
 
   sanitizeText(text: string) {
@@ -109,10 +109,9 @@ export default class Parser {
       '"': '&quot;',
       "'": '&#x27;',
       '\\': '&#x5C;',
-      '|': '&#x7C;',
-      '&br;': '<br>'
+      '|': '&#x7C;'
     };
-    const reg = /["'\\|]|&br;/gi;
+    const reg = /["'\\|]/gi;
     return text.replace(reg, function (match) {
       // @ts-ignore
       return map[match];

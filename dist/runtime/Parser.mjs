@@ -69,7 +69,7 @@ export default class Parser {
   replaceAngleBracketsInText(text) {
     return text.replace(/(?<=[^=])<|>(?=[^=])/g, function(match) {
       return match === "<" ? "&lt;" : "&gt;";
-    });
+    }).replaceAll("&br;", "<br>");
   }
   sanitizeText(text) {
     text = this.replaceAngleBracketsInText(text);
@@ -77,10 +77,9 @@ export default class Parser {
       '"': "&quot;",
       "'": "&#x27;",
       "\\": "&#x5C;",
-      "|": "&#x7C;",
-      "&br;": "<br>"
+      "|": "&#x7C;"
     };
-    const reg = /["'\\|]|&br;/gi;
+    const reg = /["'\\|]/gi;
     return text.replace(reg, function(match) {
       return map[match];
     });
