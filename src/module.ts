@@ -1,5 +1,4 @@
 import {
-  addTemplate,
   addPlugin,
   defineNuxtModule,
   extendPages,
@@ -7,19 +6,21 @@ import {
   isNuxt2,
   addLayout,
   addComponentsDir,
-  createResolver
+  createResolver,
 } from '@nuxt/kit'
 import {kebabCase} from "scule";
 import {resolve, extname, basename, join} from "path";
 import Parser from "./runtime/Parser";
 import {promises, existsSync, writeFileSync, mkdirSync} from "node:fs";
 import lodashTemplate from "lodash.template";
+import type {Resolver} from '@nuxt/kit'
 
 export interface ModuleOptions {
   folder?: string,
   name?: string,
   path?: string,
   debug?: boolean,
+  list?: boolean,
   files: () => {[key:string]:string},
   doc?: {[key:string]:any},
 }
@@ -35,6 +36,20 @@ function filesCleanup(files: {[key: string]: string}) {
   return result
 }
 
+async function makeTemplate(templateName: string, fileName: string, options: {[key: string]: any}, resolver: Resolver) {
+  const srcContents = await promises.readFile(resolver.resolve(`./runtime/templates/${templateName}`), "utf-8");
+  const template = lodashTemplate(srcContents, {})({options:options});
+
+  if (!existsSync(join(__dirname, '.cache'))) {
+    mkdirSync(join(__dirname, '.cache'));
+  }
+
+  const path = join(__dirname, '.cache', `${fileName}.vue`);
+  writeFileSync(path , template);
+
+  return path;
+}
+
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'nuxt-open-api-docs',
@@ -45,6 +60,7 @@ export default defineNuxtModule<ModuleOptions>({
     name: 'OpenApiDocs',
     path: 'docs',
     debug: false,
+    list: false,
     doc: {},
     files: () => { return {}},
   },
@@ -79,6 +95,24 @@ export default defineNuxtModule<ModuleOptions>({
     const filesClean = filesCleanup(options.files());
     const files = options.files();
 
+    if(options.list) {
+      const listName = 'OpenApiTemplateDocsList';
+      const listOptions = {files: filesClean, path: options.path};
+      const listPath = await makeTemplate(`${listName}.vue`, listName, listOptions, resolver)
+      extendPages((pages) => {
+        pages.push({
+          name: `openapi-docs-list`,
+          path: `/${options.path}`,
+          // @ts-ignore
+          component: listPath,
+          file: listPath,
+          meta: {
+            nuxtI18n: false,
+          },
+        })
+      });
+    }
+
     for (let filePath in files) {
       console.log('[nuxt-openapi-docs-module] Generate: ' + filePath)
       const localoptions = JSON.parse(JSON.stringify(options));
@@ -108,17 +142,8 @@ export default defineNuxtModule<ModuleOptions>({
         options: {...localoptions, files: filesClean},
       }, localoptions.layoutName)
 
-
       const templateName = isNuxt2(nuxt) ? 'OpenApiTemplateNuxt2.vue' : 'OpenApiTemplateNuxt3.vue';
-      const srcContents = await promises.readFile(resolver.resolve(`./runtime/templates/${templateName}`), "utf-8");
-      const template = lodashTemplate(srcContents, {})({options:{...localoptions, files: filesClean}});
-
-      if (!existsSync(join(__dirname, '.cache'))) {
-        mkdirSync(join(__dirname, '.cache'));
-      }
-
-      const path = join(__dirname, '.cache', `${localoptions.fileName}.vue`);
-      writeFileSync(path , template);
+      const path = await makeTemplate(templateName, localoptions.fileName, {...localoptions, files: filesClean}, resolver)
 
       extendPages((pages) => {
         pages.push({

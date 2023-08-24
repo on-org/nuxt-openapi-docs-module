@@ -5,6 +5,7 @@ interface ModuleOptions {
     name?: string;
     path?: string;
     debug?: boolean;
+    list?: boolean;
     files: () => {
         [key: string]: string;
     };

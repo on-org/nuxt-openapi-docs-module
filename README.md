@@ -107,6 +107,7 @@ modules: [
 - `path`: the component url for docs.
 - `files`: function with files list in OpenApiDocs folder, files: function() {return { 'News-API': 'News API'}}.
 - `debug`: print debug information to console, Default: false
+- `list`: Toggling the list of documents, Default: false
 -
 ### Folder Structure
 The default folder structure for your OpenAPI specification files should look like this:

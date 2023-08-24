@@ -11,6 +11,7 @@ export default defineNuxtConfig({
         folder: './docs/openapi',
         name: 'Api Docs',
         debug: true,
+        list: true,
         files: function() {
           if(process.env.NODE_ENV !== 'production') {
             return {
