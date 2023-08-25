@@ -3,14 +3,14 @@
     class="oapi-route-header"
     :class="{'oapi-route-header--deprecated': deprecated}"
   >
-    <h1 class="oapi-route-header__title">
+    <h1 :id="'method-'+method" class="oapi-route-header__title">
       <span
         class="oapi-method-tag"
         :class="`oapi-method-tag--${method}`"
       >{{ method }}</span>
       {{ title }}
     </h1>
-    <div class="oapi-route-header__path" @click="(e) => copyToClipboard(requestUrl, e)" >
+    <div class="oapi-route-header__path" @click="(e) => $openapidoc.copyToClipboard(requestUrl, e)" >
       <code v-text="requestUrl"></code>
     </div>
     <div
@@ -34,11 +34,7 @@
   </div>
 </template>
 
-
 <script>
-import {getTagColor} from "../helpers";
-import {copyToClipboard} from '../helpers';
-
 export default {
   props: {
     path: {
@@ -83,10 +79,6 @@ export default {
       return this.path
     }
   },
-  methods: {
-    getTagColor,
-    copyToClipboard
-  }
 };
 </script>
 
@@ -103,6 +95,13 @@ export default {
   font-size: 0.8rem;
   font-weight: 600;
   margin-bottom: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  direction: rtl;
+  position: relative;
+  text-align: left;
 }
 .oapi-route-header .oapi-method-tag {
   user-select: none;

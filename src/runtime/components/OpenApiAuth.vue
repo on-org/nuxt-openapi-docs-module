@@ -9,7 +9,7 @@
         :key="name"
         class="oapi-schema-block"
       >
-        <h3 v-text="name" />
+        <h3 :id="'security-schemes-'+name" v-text="name"  />
         <div
           v-if="secScheme.description"
           class="oapi-schema-block__description"

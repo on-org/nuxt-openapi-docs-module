@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     genUrl(path) {
-      return this.pathDoc + '/' + path + '/info'
+      return '/' + this.pathDoc + '/' + path + '/info'
     }
   }
 }

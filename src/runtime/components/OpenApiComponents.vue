@@ -9,7 +9,7 @@
         :key="name"
         class="oapi-schema-block"
       >
-        <h3 v-text="name" />
+        <h3 :id="name" v-text="name" />
         <div
           v-if="schema.title"
           class="oapi-schema-block__title"
@@ -56,7 +56,7 @@
         :key="name"
         class="oapi-schema-block"
       >
-        <h3 v-text="name" />
+        <h3 :id="name" v-text="name" />
         <div class="oapi-schema-block__required">
           {{ $openapidoc.getLocaleText('openapidoc.required') }}
         </div>
@@ -81,7 +81,7 @@
         :key="name"
         class="oapi-schema-block"
       >
-        <h3 v-text="name" />
+        <h3 :id="name" v-text="name" />
         <div
           v-if="response.description"
           class="oapi-schema-block__description"
@@ -104,7 +104,7 @@
         :key="name"
         class="oapi-schema-block"
       >
-        <h3 v-text="name" />
+        <h3 :id="name" v-text="name" />
         <div
           v-if="parameter.description"
           class="oapi-schema-block__description"
@@ -127,7 +127,7 @@
         :key="name"
         class="oapi-schema-block"
       >
-        <h3 v-text="name" />
+        <h3 :id="name" v-text="name" />
         <div
           v-if="header.description"
           class="oapi-schema-block__description"

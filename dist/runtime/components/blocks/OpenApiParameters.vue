@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2><span v-text="title" /></h2>
+    <h2 id="parameters"><span v-text="title" /></h2>
 
     <OpenApiParameter
       v-for="parameter in parameters"

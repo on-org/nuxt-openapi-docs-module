@@ -1,6 +1,6 @@
 <template>
   <div class="oapi-route-sec">
-    <h2>
+    <h2 id="security">
       {{ $openapidoc.getLocaleText('openapidoc.security') }}
     </h2>
     <ul class="oapi-route-sec__list">

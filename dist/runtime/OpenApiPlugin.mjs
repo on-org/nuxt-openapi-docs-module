@@ -67,4 +67,18 @@ export default class OpenApiPlugin {
   setRouteInfo(routeInfo) {
     this.routeInfo = routeInfo;
   }
+  copyToClipboard(data, e) {
+    const btnEl = e.target;
+    const originalText = btnEl.innerText;
+    try {
+      navigator.clipboard.writeText(data).then((r) => {
+        btnEl.innerText = "Copied";
+        setTimeout(() => {
+          btnEl.innerText = originalText;
+        }, 1e3);
+      });
+    } catch (err) {
+      console.error("Unable to copy", err);
+    }
+  }
 }

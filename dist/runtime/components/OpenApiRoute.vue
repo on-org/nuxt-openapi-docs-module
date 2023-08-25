@@ -12,7 +12,7 @@
     />
 
     <div v-if="resolvedSchema.servers" class="oapi-route__servers">
-      <h2>{{ $openapidoc.getLocaleText('openapidoc.servers') }}</h2>
+      <h2 id="servers">{{ $openapidoc.getLocaleText('openapidoc.servers') }}</h2>
       <OpenApiServer
         v-for="routeServer in resolvedSchema.servers"
         :key="routeServer.url"
@@ -22,7 +22,7 @@
     </div>
 
     <div v-if="routeInfo">
-      <h2>
+      <h2 id="info">
         {{ $openapidoc.getLocaleText('openapidoc.info') }}
       </h2>
       <div class="oapi-doc-info" v-html="routeInfo" />
@@ -66,7 +66,7 @@
     />
 
     <client-only v-if="url">
-      <h2 class="text-lg font-bold mb-2">
+      <h2 id="code_simple" class="text-lg font-bold mb-2">
         {{ $openapidoc.getLocaleText('openapidoc.code_simple') }}:
       </h2>
       <CodeSimples

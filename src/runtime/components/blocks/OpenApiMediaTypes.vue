@@ -116,6 +116,14 @@ export default {
       flex: 0 0 auto;
       width: 200px;
       max-width: 100%;
+
+      @media (max-width: 422px) {
+        width: 150px;
+      }
+
+      @media (max-width: 380px) {
+        width: 120px;
+      }
     }
   }
 }

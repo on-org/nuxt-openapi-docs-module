@@ -117,4 +117,14 @@ export default {
   width: 200px;
   max-width: 100%;
 }
+@media (max-width: 422px) {
+  .oapi-req-body-obj-content-type .oapi-dd {
+    width: 150px;
+  }
+}
+@media (max-width: 380px) {
+  .oapi-req-body-obj-content-type .oapi-dd {
+    width: 120px;
+  }
+}
 </style>

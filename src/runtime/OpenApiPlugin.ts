@@ -94,4 +94,20 @@ export default class OpenApiPlugin {
   setRouteInfo(routeInfo: (file: string, url: string, method: string) => null|string) {
     this.routeInfo = routeInfo
   }
+
+  copyToClipboard(data: string, e: any) {
+    const btnEl = e.target;
+    const originalText = btnEl.innerText;
+
+    try {
+      navigator.clipboard.writeText(data).then(r => {
+        btnEl.innerText = 'Copied';
+        setTimeout(() => {
+          btnEl.innerText = originalText;
+        }, 1000);
+      });
+    } catch (err) {
+      console.error('Unable to copy', err); // eslint-disable-line no-console
+    }
+  }
 }

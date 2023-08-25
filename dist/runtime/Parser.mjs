@@ -32,6 +32,7 @@ export default class Parser {
       // highlight.js css expects a top-level 'hljs' class.
       pedantic: false,
       gfm: true,
+      headerIds: true,
       breaks: false,
       sanitize: false,
       smartypants: false,

@@ -125,6 +125,27 @@ export default {
     onChangeServer(option) {
       this.currentServer = option
     },
+    enableTitleClick() {
+      const headers = document.querySelector('.content-container').querySelectorAll('h1[id], h2[id], h3[id]');
+
+      headers.forEach(header => {
+        header.addEventListener('click', e => {
+          const headerId = header.getAttribute('id');
+          const select = window.location.href + '#' + headerId;
+
+          this.$openapidoc.copyToClipboard(select, e)
+
+          this.$router.push({
+            path: this.$route.path,
+            hash: '#' + headerId
+          })
+
+          setTimeout(() => {
+            header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        });
+      });
+    }
   },
   computed: {
     currentLocale() {
@@ -221,6 +242,7 @@ export default {
       this.$openapidocBus.$on('downloadJsonDoc', this.downloadJson);
       this.$openapidocBus.$on('changeServer', this.onChangeServer);
       this.setScrollPosition()
+      this.enableTitleClick();
     }
   },
   unmounted() {
@@ -242,5 +264,38 @@ export default {
 .highlighted {
   background-color: yellow;
   font-weight: bold;
+}
+
+h1[id],
+h2[id],
+h3[id] {
+  position: relative;
+  cursor: pointer;
+}
+h1[id]::before,
+h2[id]::before,
+h3[id]::before {
+  content: "#";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+h1[id]:hover,
+h2[id]:hover,
+h3[id]:hover {
+  opacity: 0.8;
+}
+h1[id]:hover::before,
+h2[id]:hover::before,
+h3[id]:hover::before {
+  opacity: 1;
+}
+h1[id]:active::before,
+h2[id]:active::before,
+h3[id]:active::before {
+  opacity: 0.5;
 }
 </style>

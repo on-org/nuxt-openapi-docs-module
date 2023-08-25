@@ -29,7 +29,6 @@
 <script>
 import RequestTemplater from "request-templater/dist/request-templater.es";
 import CustomDropdownWithSubMenu from '../lib/CustomDropdownWithSubMenu.vue';
-import {copyToClipboard} from '../helpers';
 
 const requestTemplater = new RequestTemplater();
 
@@ -93,7 +92,7 @@ export default {
 
   methods: {
     copyToClipboard(e) {
-      copyToClipboard(this.code, e)
+      this.$openapidoc.copyToClipboard(this.code, e)
     },
     onLangClick(snippet, library = null) {
       this.snippetIndex = snippet;

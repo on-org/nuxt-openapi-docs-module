@@ -48,11 +48,5 @@ declare namespace _default {
         function requestUrl(): string;
         function title(): any;
     }
-    namespace methods {
-        export { getTagColor };
-        export { copyToClipboard };
-    }
 }
 export default _default;
-import { getTagColor } from "../helpers";
-import { copyToClipboard } from "../helpers";
