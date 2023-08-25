@@ -131,7 +131,8 @@ export default {
       headers.forEach(header => {
         header.addEventListener('click', e => {
           const headerId = header.getAttribute('id');
-          const select = window.location.href + '#' + headerId;
+          console.log(window.location)
+          const select = window.location.origin + window.location.pathname + '#' + headerId;
 
           this.$openapidoc.copyToClipboard(select, e)
 
