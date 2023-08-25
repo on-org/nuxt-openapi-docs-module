@@ -3,6 +3,7 @@ export default defineNuxtConfig({
   plugins: [
     { src: '@/plugins/content' }
   ],
+
   // debug: true,
   modules: [
     [
@@ -85,4 +86,11 @@ export default defineNuxtConfig({
       }
     ],
   ],
+
+  devtools: {
+    enabled: true,
+    timeline: {
+      enabled: true,
+    },
+  },
 })

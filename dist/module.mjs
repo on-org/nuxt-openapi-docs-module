@@ -1,4 +1,4 @@
-import { defineNuxtModule, createResolver, addComponentsDir, extendPages, isNuxt2, addLayout, addPlugin, isNuxt3 } from '@nuxt/kit';
+import { defineNuxtModule, createResolver, addComponentsDir, extendPages, addLayout, addPlugin } from '@nuxt/kit';
 import { kebabCase } from 'scule';
 import { join, dirname, basename, extname, resolve } from 'path';
 import { marked } from 'marked';
@@ -321,7 +321,10 @@ async function makeTemplate(templateName, fileName, options, resolver) {
 const module = defineNuxtModule({
   meta: {
     name: "nuxt-open-api-docs",
-    configKey: "openApiDocs"
+    configKey: "openApiDocs",
+    compatibility: {
+      nuxt: "^3.0.0"
+    }
   },
   defaults: {
     folder: "./docs/openapi",
@@ -387,7 +390,7 @@ const module = defineNuxtModule({
       localoptions.pathsByTags = parser.getPaths();
       localoptions.fileName = parser.getFilename();
       localoptions.layoutName = kebabCase(`apidocs-layout-${localoptions.fileName}`).replace(/["']/g, "");
-      const layoutName = isNuxt2(nuxt) ? "OpenApiLayoutNuxt2.vue" : "OpenApiLayoutNuxt3.vue";
+      const layoutName = "OpenApiLayoutNuxt3.vue";
       addLayout({
         src: resolver.resolve(`./runtime/layout/${layoutName}`),
         filename: `apidocs.layout.${localoptions.fileName}.vue`,
@@ -396,7 +399,7 @@ const module = defineNuxtModule({
         write: true,
         options: { ...localoptions, files: filesClean }
       }, localoptions.layoutName);
-      const templateName = isNuxt2(nuxt) ? "OpenApiTemplateNuxt2.vue" : "OpenApiTemplateNuxt3.vue";
+      const templateName = "OpenApiTemplateNuxt3.vue";
       const path = await makeTemplate(templateName, localoptions.fileName, { ...localoptions, files: filesClean }, resolver);
       extendPages((pages) => {
         pages.push({
@@ -469,16 +472,9 @@ const module = defineNuxtModule({
         }
       }
     }
-    if (isNuxt2(nuxt)) {
-      addPlugin({
-        src: resolver.resolve("./runtime/plugin")
-      });
-    }
-    if (isNuxt3(nuxt)) {
-      addPlugin({
-        src: resolver.resolve("./runtime/plugin3")
-      });
-    }
+    addPlugin({
+      src: resolver.resolve("./runtime/plugin3")
+    });
     nuxt.options.css.push(resolver.resolve("./runtime/github.css"));
     nuxt.options.css.push(resolver.resolve("./runtime/styles.css"));
   }

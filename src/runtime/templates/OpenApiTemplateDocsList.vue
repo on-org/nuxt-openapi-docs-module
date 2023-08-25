@@ -12,27 +12,17 @@
   </div>
 </template>
 
-<script>
-// eslint-disable-next-line @ts-ignore
-const files = <%= JSON.stringify(options.files) %>;
-// eslint-disable-next-line @ts-ignore
-const pathDoc = '<%= options.path %>';
+<script setup lang="ts">
+import {useFetch, useRoute} from "#imports";
 
-export default {
-  name: 'AppDocsDocsList',
+const route = useRoute()
 
-  data() {
-    return {
-      files: files,
-      pathDoc: pathDoc
-    };
-  },
-  methods: {
-    genUrl(path) {
-      return this.pathDoc + '/' + path + '/info'
-    }
-  }
+const { data: files } = await useFetch('/docs/query/files')
+
+function genUrl(path) {
+  return path + '/info'
 }
+
 </script>
 
 <style lang="scss" scoped>

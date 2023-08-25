@@ -2,11 +2,9 @@ import {
   addPlugin,
   defineNuxtModule,
   extendPages,
-  isNuxt3,
-  isNuxt2,
   addLayout,
   addComponentsDir,
-  createResolver,
+  createResolver, addTemplate
 } from '@nuxt/kit'
 import {kebabCase} from "scule";
 import {resolve, extname, basename, join} from "path";
@@ -14,6 +12,7 @@ import Parser from "./runtime/Parser";
 import {promises, existsSync, writeFileSync, mkdirSync} from "node:fs";
 import lodashTemplate from "lodash.template";
 import type {Resolver} from '@nuxt/kit'
+import { type WatchEvent, createStorage } from 'unstorage'
 
 export interface ModuleOptions {
   folder?: string,
@@ -54,6 +53,9 @@ export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'nuxt-open-api-docs',
     configKey: 'openApiDocs',
+    compatibility: {
+      nuxt: '^3.0.0'
+    }
   },
   defaults: {
     folder: './docs/openapi',
@@ -69,21 +71,6 @@ export default defineNuxtModule<ModuleOptions>({
     const isSSG = nuxt.options.dev === false && (nuxt.options.target === 'static' || nuxt.options._generate)
 
     const resolver = createResolver(import.meta.url)
-    if(options.debug) {
-      // @ts-ignore
-      nuxt.hook('generate:route', (route: any) => {
-        console.log(`[DEBUG] [nuxt-openapi-docs-module] Generating route: ${route.route}`)
-      })
-      // @ts-ignore
-      nuxt.hook('generate:routeCreated', (route: any) => {
-        console.log(`[DEBUG] [nuxt-openapi-docs-module] Route created: ${route.route}`)
-      })
-      // @ts-ignore
-      nuxt.hook('generate:routeFailed', (route: any, errors: Error) => {
-        console.error(`[DEBUG] [nuxt-openapi-docs-module] Route failed: ${route.route}`)
-        console.error(errors)
-      })
-    }
 
     await addComponentsDir({
       path: resolver.resolve( "./runtime/components"),
@@ -95,17 +82,99 @@ export default defineNuxtModule<ModuleOptions>({
     const filesClean = filesCleanup(options.files());
     const files = options.files();
 
+    nuxt.hook("nitro:build:before", async (nitro) => {
+      await nitro.storage.setItem('cache:openapidoc:files.json', files);
+
+
+      const workDir = resolve(nuxt.options.rootDir, options.folder);
+      for (let filePath in files) {
+        const parser = new Parser(workDir)
+
+        parser.load(filePath)
+
+        const filename = parser.getFilename()
+
+        const doc = parser.getDoc();
+
+        await nitro.storage.setItem(`cache:openapidoc:${filePath}:locales.json`, parser.getLocales());
+        await nitro.storage.setItem(`cache:openapidoc:${filePath}:locales_reload.json`, parser.getLocalesReload());
+        await nitro.storage.setItem(`cache:openapidoc:${filePath}:doc.json`, parser.getDoc());
+        await nitro.storage.setItem(`cache:openapidoc:${filePath}:path.json`, options.path);
+        await nitro.storage.setItem(`cache:openapidoc:${filePath}:paths_by_tags.json`, parser.getPaths());
+        await nitro.storage.setItem(`cache:openapidoc:${filePath}:servers.json`, doc.servers ?? {});
+
+        const pathsByTags = parser.getPaths();
+        const routes = nuxt.options.generate.routes as any;
+        nuxt.options.generate.routes = Array.isArray(nuxt.options.generate.routes) ? nuxt.options.generate.routes : [];
+        if (routes instanceof Function) {
+          if (routes instanceof Function) {
+            routes.push(...await routes() || [])
+          }
+        }
+
+        if (isSSG) {
+          for (let tag in pathsByTags) {
+            if (tag === 'custom') continue;
+
+            for (let i in pathsByTags[tag].items) {
+              const item = pathsByTags[tag].items[i]
+
+              nuxt.options.generate.routes.push(`/${options.path}/${filename}/${item.type}/${item.path}`)
+            }
+          }
+        }
+      }
+    });
+
+    nuxt.hook('nitro:config', (nitroConfig) => {
+      nitroConfig.alias['#openapidoc/server'] = resolver.resolve('./runtime/server')
+
+      nitroConfig.handlers = nitroConfig.handlers || []
+
+      nitroConfig.prerender = nitroConfig.prerender || {};
+      nitroConfig.prerender.routes = nitroConfig.prerender.routes || [];
+
+      nuxt.options.build.transpile = nuxt.options.build.transpile || [];
+      nuxt.options.build.transpile.push(resolve("./runtime"));
+
+      nitroConfig.handlers.push(
+          {
+            method: 'get',
+            route: `/${options.path}/query/files/:name`,
+            handler: resolver.resolve('./runtime/server/api/files')
+          },
+          {
+            method: 'get',
+            route: `/${options.path}/query/file/:name`,
+            handler: resolver.resolve('./runtime/server/api/file')
+          },
+      )
+
+
+      if (!nuxt.options.dev) {
+        nitroConfig.prerender.routes.unshift(`${options.path}/query/files`);
+        console.info("Added `"+`${options.path}/query/files`+ "` route to prerender");
+        for (let filePath in files) {
+          nitroConfig.prerender.routes.unshift(`${options.path}/query/file/:name`);
+          console.info("Added `"+`${options.path}/query/file/:name`+ "` route to prerender");
+        }
+
+      }
+      console.info("Added `"+`${options.path}/query/files`+ "` route handler");
+    })
+
     if(options.list) {
-      const listName = 'OpenApiTemplateDocsList';
-      const listOptions = {files: filesClean, path: options.path};
-      const listPath = await makeTemplate(`${listName}.vue`, listName, listOptions, resolver)
+      addTemplate({
+        src: resolver.resolve('./runtime/templates/OpenApiTemplateDocsList.vue'),
+        filename: `OpenApiTemplateDocsList.vue`,
+        write: true,
+      })
+
       extendPages((pages) => {
         pages.push({
           name: `openapi-docs-list`,
           path: `/${options.path}`,
-          // @ts-ignore
-          component: listPath,
-          file: listPath,
+          file: resolve(nuxt.options.buildDir, `OpenApiTemplateDocsList.vue`),
           meta: {
             nuxtI18n: false,
           },
@@ -113,128 +182,43 @@ export default defineNuxtModule<ModuleOptions>({
       });
     }
 
-    for (let filePath in files) {
-      console.log('[nuxt-openapi-docs-module] Generate: ' + filePath)
-      const localoptions = JSON.parse(JSON.stringify(options));
-      const workDir = resolve(nuxt.options.rootDir, localoptions.folder);
+    addLayout({
+      src: resolver.resolve( `./runtime/layout/OpenApiLayoutNuxt3.vue`),
+      filename: `OpenApiLayoutNuxt3.vue`,
+      write: true,
+      options: { name: options.name },
+    }, `open-api-layout-nuxt3`)
 
-      const parser = new Parser(workDir)
+    addTemplate({
+      src: resolver.resolve('./runtime/templates/OpenApiTemplateNuxt3.vue'),
+      filename: `OpenApiTemplateNuxt3.vue`,
+      write: true,
+    })
 
-      parser.load(filePath)
-
-      localoptions.locales = parser.getLocales();
-      localoptions.localesReload = parser.getLocalesReload();
-
-      const pathsByTags = parser.getPaths()
-      localoptions.doc = parser.getDoc();
-      localoptions.pathsByTags = parser.getPaths();
-      localoptions.fileName = parser.getFilename();
-      localoptions.layoutName = (kebabCase(`apidocs-layout-${localoptions.fileName}`) as string).replace(/["']/g, "");
-
-
-      const layoutName = isNuxt2(nuxt) ? 'OpenApiLayoutNuxt2.vue' : 'OpenApiLayoutNuxt3.vue';
-      addLayout({
-        src: resolver.resolve( `./runtime/layout/${layoutName}`),
-        filename: `apidocs.layout.${localoptions.fileName}.vue`,
-        // @ts-ignore
-        name: localoptions.layoutName,
-        write: true,
-        options: {...localoptions, files: filesClean},
-      }, localoptions.layoutName)
-
-      const templateName = isNuxt2(nuxt) ? 'OpenApiTemplateNuxt2.vue' : 'OpenApiTemplateNuxt3.vue';
-      const path = await makeTemplate(templateName, localoptions.fileName, {...localoptions, files: filesClean}, resolver)
-
-      extendPages((pages) => {
-        pages.push({
-          name: `openapi-${localoptions.path}/${localoptions.fileName}/info`,
-          path: `/${localoptions.path}/${localoptions.fileName}/info`,
-          // path: `/${localoptions.path}/${localoptions.fileName}/info`,
-          // @ts-ignore
-          component: path,
-          file: path,
-          meta: {
-            nuxtI18n: false,
-            file: localoptions.fileName,
-            type: 'get',
-            path: 'info',
-          },
-        })
-
-        pages.push({
-          name: `openapi-${localoptions.path}/${localoptions.fileName}/components`,
-          path: `/${localoptions.path}/${localoptions.fileName}/components`,
-          // @ts-ignore
-          component: path,
-          file: path,
-          meta: {
-            nuxtI18n: false,
-            file: localoptions.fileName,
-            type: 'get',
-            path: 'components',
-          },
-        })
-
-        pages.push({
-          name: `openapi-${localoptions.path}/${localoptions.fileName}/auth`,
-          path: `/${localoptions.path}/${localoptions.fileName}/auth`,
-          // @ts-ignore
-          component: path,
-          file: path,
-          meta: {
-            nuxtI18n: false,
-            file: localoptions.fileName,
-            type: 'get',
-            path: 'auth',
-          },
-        })
-
-        pages.push({
-          name: `openapi-${localoptions.path}/${localoptions.fileName}/type-path`,
-          path: `/${localoptions.path}/${localoptions.fileName}/:type/:path`,
-          // @ts-ignore
-          component: path,
-          file: path,
-          meta: {
-            nuxtI18n: false,
-            file: localoptions.fileName,
-          },
-        })
+    extendPages((pages) => {
+      pages.push({
+        name: `openapi-${options.path}`,
+        path: `/${options.path}/:name/:type`,
+        file: resolve(nuxt.options.buildDir, `OpenApiTemplateNuxt3.vue`),
+        meta: {
+          nuxtI18n: false,
+        },
       })
 
-
-      const routes = nuxt.options.generate.routes as any;
-      nuxt.options.generate.routes = Array.isArray(nuxt.options.generate.routes) ? nuxt.options.generate.routes : [];
-      if (routes instanceof Function) {
-        if (routes instanceof Function) {
-          routes.push(...await routes() || [])
-        }
-      }
-
-      if (isSSG) {
-        for (let tag in pathsByTags) {
-          if (tag === 'custom') continue;
-
-          for (let i in pathsByTags[tag].items) {
-            const item = pathsByTags[tag].items[i]
-
-            nuxt.options.generate.routes.push(`/${localoptions.path}/${localoptions.fileName}/${item.type}/${item.path}`)
-          }
-        }
-      }
-    }
-
-
-    if(isNuxt2(nuxt)) {
-      addPlugin({
-        src: resolver.resolve('./runtime/plugin'),
+      pages.push({
+        name: `openapi-${options.path}/type-mathod`,
+        path: `/${options.path}/:name/:type/:mathod`,
+        file: resolve(nuxt.options.buildDir, `OpenApiTemplateNuxt3.vue`),
+        meta: {
+          nuxtI18n: false,
+        },
       })
-    }
-    if(isNuxt3(nuxt)) {
-      addPlugin({
-        src: resolver.resolve('./runtime/plugin3'),
-      })
-    }
+    })
+
+
+    addPlugin({
+      src: resolver.resolve('./runtime/plugin3'),
+    })
 
     nuxt.options.css.push(resolver.resolve('./runtime/github.css'));
     nuxt.options.css.push(resolver.resolve('./runtime/styles.css'));

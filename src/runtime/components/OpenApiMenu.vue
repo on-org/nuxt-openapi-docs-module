@@ -211,8 +211,12 @@ export default {
     },
     getRoute(path) {
       return {
-        name: `openapi-${this.path}/${this.file}/${path}${this.$openapidoc.I18nLocaleSuffix()}`,
-        meta: {path: path, file: this.file, type: 'get'}
+        name: `openapi-${this.path}${this.$openapidoc.I18nLocaleSuffix()}`,
+        params: {
+          name: this.file,
+          type: path
+        }
+
       };
     },
     getSubRoute(route) {
@@ -222,17 +226,18 @@ export default {
         return {name: `${this.path}-${this.file}-${type}-${path}${this.$openapidoc.I18nLocaleSuffix()}`};
       }
 
-
       return {
-        name: `openapi-${this.path}/${this.file}/type-path${this.$openapidoc.I18nLocaleSuffix()}`,
-        meta: {path: path, file: this.file, type: type},
-        params: { type: type, path: path }
+        name: `openapi-${this.path}/type-mathod${this.$openapidoc.I18nLocaleSuffix()}`,
+        params: { name: this.file, type: type, mathod: path }
       };
     },
     changeDoc(option) {
       return {
-        name: `openapi-${this.path}/${option}/info${this.$openapidoc.I18nLocaleSuffix('en')}`,
-        meta: {path: option, type: 'get', file: this.file}
+        name: `openapi-${this.path}${this.$openapidoc.I18nLocaleSuffix('en')}`,
+        params: {
+          name: option,
+          type: 'info'
+        }
       };
     },
     changeServer(option) {
@@ -241,8 +246,11 @@ export default {
     },
     changeLocale(option) {
       return {
-        name: `openapi-${this.path}/${this.file}/info${this.$openapidoc.I18nLocaleSuffix(option)}`,
-        meta: {path: this.file, type: 'get', file: this.file}
+        name: `openapi-${this.path}${this.$openapidoc.I18nLocaleSuffix(option)}`,
+        params: {
+          name: this.file,
+          type: 'info'
+        }
       };
     },
   },
