@@ -126,7 +126,7 @@ export default {
       this.currentServer = option
     },
     enableTitleClick() {
-      const headers = document.querySelector('.content-container').querySelectorAll('h1[id], h2[id], h3[id]');
+      const headers = document.querySelector('.content-container').querySelectorAll('h1[id], h2[id], h3[id], h4[id]');
 
       headers.forEach(header => {
         header.addEventListener('click', e => {
@@ -270,7 +270,8 @@ export default {
 
 h1[id],
 h2[id],
-h3[id] {
+h3[id],
+h4[id] {
   position: relative;
   cursor: pointer;
 

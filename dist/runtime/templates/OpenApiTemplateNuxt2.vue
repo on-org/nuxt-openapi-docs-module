@@ -126,7 +126,7 @@ export default {
       this.currentServer = option
     },
     enableTitleClick() {
-      const headers = document.querySelector('.content-container').querySelectorAll('h1[id], h2[id], h3[id]');
+      const headers = document.querySelector('.content-container').querySelectorAll('h1[id], h2[id], h3[id], h4[id]');
 
       headers.forEach(header => {
         header.addEventListener('click', e => {
@@ -269,13 +269,15 @@ export default {
 
 h1[id],
 h2[id],
-h3[id] {
+h3[id],
+h4[id] {
   position: relative;
   cursor: pointer;
 }
 h1[id]::before,
 h2[id]::before,
-h3[id]::before {
+h3[id]::before,
+h4[id]::before {
   content: "#";
   position: absolute;
   top: 50%;
@@ -286,17 +288,20 @@ h3[id]::before {
 }
 h1[id]:hover,
 h2[id]:hover,
-h3[id]:hover {
+h3[id]:hover,
+h4[id]:hover {
   opacity: 0.8;
 }
 h1[id]:hover::before,
 h2[id]:hover::before,
-h3[id]:hover::before {
+h3[id]:hover::before,
+h4[id]:hover::before {
   opacity: 1;
 }
 h1[id]:active::before,
 h2[id]:active::before,
-h3[id]:active::before {
+h3[id]:active::before,
+h4[id]:active::before {
   opacity: 0.5;
 }
 </style>
