@@ -178,7 +178,9 @@ export default {
     right: 0;
     bottom: 0;
     background-color: #fff;
-    z-index: -1;
+    z-index: 10;
+    min-height: 300px;
+    max-height: 300px;
   }
 }
 .oapi-dd-sub-list__item {
