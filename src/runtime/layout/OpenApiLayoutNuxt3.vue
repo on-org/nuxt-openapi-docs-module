@@ -43,26 +43,20 @@
 </template>
 
 <script setup lang="ts">
-const name = '<%= options.name %>';
-
 import {computed, ref, useFetch, useNuxtApp, useRoute, watch} from "#imports";
+
+const name = ref('<%= options.name %>');
+const files = ref(<%= JSON.stringify(options.files) %>);
+const pathsByTags = ref(<%= JSON.stringify(options.pathsByTags) %>);
+const locales = ref(<%= JSON.stringify(options.locales) %>);
+const localesReload = ref<boolean>(<%= options.localesReload ?? false %>);
+const servers = ref<Array<any>>(<%= JSON.stringify(options.servers) %>);
+const path = ref('<%= options.path %>');
 
 const route = useRoute()
 const { $openapidoc, $openapidocBus } = useNuxtApp()
 
 const fileName = ref(route.params.name.toString());
-
-console.log('/docs/query/files/'+ fileName.value)
-
-const { data: data } = await useFetch('/docs/query/files/'+ fileName.value)
-
-const files = ref(data.value.files)
-const pathsByTags = ref(data.value.pathsByTags)
-const locales = ref(data.value.locales)
-const localesReload = ref<boolean>(data.value.localesReload ?? false)
-const servers = ref<Array>(data.value.servers ?? [])
-const path = ref<string>(data.value.path ?? '')
-
 
 const isMenuOpen = ref(false)
 const isMobile = ref(false)
@@ -77,7 +71,7 @@ const footer = computed((): string => {
   return $openapidoc.getFooter()
 })
 
-watch(route, value => {
+watch(route, () => {
   if (isMobile.value) {
     isMenuOpen.value = false;
   }
@@ -85,103 +79,8 @@ watch(route, value => {
 function toggleMenu() {
   isMenuOpen.value = !isMenuOpen.value;
 }
-
 </script>
 
-<!--<script>-->
-<!--import {useNuxtApp, showError, useHead} from "#app";-->
-
-<!--function genHead() {-->
-<!--  return {-->
-<!--    htmlAttrs: { class: 'oapi' }-->
-<!--  }-->
-<!--}-->
-
-<!--export default {-->
-<!--  name: 'openapi-docs',-->
-<!--  setup() {-->
-<!--    const { $openapidoc } = useNuxtApp()-->
-<!--    useHead(genHead());-->
-
-<!--    if(!$openapidoc.hasAccess(fileName)) {-->
-<!--      showError({-->
-<!--        statusCode: 404,-->
-<!--        message: 'page not found',-->
-<!--      })-->
-<!--    }-->
-<!--    return {}-->
-<!--  },-->
-<!--  created() {-->
-<!--    if(this && this.$fetch) this.$fetch();-->
-<!--  },-->
-<!--  watch: {-->
-<!--    '$route': {-->
-<!--      handler: function(val) {-->
-<!--        if (this.isMobile) {-->
-<!--          this.isMenuOpen = false;-->
-<!--        }-->
-<!--      },-->
-<!--      deep: true-->
-<!--    },-->
-<!--  },-->
-<!--  data() {-->
-<!--    return {-->
-<!--      pathsByTags: pathsByTags,-->
-<!--      files: files,-->
-<!--      path_doc: path_doc,-->
-<!--      locales: locales,-->
-<!--      name: name,-->
-<!--      isMenuOpen: true,-->
-<!--      isMobile: false,-->
-<!--      localesReload: localesReload,-->
-<!--      fileName: fileName,-->
-<!--      servers: servers,-->
-<!--    };-->
-<!--  },-->
-<!--  head() {-->
-<!--    return genHead();-->
-<!--  },-->
-<!--  computed: {-->
-<!--    currentLocale() {-->
-<!--      return this.$openapidoc.currentLocale()-->
-<!--    },-->
-<!--    footer() {-->
-<!--      return this.$openapidoc.getFooter()-->
-<!--    },-->
-<!--    logo() {-->
-<!--      return this.$openapidoc.getLogo().replace(':name', this.name)-->
-<!--    },-->
-<!--  },-->
-<!--  methods: {-->
-<!--    toggleMenu() {-->
-<!--      this.isMenuOpen = !this.isMenuOpen;-->
-<!--    },-->
-<!--    handleResize() {-->
-<!--      this.isDesktop = window.innerWidth >= 1110;-->
-<!--      this.isMobile = window.innerWidth < 1110;-->
-<!--      if (!this.isDesktop && this.isMenuOpen) {-->
-<!--        this.isMenuOpen = false-->
-<!--      }-->
-<!--      if (this.isDesktop) {-->
-<!--        this.isMenuOpen = true-->
-<!--      }-->
-<!--    },-->
-<!--  },-->
-<!--  mounted() {-->
-<!--    if(process.client) {-->
-<!--      this.isMobile = window.innerWidth < 1110;-->
-<!--      this.isMenuOpen = window.innerWidth >= 1110;-->
-<!--      window.addEventListener('resize', this.handleResize)-->
-<!--    }-->
-<!--  },-->
-<!--  unmounted() {-->
-<!--    window.removeEventListener('resize', this.handleResize)-->
-<!--  },-->
-<!--  beforeDestroy() {-->
-<!--    window.removeEventListener('resize', this.handleResize)-->
-<!--  },-->
-<!--}-->
-<!--</script>-->
 
 <style lang="scss">
 

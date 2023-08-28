@@ -13,14 +13,20 @@
 </template>
 
 <script setup lang="ts">
-import {useFetch, useRoute} from "#imports";
+import {ref, useFetch, useRoute} from "#imports";
+
+function toObject(val: string|undefined) {
+  if(!val) return {}
+  return JSON.parse(val)
+}
+
 
 const route = useRoute()
 
-const { data: files } = await useFetch('/docs/query/files')
+const files = ref(toObject('<%= JSON.stringify(options.files) %>'));
 
-function genUrl(path) {
-  return path + '/info'
+function genUrl(path: string|number) {
+  return path.toString() + '/info'
 }
 
 </script>

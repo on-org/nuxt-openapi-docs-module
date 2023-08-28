@@ -1,18 +1,2 @@
-import * as _nuxt_schema from '@nuxt/schema';
-
-interface ModuleOptions {
-    folder?: string;
-    name?: string;
-    path?: string;
-    debug?: boolean;
-    list?: boolean;
-    files: () => {
-        [key: string]: string;
-    };
-    doc?: {
-        [key: string]: any;
-    };
-}
-declare const _default: _nuxt_schema.NuxtModule<ModuleOptions>;
-
-export { ModuleOptions, _default as default };
+export * from "/Users/s00d/packeges/nuxt-openapi-plugin/src/module";
+export { default } from "/Users/s00d/packeges/nuxt-openapi-plugin/src/module";

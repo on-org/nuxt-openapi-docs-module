@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout class="content-container" name="open-api-layout-nuxt3">
+  <NuxtLayout class="content-container" :name="layoutName">
     <OpenApiInfo v-if="isInfo" :info="doc.info" :servers="doc.servers" :current-locale="currentLocale"></OpenApiInfo>
     <OpenApiAuth v-else-if="isAuth" :components="doc.components" :current-locale="currentLocale"></OpenApiAuth>
     <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="currentLocale"></OpenApiComponents>
@@ -32,6 +32,7 @@ const { data } = await useFetch("/docs/query/file/" + fileName.value)
 
 const path_doc = ref<string>(data.value.path ?? '')
 const doc = ref(data.value.doc ?? {})
+const layoutName = ref(data.value.layoutName ?? {})
 
 const isInfo = computed(() => {
   return type.value === 'info'

@@ -13,6 +13,7 @@ import {promises, existsSync, writeFileSync, mkdirSync} from "node:fs";
 import lodashTemplate from "lodash.template";
 import type {Resolver} from '@nuxt/kit'
 import { type WatchEvent, createStorage } from 'unstorage'
+import {parse} from "pathe";
 
 export interface ModuleOptions {
   folder?: string,
@@ -82,53 +83,73 @@ export default defineNuxtModule<ModuleOptions>({
     const filesClean = filesCleanup(options.files());
     const files = options.files();
 
+    const workDir = resolve(nuxt.options.rootDir, options.folder!);
+    const docs: {
+      filename: string
+      filePath: string
+      doc: any
+      path: string
+      layoutName: string
+      pathsByTags: any
+    }[] = [];
+    for (let filePath in files) {
+      const parser = new Parser(workDir)
+
+      parser.load(filePath)
+
+      const layoutName = `open-api-layout-` + kebabCase(parser.getFilename()).replace(/["']/g, "");
+
+      addLayout({
+        src: resolver.resolve( `./runtime/layout/OpenApiLayoutNuxt3.vue`),
+        filename: layoutName + `.vue`,
+        write: true,
+        options: {
+          name: options.name,
+          files,
+          pathsByTags: parser.getPaths(),
+          locales: parser.getLocales(),
+          localesReload: parser.getLocalesReload(),
+          servers: parser.getServers(),
+          path: options.path ?? 'docs',
+        },
+      }, layoutName)
+
+      docs.push({
+        filename: parser.getFilename(),
+        filePath: filePath,
+        doc: parser.getDoc(),
+        path: options.path!,
+        layoutName: layoutName,
+        pathsByTags: parser.getPaths(),
+      })
+    }
+
     nuxt.hook("nitro:build:before", async (nitro) => {
-      await nitro.storage.setItem('cache:openapidoc:files.json', files);
+      for (let item of docs) {
+        nitro.options.prerender.routes = nitro.options.prerender.routes || []
 
 
-      const workDir = resolve(nuxt.options.rootDir, options.folder);
-      for (let filePath in files) {
-        const parser = new Parser(workDir)
-
-        parser.load(filePath)
-
-        const filename = parser.getFilename()
-
-        const doc = parser.getDoc();
-
-        await nitro.storage.setItem(`cache:openapidoc:${filePath}:locales.json`, parser.getLocales());
-        await nitro.storage.setItem(`cache:openapidoc:${filePath}:locales_reload.json`, parser.getLocalesReload());
-        await nitro.storage.setItem(`cache:openapidoc:${filePath}:doc.json`, parser.getDoc());
-        await nitro.storage.setItem(`cache:openapidoc:${filePath}:path.json`, options.path);
-        await nitro.storage.setItem(`cache:openapidoc:${filePath}:paths_by_tags.json`, parser.getPaths());
-        await nitro.storage.setItem(`cache:openapidoc:${filePath}:servers.json`, doc.servers ?? {});
-
-        const pathsByTags = parser.getPaths();
-        const routes = nuxt.options.generate.routes as any;
-        nuxt.options.generate.routes = Array.isArray(nuxt.options.generate.routes) ? nuxt.options.generate.routes : [];
-        if (routes instanceof Function) {
-          if (routes instanceof Function) {
-            routes.push(...await routes() || [])
-          }
-        }
+        await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:doc.json`, item.doc);
+        await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:path.json`, item.path);
+        await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:layoutName.json`, item.layoutName);
 
         if (isSSG) {
-          for (let tag in pathsByTags) {
+          for (let tag in item.pathsByTags) {
             if (tag === 'custom') continue;
 
-            for (let i in pathsByTags[tag].items) {
-              const item = pathsByTags[tag].items[i]
+            for (let i in item.pathsByTags[tag].items) {
+              const select = item.pathsByTags[tag].items[i]
 
-              nuxt.options.generate.routes.push(`/${options.path}/${filename}/${item.type}/${item.path}`)
+              // nuxt.options.generate.routes.push(`/${options.path}/${filename}/${item.type}/${item.path}`)
+              nitro.options.prerender.routes.unshift(`/${options.path}/${select.filename}/${select.type}/${select.path}`);
             }
           }
+
         }
       }
     });
 
     nuxt.hook('nitro:config', (nitroConfig) => {
-      nitroConfig.alias['#openapidoc/server'] = resolver.resolve('./runtime/server')
-
       nitroConfig.handlers = nitroConfig.handlers || []
 
       nitroConfig.prerender = nitroConfig.prerender || {};
@@ -140,26 +161,11 @@ export default defineNuxtModule<ModuleOptions>({
       nitroConfig.handlers.push(
           {
             method: 'get',
-            route: `/${options.path}/query/files/:name`,
-            handler: resolver.resolve('./runtime/server/api/files')
-          },
-          {
-            method: 'get',
             route: `/${options.path}/query/file/:name`,
             handler: resolver.resolve('./runtime/server/api/file')
           },
       )
 
-
-      if (!nuxt.options.dev) {
-        nitroConfig.prerender.routes.unshift(`${options.path}/query/files`);
-        console.info("Added `"+`${options.path}/query/files`+ "` route to prerender");
-        for (let filePath in files) {
-          nitroConfig.prerender.routes.unshift(`${options.path}/query/file/:name`);
-          console.info("Added `"+`${options.path}/query/file/:name`+ "` route to prerender");
-        }
-
-      }
       console.info("Added `"+`${options.path}/query/files`+ "` route handler");
     })
 
@@ -168,6 +174,9 @@ export default defineNuxtModule<ModuleOptions>({
         src: resolver.resolve('./runtime/templates/OpenApiTemplateDocsList.vue'),
         filename: `OpenApiTemplateDocsList.vue`,
         write: true,
+        options: {
+          files
+        }
       })
 
       extendPages((pages) => {
@@ -181,13 +190,6 @@ export default defineNuxtModule<ModuleOptions>({
         })
       });
     }
-
-    addLayout({
-      src: resolver.resolve( `./runtime/layout/OpenApiLayoutNuxt3.vue`),
-      filename: `OpenApiLayoutNuxt3.vue`,
-      write: true,
-      options: { name: options.name },
-    }, `open-api-layout-nuxt3`)
 
     addTemplate({
       src: resolver.resolve('./runtime/templates/OpenApiTemplateNuxt3.vue'),
