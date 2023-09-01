@@ -13,17 +13,13 @@
 </template>
 
 <script setup lang="ts">
-import {ref, useFetch, useRoute} from "#imports";
-
-function toObject(val: string|undefined) {
-  if(!val) return {}
-  return JSON.parse(val)
-}
-
+import {ref, useOpenApiDataState, useRoute} from "#imports";
 
 const route = useRoute()
 
-const files = ref(toObject('<%= JSON.stringify(options.files) %>'));
+const data = useOpenApiDataState().data;
+
+const files = ref(data.value.files);
 
 function genUrl(path: string|number) {
   return path.toString() + '/info'

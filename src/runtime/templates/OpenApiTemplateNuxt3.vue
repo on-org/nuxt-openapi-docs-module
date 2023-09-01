@@ -13,7 +13,21 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, onUnmounted, ref, useFetch, useNuxtApp, useRoute, useRouter, useOpenApiDataState} from "#imports";
+import {
+  computed,
+  onMounted,
+  onUnmounted,
+  ref,
+  useNuxtApp,
+  useRoute,
+  useRouter,
+  useOpenApiDataState,
+  definePageMeta
+} from "#imports";
+
+definePageMeta({
+  layout: false,
+});
 
 const route = useRoute()
 const router = useRouter()

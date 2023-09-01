@@ -83,13 +83,14 @@
       >
         <li
           v-for="(route) in sub_routes.items"
-          :key="`${route.type}-${route.name}`"
+          :key="`${route.path}-${route.type}`"
         >
           <nuxt-link
+            :id="`${route.path}-${route.type}`"
             :to="getSubRoute(route)"
             class="oapi-menu-item"
             active-class="oapi-menu-item--is-active"
-            @click.native.stop.prevent
+            @click.native.stop.prevent="changeRoute(route)"
           >
             <div class="oapi-menu-item__title">
               <span
@@ -230,6 +231,12 @@ export default {
         name: `openapi-${this.path}/type-mathod${this.$openapidoc.I18nLocaleSuffix()}`,
         params: { name: this.file, type: type, mathod: path }
       };
+    },
+    changeRoute(route) {
+      setTimeout(() => {
+        // @todo fix this
+        document.querySelector(`#${route.path}-${route.type}`).scrollIntoView({ block: 'center' });
+      }, 30);
     },
     changeDoc(option) {
       return {

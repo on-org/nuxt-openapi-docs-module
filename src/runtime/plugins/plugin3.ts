@@ -40,7 +40,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   }
 
   const refresh = async (to: RouteLocationNormalized | RouteLocationNormalizedLoaded, dedup = false) => {
-    const fileName = ref(to.params.name.toString());
+    const fileName = ref(to.params.name?.toString() ?? 'default');
 
     const { data: result } = await useFetch("/docs/query/file/" + fileName.value)
 
@@ -48,7 +48,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   }
 
   addRouteMiddleware(async (to, from) => {
-    if (!to.name?.toString().startsWith('openapi-docs')) return;
+    if (!to.name?.toString().startsWith('openapi-')) return;
     if (process.client && to.params.name === from.params.name) return;
     if (process.client && to.path === from.path) {
       return

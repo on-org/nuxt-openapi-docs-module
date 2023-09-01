@@ -116,6 +116,8 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     nuxt.hook("nitro:build:before", async (nitro) => {
+      await nitro.storage.setItem(`cache:openapidoc:files.json`, filesClean);
+
       for (let item of docs) {
         nitro.options.prerender.routes = nitro.options.prerender.routes || []
 
@@ -173,7 +175,7 @@ export default defineNuxtModule<ModuleOptions>({
         filename: `OpenApiTemplateDocsList.vue`,
         write: true,
         options: {
-          files
+          files: filesClean
         }
       })
 

@@ -18,21 +18,25 @@
     </OpenApiMainHeader>
     <div class="oapi-layout__body">
       <OpenApiMainLeftMenu :isMenuOpen="isMenuOpen" :isMobile="isMobile">
-        <OpenApiMenu
-            :routes="pathsByTags"
-            :current-locale="currentLocale"
-            :file="fileName"
-            :path="path"
-            :files="files"
-            :locales="locales"
-            :locales-reload="localesReload"
-            :servers="servers"
-        />
+        <template #menu>
+          <OpenApiMenu
+              :routes="pathsByTags"
+              :current-locale="currentLocale"
+              :file="fileName"
+              :path="path"
+              :files="files"
+              :locales="locales"
+              :locales-reload="localesReload"
+              :servers="servers"
+          />
+        </template>
       </OpenApiMainLeftMenu>
 
       <OpenApiMainContent>
         <transition name="oapi-fade" tag="div">
-          <div><slot></slot></div>
+          <div>
+            <slot />
+          </div>
         </transition>
         <template #footer>
           <footer class="oapi-footer" v-if="footer" v-html="footer"></footer>
@@ -44,6 +48,8 @@
 
 <script setup lang="ts">
 import {computed, ref, useFetch, useNuxtApp, useOpenApiDataState, useRoute, watch} from "#imports";
+
+console.log('reload')
 
 const data = useOpenApiDataState().data;
 
