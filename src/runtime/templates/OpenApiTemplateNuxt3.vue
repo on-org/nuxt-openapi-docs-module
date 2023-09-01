@@ -157,6 +157,15 @@ function enableTitleClick() {
   });
 }
 
+function setScrollPosition() {
+  if (route.hash) return;
+
+  const el = document.querySelector('.oapi-content');
+  if (!el) return;
+
+  el.scrollTop = 0;
+}
+
 function downloadJson() {
   const json = JSON.stringify(doc.value, null, 4);
   const blob = new Blob([json], { type: 'application/json' });
@@ -178,6 +187,7 @@ onMounted(() => {
   if(process.client) {
     $openapidocBus.$on('downloadJsonDoc', downloadJson);
     $openapidocBus.$on('changeServer', onChangeServer);
+    setScrollPosition();
     enableTitleClick();
   }
 })
