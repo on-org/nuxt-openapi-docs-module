@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, onUnmounted, ref, useFetch, useNuxtApp, useRoute, useRouter} from "#imports";
+import {computed, onMounted, onUnmounted, ref, useFetch, useNuxtApp, useRoute, useRouter, useOpenApiDataState} from "#imports";
 
 const route = useRoute()
 const router = useRouter()
@@ -26,9 +26,7 @@ const mathod = ref((route.params.mathod ?? 'default').toString());
 const url = ref('')
 const currentServer = ref(0)
 
-console.log("/docs/query/file/" + fileName.value)
-
-const { data } = await useFetch("/docs/query/file/" + fileName.value)
+const data = useOpenApiDataState().data;
 
 const path_doc = ref<string>(data.value.path ?? '')
 const doc = ref(data.value.doc ?? {})
@@ -46,7 +44,7 @@ const isComponents = computed(() => {
 const currentLocale = computed((): string => {
   return $openapidoc.currentLocale()
 })
-const activePath = computed((): string => {
+const activePath = computed((): string|null => {
   if(!doc.value.paths) return null;
   for (let selectPath in doc.value.paths) {
     let routePath = selectPath;
@@ -61,7 +59,7 @@ const activePath = computed((): string => {
   }
   return null;
 })
-const activeWebhook = computed((): string => {
+const activeWebhook = computed((): string|null => {
   if(!doc.value.webhooks) return null;
   for (let selectPath in doc.value.webhooks) {
     let routePath = selectPath;
@@ -78,17 +76,17 @@ const activeWebhook = computed((): string => {
   return null;
 })
 
-const activeRoute = computed((): string => {
+const activeRoute = computed((): string|null => {
   if(!activePath.value) return null;
   return activePath.value[type.value] ?? null;
 })
 
-const subParams = computed((): string => {
+const subParams = computed((): string|null => {
   if(!activePath.value) return null;
   return activePath.value['parameters'] ?? null;
 })
 
-const server = computed((): string => {
+const server = computed((): string|null => {
   if (activePath.value) {
     if(activePath.value.servers && activePath.value.servers[0]) {
       return activePath.value.servers[0].url ?? null
@@ -110,9 +108,10 @@ const server = computed((): string => {
   }
 
   if (doc.value.servers[cs].variables) {
-    const variables = Object.values(doc.value.servers[cs].variables);
-    if (variables && variables.length && variables[0].default) {
-      return variables[0].default
+    const variables = Object.values(doc.value.servers[cs].variables) ?? [];
+    if (variables && variables.length) {
+      const select = variables[0] as any
+      return select.default
     }
   }
 
@@ -124,7 +123,7 @@ function onChangeServer(option: number) {
 }
 
 function enableTitleClick() {
-  const headers = document.querySelector('.content-container').querySelectorAll('h1[id], h2[id], h3[id], h4[id]');
+  const headers = document.querySelector('.content-container')?.querySelectorAll('h1[id], h2[id], h3[id], h4[id]') ?? [];
 
   headers.forEach(header => {
     header.addEventListener('click', e => {
@@ -166,7 +165,7 @@ onMounted(() => {
   if(process.client) {
     $openapidocBus.$on('downloadJsonDoc', downloadJson);
     $openapidocBus.$on('changeServer', onChangeServer);
-    // enableTitleClick();
+    enableTitleClick();
   }
 })
 

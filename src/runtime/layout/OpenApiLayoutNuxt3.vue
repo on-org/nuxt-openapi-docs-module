@@ -65,7 +65,7 @@ const currentLocale = computed((): string => {
   return $openapidoc.currentLocale()
 })
 const logo = computed((): string => {
-  return $openapidoc.getLogo().replace(':name', name)
+  return $openapidoc.getLogo().replace(':name', name.value)
 })
 const footer = computed((): string => {
   return $openapidoc.getFooter()

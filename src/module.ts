@@ -4,7 +4,7 @@ import {
   extendPages,
   addLayout,
   addComponentsDir,
-  createResolver, addTemplate
+  createResolver, addTemplate, addImports
 } from '@nuxt/kit'
 import {kebabCase} from "scule";
 import {resolve, extname, basename, join} from "path";
@@ -12,8 +12,6 @@ import Parser from "./runtime/Parser";
 import {promises, existsSync, writeFileSync, mkdirSync} from "node:fs";
 import lodashTemplate from "lodash.template";
 import type {Resolver} from '@nuxt/kit'
-import { type WatchEvent, createStorage } from 'unstorage'
-import {parse} from "pathe";
 
 export interface ModuleOptions {
   folder?: string,
@@ -21,6 +19,7 @@ export interface ModuleOptions {
   path?: string,
   debug?: boolean,
   list?: boolean,
+  devtools?: boolean,
   files: () => {[key:string]:string},
   doc?: {[key:string]:any},
 }
@@ -64,6 +63,7 @@ export default defineNuxtModule<ModuleOptions>({
     path: 'docs',
     debug: false,
     list: false,
+    devtools: true,
     doc: {},
     files: () => { return {}},
   },
@@ -217,9 +217,13 @@ export default defineNuxtModule<ModuleOptions>({
       })
     })
 
+    addImports([
+      { name: 'useOpenApiDataState', as: 'useOpenApiDataState', from: resolver.resolve('./runtime/composables/openApiData') },
+    ])
+
 
     addPlugin({
-      src: resolver.resolve('./runtime/plugin3'),
+      src: resolver.resolve('./runtime/plugins/plugin3'),
     })
 
     nuxt.options.css.push(resolver.resolve('./runtime/github.css'));
