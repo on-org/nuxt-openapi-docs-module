@@ -58,7 +58,11 @@ const files = ref(data.value.files);
 const pathsByTags = ref(data.value.pathsByTags);
 const locales = ref(data.value.locales);
 const localesReload = ref<boolean>(data.value.localesReload ?? false);
-const servers = ref<Array<any>>(data.value.servers);
+
+let ser = data.value.servers;
+if(!Array.isArray(ser)) ser = [];
+
+const servers = ref<Array<any>>(ser);
 const path = ref('<%= options.path %>');
 
 const route = useRoute()

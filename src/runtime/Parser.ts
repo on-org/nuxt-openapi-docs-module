@@ -206,8 +206,8 @@ export default class Parser {
     return this.localesReload;
   }
 
-  getServers(): {[key: string]: any} {
-    return this.spec.servers ?? {};
+  getServers(): any[] {
+    return this.spec.servers ?? [];
   }
 
   getPaths(): {[key: string]: PathByTag} {
