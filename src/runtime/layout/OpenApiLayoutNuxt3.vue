@@ -47,9 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, useFetch, useNuxtApp, useOpenApiDataState, useRoute, watch} from "#imports";
-
-console.log('reload')
+import {computed, ref, useNuxtApp, useOpenApiDataState, useRoute, watch} from "#imports";
 
 const data = useOpenApiDataState().data;
 

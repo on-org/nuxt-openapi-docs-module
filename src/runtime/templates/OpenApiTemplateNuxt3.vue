@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout class="content-container" name="open-api-layout">
+  <div class="content-container">
     <OpenApiInfo v-if="isInfo" :info="doc.info" :servers="doc.servers" :current-locale="currentLocale"></OpenApiInfo>
     <OpenApiAuth v-else-if="isAuth" :components="doc.components" :current-locale="currentLocale"></OpenApiAuth>
     <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="currentLocale"></OpenApiComponents>
@@ -9,7 +9,7 @@
     <client-only>
       <SearchBlock :current-locale="currentLocale" :doc="doc" :path="mathod" :file="fileName" />
     </client-only>
-  </NuxtLayout>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -26,7 +26,7 @@ import {
 } from "#imports";
 
 definePageMeta({
-  layout: false,
+  layout: "open-api-layout",
 });
 
 const route = useRoute()

@@ -233,10 +233,9 @@ export default {
       };
     },
     changeRoute(route) {
-      setTimeout(() => {
-        // @todo fix this
-        document.querySelector(`#${route.path}-${route.type}`).scrollIntoView({ block: 'center' });
-      }, 30);
+      // setTimeout(() => {
+        // document.querySelector(`#${route.path}-${route.type}`).scrollIntoView({ behavior: 'smooth', block: 'center',  });
+      // }, 30);
     },
     changeDoc(option) {
       return {
