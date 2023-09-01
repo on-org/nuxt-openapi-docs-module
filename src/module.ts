@@ -24,6 +24,18 @@ export interface ModuleOptions {
   doc?: {[key:string]:any},
 }
 
+interface DocItem {
+  name: string
+  filename: string
+  filePath: string
+  doc: any
+  path: string
+  pathsByTags: any
+  locales: { [key: string]: string }
+  localesReload: boolean
+  servers: {[key: string]: any}
+}
+
 function filesCleanup(files: {[key: string]: string}) {
   const result: {[key: string]: string} = {}
   for (const i in files) {
@@ -84,43 +96,22 @@ export default defineNuxtModule<ModuleOptions>({
     const files = options.files();
 
     const workDir = resolve(nuxt.options.rootDir, options.folder!);
-    const docs: {
-      filename: string
-      filePath: string
-      doc: any
-      path: string
-      layoutName: string
-      pathsByTags: any
-    }[] = [];
+    const docs: DocItem[] = [];
     for (let filePath in files) {
       const parser = new Parser(workDir)
 
       parser.load(filePath)
 
-      const layoutName = `open-api-layout-` + kebabCase(parser.getFilename()).replace(/["']/g, "");
-
-      addLayout({
-        src: resolver.resolve( `./runtime/layout/OpenApiLayoutNuxt3.vue`),
-        filename: layoutName + `.vue`,
-        write: true,
-        options: {
-          name: options.name,
-          files,
-          pathsByTags: parser.getPaths(),
-          locales: parser.getLocales(),
-          localesReload: parser.getLocalesReload(),
-          servers: parser.getServers(),
-          path: options.path ?? 'docs',
-        },
-      }, layoutName)
-
       docs.push({
         filename: parser.getFilename(),
+        name: options.name!.toString(),
         filePath: filePath,
         doc: parser.getDoc(),
         path: options.path!,
-        layoutName: layoutName,
         pathsByTags: parser.getPaths(),
+        locales: parser.getLocales(),
+        localesReload: parser.getLocalesReload(),
+        servers: parser.getServers(),
       })
     }
 
@@ -131,7 +122,14 @@ export default defineNuxtModule<ModuleOptions>({
 
         await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:doc.json`, item.doc);
         await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:path.json`, item.path);
-        await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:layoutName.json`, item.layoutName);
+
+
+        await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:locales.json`, item.locales);
+        await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:locales_reload.json`, item.localesReload);
+        await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:servers.json`, item.servers);
+        await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:paths_by_tags.json`, item.pathsByTags);
+        await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:name.json`, item.name);
+
 
         if (isSSG) {
           for (let tag in item.pathsByTags) {
@@ -190,6 +188,15 @@ export default defineNuxtModule<ModuleOptions>({
         })
       });
     }
+
+    addLayout({
+      src: resolver.resolve( `./runtime/layout/OpenApiLayoutNuxt3.vue`),
+      filename: `OpenApiLayoutNuxt3.vue`,
+      write: true,
+      options: {
+        path: options.path ?? 'docs',
+      },
+    }, 'open-api-layout')
 
     addTemplate({
       src: resolver.resolve('./runtime/templates/OpenApiTemplateNuxt3.vue'),

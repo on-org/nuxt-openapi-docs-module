@@ -23,6 +23,6 @@ export const useOpenApiDataState = () => {
     const data = useState<Record<string, ParsedOpenApi>>('oa-data', () => shallowRef(shallowReactive({})))
 
     return {
-        data,
+        data
     }
 }

@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout class="content-container" :name="layoutName">
+  <NuxtLayout class="content-container" name="open-api-layout">
     <OpenApiInfo v-if="isInfo" :info="doc.info" :servers="doc.servers" :current-locale="currentLocale"></OpenApiInfo>
     <OpenApiAuth v-else-if="isAuth" :components="doc.components" :current-locale="currentLocale"></OpenApiAuth>
     <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="currentLocale"></OpenApiComponents>
@@ -29,8 +29,7 @@ const currentServer = ref(0)
 const data = useOpenApiDataState().data;
 
 const path_doc = ref<string>(data.value.path ?? '')
-const doc = ref(data.value.doc ?? {})
-const layoutName = ref(data.value.layoutName ?? {})
+const doc = ref<{[key: string]: any}>(data.value.doc ?? {})
 
 const isInfo = computed(() => {
   return type.value === 'info'
@@ -86,7 +85,7 @@ const subParams = computed((): string|null => {
   return activePath.value['parameters'] ?? null;
 })
 
-const server = computed((): string|null => {
+const server = computed((): string => {
   if (activePath.value) {
     if(activePath.value.servers && activePath.value.servers[0]) {
       return activePath.value.servers[0].url ?? null
@@ -104,7 +103,7 @@ const server = computed((): string|null => {
   }
 
   if (!doc.value.servers || !doc.value.servers[cs]) {
-    return null;
+    return '';
   }
 
   if (doc.value.servers[cs].variables) {
@@ -115,7 +114,7 @@ const server = computed((): string|null => {
     }
   }
 
-  return doc.value.servers[cs].url ?? null
+  return doc.value.servers[cs].url ?? ''
 })
 
 function onChangeServer(option: number) {

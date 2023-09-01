@@ -43,14 +43,16 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, useFetch, useNuxtApp, useRoute, watch} from "#imports";
+import {computed, ref, useFetch, useNuxtApp, useOpenApiDataState, useRoute, watch} from "#imports";
 
-const name = ref('<%= options.name %>');
-const files = ref(<%= JSON.stringify(options.files) %>);
-const pathsByTags = ref(<%= JSON.stringify(options.pathsByTags) %>);
-const locales = ref(<%= JSON.stringify(options.locales) %>);
-const localesReload = ref<boolean>(<%= options.localesReload ?? false %>);
-const servers = ref<Array<any>>(<%= JSON.stringify(options.servers) %>);
+const data = useOpenApiDataState().data;
+
+const name = ref(data.value.name);
+const files = ref(data.value.files);
+const pathsByTags = ref(data.value.pathsByTags);
+const locales = ref(data.value.locales);
+const localesReload = ref<boolean>(data.value.localesReload ?? false);
+const servers = ref<Array<any>>(data.value.servers);
 const path = ref('<%= options.path %>');
 
 const route = useRoute()
