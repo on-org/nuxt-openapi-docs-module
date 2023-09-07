@@ -4,14 +4,14 @@ import {
   extendPages,
   addLayout,
   addComponentsDir,
-  createResolver, addTemplate, addImports
+  createResolver, addTemplate, addImports, updateTemplates, addTypeTemplate, buildNuxt
 } from '@nuxt/kit'
-import {kebabCase} from "scule";
 import {resolve, extname, basename, join} from "path";
 import Parser from "./runtime/Parser";
 import {promises, existsSync, writeFileSync, mkdirSync} from "node:fs";
 import lodashTemplate from "lodash.template";
 import type {Resolver} from '@nuxt/kit'
+import chokidar from "chokidar";
 
 export interface ModuleOptions {
   folder?: string,
@@ -61,6 +61,18 @@ async function makeTemplate(templateName: string, fileName: string, options: {[k
   return path;
 }
 
+async function updateStorageFiles(nitro: any, docs: DocItem[]) {
+  for (let item of docs) {
+    await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:doc.json`, item.doc);
+    await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:path.json`, item.path);
+    await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:locales.json`, item.locales);
+    await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:locales_reload.json`, item.localesReload);
+    await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:servers.json`, item.servers);
+    await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:paths_by_tags.json`, item.pathsByTags);
+    await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:name.json`, item.name);
+  }
+}
+
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'nuxt-open-api-docs',
@@ -92,10 +104,12 @@ export default defineNuxtModule<ModuleOptions>({
       extensions: ['vue']
     })
 
+
     const filesClean = filesCleanup(options.files());
     const files = options.files();
 
     const workDir = resolve(nuxt.options.rootDir, options.folder!);
+
     const docs: DocItem[] = [];
     for (let filePath in files) {
       const parser = new Parser(workDir)
@@ -116,21 +130,29 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     nuxt.hook("nitro:build:before", async (nitro) => {
+      if (!isSSG) {
+        console.log('ℹ add file watcher', workDir)
+
+        const watcher = chokidar.watch(workDir, {
+          ignored: /(^|[\/\\])\../, // игнорировать dotfiles
+          persistent: true
+        })
+
+        watcher.on('change', async path => {
+          console.log('update store item', path)
+          await updateStorageFiles(nitro, docs)
+
+          nuxt.callHook('restart')
+
+        })
+      }
+
       await nitro.storage.setItem(`cache:openapidoc:files.json`, filesClean);
 
       for (let item of docs) {
         nitro.options.prerender.routes = nitro.options.prerender.routes || []
 
-
-        await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:doc.json`, item.doc);
-        await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:path.json`, item.path);
-
-
-        await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:locales.json`, item.locales);
-        await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:locales_reload.json`, item.localesReload);
-        await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:servers.json`, item.servers);
-        await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:paths_by_tags.json`, item.pathsByTags);
-        await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:name.json`, item.name);
+        await updateStorageFiles(nitro, docs);
 
 
         if (isSSG) {
@@ -144,7 +166,6 @@ export default defineNuxtModule<ModuleOptions>({
               nitro.options.prerender.routes.unshift(`/${options.path}/${select.filename}/${select.type}/${select.path}`);
             }
           }
-
         }
       }
     });
@@ -156,7 +177,7 @@ export default defineNuxtModule<ModuleOptions>({
       nitroConfig.prerender.routes = nitroConfig.prerender.routes || [];
 
       nuxt.options.build.transpile = nuxt.options.build.transpile || [];
-      nuxt.options.build.transpile.push(resolve("./runtime"));
+      nuxt.options.build.transpile.push(resolver.resolve("./runtime"));
 
       nitroConfig.handlers.push(
           {
@@ -183,7 +204,7 @@ export default defineNuxtModule<ModuleOptions>({
         pages.push({
           name: `openapi-docs-list`,
           path: `/${options.path}`,
-          file: resolve(nuxt.options.buildDir, `OpenApiTemplateDocsList.vue`),
+          file: resolver.resolve(`./runtime/templates/OpenApiTemplateDocsList.vue`),
           meta: {
             nuxtI18n: false,
           },
@@ -210,7 +231,7 @@ export default defineNuxtModule<ModuleOptions>({
       pages.push({
         name: `openapi-${options.path}`,
         path: `/${options.path}/:name/:type`,
-        file: resolve(nuxt.options.buildDir, `OpenApiTemplateNuxt3.vue`),
+        file: resolver.resolve(`./runtime/templates/OpenApiTemplateNuxt3.vue`),
         meta: {
           nuxtI18n: false,
         },
@@ -219,7 +240,7 @@ export default defineNuxtModule<ModuleOptions>({
       pages.push({
         name: `openapi-${options.path}/type-mathod`,
         path: `/${options.path}/:name/:type/:mathod`,
-        file: resolve(nuxt.options.buildDir, `OpenApiTemplateNuxt3.vue`),
+        file: resolver.resolve(`./runtime/templates/OpenApiTemplateNuxt3.vue`),
         meta: {
           nuxtI18n: false,
         },
@@ -237,5 +258,6 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.options.css.push(resolver.resolve('./runtime/github.css'));
     nuxt.options.css.push(resolver.resolve('./runtime/styles.css'));
+
   }
 })
