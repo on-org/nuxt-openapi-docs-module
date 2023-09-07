@@ -34,9 +34,6 @@ const router = useRouter()
 
 const { $openapidoc, $openapidocBus } = useNuxtApp()
 
-const fileName = ref(route.params.name.toString());
-const type = ref(route.params.type.toString());
-const mathod = ref((route.params.mathod ?? 'default').toString());
 const url = ref('')
 const currentServer = ref(0)
 
@@ -45,18 +42,14 @@ const data = useOpenApiDataState().data;
 const path_doc = ref<string>(data.value.path ?? '')
 const doc = ref<{[key: string]: any}>(data.value.doc ?? {})
 
-const isInfo = computed(() => {
-  return type.value === 'info'
-})
-const isAuth = computed(() => {
-  return type.value === 'auth'
-})
-const isComponents = computed(() => {
-  return type.value === 'components'
-})
-const currentLocale = computed((): string => {
-  return $openapidoc.currentLocale()
-})
+const fileName = computed(() => route.params.name.toString());
+const type = computed(() => route.params.type.toString());
+const mathod = computed(() => (route.params.mathod ?? 'default').toString());
+const isInfo = computed(() => type.value === 'info')
+const isAuth = computed(() => type.value === 'auth')
+const isComponents = computed(() => type.value === 'components')
+const currentLocale = computed((): string => $openapidoc.currentLocale())
+
 const activePath = computed((): string|null => {
   if(!doc.value.paths) return null;
   for (let selectPath in doc.value.paths) {

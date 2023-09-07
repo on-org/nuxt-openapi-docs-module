@@ -48,11 +48,10 @@ export default defineNuxtPlugin((nuxtApp) => {
   }
 
   addRouteMiddleware(async (to, from) => {
+
     if (!to.name?.toString().startsWith('openapi-')) return;
     if (process.client && to.params.name === from.params.name) return;
-    if (process.client && to.path === from.path) {
-      return
-    }
+    if (process.client && to.path === from.path) return
 
     const redirect = await refresh(to, false)
 

@@ -8,7 +8,7 @@ info:
   title: Pet Store
   version: 1.0.0
   description: >
-    # Introduction 15
+    # Introduction
 
     Petstore illustrate the typical design decisions and tradeoffs a developer makes when building an enterprise application.
     The demo shows how to document REST API services **OpenAPI format** and is based on

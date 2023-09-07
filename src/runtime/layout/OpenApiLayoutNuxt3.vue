@@ -50,36 +50,26 @@
 import {computed, ref, useNuxtApp, useOpenApiDataState, useRoute, watch} from "#imports";
 
 const data = useOpenApiDataState().data;
-
-const name = ref(data.value.name);
-const files = ref(data.value.files);
-const pathsByTags = ref(data.value.pathsByTags);
-const locales = ref(data.value.locales);
-const localesReload = ref<boolean>(data.value.localesReload ?? false);
+const route = useRoute()
+const { $openapidoc, $openapidocBus } = useNuxtApp()
 
 let ser = data.value.servers;
 if(!Array.isArray(ser)) ser = [];
 
 const servers = ref<Array<any>>(ser);
 const path = ref('<%= options.path %>');
-
-const route = useRoute()
-const { $openapidoc, $openapidocBus } = useNuxtApp()
-
-const fileName = ref(route.params.name.toString());
-
 const isMenuOpen = ref(false)
 const isMobile = ref(false)
 
-const currentLocale = computed((): string => {
-  return $openapidoc.currentLocale()
-})
-const logo = computed((): string => {
-  return $openapidoc.getLogo().replace(':name', name.value)
-})
-const footer = computed((): string => {
-  return $openapidoc.getFooter()
-})
+const fileName = computed((): string => route.params.name.toString())
+const name = computed((): string => data.value.name)
+const files = computed((): string => data.value.files)
+const pathsByTags = computed((): string => data.value.pathsByTags)
+const localesReload = computed<boolean>((): string => data.value.localesReload ?? false)
+const locales = computed((): string => data.value.locales)
+const currentLocale = computed((): string => $openapidoc.currentLocale())
+const logo = computed((): string => $openapidoc.getLogo().replace(':name', name.value))
+const footer = computed((): string => $openapidoc.getFooter())
 
 watch(route, () => {
   if (isMobile.value) {

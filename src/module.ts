@@ -4,14 +4,16 @@ import {
   extendPages,
   addLayout,
   addComponentsDir,
-  createResolver, addTemplate, addImports, updateTemplates, addTypeTemplate, buildNuxt
+  createResolver,
+  addTemplate,
+  addImports,
 } from '@nuxt/kit'
 import {resolve, extname, basename, join} from "path";
 import Parser from "./runtime/Parser";
 import {promises, existsSync, writeFileSync, mkdirSync} from "node:fs";
 import lodashTemplate from "lodash.template";
 import type {Resolver} from '@nuxt/kit'
-import chokidar from "chokidar";
+import {watch} from "fs";
 
 export interface ModuleOptions {
   folder?: string,
@@ -133,18 +135,14 @@ export default defineNuxtModule<ModuleOptions>({
       if (!isSSG) {
         console.log('ℹ add file watcher', workDir)
 
-        const watcher = chokidar.watch(workDir, {
-          ignored: /(^|[\/\\])\../, // игнорировать dotfiles
-          persistent: true
-        })
-
-        watcher.on('change', async path => {
-          console.log('update store item', path)
-          await updateStorageFiles(nitro, docs)
-
-          nuxt.callHook('restart')
-
-        })
+        const watcher = watch(workDir, { recursive: true }, async (evt, name) => {
+          if (evt === 'change') {
+            watcher.close();
+            console.log('↻ update store item', name)
+            await updateStorageFiles(nitro, docs)
+            nuxt.callHook('restart')
+          }
+        });
       }
 
       await nitro.storage.setItem(`cache:openapidoc:files.json`, filesClean);
@@ -153,7 +151,6 @@ export default defineNuxtModule<ModuleOptions>({
         nitro.options.prerender.routes = nitro.options.prerender.routes || []
 
         await updateStorageFiles(nitro, docs);
-
 
         if (isSSG) {
           for (let tag in item.pathsByTags) {
