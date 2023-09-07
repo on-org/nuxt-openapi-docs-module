@@ -22,12 +22,15 @@ import {
   useRoute,
   useRouter,
   useOpenApiDataState,
-  definePageMeta
+  definePageMeta, defineI18nRoute
 } from "#imports";
 
 definePageMeta({
   layout: "open-api-layout",
 });
+
+defineI18nRoute(false)
+
 
 const route = useRoute()
 const router = useRouter()
