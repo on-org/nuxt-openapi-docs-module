@@ -22,14 +22,12 @@ import {
   useRoute,
   useRouter,
   useOpenApiDataState,
-  definePageMeta, defineI18nRoute
+  definePageMeta, defineI18nRoute, toRaw
 } from "#imports";
 
 definePageMeta({
   layout: "open-api-layout",
 });
-
-defineI18nRoute(false)
 
 
 const route = useRoute()
@@ -41,6 +39,11 @@ const url = ref('')
 const currentServer = ref(0)
 
 const data = useOpenApiDataState().data;
+
+
+defineI18nRoute({
+  locales: Object.keys(data.value.locales)
+})
 
 const path_doc = ref<string>(data.value.path ?? '')
 const doc = ref<{[key: string]: any}>(data.value.doc ?? {})

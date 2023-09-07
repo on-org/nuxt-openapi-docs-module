@@ -1,8 +1,8 @@
 <template>
   <div class="content-container">
     <ul>
-      <li v-for="(file, path) in files" :key="path">
-        <a :href="genUrl(path)" class="file-item">
+      <li v-for="(file, filename) in files" :key="filename">
+        <a :href="genUrl(filename)" class="file-item">
           <div>
             <p>{{ file }}</p>
           </div>
@@ -21,8 +21,11 @@ const data = useOpenApiDataState().data;
 
 const files = ref(data.value.files);
 
-function genUrl(path: string|number) {
-  return path.toString() + '/info'
+
+function genUrl(filename: string|number) {
+  let route = '/' + data.value.doc_path + '/' + filename.toString() + '/info';
+  route = route.toString().replaceAll(/\/\/+/gmu, '/')
+  return  route
 }
 
 </script>

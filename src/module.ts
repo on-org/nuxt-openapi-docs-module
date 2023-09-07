@@ -97,6 +97,7 @@ export default defineNuxtModule<ModuleOptions>({
     // @ts-ignore
     const isSSG = nuxt.options.dev === false && (nuxt.options.target === 'static' || nuxt.options._generate)
 
+
     const resolver = createResolver(import.meta.url)
 
     await addComponentsDir({
@@ -132,6 +133,7 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     nuxt.hook("nitro:build:before", async (nitro) => {
+
       if (!isSSG) {
         console.log('ℹ add file watcher', workDir)
 
@@ -145,7 +147,9 @@ export default defineNuxtModule<ModuleOptions>({
         });
       }
 
+
       await nitro.storage.setItem(`cache:openapidoc:files.json`, filesClean);
+      await nitro.storage.setItem(`cache:openapidoc:doc_path.json`, options.path ?? 'docs');
 
       for (let item of docs) {
         nitro.options.prerender.routes = nitro.options.prerender.routes || []
@@ -153,14 +157,16 @@ export default defineNuxtModule<ModuleOptions>({
         await updateStorageFiles(nitro, docs);
 
         if (isSSG) {
+          nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/info`);
+          nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/auth`);
+          nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/components`);
           for (let tag in item.pathsByTags) {
             if (tag === 'custom') continue;
 
             for (let i in item.pathsByTags[tag].items) {
               const select = item.pathsByTags[tag].items[i]
 
-              // nuxt.options.generate.routes.push(`/${options.path}/${filename}/${item.type}/${item.path}`)
-              nitro.options.prerender.routes.unshift(`/${options.path}/${select.filename}/${select.type}/${select.path}`);
+              nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/${select.type}/${select.path}`);
             }
           }
         }
@@ -193,7 +199,7 @@ export default defineNuxtModule<ModuleOptions>({
         filename: `OpenApiTemplateDocsList.vue`,
         write: true,
         options: {
-          files: filesClean
+          files: filesClean,
         }
       })
 
@@ -202,9 +208,6 @@ export default defineNuxtModule<ModuleOptions>({
           name: `openapi-docs-list`,
           path: `/${options.path}`,
           file: resolver.resolve(`./runtime/templates/OpenApiTemplateDocsList.vue`),
-          meta: {
-            nuxtI18n: false,
-          },
         })
       });
     }
@@ -229,18 +232,12 @@ export default defineNuxtModule<ModuleOptions>({
         name: `openapi-${options.path}`,
         path: `/${options.path}/:name/:type`,
         file: resolver.resolve(`./runtime/templates/OpenApiTemplateNuxt3.vue`),
-        meta: {
-          nuxtI18n: false,
-        },
       })
 
       pages.push({
         name: `openapi-${options.path}/type-mathod`,
         path: `/${options.path}/:name/:type/:mathod`,
         file: resolver.resolve(`./runtime/templates/OpenApiTemplateNuxt3.vue`),
-        meta: {
-          nuxtI18n: false,
-        },
       })
     })
 
