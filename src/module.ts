@@ -21,6 +21,7 @@ export interface ModuleOptions {
   path?: string,
   debug?: boolean,
   list?: boolean,
+  localize?: boolean,
   devtools?: boolean,
   files: () => {[key:string]:string},
   doc?: {[key:string]:any},
@@ -106,6 +107,7 @@ export default defineNuxtModule<ModuleOptions>({
     debug: false,
     list: false,
     devtools: true,
+    localize: true,
     doc: {},
     files: () => { return {}},
   },
@@ -269,22 +271,23 @@ export default defineNuxtModule<ModuleOptions>({
       src: resolver.resolve('./runtime/plugins/plugin3'),
     })
 
-    nuxt.hook('i18n:registerModule', register => {
-      register({
-        // langDir path needs to be resolved
-        langDir: resolver.resolve('./runtime/lang'),
-        locales: [
-          {code: 'en', file: 'en.json'},
-          {code: 'fr', file: 'fr.json'},
-          {code: 'de', file: 'de.json'},
-          {code: 'ru', file: 'ru.json'},
-          {code: 'ch', file: 'ch.json'},
-          {code: 'es', file: 'es.json'},
-          {code: 'hi', file: 'hi.json'},
-          {code: 'ar', file: 'ar.json'},
-        ]
+    if (options.localize) {
+      nuxt.hook('i18n:registerModule', register => {
+        register({
+          langDir: resolver.resolve('./runtime/lang'),
+          locales: [
+            {code: 'en', file: 'en.json'},
+            {code: 'fr', file: 'fr.json'},
+            {code: 'de', file: 'de.json'},
+            {code: 'ru', file: 'ru.json'},
+            {code: 'ch', file: 'ch.json'},
+            {code: 'es', file: 'es.json'},
+            {code: 'hi', file: 'hi.json'},
+            {code: 'ar', file: 'ar.json'},
+          ]
+        })
       })
-    })
+    }
 
     nuxt.options.css.push(resolver.resolve('./runtime/github.css'));
     nuxt.options.css.push(resolver.resolve('./runtime/styles.css'));
