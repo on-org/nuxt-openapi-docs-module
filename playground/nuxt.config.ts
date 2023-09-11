@@ -1,8 +1,18 @@
 const isDev = process.env.NODE_ENV !== 'production';
+const currentDate = new Date();
+const timestamp = currentDate.getTime();
 export default defineNuxtConfig({
   plugins: [
     { src: '@/plugins/content' },
   ],
+  runtimeConfig: {
+    // The private keys which are only available within server-side
+    timestamp,
+    // Keys within public, will be also exposed to the client-side
+    public: {
+      timestamp
+    }
+  },
   // debug: true,
   modules: [
     [
@@ -87,22 +97,41 @@ export default defineNuxtConfig({
     [
       '@nuxtjs/i18n',
       {
+        vueI18n: './i18n.config.ts',
+        locale: 'en',
         defaultLocale: 'en',
-        fallbackLocale: 'en',
         lazy: true,
         langDir: 'lang',
+        // compilation: {
+        //   jit: false
+        // },
+        bundle: {
+          allowDynamic: false,
+          runtimeOnly: false,
+          compositionOnly: false,
+          fullInstall: false,
+          jitCompilation: false,
+          dropMessageCompiler: false,
+          strictMessage: false,
+          escapeHtml: false,
+          defaultSFCLang: 'json',
+          globalSFCScope: false,
+        },
+        experimental: {
+          jsTsFormatResource: true
+        },
         locales: [
           {
             code: 'en',
-            file: 'index.js'
+            file: 'en.json'
           },
           {
             code: 'ru',
-            file: 'index.js'
+            file: 'ru.json'
           },
           {
             code: 'de',
-            file: 'index.js'
+            file: 'de.json'
           }
         ],
       }

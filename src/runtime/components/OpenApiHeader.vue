@@ -50,10 +50,6 @@ export default {
       type: Object,
       required: true,
     },
-    locales: {
-      type: Object,
-      required: true,
-    },
   },
   computed: {
 

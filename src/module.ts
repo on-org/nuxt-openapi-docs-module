@@ -49,7 +49,7 @@ function filesCleanup(files: {[key: string]: string}) {
   return result
 }
 
-async function makeTemplate(templateName: string, fileName: string, options: {[key: string]: any}, resolver: Resolver) {
+async function makeTemplate_(templateName: string, fileName: string, options: {[key: string]: any}, resolver: Resolver) {
   const srcContents = await promises.readFile(resolver.resolve(`./runtime/templates/${templateName}`), "utf-8");
   const template = lodashTemplate(srcContents, {})({options:options});
 
@@ -58,6 +58,22 @@ async function makeTemplate(templateName: string, fileName: string, options: {[k
   }
 
   const path = join(__dirname, '.cache', `${fileName}.vue`);
+
+  writeFileSync(path , template);
+
+  return path;
+}
+
+async function makeTemplate(templateName: string, fileName: string, options: {[key: string]: any}, resolver: Resolver, buildDir: string) {
+  const srcContents = await promises.readFile(resolver.resolve(`./runtime/templates/${templateName}`), "utf-8");
+  const template = lodashTemplate(srcContents, {})({options:options});
+
+  if (!existsSync(resolver.resolve(buildDir, 'openapi'))) {
+    mkdirSync(resolver.resolve(buildDir, 'openapi'));
+  }
+
+  const path = resolver.resolve(buildDir, 'openapi', `${fileName}.vue`)
+
   writeFileSync(path , template);
 
   return path;
@@ -97,7 +113,6 @@ export default defineNuxtModule<ModuleOptions>({
     // @ts-ignore
     const isSSG = nuxt.options.dev === false && (nuxt.options.target === 'static' || nuxt.options._generate)
 
-
     const resolver = createResolver(import.meta.url)
 
     await addComponentsDir({
@@ -133,7 +148,6 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     nuxt.hook("nitro:build:before", async (nitro) => {
-
       if (!isSSG) {
         console.log('ℹ add file watcher', workDir)
 
@@ -221,25 +235,30 @@ export default defineNuxtModule<ModuleOptions>({
       },
     }, 'open-api-layout')
 
-    addTemplate({
-      src: resolver.resolve('./runtime/templates/OpenApiTemplateNuxt3.vue'),
-      filename: `OpenApiTemplateNuxt3.vue`,
-      write: true,
-    })
+    for (let item of docs) {
+      const dst = await makeTemplate('OpenApiTemplateNuxt3.vue', `${item.filename}`, {
+        path: options.path ?? 'docs',
+        filename: item.filename,
+        locales: item.locales,
+        localesReload: item.localesReload,
+      }, resolver, nuxt.options.buildDir)
 
-    extendPages((pages) => {
-      pages.push({
-        name: `openapi-${options.path}`,
-        path: `/${options.path}/:name/:type`,
-        file: resolver.resolve(`./runtime/templates/OpenApiTemplateNuxt3.vue`),
+      extendPages((pages) => {
+        pages.push({
+          name: `openapi-${options.path}`,
+          path: `/${options.path}/:name/:type`,
+          file: dst,
+        })
+
+        pages.push({
+          name: `openapi-${options.path}/type-mathod`,
+          path: `/${options.path}/:name/:type/:mathod`,
+          file: dst,
+        })
       })
 
-      pages.push({
-        name: `openapi-${options.path}/type-mathod`,
-        path: `/${options.path}/:name/:type/:mathod`,
-        file: resolver.resolve(`./runtime/templates/OpenApiTemplateNuxt3.vue`),
-      })
-    })
+    }
+
 
     addImports([
       { name: 'useOpenApiDataState', as: 'useOpenApiDataState', from: resolver.resolve('./runtime/composables/openApiData') },
@@ -248,6 +267,23 @@ export default defineNuxtModule<ModuleOptions>({
 
     addPlugin({
       src: resolver.resolve('./runtime/plugins/plugin3'),
+    })
+
+    nuxt.hook('i18n:registerModule', register => {
+      register({
+        // langDir path needs to be resolved
+        langDir: resolver.resolve('./runtime/lang'),
+        locales: [
+          {code: 'en', file: 'en.json'},
+          {code: 'fr', file: 'fr.json'},
+          {code: 'de', file: 'de.json'},
+          {code: 'ru', file: 'ru.json'},
+          {code: 'ch', file: 'ch.json'},
+          {code: 'es', file: 'es.json'},
+          {code: 'hi', file: 'hi.json'},
+          {code: 'ar', file: 'ar.json'},
+        ]
+      })
     })
 
     nuxt.options.css.push(resolver.resolve('./runtime/github.css'));

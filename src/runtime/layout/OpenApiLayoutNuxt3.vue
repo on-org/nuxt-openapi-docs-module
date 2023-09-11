@@ -10,7 +10,6 @@
         <OpenApiHeader
           :current-locale="currentLocale"
           :files="files"
-          :locales="locales"
           :file="fileName"
           :path="path"
         />

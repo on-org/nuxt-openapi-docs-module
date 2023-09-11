@@ -22,12 +22,8 @@ import {
   useRoute,
   useRouter,
   useOpenApiDataState,
-  definePageMeta, defineI18nRoute, toRaw
+  definePageMeta, defineI18nRoute, toRaw, useHead
 } from "#imports";
-
-definePageMeta({
-  layout: "open-api-layout",
-});
 
 
 const route = useRoute()
@@ -35,14 +31,19 @@ const router = useRouter()
 
 const { $openapidoc, $openapidocBus } = useNuxtApp()
 
+definePageMeta({
+  layout: "open-api-layout",
+});
+
 const url = ref('')
 const currentServer = ref(0)
 
 const data = useOpenApiDataState().data;
 
 
+
 defineI18nRoute({
-  locales: Object.keys(data.value.locales)
+  locales: <%= JSON.stringify(Object.keys(options.locales)).replace(/"/g, "'") %>
 })
 
 const path_doc = ref<string>(data.value.path ?? '')
@@ -96,6 +97,38 @@ const activeRoute = computed((): string|null => {
 const subParams = computed((): string|null => {
   if(!activePath.value) return null;
   return activePath.value['parameters'] ?? null;
+})
+
+
+const title = computed(() => {
+  const locale = $openapidoc.currentLocale() ?? '';
+  if (isInfo.value) return `[<%= options.filename %>] - Info Docs`;
+  if (isAuth.value) return `[<%= options.filename %>] - Authorization`;
+  if (isComponents.value) return `[<%= options.filename %>] - Components Docs`;
+  if (!activeRoute.value) return ''
+
+  const title = activeRoute[`x-summary-`+locale.value] || activeRoute['summary'] || ''
+  return `[<%= options.filename %>] - ` + title;
+});
+
+const description = computed(() => {
+  const locale = $openapidoc.currentLocale() ?? '';
+  if (isInfo.value) return `[<%= options.filename %>] - Info Docs`;
+  if (isAuth.value) return `[<%= options.filename %>] - Authorization`;
+  if (isComponents.value) return `[<%= options.filename %>] - Components Docs`;
+  if (!activeRoute.value) return ''
+
+  return activeRoute[`x-description-`+locale.value] || activeRoute['description'] || ''
+});
+
+useHead({
+  title: title.value,
+  meta: [
+    { name: 'description', content: description.value }
+  ],
+  bodyAttrs: {
+    class: 'oapi'
+  },
 })
 
 const server = computed((): string => {

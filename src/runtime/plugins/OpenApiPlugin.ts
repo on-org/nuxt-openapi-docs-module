@@ -8,7 +8,6 @@ interface Param {
 export default class OpenApiPlugin {
   params: Array<Param> = [];
   locale = 'en';
-  locales: { [key: string]: string } = {};
   footer: null|string = null;
   routeInfo: (file: string, url: string, method: string) => null|string = (file: string, url: string, method: string) => null;
   logo: string | null = '<svg width="140" height="30" viewBox="0 0 380 91" class="css-1j8o68f">' +
@@ -37,10 +36,6 @@ export default class OpenApiPlugin {
     this.params = []
   }
 
-  addLocale(locale: { [key: string]: string }) {
-    this.locales = locale;
-  }
-
   getLocaleText(path: string) {
     if(this.i18n && this.i18n.t) {
       const text = this.i18n.t(path);
@@ -49,7 +44,7 @@ export default class OpenApiPlugin {
       }
     }
 
-    return this.locales[path] || path;
+    return path;
   }
 
   hasI18n() {

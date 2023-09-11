@@ -1,6 +1,5 @@
 import mitt from 'mitt';
 import OpenApiPlugin from "./OpenApiPlugin";
-import enLang from '../locales/en.json'
 import {defineNuxtPlugin} from "#app";
 import OpenApiRefPlugin from "./OpenApiRefPlugin";
 import { useOpenApiDataState } from '../composables/openApiData'
@@ -28,8 +27,6 @@ export default defineNuxtPlugin((nuxtApp) => {
   const openapidocRef = new OpenApiRefPlugin(i18nLinker)
 
   const { data } = useOpenApiDataState()
-
-  openapidoc.addLocale(enLang)
 
   if (process.server) {
     nuxtApp.payload.openapidocRefDefinitions = openapidocRef.definitions;

@@ -6,3 +6,10 @@
     </div>
   </div>
 </template>
+<script setup lang="ts">
+import {useI18n} from "#imports";
+
+// const messages = await import(`../lang/en_local.ts`);
+// useI18n({ messages: messages.default })
+
+</script>
