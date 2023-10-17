@@ -8,7 +8,7 @@
     "generate": "node --max-old-space-size=12192 node_modules/nuxt/bin/nuxt.js generate"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^1.0.0-beta.1",
+    "@nuxt/devtools": "^1.0.0-beta.3",
     "@nuxtjs/i18n": "^8.0.0-rc.4",
     "nuxt": "3.7.4"
   },

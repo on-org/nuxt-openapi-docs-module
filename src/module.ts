@@ -50,7 +50,7 @@ function filesCleanup(files: {[key: string]: string}) {
   return result
 }
 
-async function makeTemplate_(templateName: string, fileName: string, options: {[key: string]: any}, resolver: Resolver) {
+async function makeTemplate(templateName: string, fileName: string, options: {[key: string]: any}, resolver: Resolver) {
   const srcContents = await promises.readFile(resolver.resolve(`./runtime/templates/${templateName}`), "utf-8");
   const template = lodashTemplate(srcContents, {})({options:options});
 
@@ -65,7 +65,7 @@ async function makeTemplate_(templateName: string, fileName: string, options: {[
   return path;
 }
 
-async function makeTemplate(templateName: string, fileName: string, options: {[key: string]: any}, resolver: Resolver, buildDir: string) {
+async function _makeTemplate(templateName: string, fileName: string, options: {[key: string]: any}, resolver: Resolver, buildDir: string) {
   const srcContents = await promises.readFile(resolver.resolve(`./runtime/templates/${templateName}`), "utf-8");
   const template = lodashTemplate(srcContents, {})({options:options});
 
@@ -82,13 +82,14 @@ async function makeTemplate(templateName: string, fileName: string, options: {[k
 
 async function updateStorageFiles(nitro: any, docs: DocItem[]) {
   for (let item of docs) {
-    await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:doc.json`, item.doc);
-    await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:path.json`, item.path);
-    await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:locales.json`, item.locales);
-    await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:locales_reload.json`, item.localesReload);
-    await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:servers.json`, item.servers);
-    await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:paths_by_tags.json`, item.pathsByTags);
-    await nitro.storage.setItem(`cache:openapidoc:${item.filePath}:name.json`, item.name);
+    console.log(`cache:openapidoc:${item.filename}:doc.json`, item.doc)
+    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:doc.json`, item.doc);
+    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:path.json`, item.path);
+    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:locales.json`, item.locales);
+    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:locales_reload.json`, item.localesReload);
+    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:servers.json`, item.servers);
+    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:paths_by_tags.json`, item.pathsByTags);
+    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:name.json`, item.name);
   }
 }
 
@@ -189,7 +190,7 @@ export default defineNuxtModule<ModuleOptions>({
       }
     });
 
-    nuxt.hook('nitro:config', (nitroConfig) => {
+    nuxt.hook('nitro:config', async (nitroConfig) => {
       nitroConfig.handlers = nitroConfig.handlers || []
 
       nitroConfig.prerender = nitroConfig.prerender || {};
@@ -226,6 +227,8 @@ export default defineNuxtModule<ModuleOptions>({
           file: resolver.resolve(`./runtime/templates/OpenApiTemplateDocsList.vue`),
         })
       });
+
+
     }
 
     addLayout({
@@ -243,7 +246,7 @@ export default defineNuxtModule<ModuleOptions>({
         filename: item.filename,
         locales: item.locales,
         localesReload: item.localesReload,
-      }, resolver, nuxt.options.buildDir)
+      }, resolver)
 
       extendPages((pages) => {
         pages.push({

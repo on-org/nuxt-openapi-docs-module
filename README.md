@@ -21,6 +21,7 @@ work with static and server target
 |---------|-------------------------|
 | 3.0     | 	2.x and 3.x            |
 | 4.0     | 	2.x and 3.x            |
+| 5.0     | 	3.x                    |
 
 
 for nuxt 3 need add vite.config.ts
