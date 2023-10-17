@@ -6,7 +6,6 @@ export default defineEventHandler(async (event) => {
 
   const fileName = event.context.params?.name;
 
-
   const files = await storage.getItem('cache:openapidoc:files.json');
   const doc_path = await storage.getItem(`cache:openapidoc:doc_path.json`);
 

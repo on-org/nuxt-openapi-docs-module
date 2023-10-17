@@ -113,7 +113,7 @@ export default defineNuxtModule<ModuleOptions>({
   },
   async setup (options, nuxt) {
     // @ts-ignore
-    const isSSG = nuxt.options.dev === false && (nuxt.options.target === 'static' || nuxt.options._generate)
+    const isSSG = nuxt.options.dev === false
 
     const resolver = createResolver(import.meta.url)
 
@@ -172,18 +172,16 @@ export default defineNuxtModule<ModuleOptions>({
 
         await updateStorageFiles(nitro, docs);
 
-        if (isSSG) {
-          nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/info`);
-          nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/auth`);
-          nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/components`);
-          for (let tag in item.pathsByTags) {
-            if (tag === 'custom') continue;
+        nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/info`);
+        nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/auth`);
+        nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/components`);
+        for (let tag in item.pathsByTags) {
+          if (tag === 'custom') continue;
 
-            for (let i in item.pathsByTags[tag].items) {
-              const select = item.pathsByTags[tag].items[i]
+          for (let i in item.pathsByTags[tag].items) {
+            const select = item.pathsByTags[tag].items[i]
 
-              nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/${select.type}/${select.path}`);
-            }
+            nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/${select.type}/${select.path}`);
           }
         }
       }
@@ -210,24 +208,18 @@ export default defineNuxtModule<ModuleOptions>({
     })
 
     if(options.list) {
-      addTemplate({
-        src: resolver.resolve('./runtime/templates/OpenApiTemplateDocsList.vue'),
-        filename: `OpenApiTemplateDocsList.vue`,
-        write: true,
-        options: {
-          files: filesClean,
-        }
-      })
+      const dst = await makeTemplate('OpenApiTemplateDocsList.vue', 'DocsList', {
+        files: filesClean,
+        doc_path: options.path ?? 'docs',
+      }, resolver)
 
       extendPages((pages) => {
         pages.push({
           name: `openapi-docs-list`,
           path: `/${options.path}`,
-          file: resolver.resolve(`./runtime/templates/OpenApiTemplateDocsList.vue`),
+          file: dst,
         })
       });
-
-
     }
 
     addLayout({
@@ -260,9 +252,7 @@ export default defineNuxtModule<ModuleOptions>({
           file: dst,
         })
       })
-
     }
-
 
     addImports([
       { name: 'useOpenApiDataState', as: 'useOpenApiDataState', from: resolver.resolve('./runtime/composables/openApiData') },

@@ -13,17 +13,17 @@
 </template>
 
 <script setup lang="ts">
-import {ref, useOpenApiDataState, useRoute} from "#imports";
+const options = <%= JSON.stringify(options) %>;
+
+import {ref, useRoute} from "#imports";
 
 const route = useRoute()
 
-const data = useOpenApiDataState().data;
-
-const files = ref(data.value.files);
+const files = ref(options.files);
 
 
 function genUrl(filename: string|number) {
-  let route = '/' + data.value.doc_path + '/' + filename.toString() + '/info';
+  let route = '/' + options.doc_path + '/' + filename.toString() + '/info';
   route = route.toString().replaceAll(/\/\/+/gmu, '/')
   return  route
 }
