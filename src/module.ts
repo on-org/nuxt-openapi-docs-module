@@ -82,7 +82,6 @@ async function _makeTemplate(templateName: string, fileName: string, options: {[
 
 async function updateStorageFiles(nitro: any, docs: DocItem[]) {
   for (let item of docs) {
-    console.log(`cache:openapidoc:${item.filename}:doc.json`, item.doc)
     await nitro.storage.setItem(`cache:openapidoc:${item.filename}:doc.json`, item.doc);
     await nitro.storage.setItem(`cache:openapidoc:${item.filename}:path.json`, item.path);
     await nitro.storage.setItem(`cache:openapidoc:${item.filename}:locales.json`, item.locales);
