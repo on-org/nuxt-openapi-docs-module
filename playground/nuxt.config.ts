@@ -13,6 +13,13 @@ export default defineNuxtConfig({
       timestamp
     }
   },
+  vite: {
+    resolve: {
+      alias: {
+        'vue-i18n': 'vue-i18n/dist/vue-i18n.esm-bundler.js',
+      },
+    },
+  },
   // debug: true,
   modules: [
     [
@@ -101,21 +108,13 @@ export default defineNuxtConfig({
         locale: 'en',
         defaultLocale: 'en',
         lazy: true,
+        debug: false,
         langDir: 'lang',
         // compilation: {
         //   jit: false
         // },
         bundle: {
-          allowDynamic: false,
           runtimeOnly: false,
-          compositionOnly: false,
-          fullInstall: false,
-          jitCompilation: false,
-          dropMessageCompiler: false,
-          strictMessage: false,
-          escapeHtml: false,
-          defaultSFCLang: 'json',
-          globalSFCScope: false,
         },
         experimental: {
           jsTsFormatResource: true

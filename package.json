@@ -85,6 +85,7 @@
     "flowbite": "^1.8.1",
     "fs-extra": "^11.1.1",
     "nuxi": "^3.7.3",
+    "nuxt": "^3.7.4",
     "nuxt-api-party": "^0.17.1",
     "postcss": "^8.4.29",
     "sass": "^1.66.1",
