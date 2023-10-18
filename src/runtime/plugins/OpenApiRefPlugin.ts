@@ -1,4 +1,4 @@
-import mergeJsonSchema from "json-schema-merge-allof";
+import { merge } from 'allof-merge'
 
 export default class OpenApiRefPlugin {
   definitions: { [key: string]: any } = {};
@@ -108,7 +108,7 @@ export default class OpenApiRefPlugin {
   resolveAllOf(schema: any) {
     if (typeof schema !== 'object' || !Array.isArray(schema.allOf)) return schema;
     const originalRef = schema.$ref;
-    const result = mergeJsonSchema(schema);
+    const result = merge(schema, { onMergeError: (err) => console.error(err) });
     if (originalRef) {
       result.$ref = originalRef;
     } else if (result.$ref) {
