@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import RequestTemplater from "request-templater/dist/request-templater.es";
+import RequestTemplater from "request-templater";
 import CustomDropdownWithSubMenu from '../lib/CustomDropdownWithSubMenu.vue';
 
 const requestTemplater = new RequestTemplater();

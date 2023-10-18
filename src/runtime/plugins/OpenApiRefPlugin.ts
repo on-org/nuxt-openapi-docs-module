@@ -1,4 +1,4 @@
-import { merge } from 'allof-merge'
+import {merge} from "../packages/allof-merge";
 
 export default class OpenApiRefPlugin {
   definitions: { [key: string]: any } = {};
@@ -21,6 +21,7 @@ export default class OpenApiRefPlugin {
   }
 
   pefFix(ref: any, cache: string[] = []) {
+
     if(typeof ref !== 'string' || !ref.startsWith('#')) {
       return ref
     }
@@ -37,6 +38,7 @@ export default class OpenApiRefPlugin {
       };
     }
     const [_, type, block, name] = ref.split('/')
+
     let refSchema = null;
     if (type === 'definitions') {
       if(!this.definitions || !this.definitions[block]) {
@@ -57,6 +59,7 @@ export default class OpenApiRefPlugin {
     }
 
     if(!refSchema) return null;
+
 
     return this.refs[ref] = this.repReplace(refSchema, cache);
   }
@@ -90,7 +93,6 @@ export default class OpenApiRefPlugin {
 
     let result: Record<string, any> = {};
 
-
     for (const [key, value] of Object.entries(source)) {
       let subVal = value;
       if(typeof subVal === 'string' && subVal.startsWith('#')) subVal = {$ref: value};
@@ -108,7 +110,7 @@ export default class OpenApiRefPlugin {
   resolveAllOf(schema: any) {
     if (typeof schema !== 'object' || !Array.isArray(schema.allOf)) return schema;
     const originalRef = schema.$ref;
-    const result = merge(schema, { onMergeError: (err) => console.error(err) });
+    const result = merge(schema, { onMergeError: (err: any) => console.error(err) });
     if (originalRef) {
       result.$ref = originalRef;
     } else if (result.$ref) {

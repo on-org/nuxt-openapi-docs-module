@@ -29,7 +29,7 @@ import {
 const route = useRoute()
 const router = useRouter()
 
-const { $openapidoc, $openapidocBus } = useNuxtApp()
+const { $openapidoc, $openapidocBus, $openapidocRef } = useNuxtApp()
 
 definePageMeta({
   layout: "open-api-layout",
@@ -39,8 +39,6 @@ const url = ref('')
 const currentServer = ref(0)
 
 const data = useOpenApiDataState().data;
-
-
 
 defineI18nRoute({
   locales: <%= JSON.stringify(Object.keys(options.locales)).replace(/"/g, "'") %>
@@ -56,6 +54,11 @@ const isInfo = computed(() => type.value === 'info')
 const isAuth = computed(() => type.value === 'auth')
 const isComponents = computed(() => type.value === 'components')
 const currentLocale = computed((): string => $openapidoc.currentLocale())
+
+$openapidocRef.setComponents(data.value.doc?.components)
+$openapidocRef.setDefinitions(data.value.doc?.definitions)
+$openapidocRef.setDocPath(data.value.path ?? '')
+$openapidocRef.setFile(fileName)
 
 const activePath = computed((): string|null => {
   if(!doc.value.paths) return null;

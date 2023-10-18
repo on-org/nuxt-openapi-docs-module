@@ -1,6 +1,6 @@
 {
   "name": "nuxt-openapi-docs-module",
-  "version": "5.0.0-beta.10",
+  "version": "5.0.0-beta.16",
   "description": "A plugin for Nuxt.js to generate pages from OpenAPI specifications",
   "homepage": "https://github.com/on-org/nuxt-openapi-docs-module#readme",
   "scripts": {
@@ -53,7 +53,6 @@
   "types": "./dist/types.d.ts",
   "dependencies": {
     "@nuxt/kit": "^3.7.4",
-    "allof-merge": "^0.5.1",
     "h3": "^1.8.2",
     "highlight.js": "^11.7.0",
     "isomorphic-dompurify": "^1.9.0",
@@ -62,10 +61,11 @@
     "marked": "^4.3.0",
     "mitt": "^3.0.1",
     "node-watch": "^0.7.4",
-    "request-templater": "^1.2.1",
+    "request-templater": "^1.3.1",
     "scule": "^1.0.0",
     "sync-fetch": "^0.5.2",
-    "unstorage": "^1.9.0"
+    "unstorage": "^1.9.0",
+    "json-crawl": "^0.2.6"
   },
   "devDependencies": {
     "@intlify/unplugin-vue-i18n": "^1.4.0",
