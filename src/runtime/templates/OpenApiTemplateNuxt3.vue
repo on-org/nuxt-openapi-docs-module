@@ -40,16 +40,17 @@ const currentServer = ref(0)
 
 const data = useOpenApiDataState().data;
 
+const options: any = undefined;
 defineI18nRoute({
   locales: <%= JSON.stringify(Object.keys(options.locales)).replace(/"/g, "'") %>
 })
 
-const path_doc = ref<string>(data.value.path ?? '')
+const path_doc = ref<string>((data.value.path ?? '').toString())
 const doc = ref<{[key: string]: any}>(data.value.doc ?? {})
 
-const fileName = computed(() => route.params.name.toString());
-const type = computed(() => route.params.type.toString());
-const mathod = computed(() => (route.params.mathod ?? 'default').toString());
+const fileName = computed<string>(() => route.params.name.toString());
+const type = computed<string>(() => route.params.type.toString());
+const mathod = computed<string>(() => (route.params.mathod ?? 'default').toString());
 const isInfo = computed(() => type.value === 'info')
 const isAuth = computed(() => type.value === 'auth')
 const isComponents = computed(() => type.value === 'components')
@@ -57,10 +58,10 @@ const currentLocale = computed((): string => $openapidoc.currentLocale())
 
 $openapidocRef.setComponents(data.value.doc?.components)
 $openapidocRef.setDefinitions(data.value.doc?.definitions)
-$openapidocRef.setDocPath(data.value.path ?? '')
-$openapidocRef.setFile(fileName)
+$openapidocRef.setDocPath(path_doc.value)
+$openapidocRef.setFile(fileName.value)
 
-const activePath = computed((): string|null => {
+const activePath = computed((): { [key: string]: any }|null => {
   if(!doc.value.paths) return null;
   for (let selectPath in doc.value.paths) {
     let routePath = selectPath;
@@ -75,7 +76,8 @@ const activePath = computed((): string|null => {
   }
   return null;
 })
-const activeWebhook = computed((): string|null => {
+
+const activeWebhook = computed((): { [key: string]: any }|null => {
   if(!doc.value.webhooks) return null;
   for (let selectPath in doc.value.webhooks) {
     let routePath = selectPath;
@@ -110,7 +112,7 @@ const title = computed(() => {
   if (isComponents.value) return `[<%= options.filename %>] - Components Docs`;
   if (!activeRoute.value) return ''
 
-  const title = activeRoute[`x-summary-`+locale.value] || activeRoute['summary'] || ''
+  const title = activeRoute.value[`x-summary-`+locale.value] || activeRoute.value['summary'] || ''
   return `[<%= options.filename %>] - ` + title;
 });
 
@@ -121,7 +123,7 @@ const description = computed(() => {
   if (isComponents.value) return `[<%= options.filename %>] - Components Docs`;
   if (!activeRoute.value) return ''
 
-  return activeRoute[`x-description-`+locale.value] || activeRoute['description'] || ''
+  return activeRoute.value[`x-description-`+locale.value] || activeRoute.value['description'] || ''
 });
 
 useHead({

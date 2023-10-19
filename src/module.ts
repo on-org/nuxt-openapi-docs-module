@@ -23,6 +23,7 @@ export interface ModuleOptions {
   list?: boolean,
   localize?: boolean,
   devtools?: boolean,
+  locales?: string[],
   files: () => {[key:string]:string},
   doc?: {[key:string]:any},
 }
@@ -109,6 +110,7 @@ export default defineNuxtModule<ModuleOptions>({
     devtools: true,
     localize: true,
     doc: {},
+    locales: ['en', 'fr', 'de', 'ru', 'ch', 'es', 'hi', 'ar', 'zh', 'pt'],
     files: () => { return {}},
   },
   async setup (options, nuxt) {
@@ -267,16 +269,11 @@ export default defineNuxtModule<ModuleOptions>({
       nuxt.hook('i18n:registerModule', register => {
         register({
           langDir: resolver.resolve('./runtime/lang'),
-          locales: [
-            {code: 'en', iso: 'en', file: 'en.json'},
-            {code: 'fr', iso: 'fr', file: 'fr.json'},
-            {code: 'de', iso: 'de', file: 'de.json'},
-            {code: 'ru', iso: 'ru', file: 'ru.json'},
-            {code: 'ch', iso: 'ch', file: 'ch.json'},
-            {code: 'es', iso: 'es', file: 'es.json'},
-            {code: 'hi', iso: 'hi', file: 'hi.json'},
-            {code: 'ar', iso: 'ar', file: 'ar.json'},
-          ]
+          locales: options.locales?.map((code) => ({
+            code,
+            iso: code,
+            file: `${code}.json`,
+          })),
         })
       })
     }
