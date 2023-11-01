@@ -37,7 +37,8 @@ export default defineNuxtPlugin((nuxtApp) => {
   }
 
   const refresh = async (to: RouteLocationNormalized | RouteLocationNormalizedLoaded, dedup = false) => {
-    const docsBase = to.fullPath.split('/')[1] ?? 'docs';
+    let docsBase = to.fullPath.split('/')[1] ?? 'docs';
+    if(docsBase.length < 4) docsBase = to.fullPath.split('/')[2] ?? 'docs';
     const fileName = ref(to.params.name?.toString() ?? 'default');
 
     const { data: result } = await useFetch('/' + docsBase + "/query/file/" + fileName.value)
