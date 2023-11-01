@@ -1,0 +1,945 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "OnlineProxy Client API v1",
+    "contact": {
+      "email": "support@onlineproxy.io"
+    },
+    "version": "1.0.0",
+    "x-locales": {
+      "de": "Deutsch",
+      "en": "English",
+      "ru": "Русский"
+    }
+  },
+  "servers": [
+    {
+      "url": "/api/client/v1"
+    }
+  ],
+  "paths": {
+    "/proxies/{id}/comment": {
+      "post": {
+        "tags": [
+          "comment"
+        ],
+        "summary": "Create/update proxy comment.",
+        "operationId": "595f333232f69baa1e0071d123acc58e",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Proxy id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrUpdateProxyCommentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "comment": {
+                      "description": "Comment",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/proxies/{id}": {
+      "get": {
+        "tags": [
+          "proxy"
+        ],
+        "summary": "Returns proxy.",
+        "operationId": "371f84de855a7d93aebe2258ba655cde",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Proxy id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "example": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResource"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/proxies": {
+      "get": {
+        "tags": [
+          "proxy"
+        ],
+        "summary": "Returns proxy list.",
+        "operationId": "e49530fbfa49e702023cbfda466bdadb",
+        "parameters": [
+          {
+            "name": "expired",
+            "in": "query",
+            "description": "Proxy expired or not (not expired by default)",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                0,
+                1
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProxyResource"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rotate": {
+      "get": {
+        "tags": [
+          "proxy"
+        ],
+        "summary": "Rotate proxy IP-address.",
+        "operationId": "704a36b7e66509a8c10e6107c6510f0b",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "query",
+            "description": "Rotate ip token",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 64,
+              "minLength": 64
+            },
+            "example": "YAxVULj2NICWxTosVKheI6hAzEDDbr53ah5HYGnfBeF9m7jySToetWxfKZFAE2ej"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Proxy IP-address will be rotated soon."
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/filters": {
+      "get": {
+        "tags": [
+          "sale"
+        ],
+        "summary": "Returns proxies available for order, matches the input filtering criteria.",
+        "operationId": "e6bb7f464f39a38aaa4e5bb612d921c3",
+        "parameters": [
+          {
+            "name": "geo_country[]",
+            "in": "query",
+            "description": "Country codes in ISO-2",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "RU"
+              }
+            }
+          },
+          {
+            "name": "geo_region[]",
+            "in": "query",
+            "description": "Region names",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "Tatarstan Republic"
+              }
+            }
+          },
+          {
+            "name": "geo_city[]",
+            "in": "query",
+            "description": "City names",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "Kazan"
+              }
+            }
+          },
+          {
+            "name": "geo_operator[]",
+            "in": "query",
+            "description": "Operator names",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "mts"
+              }
+            }
+          },
+          {
+            "name": "type[]",
+            "in": "query",
+            "description": "Proxy types",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "private",
+                  "shared"
+                ],
+                "example": "shared"
+              }
+            }
+          },
+          {
+            "name": "protocol[]",
+            "in": "query",
+            "description": "Proxy protocols",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "http",
+                  "socks5"
+                ],
+                "example": "http"
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FiltersResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/order": {
+      "post": {
+        "tags": [
+          "sale"
+        ],
+        "summary": "Order proxy.",
+        "operationId": "4501f9f0162f66cb49e21b91f99d9a45",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrderProxyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProxyResource"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tariffs": {
+      "get": {
+        "tags": [
+          "sale"
+        ],
+        "summary": "Returns the available periods and the minimum order price of proxies, matches the input filtering criteria.",
+        "operationId": "0829afb56da6aaab69212d2986a6127e",
+        "parameters": [
+          {
+            "name": "geo_country[]",
+            "in": "query",
+            "description": "Country codes in ISO-2",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "RU"
+              }
+            }
+          },
+          {
+            "name": "geo_region[]",
+            "in": "query",
+            "description": "Region names",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "Tatarstan Republic"
+              }
+            }
+          },
+          {
+            "name": "geo_city[]",
+            "in": "query",
+            "description": "City names",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "Kazan"
+              }
+            }
+          },
+          {
+            "name": "geo_operator[]",
+            "in": "query",
+            "description": "Operator names",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "example": "mts"
+              }
+            }
+          },
+          {
+            "name": "type[]",
+            "in": "query",
+            "description": "Proxy types",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "private",
+                  "shared"
+                ],
+                "example": "shared"
+              }
+            }
+          },
+          {
+            "name": "protocol[]",
+            "in": "query",
+            "description": "Proxy protocols",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "http",
+                  "socks5"
+                ],
+                "example": "http"
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "period": {
+                        "description": "Order days",
+                        "type": "integer",
+                        "example": "1"
+                      },
+                      "price": {
+                        "description": "Order price",
+                        "type": "string",
+                        "example": "1.23"
+                      }
+                    },
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/balance": {
+      "get": {
+        "tags": [
+          "balance"
+        ],
+        "summary": "Returns user balance.",
+        "operationId": "7365f898b2cf2b06fddf26b66cfae3f8",
+        "requestBody": {
+          "content": {
+            "application/json": {
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "balance": {
+                      "description": "Balance",
+                      "type": "string",
+                      "example": "12.34"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateOrUpdateProxyCommentRequest": {
+        "required": [
+          "comment"
+        ],
+        "properties": {
+          "comment": {
+            "description": "Comment",
+            "type": "string",
+            "maxLength": 255
+          }
+        },
+        "type": "object"
+      },
+      "OrderProxyRequest": {
+        "required": [
+          "period",
+          "price"
+        ],
+        "properties": {
+          "filters": {
+            "description": "Proxy order filters",
+            "properties": {
+              "geo_country": {
+                "description": "Country codes in ISO-2",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": "RU"
+                }
+              },
+              "geo_region": {
+                "description": "Region names",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": "Tatarstan Republic"
+                }
+              },
+              "geo_city": {
+                "description": "City names",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": "Kazan"
+                }
+              },
+              "geo_operator": {
+                "description": "Operator names",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": "mts"
+                }
+              },
+              "type": {
+                "description": "Proxy types",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "private",
+                    "shared"
+                  ],
+                  "example": "shared"
+                }
+              },
+              "protocol": {
+                "description": "Proxy protocols",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "http",
+                    "socks5"
+                  ],
+                  "example": "http"
+                }
+              }
+            },
+            "type": "object"
+          },
+          "period": {
+            "description": "Order days",
+            "type": "integer",
+            "example": 1
+          },
+          "price": {
+            "description": "Order price",
+            "type": "string",
+            "example": "1.23"
+          }
+        },
+        "type": "object"
+      },
+      "ProxyResource": {
+        "properties": {
+          "id": {
+            "description": "Order id",
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "login": {
+            "description": "Login to connect",
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "password": {
+            "description": "Password to connect",
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "protocol": {
+            "description": "Protocol to connect",
+            "type": "string",
+            "enum": [
+              "http",
+              "socks5"
+            ]
+          },
+          "host": {
+            "description": "Host/ip to connect",
+            "type": "string",
+            "maxLength": 255
+          },
+          "port": {
+            "description": "Port to connect",
+            "type": "integer",
+            "example": 8080
+          },
+          "geo_country": {
+            "description": "Country code in ISO-2",
+            "type": "string",
+            "example": "RU"
+          },
+          "geo_city": {
+            "description": "City name",
+            "type": "string",
+            "maxLength": 255,
+            "example": "Moscow",
+            "nullable": true
+          },
+          "geo_operator": {
+            "description": "Operator name",
+            "type": "string",
+            "maxLength": 255,
+            "example": "mts",
+            "nullable": true
+          },
+          "private": {
+            "description": "Proxy type",
+            "type": "boolean"
+          },
+          "comment": {
+            "description": "Comment",
+            "type": "string",
+            "maxLength": 255,
+            "nullable": true
+          },
+          "rotate_ip_url": {
+            "description": "Url to rotate proxy IP-address",
+            "type": "string",
+            "nullable": true
+          },
+          "start_at": {
+            "description": "Order start datetime (UTC ISO-8601)",
+            "type": "string",
+            "format": "date-time"
+          },
+          "stop_at": {
+            "description": "Order expire datetime (UTC ISO-8601)",
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "type": "object"
+      },
+      "ErrorResponse": {
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "description": "Error message",
+            "type": "string"
+          },
+          "errors": {
+            "description": "Input validation errors",
+            "type": "object",
+            "nullable": true
+          }
+        },
+        "type": "object"
+      },
+      "FiltersResponse": {
+        "properties": {
+          "geo_country": {
+            "description": "Country code in ISO-2",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "RU"
+            }
+          },
+          "geo_region": {
+            "description": "Region name",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "Tatarstan Republic"
+            }
+          },
+          "geo_city": {
+            "description": "City name",
+            "type": "array",
+            "items": {
+              "properties": {
+                "geo_city": {
+                  "description": "City name",
+                  "type": "string",
+                  "example": "Moscow"
+                },
+                "geo_country": {
+                  "description": "Country code in ISO-2",
+                  "type": "string",
+                  "example": "RU"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "geo_operator": {
+            "description": "Operator name",
+            "type": "array",
+            "items": {
+              "properties": {
+                "geo_operator": {
+                  "description": "Operator name",
+                  "type": "string",
+                  "example": "mts"
+                },
+                "geo_country": {
+                  "description": "Country code in ISO-2",
+                  "type": "string",
+                  "example": "RU"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "type": {
+            "description": "Proxy type",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "private",
+                "shared"
+              ],
+              "example": "shared"
+            }
+          },
+          "protocol": {
+            "description": "Proxy protocol",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "http",
+                "socks5"
+              ],
+              "example": "http"
+            }
+          }
+        },
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": [
+
+      ]
+    }
+  ]
+}

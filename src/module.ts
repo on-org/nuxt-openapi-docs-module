@@ -278,8 +278,8 @@ export default defineNuxtModule<ModuleOptions>({
       })
     }
 
-    nuxt.options.css.push(resolver.resolve('./runtime/github.css'));
-    nuxt.options.css.push(resolver.resolve('./runtime/styles.css'));
+    // nuxt.options.css.push(resolver.resolve('./runtime/github.css'));
+    // nuxt.options.css.push(resolver.resolve('./runtime/styles.css'));
 
   }
 })

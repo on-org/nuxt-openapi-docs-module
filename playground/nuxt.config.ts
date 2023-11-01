@@ -33,16 +33,18 @@ export default defineNuxtConfig({
           if(process.env.NODE_ENV !== 'production') {
             return {
               'petstore_extended': 'Petstore Extended Api',
-              'localization': 'Localization',
-              'no-access': 'no access',
-              'test-yaml.yaml': 'yaml ext',
-              'test-json.json': 'json ext',
-              'https://petstore.swagger.io/v2/swagger.json': 'petstore url',
+              'api.json': 'API Proxy',
+              "allof": "allof",
+              // 'localization': 'Localization',
+              // 'no-access': 'no access',
+              // 'test-yaml.yaml': 'yaml ext',
+              // 'test-json.json': 'json ext',
+              // 'https://petstore.swagger.io/v2/swagger.json': 'petstore url',
             }
           }
           return {
             'petstore_extended': 'Petstore Extended Api',
-            // 'localization': 'Localization',
+            'localization': 'Localization',
             // 'no-access': 'no access',
             //
             // "additional-props": "additional-props",
