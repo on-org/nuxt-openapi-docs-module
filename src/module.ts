@@ -177,6 +177,13 @@ export default defineNuxtModule<ModuleOptions>({
         nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/info`);
         nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/auth`);
         nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/components`);
+
+        for (let locale in item.locales) {
+          if(locale === 'en') continue;
+          nitro.options.prerender.routes.unshift(`/${locale}/${options.path}/${item.filename}/info`);
+          nitro.options.prerender.routes.unshift(`/${locale}/${options.path}/${item.filename}/auth`);
+          nitro.options.prerender.routes.unshift(`/${locale}/${options.path}/${item.filename}/components`);
+        }
         for (let tag in item.pathsByTags) {
           if (tag === 'custom') continue;
 
@@ -184,6 +191,10 @@ export default defineNuxtModule<ModuleOptions>({
             const select = item.pathsByTags[tag].items[i]
 
             nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/${select.type}/${select.path}`);
+            for (let locale in item.locales) {
+              if(locale === 'en') continue;
+              nitro.options.prerender.routes.unshift(`/${locale}/${options.path}/${item.filename}/${select.type}/${select.path}`);
+            }
           }
         }
       }
