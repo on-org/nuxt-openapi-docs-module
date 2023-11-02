@@ -1,7 +1,12 @@
 const isDev = process.env.NODE_ENV !== 'production';
 const currentDate = new Date();
 const timestamp = currentDate.getTime();
+
 export default defineNuxtConfig({
+  app: {
+    baseURL: isDev ? '/' : '/nuxt-openapi-docs-module',
+    buildAssetsDir: 'assets'
+  },
   plugins: [
     { src: '@/plugins/content' },
   ],
