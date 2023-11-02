@@ -8,7 +8,10 @@ export default defineNuxtConfig({
     buildAssetsDir: 'assets'
   },
   experimental: {
-    payloadExtraction: true
+    payloadExtraction: false
+  },
+  nitro: {
+    inlineDynamicImports: true
   },
   plugins: [
     { src: '@/plugins/content' },
