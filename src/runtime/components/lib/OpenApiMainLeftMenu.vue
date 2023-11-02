@@ -4,7 +4,7 @@
     class="oapi-aside"
     :class="computedClass"
   >
-    <slot />
+    <slot name="menu" />
   </aside>
 </template>
 

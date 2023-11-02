@@ -1,9 +1,8 @@
-import { defineNuxtModule, createResolver, addComponentsDir, extendPages, isNuxt2, addLayout, addPlugin, isNuxt3 } from '@nuxt/kit';
-import { kebabCase } from 'scule';
+import { defineNuxtModule, createResolver, addComponentsDir, extendPages, addLayout, addImports, addPlugin } from '@nuxt/kit';
 import { join, dirname, basename, extname, resolve } from 'path';
 import { marked } from 'marked';
 import fetch from 'sync-fetch';
-import fs from 'fs';
+import fs, { watch } from 'fs';
 import * as yaml from 'js-yaml';
 import hljs from 'highlight.js';
 import { promises, existsSync, mkdirSync, writeFileSync } from 'node:fs';
@@ -18,15 +17,22 @@ import __cjs_mod__ from 'module';
 const __filename = __cjs_url__.fileURLToPath(import.meta.url);
 const __dirname = __cjs_path__.dirname(__filename);
 const require = __cjs_mod__.createRequire(import.meta.url);
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => {
+  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+  return value;
+};
 class Parser {
   constructor(workDir) {
-    this.fileName = "";
-    this.spec = {};
-    this.components = {};
-    this.definitions = {};
-    this.locales = { "en": "English" };
-    this.localesReload = false;
-    this.refs = {};
+    __publicField(this, "workDir");
+    __publicField(this, "fileName", "");
+    __publicField(this, "spec", {});
+    __publicField(this, "components", {});
+    __publicField(this, "definitions", {});
+    __publicField(this, "locales", { "en": "English" });
+    __publicField(this, "localesReload", false);
+    __publicField(this, "refs", {});
     this.workDir = workDir;
     const self = this;
     const renderer = new marked.Renderer();
@@ -171,6 +177,9 @@ class Parser {
   }
   getLocalesReload() {
     return this.localesReload;
+  }
+  getServers() {
+    return this.spec.servers ?? [];
   }
   getPaths() {
     return JSON.parse(JSON.stringify({
@@ -318,10 +327,24 @@ async function makeTemplate(templateName, fileName, options, resolver) {
   writeFileSync(path, template);
   return path;
 }
+async function updateStorageFiles(nitro, docs) {
+  for (let item of docs) {
+    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:doc.json`, item.doc);
+    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:path.json`, item.path);
+    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:locales.json`, item.locales);
+    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:locales_reload.json`, item.localesReload);
+    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:servers.json`, item.servers);
+    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:paths_by_tags.json`, item.pathsByTags);
+    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:name.json`, item.name);
+  }
+}
 const module = defineNuxtModule({
   meta: {
     name: "nuxt-open-api-docs",
-    configKey: "openApiDocs"
+    configKey: "openApiDocs",
+    compatibility: {
+      nuxt: "^3.0.0"
+    }
   },
   defaults: {
     folder: "./docs/openapi",
@@ -329,26 +352,17 @@ const module = defineNuxtModule({
     path: "docs",
     debug: false,
     list: false,
+    devtools: true,
+    localize: true,
     doc: {},
+    locales: ["en", "fr", "de", "ru", "ch", "es", "hi", "ar", "zh", "pt"],
     files: () => {
       return {};
     }
   },
   async setup(options, nuxt) {
-    const isSSG = nuxt.options.dev === false && (nuxt.options.target === "static" || nuxt.options._generate);
+    const isSSG = nuxt.options.dev === false;
     const resolver = createResolver(import.meta.url);
-    if (options.debug) {
-      nuxt.hook("generate:route", (route) => {
-        console.log(`[DEBUG] [nuxt-openapi-docs-module] Generating route: ${route.route}`);
-      });
-      nuxt.hook("generate:routeCreated", (route) => {
-        console.log(`[DEBUG] [nuxt-openapi-docs-module] Route created: ${route.route}`);
-      });
-      nuxt.hook("generate:routeFailed", (route, errors) => {
-        console.error(`[DEBUG] [nuxt-openapi-docs-module] Route failed: ${route.route}`);
-        console.error(errors);
-      });
-    }
     await addComponentsDir({
       path: resolver.resolve("./runtime/components"),
       pathPrefix: false,
@@ -357,130 +371,139 @@ const module = defineNuxtModule({
     });
     const filesClean = filesCleanup(options.files());
     const files = options.files();
+    const workDir = resolve(nuxt.options.rootDir, options.folder);
+    const docs = [];
+    for (let filePath in files) {
+      const parser = new Parser(workDir);
+      parser.load(filePath);
+      docs.push({
+        filename: parser.getFilename(),
+        name: options.name.toString(),
+        filePath,
+        doc: parser.getDoc(),
+        path: options.path,
+        pathsByTags: parser.getPaths(),
+        locales: parser.getLocales(),
+        localesReload: parser.getLocalesReload(),
+        servers: parser.getServers()
+      });
+    }
+    nuxt.hook("nitro:build:before", async (nitro) => {
+      if (!isSSG) {
+        console.log("\u2139 add file watcher", workDir);
+        const watcher = watch(workDir, { recursive: true }, async (evt, name) => {
+          if (evt === "change") {
+            watcher.close();
+            console.log("\u21BB update store item", name);
+            await updateStorageFiles(nitro, docs);
+            nuxt.callHook("restart");
+          }
+        });
+      }
+      await nitro.storage.setItem(`cache:openapidoc:files.json`, filesClean);
+      await nitro.storage.setItem(`cache:openapidoc:doc_path.json`, options.path ?? "docs");
+      for (let item of docs) {
+        nitro.options.prerender.routes = nitro.options.prerender.routes || [];
+        await updateStorageFiles(nitro, docs);
+        nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/info`);
+        nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/auth`);
+        nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/components`);
+        for (let locale in item.locales) {
+          if (locale === "en")
+            continue;
+          nitro.options.prerender.routes.unshift(`/${locale}/${options.path}/${item.filename}/info`);
+          nitro.options.prerender.routes.unshift(`/${locale}/${options.path}/${item.filename}/auth`);
+          nitro.options.prerender.routes.unshift(`/${locale}/${options.path}/${item.filename}/components`);
+        }
+        for (let tag in item.pathsByTags) {
+          if (tag === "custom")
+            continue;
+          for (let i in item.pathsByTags[tag].items) {
+            const select = item.pathsByTags[tag].items[i];
+            nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/${select.type}/${select.path}`);
+            for (let locale in item.locales) {
+              if (locale === "en")
+                continue;
+              nitro.options.prerender.routes.unshift(`/${locale}/${options.path}/${item.filename}/${select.type}/${select.path}`);
+            }
+          }
+        }
+      }
+    });
+    nuxt.hook("nitro:config", async (nitroConfig) => {
+      nitroConfig.handlers = nitroConfig.handlers || [];
+      nitroConfig.prerender = nitroConfig.prerender || {};
+      nitroConfig.prerender.routes = nitroConfig.prerender.routes || [];
+      nuxt.options.build.transpile = nuxt.options.build.transpile || [];
+      nuxt.options.build.transpile.push(resolver.resolve("./runtime"));
+      nitroConfig.handlers.push(
+        {
+          method: "get",
+          route: `/${options.path}/query/file/:name`,
+          handler: resolver.resolve("./runtime/server/api/file")
+        }
+      );
+      console.info(`Added \`${options.path}/query/files\` route handler`);
+    });
     if (options.list) {
-      const listName = "OpenApiTemplateDocsList";
-      const listOptions = { files: filesClean, path: options.path };
-      const listPath = await makeTemplate(`${listName}.vue`, listName, listOptions, resolver);
+      const dst = await makeTemplate("OpenApiTemplateDocsList.vue", "DocsList", {
+        files: filesClean,
+        doc_path: options.path ?? "docs"
+      }, resolver);
       extendPages((pages) => {
         pages.push({
           name: `openapi-docs-list`,
           path: `/${options.path}`,
-          // @ts-ignore
-          component: listPath,
-          file: listPath,
-          meta: {
-            nuxtI18n: false
-          }
+          file: dst
         });
       });
     }
-    for (let filePath in files) {
-      console.log("[nuxt-openapi-docs-module] Generate: " + filePath);
-      const localoptions = JSON.parse(JSON.stringify(options));
-      const workDir = resolve(nuxt.options.rootDir, localoptions.folder);
-      const parser = new Parser(workDir);
-      parser.load(filePath);
-      localoptions.locales = parser.getLocales();
-      localoptions.localesReload = parser.getLocalesReload();
-      const pathsByTags = parser.getPaths();
-      localoptions.doc = parser.getDoc();
-      localoptions.pathsByTags = parser.getPaths();
-      localoptions.fileName = parser.getFilename();
-      localoptions.layoutName = kebabCase(`apidocs-layout-${localoptions.fileName}`).replace(/["']/g, "");
-      const layoutName = isNuxt2(nuxt) ? "OpenApiLayoutNuxt2.vue" : "OpenApiLayoutNuxt3.vue";
-      addLayout({
-        src: resolver.resolve(`./runtime/layout/${layoutName}`),
-        filename: `apidocs.layout.${localoptions.fileName}.vue`,
-        // @ts-ignore
-        name: localoptions.layoutName,
-        write: true,
-        options: { ...localoptions, files: filesClean }
-      }, localoptions.layoutName);
-      const templateName = isNuxt2(nuxt) ? "OpenApiTemplateNuxt2.vue" : "OpenApiTemplateNuxt3.vue";
-      const path = await makeTemplate(templateName, localoptions.fileName, { ...localoptions, files: filesClean }, resolver);
+    addLayout({
+      src: resolver.resolve(`./runtime/layout/OpenApiLayoutNuxt3.vue`),
+      filename: `OpenApiLayoutNuxt3.vue`,
+      write: true,
+      options: {
+        path: options.path ?? "docs"
+      }
+    }, "open-api-layout");
+    for (let item of docs) {
+      const dst = await makeTemplate("OpenApiTemplateNuxt3.vue", `${item.filename}`, {
+        path: options.path ?? "docs",
+        filename: item.filename,
+        locales: item.locales,
+        localesReload: item.localesReload
+      }, resolver);
       extendPages((pages) => {
         pages.push({
-          name: `openapi-${localoptions.path}/${localoptions.fileName}/info`,
-          path: `/${localoptions.path}/${localoptions.fileName}/info`,
-          // path: `/${localoptions.path}/${localoptions.fileName}/info`,
-          // @ts-ignore
-          component: path,
-          file: path,
-          meta: {
-            nuxtI18n: false,
-            file: localoptions.fileName,
-            type: "get",
-            path: "info"
-          }
+          name: `openapi-${options.path}`,
+          path: `/${options.path}/:name/:type`,
+          file: dst
         });
         pages.push({
-          name: `openapi-${localoptions.path}/${localoptions.fileName}/components`,
-          path: `/${localoptions.path}/${localoptions.fileName}/components`,
-          // @ts-ignore
-          component: path,
-          file: path,
-          meta: {
-            nuxtI18n: false,
-            file: localoptions.fileName,
-            type: "get",
-            path: "components"
-          }
-        });
-        pages.push({
-          name: `openapi-${localoptions.path}/${localoptions.fileName}/auth`,
-          path: `/${localoptions.path}/${localoptions.fileName}/auth`,
-          // @ts-ignore
-          component: path,
-          file: path,
-          meta: {
-            nuxtI18n: false,
-            file: localoptions.fileName,
-            type: "get",
-            path: "auth"
-          }
-        });
-        pages.push({
-          name: `openapi-${localoptions.path}/${localoptions.fileName}/type-path`,
-          path: `/${localoptions.path}/${localoptions.fileName}/:type/:path`,
-          // @ts-ignore
-          component: path,
-          file: path,
-          meta: {
-            nuxtI18n: false,
-            file: localoptions.fileName
-          }
+          name: `openapi-${options.path}/type-mathod`,
+          path: `/${options.path}/:name/:type/:mathod`,
+          file: dst
         });
       });
-      const routes = nuxt.options.generate.routes;
-      nuxt.options.generate.routes = Array.isArray(nuxt.options.generate.routes) ? nuxt.options.generate.routes : [];
-      if (routes instanceof Function) {
-        if (routes instanceof Function) {
-          routes.push(...await routes() || []);
-        }
-      }
-      if (isSSG) {
-        for (let tag in pathsByTags) {
-          if (tag === "custom")
-            continue;
-          for (let i in pathsByTags[tag].items) {
-            const item = pathsByTags[tag].items[i];
-            nuxt.options.generate.routes.push(`/${localoptions.path}/${localoptions.fileName}/${item.type}/${item.path}`);
-          }
-        }
-      }
     }
-    if (isNuxt2(nuxt)) {
-      addPlugin({
-        src: resolver.resolve("./runtime/plugin")
+    addImports([
+      { name: "useOpenApiDataState", as: "useOpenApiDataState", from: resolver.resolve("./runtime/composables/openApiData") }
+    ]);
+    addPlugin({
+      src: resolver.resolve("./runtime/plugins/plugin3")
+    });
+    if (options.localize) {
+      nuxt.hook("i18n:registerModule", (register) => {
+        register({
+          langDir: resolver.resolve("./runtime/lang"),
+          locales: options.locales?.map((code) => ({
+            code,
+            iso: code,
+            file: `${code}.json`
+          }))
+        });
       });
     }
-    if (isNuxt3(nuxt)) {
-      addPlugin({
-        src: resolver.resolve("./runtime/plugin3")
-      });
-    }
-    nuxt.options.css.push(resolver.resolve("./runtime/github.css"));
-    nuxt.options.css.push(resolver.resolve("./runtime/styles.css"));
   }
 });
 

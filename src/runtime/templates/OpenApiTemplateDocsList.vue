@@ -1,8 +1,8 @@
 <template>
   <div class="content-container">
     <ul>
-      <li v-for="(file, path) in files" :key="path">
-        <a :href="genUrl(path)" class="file-item">
+      <li v-for="(file, filename) in files" :key="filename">
+        <a :href="genUrl(filename)" class="file-item">
           <div>
             <p>{{ file }}</p>
           </div>
@@ -12,27 +12,22 @@
   </div>
 </template>
 
-<script>
-// eslint-disable-next-line @ts-ignore
-const files = <%= JSON.stringify(options.files) %>;
-// eslint-disable-next-line @ts-ignore
-const pathDoc = '<%= options.path %>';
+<script setup lang="ts">
+const options = <%= JSON.stringify(options) %>;
 
-export default {
-  name: 'AppDocsDocsList',
+import {ref, useRoute} from "#imports";
 
-  data() {
-    return {
-      files: files,
-      pathDoc: pathDoc
-    };
-  },
-  methods: {
-    genUrl(path) {
-      return this.pathDoc + '/' + path + '/info'
-    }
-  }
+const route = useRoute()
+
+const files = ref(options.files);
+
+
+function genUrl(filename: string|number) {
+  let route = '/' + options.doc_path + '/' + filename.toString() + '/info';
+  route = route.toString().replaceAll(/\/\/+/gmu, '/')
+  return  route
 }
+
 </script>
 
 <style lang="scss" scoped>

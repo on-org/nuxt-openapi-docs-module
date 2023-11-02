@@ -1,9 +1,9 @@
 declare namespace _default {
-    const name: string;
+    let name: string;
     namespace props {
         namespace hasNestedTable {
-            export const type: BooleanConstructor;
-            const _default: boolean;
+            export let type: BooleanConstructor;
+            let _default: boolean;
             export { _default as default };
         }
     }

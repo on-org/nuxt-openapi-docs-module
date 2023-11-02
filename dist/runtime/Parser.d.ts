@@ -45,6 +45,7 @@ export default class Parser {
         [key: string]: string;
     };
     getLocalesReload(): boolean;
+    getServers(): any[];
     getPaths(): {
         [key: string]: PathByTag;
     };

@@ -206,6 +206,10 @@ export default class Parser {
     return this.localesReload;
   }
 
+  getServers(): any[] {
+    return this.spec.servers ?? [];
+  }
+
   getPaths(): {[key: string]: PathByTag} {
     return JSON.parse(JSON.stringify({
       ...this.processOpenApiPaths(this.spec.webhooks ?? {}, 'webhooks'),

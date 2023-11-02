@@ -1,5 +1,8 @@
 {
   "name": "nuxt-open-api-docs",
   "configKey": "openApiDocs",
-  "version": "4.7.5"
+  "compatibility": {
+    "nuxt": "^3.0.0"
+  },
+  "version": "5.0.0-beta.22"
 }

@@ -1,8 +1,8 @@
 declare namespace _default {
     namespace props {
         namespace html {
-            const type: StringConstructor;
-            const required: boolean;
+            let type: StringConstructor;
+            let required: boolean;
         }
     }
     function render(h: any): any[];

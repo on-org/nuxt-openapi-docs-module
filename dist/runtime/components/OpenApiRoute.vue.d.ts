@@ -1,5 +1,5 @@
 declare namespace _default {
-    const name: string;
+    let name: string;
     namespace components {
         export { OpenApiCallbacks };
         export { OpenApiResponses };
@@ -13,57 +13,57 @@ declare namespace _default {
     }
     namespace props {
         export namespace route {
-            const type: (ArrayConstructor | ObjectConstructor)[];
-            const required: boolean;
+            let type: (ArrayConstructor | ObjectConstructor)[];
+            let required: boolean;
         }
         export namespace subParams {
-            const required_1: boolean;
+            let required_1: boolean;
             export { required_1 as required };
         }
         export namespace path_doc {
-            const type_1: StringConstructor;
+            let type_1: StringConstructor;
             export { type_1 as type };
-            const required_2: boolean;
+            let required_2: boolean;
             export { required_2 as required };
         }
         export namespace file {
-            const type_2: StringConstructor;
+            let type_2: StringConstructor;
             export { type_2 as type };
-            const required_3: boolean;
+            let required_3: boolean;
             export { required_3 as required };
         }
         export namespace currentLocale {
-            const type_3: StringConstructor;
+            let type_3: StringConstructor;
             export { type_3 as type };
-            const required_4: boolean;
+            let required_4: boolean;
             export { required_4 as required };
         }
         export namespace url {
-            const type_4: StringConstructor;
+            let type_4: StringConstructor;
             export { type_4 as type };
-            const required_5: boolean;
+            let required_5: boolean;
             export { required_5 as required };
-            const _default: string;
+            let _default: string;
             export { _default as default };
         }
         export namespace server {
-            const type_5: StringConstructor;
+            let type_5: StringConstructor;
             export { type_5 as type };
-            const required_6: boolean;
+            let required_6: boolean;
             export { required_6 as required };
-            const _default_1: string;
+            let _default_1: string;
             export { _default_1 as default };
         }
         export namespace method {
-            const type_6: StringConstructor;
+            let type_6: StringConstructor;
             export { type_6 as type };
-            const required_7: boolean;
+            let required_7: boolean;
             export { required_7 as required };
-            const _default_2: string;
+            let _default_2: string;
             export { _default_2 as default };
         }
         export namespace components_1 {
-            const type_7: ObjectConstructor;
+            let type_7: ObjectConstructor;
             export { type_7 as type };
             function _default_3(): {};
             export { _default_3 as default };

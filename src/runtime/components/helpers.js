@@ -1,5 +1,3 @@
-import mergeJsonSchema from 'json-schema-merge-allof';
-
 export function getTagColor(method) {
   switch (method.toUpperCase()) {
     case 'GET':

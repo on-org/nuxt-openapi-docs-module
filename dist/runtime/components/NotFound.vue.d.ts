@@ -1,4 +1,4 @@
 declare namespace _default {
-    const name: string;
+    let name: string;
 }
 export default _default;

@@ -21,6 +21,7 @@ work with static and server target
 |---------|-------------------------|
 | 3.0     | 	2.x and 3.x            |
 | 4.0     | 	2.x and 3.x            |
+| 5.0     | 	3.x                    |
 
 
 for nuxt 3 need add vite.config.ts
@@ -108,6 +109,7 @@ modules: [
 - `files`: function with files list in OpenApiDocs folder, files: function() {return { 'News-API': 'News API'}}.
 - `debug`: print debug information to console, Default: false
 - `list`: Toggling the list of documents, Default: false
+- `locales`: array wit enabled locales, Default: ['en', 'fr', 'de', 'ru', 'ch', 'es', 'hi', 'ar', 'zh', 'pt']
 -
 ### Folder Structure
 The default folder structure for your OpenAPI specification files should look like this:

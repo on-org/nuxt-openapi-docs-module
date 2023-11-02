@@ -1,5 +1,5 @@
 declare namespace _default {
-    const name: string;
+    let name: string;
     namespace components {
         export { OpenApiParameter };
         export { OpenApiObjectModel };
@@ -7,16 +7,16 @@ declare namespace _default {
     }
     namespace props {
         namespace response {
-            const type: ObjectConstructor;
-            const required: boolean;
+            let type: ObjectConstructor;
+            let required: boolean;
         }
         namespace currentLocale {
-            const type_1: StringConstructor;
+            let type_1: StringConstructor;
             export { type_1 as type };
-            const required_1: boolean;
+            let required_1: boolean;
             export { required_1 as required };
         }
-        const lite: BooleanConstructor;
+        let lite: BooleanConstructor;
     }
     function data(): {};
     namespace computed {
