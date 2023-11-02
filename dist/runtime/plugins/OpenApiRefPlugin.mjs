@@ -1,4 +1,4 @@
-import { merge } from "../packages/allof-merge/index.mjs";
+import { merge } from "allof-merge";
 export default class OpenApiRefPlugin {
   definitions = {};
   components = {};

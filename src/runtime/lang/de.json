@@ -52,6 +52,7 @@
     "external_docs": "External Docs",
     "parameters": "Parameters",
     "style": "Style",
+    "content_type": "Content Type",
     "auth": "Authorization",
     "headers": "Headers"
   }

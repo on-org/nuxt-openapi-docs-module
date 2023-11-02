@@ -277,7 +277,8 @@ export default defineNuxtModule<ModuleOptions>({
     })
 
     if (options.localize) {
-      nuxt.hook('i18n:registerModule', register => {
+      // @ts-ignore
+      nuxt.hook('i18n:registerModule', (register: any) => {
         register({
           langDir: resolver.resolve('./runtime/lang'),
           locales: options.locales?.map((code) => ({

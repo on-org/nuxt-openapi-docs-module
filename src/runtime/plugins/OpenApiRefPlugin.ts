@@ -1,4 +1,4 @@
-import {merge} from "../packages/allof-merge";
+import { merge } from 'allof-merge'
 
 export default class OpenApiRefPlugin {
   definitions: { [key: string]: any } = {};
