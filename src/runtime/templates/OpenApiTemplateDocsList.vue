@@ -21,10 +21,13 @@ const route = useRoute()
 
 const files = ref(options.files);
 
-
 function genUrl(filename: string|number) {
-  let route = '/' + options.doc_path + '/' + filename.toString() + '/info';
-  route = route.toString().replaceAll(/\/\/+/gmu, '/')
+  let base = options.base_url ?? '/'
+  if (!base.toString().endsWith('/')) {
+    base = base + '/'
+  }
+  let route = base + options.doc_path + '/' + filename.toString() + '/info';
+  route = route.toString().replaceAll(/\/\/+/gmu, '/');
   return  route
 }
 

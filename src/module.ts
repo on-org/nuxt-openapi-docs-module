@@ -114,7 +114,6 @@ export default defineNuxtModule<ModuleOptions>({
     files: () => { return {}},
   },
   async setup (options, nuxt) {
-    // @ts-ignore
     const isSSG = nuxt.options.dev === false
 
     const resolver = createResolver(import.meta.url)
@@ -224,6 +223,7 @@ export default defineNuxtModule<ModuleOptions>({
       const dst = await makeTemplate('OpenApiTemplateDocsList.vue', 'DocsList', {
         files: filesClean,
         doc_path: options.path ?? 'docs',
+        base_url: nuxt.options.app.baseURL ?? '/',
       }, resolver)
 
       extendPages((pages) => {

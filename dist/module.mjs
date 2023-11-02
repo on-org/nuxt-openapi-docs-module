@@ -448,7 +448,8 @@ const module = defineNuxtModule({
     if (options.list) {
       const dst = await makeTemplate("OpenApiTemplateDocsList.vue", "DocsList", {
         files: filesClean,
-        doc_path: options.path ?? "docs"
+        doc_path: options.path ?? "docs",
+        base_url: nuxt.options.app.baseURL ?? "/"
       }, resolver);
       extendPages((pages) => {
         pages.push({

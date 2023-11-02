@@ -7,7 +7,7 @@
     <OpenApiRoute v-else-if="activeWebhook" :route="activeWebhook" :current-locale="currentLocale" :method="type" :components="doc.components" :url="url" :path_doc="path_doc" :file="fileName" :server="server" :sub-params="subParams" />
     <NotFound v-else />
     <client-only>
-      <SearchBlock :current-locale="currentLocale" :doc="doc" :path="mathod" :file="fileName" />
+      <SearchBlock :current-locale="currentLocale" :doc="doc" :path="path_doc" :file="fileName" />
     </client-only>
   </div>
 </template>

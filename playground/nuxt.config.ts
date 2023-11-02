@@ -7,6 +7,9 @@ export default defineNuxtConfig({
     baseURL: isDev ? '/' : '/nuxt-openapi-docs-module',
     buildAssetsDir: 'assets'
   },
+  experimental: {
+    payloadExtraction: true
+  },
   plugins: [
     { src: '@/plugins/content' },
   ],
