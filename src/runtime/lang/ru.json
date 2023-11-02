@@ -48,11 +48,12 @@
     "scopes": "Области",
     "schemas": "Схемы",
     "variables": "Переменные",
-    "scheme": "Scheme",
-    "external_docs": "External Docs",
-    "parameters": "Parameters",
-    "style": "Style",
+    "scheme": "Схема",
+    "external_docs": "Внешние документы",
+    "parameters": "Параметры",
+    "style": "Стиль",
     "auth": "Авторизация",
-    "headers": "Headers"
+    "content_type": "Тип содержимого",
+    "headers": "Заголовки"
   }
 }
