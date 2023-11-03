@@ -19,14 +19,15 @@
       <OpenApiMainLeftMenu :isMenuOpen="isMenuOpen" :isMobile="isMobile">
         <template #menu>
           <OpenApiMenu
-              :routes="pathsByTags"
-              :current-locale="currentLocale"
-              :file="fileName"
-              :path="path"
-              :files="files"
-              :locales="locales"
-              :locales-reload="localesReload"
-              :servers="servers"
+            v-if="pathsByTags"
+            :routes="pathsByTags"
+            :current-locale="currentLocale"
+            :file="fileName"
+            :path="path"
+            :files="files"
+            :locales="locales"
+            :locales-reload="localesReload"
+            :servers="servers"
           />
         </template>
       </OpenApiMainLeftMenu>
@@ -51,6 +52,10 @@ import {computed, ref, useNuxtApp, useOpenApiDataState, useRoute, watch} from "#
 const data = useOpenApiDataState().data;
 const route = useRoute()
 const { $openapidoc, $openapidocBus } = useNuxtApp()
+
+if (!data.value.doc) {
+
+}
 
 let ser = data.value.servers;
 if(!Array.isArray(ser)) ser = [];
@@ -425,6 +430,47 @@ html.oapi * {
 .oapi h6 {
   font-size: 0.85em;
   color: var(--color-fg-muted);
+}
+.oapi .highlighted {
+  background-color: yellow;
+  font-weight: bold;
+}
+.oapi h1[id],
+.oapi h2[id],
+.oapi h3[id],
+.oapi h4[id] {
+  position: relative;
+  cursor: pointer;
+}
+.oapi h1[id]::before,
+.oapi h2[id]::before,
+.oapi h3[id]::before,
+.oapi h4[id]::before {
+  content: "#";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.oapi h1[id]:hover,
+.oapi h2[id]:hover,
+.oapi h3[id]:hover,
+.oapi h4[id]:hover {
+  opacity: 0.8;
+}
+.oapi h1[id]:hover::before,
+.oapi h2[id]:hover::before,
+.oapi h3[id]:hover::before,
+.oapi h4[id]:hover::before {
+  opacity: 1;
+}
+.oapi h1[id]:active::before,
+.oapi h2[id]:active::before,
+.oapi h3[id]:active::before,
+.oapi h4[id]:active::before {
+  opacity: 0.5;
 }
 .oapi small, .oapi .text_small {
   font-size: 0.833rem;

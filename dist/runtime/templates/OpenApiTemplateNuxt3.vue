@@ -1,8 +1,8 @@
 <template>
   <div class="content-container">
-    <OpenApiInfo v-if="isInfo" :info="doc.info" :servers="doc.servers" :current-locale="currentLocale"></OpenApiInfo>
-    <OpenApiAuth v-else-if="isAuth" :components="doc.components" :current-locale="currentLocale"></OpenApiAuth>
-    <OpenApiComponents v-else-if="isComponents" :components="doc.components" :current-locale="currentLocale"></OpenApiComponents>
+    <OpenApiInfo v-if="isInfo && doc.info" :info="doc.info" :servers="doc.servers" :current-locale="currentLocale"></OpenApiInfo>
+    <OpenApiAuth v-else-if="isAuth && doc.components" :components="doc.components" :current-locale="currentLocale"></OpenApiAuth>
+    <OpenApiComponents v-else-if="isComponents && doc.components" :components="doc.components" :current-locale="currentLocale"></OpenApiComponents>
     <OpenApiRoute v-else-if="activeRoute" :route="activeRoute" :current-locale="currentLocale" :method="type" :components="doc.components" :url="url" :path_doc="path_doc" :file="fileName" :server="server" :sub-params="subParams" />
     <OpenApiRoute v-else-if="activeWebhook" :route="activeWebhook" :current-locale="currentLocale" :method="type" :components="doc.components" :url="url" :path_doc="path_doc" :file="fileName" :server="server" :sub-params="subParams" />
     <NotFound v-else />
@@ -237,40 +237,5 @@ onUnmounted(() => {
 </script>
 
 <style>
-.highlighted {
-  background-color: yellow;
-  font-weight: bold;
-}
 
-
-h1[id],
-h2[id],
-h3[id],
-h4[id] {
-  position: relative;
-  cursor: pointer;
-
-
-  &::before {
-    content: '#';
-    position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  &:hover {
-    opacity: 0.8;
-
-    &::before {
-      opacity: 1;
-    }
-  }
-
-  &:active::before {
-    opacity: 0.5;
-  }
-}
 </style>

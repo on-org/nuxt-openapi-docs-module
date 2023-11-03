@@ -19,14 +19,15 @@
       <OpenApiMainLeftMenu :isMenuOpen="isMenuOpen" :isMobile="isMobile">
         <template #menu>
           <OpenApiMenu
-              :routes="pathsByTags"
-              :current-locale="currentLocale"
-              :file="fileName"
-              :path="path"
-              :files="files"
-              :locales="locales"
-              :locales-reload="localesReload"
-              :servers="servers"
+            v-if="pathsByTags"
+            :routes="pathsByTags"
+            :current-locale="currentLocale"
+            :file="fileName"
+            :path="path"
+            :files="files"
+            :locales="locales"
+            :locales-reload="localesReload"
+            :servers="servers"
           />
         </template>
       </OpenApiMainLeftMenu>
@@ -51,6 +52,10 @@ import {computed, ref, useNuxtApp, useOpenApiDataState, useRoute, watch} from "#
 const data = useOpenApiDataState().data;
 const route = useRoute()
 const { $openapidoc, $openapidocBus } = useNuxtApp()
+
+if (!data.value.doc) {
+
+}
 
 let ser = data.value.servers;
 if(!Array.isArray(ser)) ser = [];
@@ -491,6 +496,42 @@ html.oapi {
   h6 {
     font-size: .85em;
     color: var(--color-fg-muted)
+  }
+
+  .highlighted {
+    background-color: yellow;
+    font-weight: bold;
+  }
+
+  h1[id],
+  h2[id],
+  h3[id],
+  h4[id] {
+    position: relative;
+    cursor: pointer;
+
+
+    &::before {
+      content: '#';
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    &:hover {
+      opacity: 0.8;
+
+      &::before {
+        opacity: 1;
+      }
+    }
+
+    &:active::before {
+      opacity: 0.5;
+    }
   }
 
   small, .text_small {
