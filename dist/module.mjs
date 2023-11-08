@@ -17,22 +17,16 @@ import __cjs_mod__ from 'module';
 const __filename = __cjs_url__.fileURLToPath(import.meta.url);
 const __dirname = __cjs_path__.dirname(__filename);
 const require = __cjs_mod__.createRequire(import.meta.url);
-var __defProp = Object.defineProperty;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __publicField = (obj, key, value) => {
-  __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
-  return value;
-};
 class Parser {
+  workDir;
+  fileName = "";
+  spec = {};
+  components = {};
+  definitions = {};
+  locales = { "en": "English" };
+  localesReload = false;
+  refs = {};
   constructor(workDir) {
-    __publicField(this, "workDir");
-    __publicField(this, "fileName", "");
-    __publicField(this, "spec", {});
-    __publicField(this, "components", {});
-    __publicField(this, "definitions", {});
-    __publicField(this, "locales", { "en": "English" });
-    __publicField(this, "localesReload", false);
-    __publicField(this, "refs", {});
     this.workDir = workDir;
     const self = this;
     const renderer = new marked.Renderer();
