@@ -54,6 +54,8 @@
     "parameters": "Parameters",
     "style": "Style",
     "auth": "Authorization",
-    "headers": "Headers"
+    "headers": "Headers",
+    "multiple_of": "multiple of",
+    "any_of": "any of"
   }
 }

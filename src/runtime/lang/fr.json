@@ -54,7 +54,9 @@
     "parameters": "Paramètres",
     "style": "Style",
     "auth": "Autorisation",
-    "headers": "En-têtes"
+    "headers": "En-têtes",
+    "multiple_of": "multiple of",
+    "any_of": "any of"
   }
 }
 

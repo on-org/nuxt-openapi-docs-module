@@ -54,6 +54,8 @@
     "style": "Стиль",
     "auth": "Авторизация",
     "content_type": "Тип содержимого",
-    "headers": "Заголовки"
+    "headers": "Заголовки",
+    "multiple_of": "multiple of",
+    "any_of": "any of"
   }
 }

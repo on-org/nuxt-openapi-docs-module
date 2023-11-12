@@ -54,6 +54,8 @@
     "style": "Style",
     "content_type": "Content Type",
     "auth": "Authorization",
-    "headers": "Headers"
+    "headers": "Headers",
+    "multiple_of": "multiple of",
+    "any_of": "any of"
   }
 }

@@ -1,5 +1,6 @@
 
-import { ModuleOptions } from './module'
+import type { ModuleOptions } from './module'
+
 
 declare module '@nuxt/schema' {
   interface NuxtConfig { ['openApiDocs']?: Partial<ModuleOptions> }
@@ -12,4 +13,4 @@ declare module 'nuxt/schema' {
 }
 
 
-export { ModuleOptions, default } from './module'
+export type { ModuleOptions, default } from './module'

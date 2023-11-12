@@ -54,6 +54,8 @@
     "parameters": "Parámetros",
     "style": "Estilo",
     "auth": "Autorización",
-    "headers": "Encabezados"
+    "headers": "Encabezados",
+    "multiple_of": "multiple of",
+    "any_of": "any of"
   }
 }

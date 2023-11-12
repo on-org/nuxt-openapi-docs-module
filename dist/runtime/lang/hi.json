@@ -54,6 +54,8 @@
     "parameters": "पैरामीटर",
     "style": "शैली",
     "auth": "अधिकृती",
-    "headers": "हैडर"
+    "headers": "हैडर",
+    "multiple_of": "multiple of",
+    "any_of": "any of"
   }
 }

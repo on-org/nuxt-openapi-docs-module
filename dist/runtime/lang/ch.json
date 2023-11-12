@@ -54,6 +54,8 @@
     "parameters": "参数",
     "style": "样式",
     "auth": "授权",
-    "headers": "头部"
+    "headers": "头部",
+    "multiple_of": "multiple of",
+    "any_of": "any of"
   }
 }

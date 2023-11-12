@@ -54,6 +54,8 @@
     "parameters": "Parâmetros",
     "style": "Estilo",
     "auth": "Autorização",
-    "headers": "Cabeçalhos"
+    "headers": "Cabeçalhos",
+    "multiple_of": "multiple of",
+    "any_of": "any of"
   }
 }

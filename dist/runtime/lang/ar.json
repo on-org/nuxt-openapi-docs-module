@@ -54,6 +54,8 @@
     "parameters": "معلمات",
     "style": "الأسلوب",
     "auth": "المصادقة",
-    "headers": "الرؤوس"
+    "headers": "الرؤوس",
+    "multiple_of": "multiple of",
+    "any_of": "any of"
   }
 }
