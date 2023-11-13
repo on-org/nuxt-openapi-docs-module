@@ -8,6 +8,8 @@ webhooks:
   newPet:
     # This is a Path Item Object, the only difference is that the request is initiated by the API provider
     post:
+      servers:
+        - url: 'https://{ourserver.com}/'
       requestBody:
         description: Information about a new pet in the system
         content:

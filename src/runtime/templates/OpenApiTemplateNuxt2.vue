@@ -218,6 +218,16 @@ export default {
         }
       }
 
+      if (this.activeWebhook) {
+        if(this.activeWebhook.servers && this.activeWebhook.servers[0]) {
+          return this.activeWebhook.servers[0].url ?? null
+        }
+
+        if(this.activeWebhook[this.type] && this.activePath[this.type].servers && this.activeWebhook[this.type].servers[0]) {
+          return this.activeWebhook[this.type].servers[0].url ?? null
+        }
+      }
+
       let currentServer = this.currentServer;
 
       if (currentServer > 0 && this.options.doc.servers && !this.options.doc.servers[currentServer]) {
