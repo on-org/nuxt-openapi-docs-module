@@ -46,6 +46,7 @@ export default defineNuxtConfig({
               'petstore_extended': 'Petstore Extended Api',
               'api.json': 'API Proxy',
               "allof": "allof",
+              "webhook": "webhook",
               // 'localization': 'Localization',
               // 'no-access': 'no access',
               // 'test-yaml.yaml': 'yaml ext',
@@ -109,6 +110,7 @@ export default defineNuxtConfig({
             "server-override": "server-override",
             "server": "server",
             "toomany-example-generation": "toomany-example-generation",
+            "webhook": "webhook",
             "xml": "xml",
           }
         }

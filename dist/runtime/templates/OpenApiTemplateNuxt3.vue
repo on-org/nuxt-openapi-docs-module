@@ -147,6 +147,16 @@ const server = computed((): string => {
     }
   }
 
+  if (activeWebhook.value) {
+    if(activeWebhook.value.servers && activeWebhook.value.servers[0]) {
+      return activeWebhook.value.servers[0].url ?? null
+    }
+
+    if(activeWebhook.value[type.value] && activeWebhook.value[type.value].servers && activeWebhook.value[type.value].servers[0]) {
+      return activeWebhook.value[type.value].servers[0].url ?? null
+    }
+  }
+
   let cs = currentServer.value;
 
   if (cs > 0 && doc.value.servers && !doc.value.servers[cs]) {
