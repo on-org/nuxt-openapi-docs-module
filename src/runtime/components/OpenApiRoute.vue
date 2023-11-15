@@ -108,6 +108,7 @@ import OpenApiRouteHeader from './blocks/OpenApiRouteHeader.vue'
 import OpenApiSecurity from './blocks/OpenApiSecurity.vue'
 import OpenApiServer from './blocks/OpenApiServer.vue'
 import CodeSimples from './lib/CodeSimples.vue'
+import { repReplace } from "../helpers/replacer";
 
 export default {
   name: 'OpenApiRoute',
@@ -173,7 +174,7 @@ export default {
   },
   computed: {
     resolvedSchema() {
-      return this.$openapidocRef.repReplace(this.route)
+      return repReplace(this.route, [], this.$openapidocRef.definitions, this.$openapidocRef.components)
     },
     routeInfo() {
       return this.$openapidoc.getRouteInfo(this.file, this.url, this.method)

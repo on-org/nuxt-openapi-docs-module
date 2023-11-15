@@ -5,9 +5,6 @@ export default class OpenApiRefPlugin {
     components: {
         [key: string]: any;
     };
-    refs: {
-        [key: string]: any;
-    };
     i18n: any;
     doc_path: string;
     file: string;
@@ -18,9 +15,6 @@ export default class OpenApiRefPlugin {
     setComponents(components: {
         [key: string]: any;
     }): void;
-    pefFix(ref: any, cache?: string[]): any;
-    repReplace(source: any, cache?: string[], setPath?: boolean): any;
-    resolveAllOf(schema: any): any;
     setDocPath(path: string): void;
     setFile(file: string): void;
     tr(data: {

@@ -13,7 +13,7 @@ import Parser from "./runtime/Parser";
 import {promises, existsSync, writeFileSync, mkdirSync} from "node:fs";
 import lodashTemplate from "lodash.template";
 import type {Resolver} from '@nuxt/kit'
-import {watch} from "fs";
+import { watch } from 'chokidar'
 
 export interface ModuleOptions {
   folder?: string,
@@ -153,15 +153,23 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.hook("nitro:build:before", async (nitro) => {
       if (!isSSG) {
         console.log('ℹ add file watcher', workDir)
+        const cachePath = join(__dirname, '.cache');
+        console.log(cachePath)
 
-        const watcher = watch(workDir, { recursive: true }, async (evt, name) => {
-          if (evt === 'change') {
-            watcher.close();
-            console.log('↻ update store item', name)
-            await updateStorageFiles(nitro, docs)
-            nuxt.callHook('restart')
-          }
-        });
+        const watcherEvent = async (path: string) => {
+          watcher.close();
+          console.log('↻ update store item', path)
+          nuxt.callHook('restart')
+        }
+
+        const watcher = watch(workDir, { depth: 1, persistent: true }).on('change', watcherEvent);
+        const watcher2 = watch(cachePath, { depth: 1, persistent: true }).on('unlink', watcherEvent);
+
+        nuxt.hook('close', () => {
+          watcher.close();
+          watcher2.close();
+        })
+
       }
 
 

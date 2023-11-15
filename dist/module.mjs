@@ -2,11 +2,12 @@ import { defineNuxtModule, createResolver, addComponentsDir, extendPages, addLay
 import { join, dirname, basename, extname, resolve } from 'path';
 import { marked } from 'marked';
 import fetch from 'sync-fetch';
-import fs, { watch } from 'fs';
+import fs from 'fs';
 import * as yaml from 'js-yaml';
 import hljs from 'highlight.js';
 import { promises, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import lodashTemplate from 'lodash.template';
+import { watch } from 'chokidar';
 
 
 
@@ -385,13 +386,18 @@ const module = defineNuxtModule({
     nuxt.hook("nitro:build:before", async (nitro) => {
       if (!isSSG) {
         console.log("\u2139 add file watcher", workDir);
-        const watcher = watch(workDir, { recursive: true }, async (evt, name) => {
-          if (evt === "change") {
-            watcher.close();
-            console.log("\u21BB update store item", name);
-            await updateStorageFiles(nitro, docs);
-            nuxt.callHook("restart");
-          }
+        const cachePath = join(__dirname, ".cache");
+        console.log(cachePath);
+        const watcherEvent = async (path) => {
+          watcher.close();
+          console.log("\u21BB update store item", path);
+          nuxt.callHook("restart");
+        };
+        const watcher = watch(workDir, { depth: 1, persistent: true }).on("change", watcherEvent);
+        const watcher2 = watch(cachePath, { depth: 1, persistent: true }).on("unlink", watcherEvent);
+        nuxt.hook("close", () => {
+          watcher.close();
+          watcher2.close();
         });
       }
       await nitro.storage.setItem(`cache:openapidoc:files.json`, filesClean);

@@ -17,6 +17,7 @@
 
 <script>
 import OpenApiSchemaProperty from './OpenApiSchemaProperty.vue'
+import {repReplace} from "../../helpers/replacer";
 
 export default {
   name: 'OpenApiObjectModel',
@@ -37,7 +38,7 @@ export default {
   },
   computed: {
     resolvedSchema() {
-      return this.$openapidocRef.repReplace(this.schema)
+      return repReplace(this.schema, [], this.$openapidocRef.definitions, this.$openapidocRef.components)
     },
     requiredProps() {
       if (this.resolvedSchema.required && Array.isArray(this.resolvedSchema.required)) {

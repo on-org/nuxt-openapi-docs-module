@@ -1,8 +1,6 @@
-import { merge } from "allof-merge";
 export default class OpenApiRefPlugin {
   definitions = {};
   components = {};
-  refs = {};
   i18n = null;
   doc_path = "docs";
   file = "docs";
@@ -14,90 +12,6 @@ export default class OpenApiRefPlugin {
   }
   setComponents(components) {
     this.components = components;
-  }
-  pefFix(ref, cache = []) {
-    if (typeof ref !== "string" || !ref.startsWith("#")) {
-      return ref;
-    }
-    if (this.refs[ref]) {
-      return this.refs[ref];
-    }
-    if (cache.includes(ref)) {
-      return {
-        $recursive: true,
-        $ref: ref
-      };
-    }
-    const [_, type, block, name] = ref.split("/");
-    let refSchema = null;
-    if (type === "definitions") {
-      if (!this.definitions || !this.definitions[block]) {
-        return {};
-      }
-      refSchema = this.definitions[block];
-      refSchema.title = name;
-      cache.push(ref);
-    } else {
-      if (!this.components || !this.components[block] || !this.components[block][name]) {
-        return {};
-      }
-      refSchema = this.components[block][name];
-      refSchema.title = name;
-      cache.push(ref);
-    }
-    if (!refSchema)
-      return null;
-    return this.refs[ref] = this.repReplace(refSchema, cache);
-  }
-  repReplace(source, cache = [], setPath = true) {
-    if (typeof source === "string")
-      return this.pefFix(source, cache);
-    if (!source)
-      return source;
-    if (typeof source !== "object")
-      return source;
-    if (Array.isArray(source)) {
-      return source.map((item) => this.repReplace(item, cache, setPath));
-    }
-    if (source && "$ref" in source) {
-      const ref = source.$ref;
-      const refSchema = this.pefFix(ref, cache);
-      if (!refSchema) {
-        return {};
-      }
-      if (refSchema.$ref) {
-        return refSchema;
-      }
-      if (!setPath)
-        return refSchema;
-      return {
-        ...refSchema,
-        $path: ref
-      };
-    }
-    let result = {};
-    for (const [key, value] of Object.entries(source)) {
-      let subVal = value;
-      if (typeof subVal === "string" && subVal.startsWith("#"))
-        subVal = { $ref: value };
-      result[key] = this.repReplace(subVal, cache, key !== "allOf");
-    }
-    if ("allOf" in result) {
-      result = this.resolveAllOf(result);
-    }
-    return result;
-  }
-  resolveAllOf(schema) {
-    if (typeof schema !== "object" || !Array.isArray(schema.allOf))
-      return schema;
-    const originalRef = schema.$ref;
-    const result = merge(schema, { onMergeError: (err) => console.error(err) });
-    if (originalRef) {
-      result.$ref = originalRef;
-    } else if (result.$ref) {
-      delete result.$ref;
-    }
-    return result;
   }
   setDocPath(path) {
     this.doc_path = path;
