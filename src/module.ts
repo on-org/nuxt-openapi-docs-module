@@ -66,21 +66,6 @@ async function makeTemplate(templateName: string, fileName: string, options: {[k
   return path;
 }
 
-async function _makeTemplate(templateName: string, fileName: string, options: {[key: string]: any}, resolver: Resolver, buildDir: string) {
-  const srcContents = await promises.readFile(resolver.resolve(`./runtime/templates/${templateName}`), "utf-8");
-  const template = lodashTemplate(srcContents, {})({options:options});
-
-  if (!existsSync(resolver.resolve(buildDir, 'openapi'))) {
-    mkdirSync(resolver.resolve(buildDir, 'openapi'));
-  }
-
-  const path = resolver.resolve(buildDir, 'openapi', `${fileName}.vue`)
-
-  writeFileSync(path , template);
-
-  return path;
-}
-
 async function updateStorageFiles(nitro: any, docs: DocItem[]) {
   for (let item of docs) {
     await nitro.storage.setItem(`cache:openapidoc:${item.filename}:doc.json`, item.doc);
@@ -114,7 +99,7 @@ export default defineNuxtModule<ModuleOptions>({
     files: () => { return {}},
   },
   async setup (options, nuxt) {
-    const isSSG = nuxt.options.dev === false
+    const isProd = nuxt.options.dev === false
 
     const resolver = createResolver(import.meta.url)
 
@@ -151,7 +136,7 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     nuxt.hook("nitro:build:before", async (nitro) => {
-      if (!isSSG) {
+      if (!isProd) {
         console.log('ℹ add file watcher', workDir)
         const cachePath = join(__dirname, '.cache');
         console.log(cachePath)
