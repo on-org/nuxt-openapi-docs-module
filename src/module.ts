@@ -139,7 +139,6 @@ export default defineNuxtModule<ModuleOptions>({
       if (!isProd) {
         console.log('ℹ add file watcher', workDir)
         const cachePath = join(__dirname, '.cache');
-        console.log(cachePath)
 
         const watcherEvent = async (path: string) => {
           watcher.close();
