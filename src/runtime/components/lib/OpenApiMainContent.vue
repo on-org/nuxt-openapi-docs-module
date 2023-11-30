@@ -14,16 +14,16 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+
+    padding: 24px 32px 40px;
     &__container {
       width: 100%;
       flex: 1 1 auto;
-      padding: 24px 32px 40px;
     }
     &__footer {
       width: 100%;
       flex: 0 0 auto;
       margin-top: 2rem;
-      padding: 0 32px;
     }
   }
 

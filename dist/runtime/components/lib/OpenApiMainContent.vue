@@ -14,17 +14,16 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  padding: 24px 32px 40px;
 }
 .oapi-content__container {
   width: 100%;
   flex: 1 1 auto;
-  padding: 24px 32px 40px;
 }
 .oapi-content__footer {
   width: 100%;
   flex: 0 0 auto;
   margin-top: 2rem;
-  padding: 0 32px;
 }
 
 @media screen and (min-width: 640px) {

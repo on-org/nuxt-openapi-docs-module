@@ -350,13 +350,16 @@ const module = defineNuxtModule({
     devtools: true,
     localize: true,
     doc: {},
-    locales: ["en", "fr", "de", "ru", "ch", "es", "hi", "ar", "zh", "pt"],
+    locales: [],
     files: () => {
       return {};
     }
   },
   async setup(options, nuxt) {
-    const isSSG = nuxt.options.dev === false;
+    if (!options.locales || !options.locales.length) {
+      options.locales = ["en", "fr", "de", "ru", "ch", "es", "hi", "ar", "zh", "pt"];
+    }
+    const isProd = nuxt.options.dev === false;
     const resolver = createResolver(import.meta.url);
     await addComponentsDir({
       path: resolver.resolve("./runtime/components"),
@@ -384,10 +387,9 @@ const module = defineNuxtModule({
       });
     }
     nuxt.hook("nitro:build:before", async (nitro) => {
-      if (!isSSG) {
+      if (!isProd) {
         console.log("\u2139 add file watcher", workDir);
         const cachePath = join(__dirname, ".cache");
-        console.log(cachePath);
         const watcherEvent = async (path) => {
           watcher.close();
           console.log("\u21BB update store item", path);

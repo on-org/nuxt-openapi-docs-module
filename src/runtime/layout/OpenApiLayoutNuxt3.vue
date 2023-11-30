@@ -47,42 +47,62 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, useNuxtApp, useOpenApiDataState, useRoute, watch} from "#imports";
+import {computed, onMounted, onUnmounted, ref, useNuxtApp, useOpenApiDataState, useRoute, watch} from "#imports";
 
 const data = useOpenApiDataState().data;
 const route = useRoute()
 const { $openapidoc, $openapidocBus } = useNuxtApp()
-
-if (!data.value.doc) {
-
-}
 
 let ser = data.value.servers;
 if(!Array.isArray(ser)) ser = [];
 
 const servers = ref<Array<any>>(ser);
 const path = ref('<%= options.path %>');
-const isMenuOpen = ref(false)
-const isMobile = ref(false)
+const isMenuOpen = ref(false);
+const isMobile = ref(false);
 
-const fileName = computed((): string => route.params.name.toString())
-const name = computed((): string => data.value.name)
-const files = computed((): string => data.value.files)
-const pathsByTags = computed((): string => data.value.pathsByTags)
-const localesReload = computed<boolean>((): string => data.value.localesReload ?? false)
-const locales = computed((): string => data.value.locales)
-const currentLocale = computed((): string => $openapidoc.currentLocale())
-const logo = computed((): string => $openapidoc.getLogo().replace(':name', name.value))
-const footer = computed((): string => $openapidoc.getFooter())
+const fileName = computed((): string => route.params.name.toString());
+const name = computed((): string => data.value.name);
+const files = computed((): string => data.value.files);
+const pathsByTags = computed((): string => data.value.pathsByTags);
+const localesReload = computed<boolean>((): string => data.value.localesReload ?? false);
+const locales = computed((): string => data.value.locales);
+const currentLocale = computed((): string => $openapidoc.currentLocale());
+const logo = computed((): string => $openapidoc.getLogo().replace(':name', name.value));
+const footer = computed((): string => $openapidoc.getFooter());
 
 watch(route, () => {
   if (isMobile.value) {
     isMenuOpen.value = false;
   }
 }, {deep: true, immediate: true})
+
 function toggleMenu() {
   isMenuOpen.value = !isMenuOpen.value;
 }
+
+function handleResize () {
+  const isDesktop = window.innerWidth >= 1110;
+  isMobile.value = window.innerWidth < 1110;
+  if (!isDesktop && isMenuOpen.value) {
+    isMenuOpen.value = false
+  }
+  if (isDesktop) {
+    isMenuOpen.value = true
+  }
+}
+
+onMounted(() => {
+  if (process.client) {
+    isMobile.value = window.innerWidth < 1110;
+    isMenuOpen.value = window.innerWidth >= 1110;
+    window.addEventListener('resize', handleResize)
+  }
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
 </script>
 
 

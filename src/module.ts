@@ -95,10 +95,13 @@ export default defineNuxtModule<ModuleOptions>({
     devtools: true,
     localize: true,
     doc: {},
-    locales: ['en', 'fr', 'de', 'ru', 'ch', 'es', 'hi', 'ar', 'zh', 'pt'],
+    locales: [],
     files: () => { return {}},
   },
   async setup (options, nuxt) {
+    if(!options.locales || !options.locales.length) {
+      options.locales = ['en', 'fr', 'de', 'ru', 'ch', 'es', 'hi', 'ar', 'zh', 'pt'];
+    }
     const isProd = nuxt.options.dev === false
 
     const resolver = createResolver(import.meta.url)
