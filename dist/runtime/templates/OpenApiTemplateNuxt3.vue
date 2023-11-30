@@ -131,6 +131,9 @@ useHead({
   meta: [
     { name: 'description', content: description.value }
   ],
+  htmlAttrs: {
+    lang: currentLocale.value,
+  },
   bodyAttrs: {
     class: 'oapi'
   },
