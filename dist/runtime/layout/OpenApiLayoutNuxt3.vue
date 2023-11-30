@@ -2,7 +2,7 @@
   <div class="oapi-layout">
     <OpenApiMainHeader :isMenuOpen="isMenuOpen" @toggleMenu="toggleMenu">
       <template #logo>
-        <nuxt-link to="/" :active-class="''">
+        <nuxt-link to="/" :active-class="''" aria-label="logo">
           <span v-html="logo"></span>
         </nuxt-link>
       </template>
@@ -615,9 +615,9 @@ html.oapi * {
   border-left: 5px solid #ccc;
 }
 .oapi-content__container a {
-  color: #4299e1;
+  color: #2f55d1;
   text-decoration: none;
-  border-bottom: 1px solid #4299e1;
+  border-bottom: 1px solid #2f55d1;
 }
 .oapi-content__container a:hover {
   color: #2c5282;

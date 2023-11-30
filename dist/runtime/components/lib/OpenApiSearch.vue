@@ -1,5 +1,7 @@
 <template>
   <button
+    id="search-btn"
+    aria-label="Search"
     class="oapi-header-btn oapi-search-btn"
     @click="toggleSearch"
   >

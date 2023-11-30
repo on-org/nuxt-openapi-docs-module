@@ -2,6 +2,8 @@
   <header class="oapi-header">
     <!-- Mobile menu button -->
     <button
+      id="menu-btn"
+      aria-label="Menu"
       class="oapi-header__menu-btn oapi-header-btn"
       @click="toggleMenu"
     >
