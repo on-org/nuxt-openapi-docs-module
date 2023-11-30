@@ -41,9 +41,8 @@ export default defineNuxtPlugin((nuxtApp) => {
     if(docsBase.length < 4) docsBase = to.fullPath.split('/')[2] ?? 'docs';
     const fileName = ref(to.params.name?.toString() ?? 'default');
 
-    const { data: result } = await useFetch('/' + docsBase + "/query/file/" + fileName.value + '.json')
+    const { data: result } = await useFetch('/' + docsBase + "/query/file/" + fileName.value + '/data.json')
 
-    console.log(111, result.value);
 
     data.value = result.value as any
   }

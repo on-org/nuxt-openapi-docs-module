@@ -181,7 +181,7 @@ export default defineNuxtModule<ModuleOptions>({
         for (let tag in item.pathsByTags) {
           if (tag === 'custom') continue;
 
-          nitro.options.prerender.routes.unshift(`/${item.path}/query/file/${item.filename}.json`)
+          nitro.options.prerender.routes.unshift(`/${item.path}/query/file/${item.filename}/data.json`)
 
           for (let i in item.pathsByTags[tag].items) {
             const select = item.pathsByTags[tag].items[i]
@@ -208,7 +208,7 @@ export default defineNuxtModule<ModuleOptions>({
       nitroConfig.handlers.push(
           {
             method: 'get',
-            route: `/${options.path}/query/file/:name.json`,
+            route: `/${options.path}/query/file/:name/data.json`,
             handler: resolver.resolve('./runtime/server/api/file')
           },
       )

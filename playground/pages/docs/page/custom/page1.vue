@@ -17,7 +17,7 @@ definePageMeta({
 });
 
 const { data } = useOpenApiDataState()
-const { data: result } = await useFetch("/docs/query/file/page.json")
+const { data: result } = await useFetch("/docs/query/file/page/data.json")
 
 data.value = {
   ...result.value as any,
