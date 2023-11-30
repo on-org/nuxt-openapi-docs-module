@@ -190,7 +190,7 @@ function enableTitleClick() {
       const headerId = header.getAttribute('id');
       const select = window.location.origin + window.location.pathname + '#' + headerId;
 
-      $openapidoc.copyToClipboard(select, e)
+      $openapidoc.copyToClipboard(select, e, false)
 
       router.push({
         path: route.path,

@@ -28,6 +28,6 @@ export default class OpenApiPlugin {
     setLogo(logo: null | string): void;
     getRouteInfo(file: string, url: string, method: string): string | null;
     setRouteInfo(routeInfo: (file: string, url: string, method: string) => null | string): void;
-    copyToClipboard(data: string, e: any): void;
+    copyToClipboard(data: string, e: any, repl?: boolean): void;
 }
 export {};

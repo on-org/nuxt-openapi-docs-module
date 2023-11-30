@@ -63,11 +63,13 @@ export default class OpenApiPlugin {
   setRouteInfo(routeInfo) {
     this.routeInfo = routeInfo;
   }
-  copyToClipboard(data, e) {
+  copyToClipboard(data, e, repl = true) {
     const btnEl = e.target;
     const originalText = btnEl.innerText;
     try {
       navigator.clipboard.writeText(data).then((r) => {
+        if (!repl)
+          return;
         btnEl.innerText = "Copied";
         setTimeout(() => {
           btnEl.innerText = originalText;
