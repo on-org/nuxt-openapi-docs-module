@@ -43,6 +43,8 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     const { data: result } = await useFetch('/' + docsBase + "/query/file/" + fileName.value)
 
+    console.log(111, result);
+
     data.value = result.value as any
   }
 
