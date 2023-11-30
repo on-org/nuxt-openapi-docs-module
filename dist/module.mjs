@@ -420,7 +420,7 @@ const module = defineNuxtModule({
         for (let tag in item.pathsByTags) {
           if (tag === "custom")
             continue;
-          nitro.options.prerender.routes.unshift(`/${item.path}/query/file/${item.filename}`);
+          nitro.options.prerender.routes.unshift(`/${item.path}/query/file/${item.filename}.json`);
           for (let i in item.pathsByTags[tag].items) {
             const select = item.pathsByTags[tag].items[i];
             nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/${select.type}/${select.path}`);
@@ -442,11 +442,11 @@ const module = defineNuxtModule({
       nitroConfig.handlers.push(
         {
           method: "get",
-          route: `/${options.path}/query/file/:name`,
+          route: `/${options.path}/query/file/:name.json`,
           handler: resolver.resolve("./runtime/server/api/file")
         }
       );
-      console.info(`Added \`${options.path}/query/files\` route handler`);
+      console.info(`Added \`${options.path}/query/files.json\` route handler`);
     });
     if (options.list) {
       const dst = await makeTemplate("OpenApiTemplateDocsList.vue", "DocsList", {
