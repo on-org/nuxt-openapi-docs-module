@@ -40,7 +40,6 @@ export default {
     },
     file: {
       type: String,
-      required: true,
     },
     path: {
       type: String,
@@ -48,7 +47,6 @@ export default {
     },
     files: {
       type: Object,
-      required: true,
     },
   },
   computed: {

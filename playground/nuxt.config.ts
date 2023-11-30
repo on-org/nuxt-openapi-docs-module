@@ -44,9 +44,10 @@ export default defineNuxtConfig({
           if(process.env.NODE_ENV !== 'production') {
             return {
               'petstore_extended': 'Petstore Extended Api',
-              'api.json': 'API Proxy',
-              "allof": "allof",
-              "webhook": "webhook",
+              // 'api.json': 'API Proxy',
+              // "allof": "allof",
+              // "webhook": "webhook",
+              'page': 'Custom Page',
               // 'localization': 'Localization',
               // 'no-access': 'no access',
               // 'test-yaml.yaml': 'yaml ext',
@@ -58,7 +59,7 @@ export default defineNuxtConfig({
             'petstore_extended': 'Petstore Extended Api',
             'localization': 'Localization',
             'no-access': 'no access',
-
+            'page': 'Custom Page',
             "additional-props": "additional-props",
             "allof": "allof",
             "arr-of-arr": "arr-of-arr",

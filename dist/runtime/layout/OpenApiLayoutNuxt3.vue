@@ -61,7 +61,7 @@ const path = ref('<%= options.path %>');
 const isMenuOpen = ref(false);
 const isMobile = ref(false);
 
-const fileName = computed((): string => route.params.name.toString());
+const fileName = computed((): string => route.params.name?.toString() ?? data.value.name?.toString());
 const name = computed((): string => data.value.name);
 const files = computed((): string => data.value.files);
 const pathsByTags = computed((): string => data.value.pathsByTags);
