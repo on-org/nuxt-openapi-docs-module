@@ -4,7 +4,7 @@ const timestamp = currentDate.getTime();
 
 export default defineNuxtConfig({
   app: {
-    // baseURL: isDev ? '/' : '/nuxt-openapi-docs-module',
+    baseURL: isDev ? '/' : '/nuxt-openapi-docs-module',
     buildAssetsDir: 'assets'
   },
   experimental: {
