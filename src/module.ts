@@ -181,6 +181,8 @@ export default defineNuxtModule<ModuleOptions>({
         for (let tag in item.pathsByTags) {
           if (tag === 'custom') continue;
 
+          nitro.options.prerender.routes.unshift(`/${item.path}/query/file/${item.filename}`)
+
           for (let i in item.pathsByTags[tag].items) {
             const select = item.pathsByTags[tag].items[i]
 

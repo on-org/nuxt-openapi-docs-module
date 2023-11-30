@@ -420,6 +420,7 @@ const module = defineNuxtModule({
         for (let tag in item.pathsByTags) {
           if (tag === "custom")
             continue;
+          nitro.options.prerender.routes.unshift(`/${item.path}/query/file/${item.filename}`);
           for (let i in item.pathsByTags[tag].items) {
             const select = item.pathsByTags[tag].items[i];
             nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/${select.type}/${select.path}`);
