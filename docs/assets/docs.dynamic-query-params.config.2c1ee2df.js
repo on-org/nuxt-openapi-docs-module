@@ -1,0 +1,1 @@
+const a={path:"docs",locales:{en:"English"},localesReload:!1,servers:[],paths_by_tags:{"Query Params":{name:"Query Params",description:"",isOpen:!0,items:[{name:"/dynamic-query-params",path:"dynamic-query-params",type:"get",icon:null,description:"Various ways to pass query params"}]}},name:"Api Docs"};export{a as d};

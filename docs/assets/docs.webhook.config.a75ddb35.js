@@ -1,0 +1,1 @@
+const e={path:"docs",locales:{en:"English"},localesReload:!1,servers:[],paths_by_tags:{webhooks:{name:"webhooks",description:"",isOpen:!0,items:[{name:"newPet",path:"newPet",type:"post",icon:null,description:null}]}},name:"Api Docs"};export{e as d};

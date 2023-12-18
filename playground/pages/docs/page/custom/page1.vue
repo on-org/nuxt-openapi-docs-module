@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import {definePageMeta, ref, onMounted, useOpenApiDataState, useFetch} from "#imports";
+import {definePageMeta, ref, onMounted, defineI18nRoute} from "#imports";
 import axios from 'axios'
 
 definePageMeta({
@@ -22,5 +22,9 @@ const content = ref('')
 onMounted(async () => {
   const result = await axios.get('https://jsonplaceholder.typicode.com/todos/1')
   content.value = `<b>${result.data.title}</b>`
+})
+
+defineI18nRoute({
+  locales: ['en']
 })
 </script>

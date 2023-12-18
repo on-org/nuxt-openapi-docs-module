@@ -85,7 +85,7 @@ export default defineNuxtModule<ModuleOptions>({
       '<path xmlns="http://www.w3.org/2000/svg" d="M1.038,38.491v145c0,8.08,6.053,16.912,13.493,19.688l105.042,46.072c1.457,0.543,2.91,0.824,4.293,0.824  c5.277,0,8.823-4.104,8.823-10.209v-145c0-8.08-6.053-16.912-13.492-19.688l-9.267-4.064c-1.756,1.523-4.893,5.444-4.893,14.093v56  l-18-25.25l-13.25,11.25c0,0-0.169-34.875-0.044-50.25c-0.037-10.146,1.992-16.831,5.298-19.391L14.155,29.104  c-1.457-0.543-2.91-0.823-4.293-0.823C4.584,28.281,1.038,32.384,1.038,38.491z"></path>' +
       '<path xmlns="http://www.w3.org/2000/svg" d="M4.475,29.498C2.76,30.81,1.495,32.787,0.91,35.272C1.715,33.491,3.003,31.483,4.475,29.498z"></path>' +
       '</g>' +
-      '<text x="50%" y="60%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="56" font-weight="600">:name</text>' +
+      '<text x="60%" y="60%" dominant-baseline="middle" text-anchor="middle" fill="black" font-size="56" font-weight="600">:name</text>' +
       '</svg>',
     footer: null,
     path: 'docs',

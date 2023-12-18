@@ -1,0 +1,1 @@
+const e={path:"docs",locales:{en:"English"},localesReload:!1,servers:[],paths_by_tags:{"Circular References":{name:"Circular References",description:"",isOpen:!0,items:[{name:"/books",path:"books",type:"get",icon:null,description:"List all books"}]}},name:"Api Docs"};export{e as d};

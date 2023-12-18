@@ -1,0 +1,1 @@
+const e={path:"docs",locales:{en:"English"},localesReload:!1,servers:[],paths_by_tags:{other:{name:"other",description:"",isOpen:!0,items:[{name:"/schema/person",path:"schema_person",type:"get",icon:null,description:"Person Schema"}]}},name:"Api Docs"};export{e as d};

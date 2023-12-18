@@ -1,0 +1,1 @@
+const e={path:"docs",locales:{en:"English"},localesReload:!1,servers:[{url:"http://demo1373839.mockable.io"}],paths_by_tags:{other:{name:"other",description:"",isOpen:!0,items:[{name:"/sample-post",path:"sample-post",type:"post",icon:null,description:"Resend schedule to a node"}]}},name:"Api Docs"};export{e as d};

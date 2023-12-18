@@ -1,0 +1,1 @@
+const e={path:"docs",locales:{en:"English"},localesReload:!1,servers:[],paths_by_tags:{other:{name:"other",description:"",isOpen:!0,items:[{name:"/xml-generated-from-schema",path:"xml-generated-from-schema",type:"get",icon:null,description:"XML (Generated From Schema)"}]}},name:"Api Docs"};export{e as d};

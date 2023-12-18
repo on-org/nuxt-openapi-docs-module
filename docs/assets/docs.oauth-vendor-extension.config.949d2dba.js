@@ -1,0 +1,1 @@
+const e={path:"docs",locales:{en:"English"},localesReload:!1,servers:[],paths_by_tags:{other:{name:"other",description:"",isOpen:!0,items:[{name:"/dogs",path:"dogs",type:"get",icon:null,description:"Return an array of the petstore&#x27;s dogs."}]}},name:"Api Docs"};export{e as d};
