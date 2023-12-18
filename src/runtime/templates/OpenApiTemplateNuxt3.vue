@@ -64,11 +64,12 @@ const activePath = computed((): { [key: string]: any }|null => {
   const paths = { ...doc_data.paths };
   if(!paths) return null;
   for (const selectPath in paths) {
-    let routePath = selectPath.toString()
-      .replace(/[/\\.?+=&{}]/gumi, '_')
-      .replace(/__+/, '_');
+    let routePath = selectPath.toString();
     if (routePath.startsWith('/')) routePath = routePath.substring(1);
     if (routePath.endsWith('/')) routePath = routePath.substring(-1);
+
+    routePath.replace(/[/\\.?+=&{}]/gumi, '_')
+      .replace(/__+/, '_')
 
     if(routePath === mathod.value) {
       url.value = selectPath.toString();
@@ -82,11 +83,12 @@ const activeWebhook = computed((): { [key: string]: any }|null => {
   const webhooks = { ...doc_data.webhooks };
   if(!webhooks) return null;
   for (const selectPath in webhooks) {
-    let routePath = selectPath.toString()
-      .replace(/[/\\.?+=&{}]/gumi, '_')
-      .replace(/__+/, '_');
+    let routePath = selectPath.toString();
     if (routePath.startsWith('/')) routePath = routePath.substring(1);
     if (routePath.endsWith('/')) routePath = routePath.substring(-1);
+
+    routePath.replace(/[/\\.?+=&{}]/gumi, '_')
+      .replace(/__+/, '_')
 
     if(routePath === mathod.value) {
       url.value = selectPath.toString();
