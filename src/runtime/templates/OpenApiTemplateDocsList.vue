@@ -13,13 +13,13 @@
 </template>
 
 <script setup lang="ts">
-const options = <%= JSON.stringify(options) %>;
+import options from '#build/openapi/config.mjs';
 
 import {ref, useRoute} from "#imports";
 
 const route = useRoute()
 
-const files = ref(options.files);
+const files = ref(options.filesClean);
 
 function genUrl(filename: string|number) {
   let base = options.base_url ?? '/'

@@ -28,7 +28,6 @@ declare namespace _default {
         function getRoute(scheme: any): {
             name: string;
             params: {
-                name: any;
                 type: string;
             };
             hash: string;

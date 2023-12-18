@@ -49,9 +49,8 @@ export default {
   methods: {
     getRoute(scheme) {
       return {
-        name: `openapi-${this.path_doc}${this.$openapidoc.I18nLocaleSuffix()}`,
+        name: `openapi-${this.path_doc}-${this.file}${this.$openapidoc.I18nLocaleSuffix()}`,
         params: {
-          name: this.file,
           type: 'components'
         },
         hash: '#'+scheme

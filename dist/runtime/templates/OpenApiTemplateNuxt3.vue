@@ -21,10 +21,11 @@ import {
   useNuxtApp,
   useRoute,
   useRouter,
-  useOpenApiDataState,
-  definePageMeta, defineI18nRoute, toRaw, useHead
+  definePageMeta, defineI18nRoute, useHead
 } from "#imports";
 
+import doc_data from '#build/openapi/docs.<%= options.filename %>.mjs';
+import data from '#build/openapi/docs.<%= options.filename %>.config.mjs';
 
 const route = useRoute()
 const router = useRouter()
@@ -32,23 +33,21 @@ const router = useRouter()
 const { $openapidoc, $openapidocBus, $openapidocRef } = useNuxtApp()
 
 definePageMeta({
-  layout: "open-api-layout",
+  layout: "open-api-layout-<%= options.filename %>",
 });
 
 const url = ref('')
 const currentServer = ref(0)
-
-const data = useOpenApiDataState().data;
 
 const options: any = undefined;
 defineI18nRoute({
   locales: <%= JSON.stringify(Object.keys(options.locales)).replace(/"/g, "'") %>
 })
 
-const path_doc = ref<string>((data.value.path ?? '').toString())
-const doc = ref<{[key: string]: any}>(data.value.doc ?? {})
+const path_doc = ref<string>((data.path ?? '').toString())
+const doc = ref<{[key: string]: any}>(doc_data ?? {})
 
-const fileName = computed<string>(() => route.params.name.toString());
+const fileName = computed<string>(() => "<%= options.filename %>");
 const type = computed<string>(() => route.params.type.toString());
 const mathod = computed<string>(() => (route.params.mathod ?? 'default').toString());
 const isInfo = computed(() => type.value === 'info')
@@ -56,8 +55,8 @@ const isAuth = computed(() => type.value === 'auth')
 const isComponents = computed(() => type.value === 'components')
 const currentLocale = computed((): string => $openapidoc.currentLocale())
 
-$openapidocRef.setComponents(data.value.doc?.components)
-$openapidocRef.setDefinitions(data.value.doc?.definitions)
+$openapidocRef.setComponents(doc_data.components)
+$openapidocRef.setDefinitions(doc_data.definitions)
 $openapidocRef.setDocPath(path_doc.value)
 $openapidocRef.setFile(fileName.value)
 

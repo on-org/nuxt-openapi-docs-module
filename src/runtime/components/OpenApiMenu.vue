@@ -212,9 +212,8 @@ export default {
     },
     getRoute(path) {
       return {
-        name: `openapi-${this.path}${this.$openapidoc.I18nLocaleSuffix()}`,
+        name: `openapi-${this.path}-${this.file}${this.$openapidoc.I18nLocaleSuffix()}`,
         params: {
-          name: this.file,
           type: path
         }
 
@@ -228,8 +227,8 @@ export default {
       }
 
       return {
-        name: `openapi-${this.path}/type-mathod${this.$openapidoc.I18nLocaleSuffix()}`,
-        params: { name: this.file, type: type, mathod: path }
+        name: `openapi-${this.path}-${this.file}/type-mathod${this.$openapidoc.I18nLocaleSuffix()}`,
+        params: { type: type, mathod: path }
       };
     },
     changeRoute(route) {
@@ -239,9 +238,8 @@ export default {
     },
     changeDoc(option) {
       return {
-        name: `openapi-${this.path}${this.$openapidoc.I18nLocaleSuffix('en')}`,
+        name: `openapi-${this.path}-${option}${this.$openapidoc.I18nLocaleSuffix('en')}`,
         params: {
-          name: option,
           type: 'info'
         }
       };
@@ -252,9 +250,8 @@ export default {
     },
     changeLocale(option) {
       return {
-        name: `openapi-${this.path}${this.$openapidoc.I18nLocaleSuffix(option)}`,
+        name: `openapi-${this.path}-${this.file}${this.$openapidoc.I18nLocaleSuffix(option)}`,
         params: {
-          name: this.file,
           type: 'info'
         }
       };

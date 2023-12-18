@@ -13,7 +13,7 @@ import Parser from "./runtime/Parser";
 import {promises, existsSync, writeFileSync, mkdirSync} from "node:fs";
 import lodashTemplate from "lodash.template";
 import type {Resolver} from '@nuxt/kit'
-import { watch } from 'chokidar'
+import {kebabCase} from "scule";
 
 export interface ModuleOptions {
   folder?: string,
@@ -46,13 +46,13 @@ function filesCleanup(files: {[key: string]: string}) {
     const extension = extname(i);
     const fileName = basename(i, extension);
 
-    result[fileName] = files[i]
+    result[kebabCase(fileName)] = files[i]
   }
   return result
 }
 
 async function makeTemplate(templateName: string, fileName: string, options: {[key: string]: any}, resolver: Resolver) {
-  const srcContents = await promises.readFile(resolver.resolve(`./runtime/templates/${templateName}`), "utf-8");
+  const srcContents = await promises.readFile(resolver.resolve(`./runtime/${templateName}`), "utf-8");
   const template = lodashTemplate(srcContents, {})({options:options});
 
   if (!existsSync(join(__dirname, '.cache'))) {
@@ -64,18 +64,6 @@ async function makeTemplate(templateName: string, fileName: string, options: {[k
   writeFileSync(path , template);
 
   return path;
-}
-
-async function updateStorageFiles(nitro: any, docs: DocItem[]) {
-  for (let item of docs) {
-    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:doc.json`, item.doc);
-    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:path.json`, item.path);
-    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:locales.json`, item.locales);
-    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:locales_reload.json`, item.localesReload);
-    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:servers.json`, item.servers);
-    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:paths_by_tags.json`, item.pathsByTags);
-    await nitro.storage.setItem(`cache:openapidoc:${item.filename}:name.json`, item.name);
-  }
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -138,89 +126,40 @@ export default defineNuxtModule<ModuleOptions>({
       })
     }
 
-    nuxt.hook("nitro:build:before", async (nitro) => {
-      if (!isProd) {
-        console.log('ℹ add file watcher', workDir)
-        const cachePath = join(__dirname, '.cache');
-
-        const watcherEvent = async (path: string) => {
-          watcher.close();
-          console.log('↻ update store item', path)
-          nuxt.callHook('restart')
-        }
-
-        const watcher = watch(workDir, { depth: 1, persistent: true }).on('change', watcherEvent);
-        const watcher2 = watch(cachePath, { depth: 1, persistent: true }).on('unlink', watcherEvent);
-
-        nuxt.hook('close', () => {
-          watcher.close();
-          watcher2.close();
-        })
-
-      }
-
-
-      await nitro.storage.setItem(`cache:openapidoc:files.json`, filesClean);
-      await nitro.storage.setItem(`cache:openapidoc:doc_path.json`, options.path ?? 'docs');
-
-      for (let item of docs) {
-        nitro.options.prerender.routes = nitro.options.prerender.routes || []
-
-        await updateStorageFiles(nitro, docs);
-
-        nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/info`);
-        nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/auth`);
-        nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/components`);
-
-        for (let locale in item.locales) {
-          if(locale === 'en') continue;
-          nitro.options.prerender.routes.unshift(`/${locale}/${options.path}/${item.filename}/info`);
-          nitro.options.prerender.routes.unshift(`/${locale}/${options.path}/${item.filename}/auth`);
-          nitro.options.prerender.routes.unshift(`/${locale}/${options.path}/${item.filename}/components`);
-        }
-        for (let tag in item.pathsByTags) {
-          if (tag === 'custom') continue;
-
-          nitro.options.prerender.routes.unshift(`/${item.path}/query/file/${item.filename}/data.json`)
-
-          for (let i in item.pathsByTags[tag].items) {
-            const select = item.pathsByTags[tag].items[i]
-
-            nitro.options.prerender.routes.unshift(`/${options.path}/${item.filename}/${select.type}/${select.path}`);
-            for (let locale in item.locales) {
-              if(locale === 'en') continue;
-              nitro.options.prerender.routes.unshift(`/${locale}/${options.path}/${item.filename}/${select.type}/${select.path}`);
-            }
-          }
-        }
-      }
-    });
-
-    nuxt.hook('nitro:config', async (nitroConfig) => {
-      nitroConfig.handlers = nitroConfig.handlers || []
-
-      nitroConfig.prerender = nitroConfig.prerender || {};
-      nitroConfig.prerender.routes = nitroConfig.prerender.routes || [];
-
-      nuxt.options.build.transpile = nuxt.options.build.transpile || [];
-      nuxt.options.build.transpile.push(resolver.resolve("./runtime"));
-
-      nitroConfig.handlers.push(
-          {
-            method: 'get',
-            route: `/${options.path}/query/file/:name/data.json`,
-            handler: resolver.resolve('./runtime/server/api/file')
-          },
-      )
-
-      console.info("Added `"+`${options.path}/query/files.json`+ "` route handler");
-    })
-
-    if(options.list) {
-      const dst = await makeTemplate('OpenApiTemplateDocsList.vue', 'DocsList', {
-        files: filesClean,
+    addTemplate({
+      filename: 'openapi/config.mjs',
+      write: true,
+      getContents: () => 'export default ' + JSON.stringify({
+        filesClean,
+        path: options.path ?? 'docs',
         doc_path: options.path ?? 'docs',
         base_url: nuxt.options.app.baseURL ?? '/',
+      })
+    })
+
+    for (let item of docs) {
+      addTemplate({
+        filename: `openapi/docs.${item.filename}.config.mjs`,
+        write: true,
+        getContents: () => 'export default ' + JSON.stringify({
+          path: item.path,
+          locales: item.locales,
+          localesReload: item.localesReload,
+          servers: item.servers,
+          paths_by_tags: item.pathsByTags,
+          name: item.name,
+        })
+      })
+      addTemplate({
+        filename: `openapi/docs.${item.filename}.mjs`,
+        write: true,
+        getContents: () => 'export default ' + JSON.stringify(item.doc)
+      })
+    }
+
+    if(options.list) {
+      const dst = await makeTemplate('templates/OpenApiTemplateDocsList.vue', 'DocsList', {
+        files: filesClean,
       }, resolver)
 
       extendPages((pages) => {
@@ -232,17 +171,20 @@ export default defineNuxtModule<ModuleOptions>({
       });
     }
 
-    addLayout({
-      src: resolver.resolve( `./runtime/layout/OpenApiLayoutNuxt3.vue`),
-      filename: `OpenApiLayoutNuxt3.vue`,
-      write: true,
-      options: {
-        path: options.path ?? 'docs',
-      },
-    }, 'open-api-layout')
-
     for (let item of docs) {
-      const dst = await makeTemplate('OpenApiTemplateNuxt3.vue', `${item.filename}`, {
+      addLayout({
+        src: resolver.resolve(`./runtime/layout/OpenApiLayoutNuxt3.vue`),
+        filename: `openapi/apidocs.layout.${item.filename}.vue`,
+        write: true,
+        options: {
+          path: options.path ?? 'docs',
+          filename: item.filename,
+          locales: item.locales,
+          localesReload: item.localesReload,
+        },
+      }, 'open-api-layout-' + item.filename)
+
+      const dst = await makeTemplate('templates/OpenApiTemplateNuxt3.vue', `${item.filename}`, {
         path: options.path ?? 'docs',
         filename: item.filename,
         locales: item.locales,
@@ -251,14 +193,14 @@ export default defineNuxtModule<ModuleOptions>({
 
       extendPages((pages) => {
         pages.push({
-          name: `openapi-${options.path}`,
-          path: `/${options.path}/:name/:type`,
+          name: `openapi-${options.path}-${item.filename}`,
+          path: `/${options.path}/${item.filename}/:type`,
           file: dst,
         })
 
         pages.push({
-          name: `openapi-${options.path}/type-mathod`,
-          path: `/${options.path}/:name/:type/:mathod`,
+          name: `openapi-${options.path}-${item.filename}/type-mathod`,
+          path: `/${options.path}/${item.filename}/:type/:mathod`,
           file: dst,
         })
       })
@@ -286,9 +228,5 @@ export default defineNuxtModule<ModuleOptions>({
         })
       })
     }
-
-    // nuxt.options.css.push(resolver.resolve('./runtime/github.css'));
-    // nuxt.options.css.push(resolver.resolve('./runtime/styles.css'));
-
   }
 })

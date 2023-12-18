@@ -4,6 +4,7 @@ import fetch from "sync-fetch";
 import fs from "fs";
 import * as yaml from "js-yaml";
 import hljs from "highlight.js";
+import {kebabCase} from "scule";
 
 interface PathByTagItem {
   name: string,
@@ -69,7 +70,7 @@ export default class Parser {
     this.spec = openApiSpec.openApiSpec;
     this.components = openApiSpec.openApiSpec.components;
     this.definitions = openApiSpec.openApiSpec.definitions;
-    this.fileName = openApiSpec.fileName;
+    this.fileName = kebabCase(openApiSpec.fileName);
 
     this.definitions = this.refReplace(this.definitions)
     this.components = this.refReplace(this.components)

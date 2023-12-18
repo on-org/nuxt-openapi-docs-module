@@ -79,7 +79,6 @@ declare namespace _default {
         export function getRoute(path: any): {
             name: string;
             params: {
-                name: any;
                 type: any;
             };
         };
@@ -89,7 +88,6 @@ declare namespace _default {
         } | {
             name: string;
             params: {
-                name: any;
                 type: any;
                 mathod: string;
             };
@@ -98,7 +96,6 @@ declare namespace _default {
         export function changeDoc(option: any): {
             name: string;
             params: {
-                name: any;
                 type: string;
             };
         };
@@ -106,7 +103,6 @@ declare namespace _default {
         export function changeLocale(option: any): {
             name: string;
             params: {
-                name: any;
                 type: string;
             };
         };

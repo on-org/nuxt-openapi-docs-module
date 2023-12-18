@@ -13,16 +13,9 @@ import {definePageMeta, ref, onMounted, useOpenApiDataState, useFetch} from "#im
 import axios from 'axios'
 
 definePageMeta({
-  layout: 'open-api-layout',
+  layout: 'open-api-layout-page',
 });
 
-const { data } = useOpenApiDataState()
-const { data: result } = await useFetch("/docs/query/file/page/data.json")
-
-data.value = {
-  ...result.value as any,
-  name: 'page'
-}
 
 const content = ref('')
 

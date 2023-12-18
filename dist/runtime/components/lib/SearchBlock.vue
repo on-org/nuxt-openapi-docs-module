@@ -178,9 +178,8 @@ export default {
           title: summary,
           description: result,
           route: {
-            name: `openapi-${this.path}${this.$openapidoc.I18nLocaleSuffix()}`,
+            name: `openapi-${this.path}-${this.file}${this.$openapidoc.I18nLocaleSuffix()}`,
             params: {
-              name: this.file,
               type: 'info'
             },
             query: {query}
@@ -213,8 +212,8 @@ export default {
               title: summary.replace(query, "<b>" + query + "</b>"),
               description: result + '...',
               route: {
-                name: `openapi-${this.path}/type-mathod${this.$openapidoc.I18nLocaleSuffix()}`,
-                params: { name: this.file, type: routePath, mathod: method },
+                name: `openapi-${this.path}-${this.file}/type-mathod${this.$openapidoc.I18nLocaleSuffix()}`,
+                params: { type: routePath, mathod: method },
                 query: {query}
               }
             };
@@ -232,8 +231,8 @@ export default {
                 title: summary,
                 description: result,
                 route: {
-                  name: `openapi-${this.path}/type-mathod${this.$openapidoc.I18nLocaleSuffix()}`,
-                  params: { name: this.file, type: routePath, mathod: method },
+                  name: `openapi-${this.path}-${this.file}/type-mathod${this.$openapidoc.I18nLocaleSuffix()}`,
+                  params: { type: routePath, mathod: method },
                   query: {query}
                 }
               };

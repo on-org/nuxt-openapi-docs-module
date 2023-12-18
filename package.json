@@ -1,7 +1,7 @@
 {
   "name": "nuxt-openapi-docs-module",
-  "version": "5.0.17",
-  "description": "A plugin for Nuxt.js to generate pages from OpenAPI specifications",
+  "version": "5.1.1",
+  "description": "A module for Nuxt.js to generate pages from OpenAPI specifications",
   "homepage": "https://github.com/on-org/nuxt-openapi-docs-module#readme",
   "scripts": {
     "prepack": "nuxt-module-build build",
