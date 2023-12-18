@@ -206,10 +206,6 @@ export default defineNuxtModule<ModuleOptions>({
       })
     }
 
-    addImports([
-      { name: 'useOpenApiDataState', as: 'useOpenApiDataState', from: resolver.resolve('./runtime/composables/openApiData') },
-    ])
-
 
     addPlugin({
       src: resolver.resolve('./runtime/plugins/plugin3'),

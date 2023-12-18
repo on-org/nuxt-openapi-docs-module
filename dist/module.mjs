@@ -1,4 +1,4 @@
-import { defineNuxtModule, createResolver, addComponentsDir, addTemplate, extendPages, addLayout, addImports, addPlugin } from '@nuxt/kit';
+import { defineNuxtModule, createResolver, addComponentsDir, addTemplate, extendPages, addLayout, addPlugin } from '@nuxt/kit';
 import { join, dirname, basename, extname, resolve } from 'path';
 import { marked } from 'marked';
 import fetch from 'sync-fetch';
@@ -447,9 +447,6 @@ const module = defineNuxtModule({
         });
       });
     }
-    addImports([
-      { name: "useOpenApiDataState", as: "useOpenApiDataState", from: resolver.resolve("./runtime/composables/openApiData") }
-    ]);
     addPlugin({
       src: resolver.resolve("./runtime/plugins/plugin3")
     });
