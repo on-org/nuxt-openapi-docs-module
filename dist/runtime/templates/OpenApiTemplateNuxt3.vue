@@ -68,7 +68,7 @@ const activePath = computed((): { [key: string]: any }|null => {
     if (routePath.startsWith('/')) routePath = routePath.substring(1);
     if (routePath.endsWith('/')) routePath = routePath.substring(-1);
 
-    routePath.replace(/[/\\.?+=&{}]/gumi, '_')
+    routePath = routePath.replace(/[/\\.?+=&{}]/gumi, '_')
       .replace(/__+/, '_')
 
     if(routePath === mathod.value) {
@@ -87,7 +87,7 @@ const activeWebhook = computed((): { [key: string]: any }|null => {
     if (routePath.startsWith('/')) routePath = routePath.substring(1);
     if (routePath.endsWith('/')) routePath = routePath.substring(-1);
 
-    routePath.replace(/[/\\.?+=&{}]/gumi, '_')
+    routePath = routePath.replace(/[/\\.?+=&{}]/gumi, '_')
       .replace(/__+/, '_')
 
     if(routePath === mathod.value) {
