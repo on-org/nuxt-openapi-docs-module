@@ -50,14 +50,14 @@
 import {computed, onMounted, onUnmounted, ref, useNuxtApp, useRoute, watch} from "#imports";
 
 import config from '#build/openapi/config.mjs';
-import data from '#build/openapi/docs.<%= options.filename %>.config.mjs';
+import doc_data from '#build/openapi/docs.<%= options.filename %>.config.mjs';
 
 const path = ref('<%= options.path %>');
 
 const route = useRoute()
 const { $openapidoc, $openapidocBus } = useNuxtApp()
 
-let ser = data.servers;
+let ser = {...doc_data.servers};
 if(!Array.isArray(ser)) ser = [];
 
 const servers = ref<Array<any>>(ser);
@@ -65,12 +65,12 @@ const isMenuOpen = ref(false);
 const isMobile = ref(false);
 
 const fileName = computed((): string => "<%= options.filename %>");
-const name = computed((): string => data.name);
+const name = computed((): string => doc_data.name);
 const files = computed(() => config.filesClean);
-const pathsByTags = computed((): string => data.paths_by_tags);
+const pathsByTags = computed((): string => doc_data.paths_by_tags);
 
-const localesReload = computed<boolean>((): string => data.localesReload ?? false);
-const locales = computed((): string => data.locales);
+const localesReload = computed<boolean>(() => doc_data.localesReload ?? false);
+const locales = computed((): string[] => doc_data.locales);
 const currentLocale = computed((): string => $openapidoc.currentLocale());
 const logo = computed((): string => config.logo.replace(':name', name.value));
 const footer = computed((): string => config.footer);

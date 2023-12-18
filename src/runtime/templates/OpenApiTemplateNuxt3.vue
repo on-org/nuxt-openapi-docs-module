@@ -61,32 +61,36 @@ $openapidocRef.setDocPath(path_doc.value)
 $openapidocRef.setFile(fileName.value)
 
 const activePath = computed((): { [key: string]: any }|null => {
-  if(!doc.value.paths) return null;
-  for (let selectPath in doc.value.paths) {
-    let routePath = selectPath;
+  const paths = { ...doc_data.paths };
+  if(!paths) return null;
+  for (const selectPath in paths) {
+    let routePath = selectPath.toString()
+      .replace(/[/\\.?+=&{}]/gumi, '_')
+      .replace(/__+/, '_');
     if (routePath.startsWith('/')) routePath = routePath.substring(1);
     if (routePath.endsWith('/')) routePath = routePath.substring(-1);
-    routePath = routePath.replace(/[/\\.?+=&{}]/gumi, '_').replace(/__+/, '_')
 
     if(routePath === mathod.value) {
-      url.value = selectPath;
-      return doc.value.paths[selectPath] ?? null
+      url.value = selectPath.toString();
+      return paths[selectPath] ?? null
     }
   }
   return null;
 })
 
 const activeWebhook = computed((): { [key: string]: any }|null => {
-  if(!doc.value.webhooks) return null;
-  for (let selectPath in doc.value.webhooks) {
-    let routePath = selectPath;
+  const webhooks = { ...doc_data.webhooks };
+  if(!webhooks) return null;
+  for (const selectPath in webhooks) {
+    let routePath = selectPath.toString()
+      .replace(/[/\\.?+=&{}]/gumi, '_')
+      .replace(/__+/, '_');
     if (routePath.startsWith('/')) routePath = routePath.substring(1);
     if (routePath.endsWith('/')) routePath = routePath.substring(-1);
-    routePath = routePath.replace(/[/\\.?+=&{}]/gumi, '_').replace(/__+/, '_')
 
     if(routePath === mathod.value) {
-      url.value = selectPath;
-      return doc.value.webhooks[selectPath][type.value] ?? null
+      url.value = selectPath.toString();
+      return webhooks[selectPath][type.value] ?? null
     }
   }
 
@@ -161,23 +165,23 @@ const server = computed((): string => {
 
   let cs = currentServer.value;
 
-  if (cs > 0 && doc.value.servers && !doc.value.servers[cs]) {
+  if (cs > 0 && doc_data.servers && !doc_data.servers[cs]) {
     cs = 0;
   }
 
-  if (!doc.value.servers || !doc.value.servers[cs]) {
+  if (!doc_data.servers || !doc_data.servers[cs]) {
     return '';
   }
 
-  if (doc.value.servers[cs].variables) {
-    const variables = Object.values(doc.value.servers[cs].variables) ?? [];
+  if (doc_data.servers[cs].variables) {
+    const variables = Object.values(doc_data.servers[cs].variables) ?? [];
     if (variables && variables.length) {
       const select = variables[0] as any
       return select.default
     }
   }
 
-  return doc.value.servers[cs].url ?? ''
+  return doc_data.servers[cs].url ?? ''
 })
 
 function onChangeServer(option: number) {
@@ -216,7 +220,7 @@ function setScrollPosition() {
 }
 
 function downloadJson() {
-  const json = JSON.stringify(doc.value, null, 4);
+  const json = JSON.stringify(doc_data, null, 4);
   const blob = new Blob([json], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
 
