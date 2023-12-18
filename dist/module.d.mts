@@ -3,6 +3,8 @@ import * as _nuxt_schema from '@nuxt/schema';
 interface ModuleOptions {
     folder?: string;
     name?: string;
+    logo?: string;
+    footer?: string | null;
     path?: string;
     debug?: boolean;
     list?: boolean;

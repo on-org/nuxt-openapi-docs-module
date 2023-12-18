@@ -72,8 +72,8 @@ const pathsByTags = computed((): string => data.paths_by_tags);
 const localesReload = computed<boolean>((): string => data.localesReload ?? false);
 const locales = computed((): string => data.locales);
 const currentLocale = computed((): string => $openapidoc.currentLocale());
-const logo = computed((): string => $openapidoc.getLogo().replace(':name', name.value));
-const footer = computed((): string => $openapidoc.getFooter());
+const logo = computed((): string => config.logo.replace(':name', name.value));
+const footer = computed((): string => config.footer);
 
 watch(route, () => {
   if (isMobile.value) {

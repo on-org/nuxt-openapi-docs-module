@@ -40,6 +40,7 @@ export default defineNuxtConfig({
         name: 'Api Docs',
         debug: true,
         list: true,
+        footer: '<div><b>Nuxt OpenApi doc panel</b> - [<a href="https://on-org.github.io/nuxt-openapi-docs-module/docs/petstore_extended/en/get/components/">Example</a>] [<a href="https://github.com/on-org/nuxt-openapi-docs-module">Info</a>] by <a href="https://github.com/s00d">s00d</a></div>',
         files: function() {
           if(process.env.NODE_ENV !== 'production') {
             return {

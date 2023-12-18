@@ -110,6 +110,8 @@ modules: [
 - `debug`: print debug information to console, Default: false
 - `list`: Toggling the list of documents, Default: false
 - `locales`: array wit enabled locales, Default: `['en']` Support: `['en', 'fr', 'de', 'ru', 'ch', 'es', 'hi', 'ar', 'zh', 'pt']`
+- `logo`: svg logo in string
+- `footer`: doc footer
 -
 ### Folder Structure
 The default folder structure for your OpenAPI specification files should look like this:
