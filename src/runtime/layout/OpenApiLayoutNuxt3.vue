@@ -2,9 +2,9 @@
   <div class="oapi-layout">
     <OpenApiMainHeader :isMenuOpen="isMenuOpen" @toggleMenu="toggleMenu">
       <template #logo>
-        <nuxt-link to="/" :active-class="''" aria-label="logo">
+        <a href="/" aria-label="logo">
           <span v-html="logo"></span>
-        </nuxt-link>
+        </a>
       </template>
       <template #button>
         <OpenApiHeader
