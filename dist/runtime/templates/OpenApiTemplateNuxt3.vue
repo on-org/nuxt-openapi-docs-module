@@ -13,6 +13,9 @@
 </template>
 
 <script setup lang="ts">
+defineI18nRoute({
+  locales: <%= JSON.stringify(Object.keys(options.locales)).replace(/"/g, "'") %>
+})
 import {
   computed,
   onMounted,
@@ -38,11 +41,6 @@ definePageMeta({
 
 const url = ref('')
 const currentServer = ref(0)
-
-const options: any = undefined;
-defineI18nRoute({
-  locales: <%= JSON.stringify(Object.keys(options.locales)).replace(/"/g, "'") %>
-})
 
 const path_doc = ref<string>((data.path ?? '').toString())
 const doc = ref<{[key: string]: any}>(doc_data ?? {})
