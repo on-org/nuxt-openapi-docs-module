@@ -466,6 +466,10 @@ const module = defineNuxtModule({
         });
       });
     }
+    nuxt.hooks.hook("nitro:config", (nitroConfig) => {
+      nitroConfig.publicAssets = nitroConfig.publicAssets || [];
+      nitroConfig.publicAssets.push({ dir: resolver.resolve("./runtime/public"), maxAge: 31536e3 });
+    });
   }
 });
 
