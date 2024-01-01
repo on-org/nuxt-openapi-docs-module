@@ -1,13 +1,12 @@
-'use strict';
 
-function pad(number) {
+function pad(number: number) {
   if (number < 10) {
     return '0' + number;
   }
   return number;
 }
 
-export function toRFCDateTime(date, omitTime, omitDate, milliseconds) {
+export function toRFCDateTime(date: Date, omitTime: boolean, omitDate: boolean, milliseconds: boolean) {
   var res = omitDate ? '' : (date.getUTCFullYear() +
     '-' + pad(date.getUTCMonth() + 1) +
     '-' + pad(date.getUTCDate()));
@@ -21,15 +20,15 @@ export function toRFCDateTime(date, omitTime, omitDate, milliseconds) {
   return res;
 };
 
-export function ensureMinLength(sample, min) {
+export function ensureMinLength(sample: string, min: number) {
   if (min > sample.length) {
     return sample.repeat(Math.trunc(min / sample.length) + 1).substring(0, min);
   }
   return sample;
 }
 
-export function mergeDeep(...objects) {
-  const isObject = obj => obj && typeof obj === 'object';
+export function mergeDeep(...objects: any[]) {
+  const isObject = (obj: any) => obj && typeof obj === 'object';
 
   return objects.reduce((prev, obj) => {
     Object.keys(obj || {}).forEach(key => {
@@ -49,7 +48,7 @@ export function mergeDeep(...objects) {
 
 // deterministic UUID sampler
 
-export function uuid(str) {
+export function uuid(str: string) {
   var hash = hashCode(str);
   var random = jsf32(hash, hash, hash, hash);
   var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -59,7 +58,7 @@ export function uuid(str) {
   return uuid;
 }
 
-export function getResultForCircular(type) {
+export function getResultForCircular(type: string) {
   return {
     value: type === 'object' ?
         {}
@@ -67,11 +66,11 @@ export function getResultForCircular(type) {
   };
 }
 
-export function popSchemaStack(seenSchemasStack, context) {
+export function popSchemaStack(seenSchemasStack: any[], context: boolean) {
   if (context) seenSchemasStack.pop();
 }
 
-function hashCode(str) {
+function hashCode(str: string) {
   var hash = 0;
   if (str.length == 0) return hash;
   for (var i = 0; i < str.length; i++) {
@@ -82,7 +81,7 @@ function hashCode(str) {
   return hash;
 }
 
-function jsf32(a, b, c, d) {
+function jsf32(a: number, b: number, c: number, d: number): () => number {
   return function () {
     a |= 0; b |= 0; c |= 0; d |= 0;
     var t = a - (b << 27 | b >>> 5) | 0;

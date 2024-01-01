@@ -1,4 +1,4 @@
-export function sampleNumber(schema) {
+export function sampleNumber(schema: any) {
   let res = 0;
   if (schema.type === 'number' && (schema.format === 'float' || schema.format === 'double')) {
     res = 0.1;

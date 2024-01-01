@@ -1,7 +1,7 @@
 import { traverse } from './traverse';
 import { mergeDeep } from './utils';
 
-export function allOfSample(into, children, options, spec, context) {
+export function allOfSample(into: any, children: any, options: any, spec: any, context: any) {
   let res = traverse(into, options, spec);
   const subSamples = [];
 

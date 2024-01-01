@@ -1,20 +1,33 @@
 import { traverse, clearCache } from './traverse';
 import { sampleArray, sampleBoolean, sampleNumber, sampleObject, sampleString } from './samplers/index';
+import type { JSONSchema7 } from 'json-schema';
 
-export var _samplers = {};
+export interface Options {
+  readonly skipNonRequired?: boolean;
+  readonly skipReadOnly?: boolean;
+  readonly skipWriteOnly?: boolean;
+  readonly quiet?: boolean;
+}
 
-const defaults = {
+export interface DefaultsOptions {
+  readonly skipReadOnly: boolean;
+  readonly maxSampleDepth: number;
+}
+
+export var _samplers: any = {};
+
+const defaults: DefaultsOptions = {
   skipReadOnly: false,
   maxSampleDepth: 15,
 };
 
-export function sample(schema, options, spec) {
+export function sample(schema: JSONSchema7, options?: Options, spec?: object) {
   let opts = Object.assign({}, defaults, options);
   clearCache();
-  return traverse(schema, opts, spec).value;
+  return traverse(schema, opts, spec!).value;
 };
 
-export function _registerSampler(type, sampler) {
+export function _registerSampler(type: string, sampler: any) {
   _samplers[type] = sampler;
 };
 

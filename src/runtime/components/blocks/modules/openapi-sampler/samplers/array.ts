@@ -1,5 +1,5 @@
 import { traverse } from '../traverse';
-export function sampleArray(schema, options = {}, spec, context) {
+export function sampleArray(schema: any, options: any = {}, spec: any, context: any) {
   const depth = (context && context.depth || 1);
 
   let arrayLength = Math.min(schema.maxItems != undefined ? schema.maxItems : Infinity, schema.minItems || 1);
@@ -9,14 +9,14 @@ export function sampleArray(schema, options = {}, spec, context) {
     arrayLength = Math.max(arrayLength, items.length);
   }
 
-  let itemSchemaGetter = itemNumber => {
+  let itemSchemaGetter = (itemNumber: any) => {
     if (Array.isArray(items)) {
       return items[itemNumber] || {};
     }
     return items || {};
   };
 
-  let res = [];
+  let res: any[] = [];
   if (!items) return res;
 
   for (let i = 0; i < arrayLength; i++) {

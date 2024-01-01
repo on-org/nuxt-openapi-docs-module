@@ -10,7 +10,7 @@ function emailSample() {
 function idnEmailSample() {
   return 'пошта@укр.нет';
 }
-function passwordSample(min, max) {
+function passwordSample(min: number, max: number) {
   let res = 'pa$$word';
   if (min > res.length) {
     res += '_';
@@ -19,7 +19,7 @@ function passwordSample(min, max) {
   return res;
 }
 
-function commonDateTimeSample({ min, max, omitTime, omitDate }) {
+function commonDateTimeSample({ min, max, omitTime, omitDate }: any) {
   let res = toRFCDateTime(new Date('2019-08-24T14:15:22.123Z'), omitTime, omitDate, false);
   if (res.length < min) {
     console.warn(`Using minLength = ${min} is incorrect with format "date-time"`);
@@ -30,19 +30,19 @@ function commonDateTimeSample({ min, max, omitTime, omitDate }) {
   return res;
 }
 
-function dateTimeSample(min, max) {
+function dateTimeSample(min: number, max: number) {
   return commonDateTimeSample({ min, max, omitTime: false, omitDate: false });
 }
 
-function dateSample(min, max) {
+function dateSample(min: number, max: number) {
   return commonDateTimeSample({ min, max, omitTime: true, omitDate: false });
 }
 
-function timeSample(min, max) {
+function timeSample(min: number, max: number) {
   return commonDateTimeSample({ min, max, omitTime: false, omitDate: true }).slice(1);
 }
 
-function defaultSample(min, max) {
+function defaultSample(min: number, max: number) {
   let res = ensureMinLength('string', min);
   if (max && res.length > max) {
     res = res.substring(0, max);
@@ -84,7 +84,7 @@ function iriReferenceSample() {
   return '/entity/1';
 }
 
-function uuidSample(_min, _max, propertyName) {
+function uuidSample(_min: number, _max: number, propertyName: string) {
   return uuid(propertyName || 'id');
 }
 
@@ -123,8 +123,9 @@ const stringFormats = {
   'regex': regexSample,
 };
 
-export function sampleString(schema, options, spec, context) {
+export function sampleString(schema: any, options: any, spec: any, context: any) {
   let format = schema.format || 'default';
+  // @ts-ignore
   let sampler = stringFormats[format] || defaultSample;
   let propertyName = context && context.propertyName;
   return sampler(schema.minLength | 0, schema.maxLength, propertyName);

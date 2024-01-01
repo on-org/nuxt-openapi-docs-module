@@ -124,8 +124,8 @@ paths:
         description: Some cookie
         required: true
         schema:
-          type: integer
-          format: int64
+          type: string
+          format: string
     post:
       tags:
         - pet

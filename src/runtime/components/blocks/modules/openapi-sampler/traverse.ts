@@ -1,23 +1,23 @@
-import { _samplers } from './openapi-sampler';
+import {_samplers, type DefaultsOptions, type Options} from './openapi-sampler';
 import { allOfSample } from './allOf';
 import { inferType } from './infer';
 import { getResultForCircular, mergeDeep, popSchemaStack } from './utils';
-import JsonPointer from '../json-pointer';
+import JsonPointer from './json-pointer';
 
-let $refCache = {};
+let $refCache: any = {};
 // for circular JS references we use additional array and not object as we need to compare entire schemas and not strings
-let seenSchemasStack = [];
+let seenSchemasStack: any[] = [];
 
 export function clearCache() {
   $refCache = {};
   seenSchemasStack = [];
 }
 
-function inferExample(schema) {
+function inferExample(schema: any) {
   let example;
   if (schema.const !== undefined) {
     example = schema.const;
-  } else if (schema.examples !== undefined && schema.examples.length) {
+  } else if (schema.examples !== undefined && schema.examples?.length) {
     example = schema.examples[0];
   } else if (schema.enum !== undefined && schema.enum.length) {
     example = schema.enum[0];
@@ -27,7 +27,7 @@ function inferExample(schema) {
   return example;
 }
 
-function tryInferExample(schema) {
+function tryInferExample(schema: any) {
   const example = inferExample(schema);
   // case when we don't infer example from schema but take from `const`, `examples`, `default` or `enum` keywords
   if (example !== undefined) {
@@ -41,7 +41,7 @@ function tryInferExample(schema) {
   return;
 }
 
-export function traverse(schema, options, spec, context) {
+export function traverse(schema: any, options: Options & DefaultsOptions, spec: object, context?: any): any {
   // checking circular JS references by checking context
   // because context is passed only when traversing through nested objects happens
   if (context) {
@@ -158,7 +158,7 @@ export function traverse(schema, options, spec, context) {
     type: type
   };
 
-  function traverseOneOrAnyOf(schema, selectedSubSchema) {
+  function traverseOneOrAnyOf(schema: any, selectedSubSchema: any): any {
     const inferred = tryInferExample(schema);
     if (inferred !== undefined) {
       return inferred;

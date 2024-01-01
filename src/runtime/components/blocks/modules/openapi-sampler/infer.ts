@@ -24,13 +24,14 @@ const schemaKeywordTypes = {
   dependencies: 'object'
 };
 
-export function inferType(schema) {
+export function inferType(schema: any) {
   if (schema.type !== undefined) {
     return Array.isArray(schema.type) ? schema.type.length === 0 ? null : schema.type[0] : schema.type;
   }
   const keywords = Object.keys(schemaKeywordTypes);
   for (var i = 0; i < keywords.length; i++) {
     let keyword = keywords[i];
+    // @ts-ignore
     let type = schemaKeywordTypes[keyword];
     if (schema[keyword] !== undefined) {
       return type;
