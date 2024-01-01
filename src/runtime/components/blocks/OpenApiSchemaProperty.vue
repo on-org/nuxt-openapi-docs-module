@@ -238,7 +238,7 @@
 <script>
 import OpenApiExpandIcon from '../icons/OpenApiExpandIcon.vue'
 import OpenApiSchemaSubObject from './OpenApiSchemaSubObject.vue'
-import {sample} from "openapi-sampler";
+import {sample} from "./modules/openapi-sampler/openapi-sampler";
 
 export default {
   name: 'OpenApiSchemaProperty',

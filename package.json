@@ -1,6 +1,6 @@
 {
   "name": "nuxt-openapi-docs-module",
-  "version": "5.1.9",
+  "version": "5.1.13",
   "description": "A module for Nuxt.js to generate pages from OpenAPI specifications",
   "homepage": "https://github.com/on-org/nuxt-openapi-docs-module#readme",
   "scripts": {
@@ -62,7 +62,6 @@
     "marked": "^11.1.0",
     "mitt": "^3.0.1",
     "node-watch": "^0.7.4",
-    "openapi-sampler": "^1.4.0",
     "request-templater": "^1.3.2",
     "scule": "^1.1.1",
     "sync-fetch": "^0.5.2",
