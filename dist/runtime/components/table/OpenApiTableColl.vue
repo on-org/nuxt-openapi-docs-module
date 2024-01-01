@@ -21,21 +21,5 @@ export default {
 </script>
 
 <style scoped>
-.coll {
-  box-sizing: border-box;
-
-  position: relative;
-  align-self: stretch;
-  align-items: center;
-
-  display: flex;
-}
-
-
-
-@media (min-width: 640px) {
-  .min {
-    width: 40px
-  }
-}
+.coll{align-items:center;align-self:stretch;box-sizing:border-box;display:flex;position:relative}@media (min-width:640px){.min{width:40px}}
 </style>

@@ -65,6 +65,13 @@
           <code v-html="exampleString" />
         </div>
         <div
+          v-else-if="genExample"
+          class="oapi-prop-add-info"
+        >
+          {{ $openapidoc.getLocaleText('openapidoc.example') }}:
+          <code v-html="genExample" />
+        </div>
+        <div
           v-if="resolvedSchema.multipleOf !== undefined"
           class="oapi-prop-add-info"
         >
@@ -231,6 +238,7 @@
 <script>
 import OpenApiExpandIcon from '../icons/OpenApiExpandIcon.vue'
 import OpenApiSchemaSubObject from './OpenApiSchemaSubObject.vue'
+import {sample} from "openapi-sampler";
 
 export default {
   name: 'OpenApiSchemaProperty',
@@ -296,6 +304,13 @@ export default {
       if (!this.resolvedSchema.example) return '';
       if (typeof this.resolvedSchema.example === 'object') return JSON.stringify(this.resolvedSchema.example, null, 2);
       return this.resolvedSchema.example.toString();
+    },
+    genExample() {
+      try {
+        return JSON.stringify(sample(this.resolvedSchema, {}));
+      } catch (e){
+        return null;
+      }
     },
     computedOneAnyOf() {
       if (!this.resolvedSchema) return [];

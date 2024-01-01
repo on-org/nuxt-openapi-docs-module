@@ -20,23 +20,5 @@ export default {
 }
 </script>
 <style scoped>
-.header {
-  box-sizing: border-box;
-  position: relative;
-  align-self: stretch;
-  align-items: center;
-  display: flex;
-}
-
-@media (min-width: 640px) {
-  .min {
-    width: 40px
-  }
-}
-
-@media (max-width: 639px) {
-  .header {
-    display: none;
-  }
-}
+.header{align-items:center;align-self:stretch;box-sizing:border-box;display:flex;position:relative}@media (min-width:640px){.min{width:40px}}@media (max-width:639px){.header{display:none}}
 </style>

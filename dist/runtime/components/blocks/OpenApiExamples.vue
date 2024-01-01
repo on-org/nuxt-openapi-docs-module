@@ -37,12 +37,5 @@ export default {
 </script>
 
 <style scoped>
-.openapi-examples {
-  margin-bottom: 1.5rem;
-}
-
-.openapi-examples h4 {
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-}
+.openapi-examples{margin-bottom:1.5rem}.openapi-examples h4{margin-bottom:.5rem;margin-top:1.5rem}
 </style>

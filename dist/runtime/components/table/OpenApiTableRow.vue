@@ -38,26 +38,5 @@ export default {
 }
 </script>
 <style scoped>
-.row:nth-of-type(even) {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-@media (max-width: 639px) {
-  .row {
-    flex-direction: column;
-  }
-
-  .opener {
-    order: 99;
-  }
-}
-
-.opener {
-  width: 30px;
-  align-self: auto;
-  box-sizing: border-box;
-  position: relative;
-  align-items: center;
-  display: flex;
-}
-
+.row:nth-of-type(2n){background-color:rgba(0,0,0,.05)}@media (max-width:639px){.row{flex-direction:column}.opener{order:99}}.opener{align-items:center;align-self:auto;box-sizing:border-box;display:flex;position:relative;width:30px}
 </style>

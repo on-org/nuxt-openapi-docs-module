@@ -44,26 +44,5 @@ export default {
 }
 </script>
 <style scoped>
-.table {
-  max-width: 100%;
-  background-color: transparent;
-  width: 100%;
-  border-collapse: collapse;
-  overflow-x: auto;
-}
-
-.table-header {
-  text-align: left;
-  opacity: 0.8;
-}
-
-.table-opener {
-  align-self: center;
-}
-
-@media (max-width: 639px) {
-  .table-header {
-    flex-direction: column;
-  }
-}
+.table{background-color:transparent;border-collapse:collapse;max-width:100%;overflow-x:auto;width:100%}.table-header{opacity:.8;text-align:left}.table-opener{align-self:center}@media (max-width:639px){.table-header{flex-direction:column}}
 </style>
