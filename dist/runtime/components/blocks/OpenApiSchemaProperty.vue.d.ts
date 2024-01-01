@@ -52,6 +52,7 @@ declare namespace _default {
         function isAnyOf(): boolean;
         function hasProperties(): boolean;
         function exampleString(): any;
+        function genExample(): string | null;
         function computedOneAnyOf(): any;
         function computedType(): any;
         function flags(): string[];
