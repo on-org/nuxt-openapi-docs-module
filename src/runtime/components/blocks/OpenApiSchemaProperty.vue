@@ -299,7 +299,7 @@ export default {
     },
     genExample() {
       try {
-        return JSON.stringify(sample(this.resolvedSchema, {}));
+        return JSON.stringify(sample(this.resolvedSchema, {quiet: true}));
       } catch (e){
         return null;
       }

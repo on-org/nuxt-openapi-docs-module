@@ -70,7 +70,7 @@ async function makeTemplate(templateName: string, fileName: string, options: {[k
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'nuxt-open-api-docs',
+    name: 'nuxt-openapi-docs-module',
     configKey: 'openApiDocs',
     compatibility: {
       nuxt: '^3.0.0'

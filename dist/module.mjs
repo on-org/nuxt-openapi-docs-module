@@ -324,7 +324,7 @@ async function makeTemplate(templateName, fileName, options, resolver) {
 }
 const module = defineNuxtModule({
   meta: {
-    name: "nuxt-open-api-docs",
+    name: "nuxt-openapi-docs-module",
     configKey: "openApiDocs",
     compatibility: {
       nuxt: "^3.0.0"
