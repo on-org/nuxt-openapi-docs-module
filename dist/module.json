@@ -1,0 +1,8 @@
+{
+  "name": "nuxt-openapi-docs-module",
+  "configKey": "openApiDocs",
+  "compatibility": {
+    "nuxt": "^3.0.0"
+  },
+  "version": "5.1.14"
+}

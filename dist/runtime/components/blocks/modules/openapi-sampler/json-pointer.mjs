@@ -1,4 +1,19 @@
-import each from "./foreach.mjs";
+function forEach(obj, fn, ctx) {
+  if (Object.prototype.toString.call(fn) !== "[object Function]") {
+    throw new TypeError("iterator must be a function");
+  }
+  if (Array.isArray(obj)) {
+    for (let i = 0; i < obj.length; i++) {
+      fn.call(ctx, obj[i], i, obj);
+    }
+  } else {
+    for (const k in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, k)) {
+        fn.call(ctx, obj[k], k, obj);
+      }
+    }
+  }
+}
 function api(obj, pointer, value) {
   if (arguments.length === 3) {
     return api.set(obj, pointer, value);
@@ -6,8 +21,8 @@ function api(obj, pointer, value) {
   if (arguments.length === 2) {
     return api.get(obj, pointer);
   }
-  var wrapped = api.bind(api, obj);
-  for (var name in api) {
+  const wrapped = api.bind(api, obj);
+  for (const name in api) {
     if (api.hasOwnProperty(name)) {
       wrapped[name] = api[name].bind(wrapped, obj);
     }
@@ -15,9 +30,9 @@ function api(obj, pointer, value) {
   return wrapped;
 }
 api.get = function get(obj, pointer) {
-  var refTokens = Array.isArray(pointer) ? pointer : api.parse(pointer);
-  for (var i = 0; i < refTokens.length; ++i) {
-    var tok = refTokens[i];
+  const refTokens = Array.isArray(pointer) ? pointer : api.parse(pointer);
+  for (let i = 0; i < refTokens.length; ++i) {
+    const tok = refTokens[i];
     if (!(typeof obj == "object" && tok in obj)) {
       throw new Error("Invalid reference token: " + tok);
     }
@@ -26,12 +41,13 @@ api.get = function get(obj, pointer) {
   return obj;
 };
 api.set = function set(obj, pointer, value) {
-  var refTokens = Array.isArray(pointer) ? pointer : api.parse(pointer), nextTok = refTokens[0];
+  const refTokens = Array.isArray(pointer) ? pointer : api.parse(pointer);
+  let nextTok = refTokens[0];
   if (refTokens.length === 0) {
     throw Error("Can not set the root object");
   }
-  for (var i = 0; i < refTokens.length - 1; ++i) {
-    var tok = refTokens[i];
+  for (let i = 0; i < refTokens.length - 1; ++i) {
+    let tok = refTokens[i];
     if (typeof tok !== "string" && typeof tok !== "number") {
       tok = String(tok);
     }
@@ -43,7 +59,7 @@ api.set = function set(obj, pointer, value) {
     }
     nextTok = refTokens[i + 1];
     if (!(tok in obj)) {
-      if (nextTok.match(/^(\d+|-)$/)) {
+      if (nextTok.toString().match(/^(\d+|-)$/)) {
         obj[tok] = [];
       } else {
         obj[tok] = {};
@@ -58,14 +74,14 @@ api.set = function set(obj, pointer, value) {
   return this;
 };
 api.remove = function(obj, pointer) {
-  var refTokens = Array.isArray(pointer) ? pointer : api.parse(pointer);
-  var finalToken = refTokens[refTokens.length - 1];
+  const refTokens = Array.isArray(pointer) ? pointer : api.parse(pointer);
+  let finalToken = refTokens[refTokens.length - 1];
   if (finalToken === void 0) {
     throw new Error('Invalid JSON pointer for remove: "' + pointer + '"');
   }
-  var parent = api.get(obj, refTokens.slice(0, -1));
+  const parent = api.get(obj, refTokens.slice(0, -1));
   if (Array.isArray(parent)) {
-    var index = +finalToken;
+    const index = +finalToken;
     if (finalToken === "" && isNaN(index)) {
       throw new Error('Invalid array index: "' + finalToken + '"');
     }
@@ -75,20 +91,20 @@ api.remove = function(obj, pointer) {
   }
 };
 api.dict = function dict(obj, descend) {
-  var results = {};
+  const results = {};
   api.walk(obj, function(value, pointer) {
     results[pointer] = value;
   }, descend);
   return results;
 };
 api.walk = function walk(obj, iterator, descend) {
-  var refTokens = [];
+  const refTokens = [];
   descend = descend || function(value) {
-    var type = Object.prototype.toString.call(value);
+    const type = Object.prototype.toString.call(value);
     return type === "[object Object]" || type === "[object Array]";
   };
   (function next(cur) {
-    each(cur, function(value, key) {
+    forEach(cur, function(value, key) {
       refTokens.push(String(key));
       if (descend(value)) {
         next(value);

@@ -57,15 +57,7 @@
           >{{ $openapidoc.getLocaleText('openapidoc.external_docs') }}</a>
         </div>
         <div
-          v-if="resolvedSchema.example"
-          class="oapi-prop-add-info"
-        >
-          {{ $openapidoc.getLocaleText('openapidoc.example') }}:
-          <br v-if="exampleString.includes('\n')">
-          <code v-html="exampleString" />
-        </div>
-        <div
-          v-else-if="genExample"
+          v-if="genExample"
           class="oapi-prop-add-info"
         >
           {{ $openapidoc.getLocaleText('openapidoc.example') }}:
@@ -307,7 +299,7 @@ export default {
     },
     genExample() {
       try {
-        return JSON.stringify(sample(this.resolvedSchema, {}));
+        return JSON.stringify(sample(this.resolvedSchema, {quiet: true}));
       } catch (e){
         return null;
       }

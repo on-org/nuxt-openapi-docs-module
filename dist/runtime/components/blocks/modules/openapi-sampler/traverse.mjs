@@ -2,7 +2,7 @@ import { _samplers } from "./openapi-sampler.mjs";
 import { allOfSample } from "./allOf.mjs";
 import { inferType } from "./infer.mjs";
 import { getResultForCircular, mergeDeep, popSchemaStack } from "./utils.mjs";
-import JsonPointer from "../json-pointer/index.mjs";
+import JsonPointer from "./json-pointer.mjs";
 let $refCache = {};
 let seenSchemasStack = [];
 export function clearCache() {
@@ -13,7 +13,7 @@ function inferExample(schema) {
   let example;
   if (schema.const !== void 0) {
     example = schema.const;
-  } else if (schema.examples !== void 0 && schema.examples.length) {
+  } else if (schema.examples !== void 0 && schema.examples?.length) {
     example = schema.examples[0];
   } else if (schema.enum !== void 0 && schema.enum.length) {
     example = schema.enum[0];
