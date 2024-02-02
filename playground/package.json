@@ -8,12 +8,15 @@
     "generate": "node --max-old-space-size=12192 node_modules/nuxt/bin/nuxt.js generate"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^1.0.6",
-    "@nuxtjs/i18n": "^8.0.0",
-    "nuxt": "3.9.0"
+    "@nuxt/devtools": "^1.0.8",
+    "@nuxtjs/i18n": "^8.0.1",
+    "nuxt": "3.10.0"
   },
   "dependencies": {
     "axios": "^1.6.2",
     "chokidar": "^3.5.3"
+  },
+  "overrides": {
+    "@parcel/watcher": "2.1.0"
   }
 }
