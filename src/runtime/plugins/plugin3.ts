@@ -25,7 +25,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   const openapidoc = new OpenApiPlugin(i18nLinker)
   const openapidocRef = new OpenApiRefPlugin(i18nLinker)
 
-  if (process.server) {
+  if (import.meta.server) {
     nuxtApp.payload.openapidocRefDefinitions = openapidocRef.definitions;
     nuxtApp.payload.openapidocRefComponents = openapidocRef.components;
   } else if (nuxtApp.payload) {

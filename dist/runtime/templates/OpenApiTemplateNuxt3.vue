@@ -237,7 +237,7 @@ function downloadJson() {
 }
 
 onMounted(() => {
-  if(process.client) {
+  if(import.meta.client) {
     $openapidocBus.$on('downloadJsonDoc', downloadJson);
     $openapidocBus.$on('changeServer', onChangeServer);
     setScrollPosition();

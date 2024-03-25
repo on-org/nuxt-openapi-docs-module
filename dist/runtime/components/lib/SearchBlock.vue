@@ -98,7 +98,7 @@ export default {
     },
   },
   mounted() {
-    if(process.client) {
+    if(import.meta.client) {
       this.$openapidocBus.$on('toggleSearchDoc', this.toggleSearch);
 
       this.search = (this.$route.query?.query ?? '').toString();

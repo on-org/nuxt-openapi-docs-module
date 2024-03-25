@@ -20,7 +20,7 @@ export default {
     }
   },
   mounted() {
-    if(process.client) {
+    if(import.meta.client) {
       this.isDarkMode = localStorage.getItem('isDarkMode') === 'true'
       if(this.isDarkMode) document.querySelector('html').classList.add('dark')
     }

@@ -97,7 +97,7 @@ function handleResize () {
 }
 
 onMounted(() => {
-  if (process.client) {
+  if (import.meta.client) {
     isMobile.value = window.innerWidth < 1110;
     isMenuOpen.value = window.innerWidth >= 1110;
     window.addEventListener('resize', handleResize)
