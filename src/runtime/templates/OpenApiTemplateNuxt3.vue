@@ -219,26 +219,9 @@ function setScrollPosition() {
   el.scrollTop = 0;
 }
 
-function downloadJson() {
-  const json = JSON.stringify(doc_data, null, 4);
-  const blob = new Blob([json], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = fileName.value + '.json';
-  document.body.appendChild(link);
-
-  link.click();
-
-  // Очистить ссылку и объект URL после скачивания файла
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
-}
 
 onMounted(() => {
   if(import.meta.client) {
-    $openapidocBus.$on('downloadJsonDoc', downloadJson);
     $openapidocBus.$on('changeServer', onChangeServer);
     setScrollPosition();
     enableTitleClick();
@@ -246,7 +229,6 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  $openapidocBus.$off('downloadJsonDoc', downloadJson);
   $openapidocBus.$off('changeServer', onChangeServer);
 })
 

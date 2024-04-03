@@ -96,16 +96,37 @@ function handleResize () {
   }
 }
 
+function downloadJson() {
+  const json = JSON.stringify(doc_data, null, 4);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = fileName.value + '.json';
+  document.body.appendChild(link);
+
+  link.click();
+
+  // Очистить ссылку и объект URL после скачивания файла
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
 onMounted(() => {
   if (import.meta.client) {
     isMobile.value = window.innerWidth < 1110;
     isMenuOpen.value = window.innerWidth >= 1110;
     window.addEventListener('resize', handleResize)
+
+    $openapidocBus.$on('downloadJsonDoc', downloadJson);
   }
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
+
+  $openapidocBus.$off('downloadJsonDoc', downloadJson);
 })
 </script>
 
