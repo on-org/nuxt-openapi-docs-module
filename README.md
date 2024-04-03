@@ -54,11 +54,7 @@ export default defineConfig({
 1. Add `nuxt-openapi-docs-module` dependency to your project
 
 ```bash
-# Using yarn
-yarn add --dev nuxt-openapi-docs-module
-
-# Using npm
-npm install --save-dev nuxt-openapi-docs-module
+npx nuxi@latest module add nuxt-openapi-docs-module
 ```
 
 2. Add `nuxt-openapi-docs-module` to the `modules` section of `nuxt.config.ts`
