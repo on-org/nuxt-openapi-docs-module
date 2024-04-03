@@ -5,7 +5,10 @@ const timestamp = currentDate.getTime();
 export default defineNuxtConfig({
   app: {
     baseURL: isDev ? '/' : '/nuxt-openapi-docs-module',
-    buildAssetsDir: 'assets'
+    buildAssetsDir: 'assets',
+    head: {
+      link: [{ rel: 'icon', type: 'image/x-icon', href: isDev ? '/favicon.ico' : "/nuxt-openapi-docs-module/favicon.ico" }]
+    },
   },
   experimental: {
     payloadExtraction: false

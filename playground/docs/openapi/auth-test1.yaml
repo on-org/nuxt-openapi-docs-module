@@ -1,6 +1,7 @@
 openapi: 3.0.1
 info:
   title: Authentication Test Case
+  version: 1.0.0
   description: Demonstrate various authentication methods supported by RapiDoc
 servers:
   - url: https://reqres.in/api/

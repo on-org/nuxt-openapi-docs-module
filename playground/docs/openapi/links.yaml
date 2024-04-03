@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   title: Links
-  version: "1.0"
+  version: "1.0.0"
   description: |
     # Various ways to create links in RapiDoc
 
@@ -11,10 +11,10 @@ info:
     - Convert headings to links on the Navigation bar
     - Use custom HTMLs and styling to create buttons, links etc
 
-    ## Markdown syntax to create links 
+    ## Markdown syntax to create links
 
     ## Internal Links
-      RapiDoc assigns auto generated IDs to important sections of the document. 
+      RapiDoc assigns auto generated IDs to important sections of the document.
       You may use these IDs in your markdown syntax to create clickable links to varous sections of the document
 
       below is how RapiDoc will assign IDs to different section
@@ -45,7 +45,7 @@ info:
         [Take me to RapiDoc Homepage ](https://mrin9.github.io/RapiDoc/)
       ```
       [Take me to RapiDoc Homepage ](https://mrin9.github.io/RapiDoc/)
-      
+
     ## HTML Links
       RapiDoc allows you to embed custom HTMLs in various slots.
 
@@ -71,19 +71,19 @@ info:
               <a href = "https://mrin9.github.io/RapiDoc/"> RapiDoc Home </a>
             </slot>
           </rapi-doc>
-        </body>  
+        </body>
       </html>
       ```
       As an example you can checkout this document's top-right corner, where you will find custom styled **HTML Links**
-    
+
     ## Headings as navigation links
 
       You can turn **level-1 and level-2 headings to links** on Navigation bar using `info-description-headings-in-navbar='true'` option
       ```html
       <html>
         ...
-        <rapi-doc  
-          spec-url = "../specs/links.yaml" 
+        <rapi-doc
+          spec-url = "../specs/links.yaml"
           info-description-headings-in-navbar='true'
         >
         </rapi-doc>
@@ -163,6 +163,7 @@ paths:
 
   /users/{userId}:
     get:
+      summary: Get a Single User
       description: Get a Single User
       parameters:
         - in: path

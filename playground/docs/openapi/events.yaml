@@ -3,10 +3,9 @@ info:
   title: Event Handling
   version: "1.0"
   description: |
-    
     ### The code demonstrate how some events can be used. Listed below are some common use cases
 
-    - `before-render` - Good place to twaek the OpenAPI spec if needed. In this example the Title above is dynamically created 
+    - `before-render` - Good place to twaek the OpenAPI spec if needed. In this example the Title above is dynamically created
     - `before-try` - Good place to twaek the AJAX request sucha as adding a request header or abort the request
     - `after-try` - Good place to inspect the response received
 
@@ -19,7 +18,7 @@ info:
     <html>
       <body>
         <rapi-doc id = "thedoc" spec-url = "..."> </rapi-doc>
-      
+
         <script>
           document.addEventListener('DOMContentLoaded', (event) => {
             let docEl = document.getElementById("thedoc");
@@ -59,7 +58,7 @@ info:
 
           })
         </script>
-      </body> 
+      </body>
 
     </html>
     ```
@@ -74,7 +73,7 @@ paths:
           in: query
           schema:
             type: integer
-            examples: 
+            examples:
               - 1
               - 2
       responses:
@@ -111,7 +110,7 @@ paths:
           in: query
           schema:
             type: integer
-            examples: 
+            examples:
               - 1
               - 10
       requestBody:

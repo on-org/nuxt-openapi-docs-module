@@ -313,7 +313,7 @@ export default class Parser {
 
             const item: PathByTag = {
               name: tagInfo.name ?? tag,
-              description: marked.parse(tagInfo.description ?? ''),
+              description: marked.parse(tagInfo.description ?? '') as string,
               isOpen: tagInfo['x-tag-expanded'] ?? true,
               items: []
             }

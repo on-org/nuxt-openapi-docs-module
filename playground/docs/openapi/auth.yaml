@@ -1,6 +1,7 @@
 openapi: 3.0.1
 info:
   title: Authentication Demo
+  version: 1.0.0
   description: Demonstrate various authentication methods supported by RapiDoc
 servers:
   - url: https://reqres.in/api/
@@ -31,13 +32,13 @@ paths:
         api_key2: []
   /fake-api-that-need-one-security-out-of-two:
     get:
-      description: API that any one API Key from the list of 2 
+      description: API that any one API Key from the list of 2
       security:
       - api_key1: []
       - api_key2: []
   /fake-api-that-need-basic-and-apikey:
     get:
-      description: API that need API Key and HTTP Basic 
+      description: API that need API Key and HTTP Basic
       security:
       - http-basic: []
       - http-bearer: []
@@ -76,12 +77,12 @@ components:
       in: cookie
     ms-oauth:
       type: oauth2
-      description: | 
-        ### IMPORTANT !!! 
+      description: |
+        ### IMPORTANT !!!
         Works only when client (`this html`) is served from `http://localhost:8080/...` because the registered client has a redirect url pointing to `http://localhost:8080/examples/oauth-receiver.html`
 
         In order to experiment with OAuth system you can do the floowing
-        1. Signup with https://portal.azure.com/ if you havent already 
+        1. Signup with https://portal.azure.com/ if you havent already
         2. Register an app with Microsoft Azure (Instructions: https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-register-app)
             - Registering an App will generate a `client-id` and `client-secret`.  Anyone who has this can make calls to the API
         3. Create some users in MS Active Directory
@@ -115,6 +116,6 @@ components:
             https://graph.microsoft.com/User.Read.All: Read logged users data
         password:
           okenUrl: https://login.microsoftonline.com/546ffd36-88d5-494c-b126-57cc823bb5ea/oauth2/v2.0/token
-          scopes:        
+          scopes:
             https://graph.microsoft.com/User.ReadBasic.All: Read logged users basic info
             https://graph.microsoft.com/User.Read.All: Read logged users data
