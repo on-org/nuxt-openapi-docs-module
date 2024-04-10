@@ -6,14 +6,13 @@ import {
   addComponentsDir,
   createResolver,
   addTemplate,
-  addImports,
 } from '@nuxt/kit'
 import {resolve, extname, basename, join} from "path";
-import Parser from "./runtime/Parser";
 import {promises, existsSync, writeFileSync, mkdirSync} from "node:fs";
-import lodashTemplate from "lodash.template";
+import _ from "lodash";
 import type {Resolver} from '@nuxt/kit'
 import {kebabCase} from "scule";
+import OpenApiProcessor from "./runtime/Parser/OpenApiProcessor";
 
 export interface ModuleOptions {
   folder?: string,
@@ -55,7 +54,7 @@ function filesCleanup(files: {[key: string]: string}) {
 
 async function makeTemplate(templateName: string, fileName: string, options: {[key: string]: any}, resolver: Resolver) {
   const srcContents = await promises.readFile(resolver.resolve(`./runtime/${templateName}`), "utf-8");
-  const template = lodashTemplate(srcContents, {})({options:options});
+  const template = _.template(srcContents, {})({options:options});
 
   if (!existsSync(join(__dirname, '.cache'))) {
     mkdirSync(join(__dirname, '.cache'));
@@ -120,7 +119,7 @@ export default defineNuxtModule<ModuleOptions>({
 
     const docs: DocItem[] = [];
     for (let filePath in files) {
-      const parser = new Parser(workDir)
+      const parser = new OpenApiProcessor(workDir)
 
       parser.load(filePath)
 

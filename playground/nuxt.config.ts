@@ -52,11 +52,13 @@ export default defineNuxtConfig({
               // "allof": "allof",
               // "webhook": "webhook",
               'page': 'Custom Page',
-              // 'localization': 'Localization',
-              // 'no-access': 'no access',
-              // 'test-yaml.yaml': 'yaml ext',
-              // 'test-json.json': 'json ext',
-              // 'https://petstore.swagger.io/v2/swagger.json': 'petstore url',
+              'localization': 'Localization',
+              'no-access': 'no access',
+              'test-yaml.yaml': 'yaml ext',
+              'test-json.json': 'json ext',
+              'https://petstore.swagger.io/v2/swagger.json': 'petstore url',
+              "markdown-headings": "markdown-headings",
+              "markdown": "markdown",
             }
           }
           return {

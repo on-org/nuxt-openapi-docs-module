@@ -1,13 +1,14 @@
 import { defineNuxtModule, createResolver, addComponentsDir, addTemplate, extendPages, addLayout, addPlugin } from '@nuxt/kit';
-import { join, dirname, basename, extname, resolve } from 'path';
-import { marked } from 'marked';
-import fetch from 'sync-fetch';
+import { extname, join, basename, resolve } from 'path';
+import { promises, existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import _ from 'lodash';
+import { kebabCase } from 'scule';
 import fs from 'fs';
 import * as yaml from 'js-yaml';
+import fetch from 'sync-fetch';
+import { Marked } from 'marked';
+import { markedHighlight } from 'marked-highlight';
 import hljs from 'highlight.js';
-import { kebabCase } from 'scule';
-import { promises, existsSync, mkdirSync, writeFileSync } from 'node:fs';
-import lodashTemplate from 'lodash.template';
 
 
 
@@ -18,74 +19,51 @@ import __cjs_mod__ from 'module';
 const __filename = __cjs_url__.fileURLToPath(import.meta.url);
 const __dirname = __cjs_path__.dirname(__filename);
 const require = __cjs_mod__.createRequire(import.meta.url);
-class Parser {
-  workDir;
-  fileName = "";
-  spec = {};
-  components = {};
-  definitions = {};
-  locales = { "en": "English" };
-  localesReload = false;
-  refs = {};
-  constructor(workDir) {
-    this.workDir = workDir;
-    const self = this;
-    const renderer = new marked.Renderer();
-    renderer.text = function(text) {
-      return self.replaceAngleBracketsInText(text);
-    };
-    renderer.table = function(header, body) {
-      return '<table class="table">\n' + header + body + "</table>\n";
-    };
-    marked.setOptions({
-      renderer,
-      highlight: function(code, lang) {
-        const language = hljs.getLanguage(lang) ? lang : "plaintext";
-        return hljs.highlight(code, { language }).value;
-      },
-      langPrefix: "hljs language-",
-      // highlight.js css expects a top-level 'hljs' class.
-      pedantic: false,
-      gfm: true,
-      headerIds: true,
-      breaks: false,
-      sanitize: false,
-      smartypants: false,
-      xhtml: false
-    });
+class FileHandler {
+  loadYamlFile(folder, fileName) {
+    let yamlData = "";
+    if (fileName.startsWith("http")) {
+      yamlData = fetch(fileName).text();
+    } else {
+      const extension = extname(fileName);
+      if (!extension) {
+        fileName += ".yaml";
+      }
+      const filePath = join(folder, fileName);
+      yamlData = fs.readFileSync(filePath, "utf8");
+    }
+    return yaml.load(yamlData);
   }
-  load(fileName) {
-    const openApiSpec = this.parseYamlFile(this.workDir, fileName);
-    this.spec = openApiSpec.openApiSpec;
-    this.components = openApiSpec.openApiSpec.components;
-    this.definitions = openApiSpec.openApiSpec.definitions;
-    this.fileName = kebabCase(openApiSpec.fileName);
-    this.definitions = this.refReplace(this.definitions);
-    this.components = this.refReplace(this.components);
-    this.spec = this.refReplace(this.spec);
-    this.definitions = this.replaceMarkdown(this.definitions);
-    this.components = this.replaceMarkdown(this.components);
-    this.spec = this.replaceMarkdown(this.spec);
-    this.localesReload = false;
-    if (this.spec && this.spec.info && this.spec.info["x-locales-reload"]) {
-      this.localesReload = this.spec.info["x-locales-reload"] === "true" || this.spec.info["x-locales-reload"] === true;
-    }
-    this.locales = { en: "English" };
-    if (this.spec && this.spec.info && this.spec.info["x-locales"]) {
-      this.locales = { ...{ en: "English" }, ...this.spec.info["x-locales"] };
-    }
-    if (!this.spec.tags) {
-      this.spec.tags = [];
-    }
-    this.spec.tags = this.spec.tags.reduce((acc, tag) => {
-      acc[tag.name.toString().toLowerCase()] = tag;
-      return acc;
-    }, {});
+}
+
+class MarkdownRenderer {
+  markedInstance;
+  constructor() {
+    this.markedInstance = new Marked(
+      markedHighlight({
+        langPrefix: "hljs language-",
+        highlight: (code, lang) => {
+          const language = hljs.getLanguage(lang) ? lang : "plaintext";
+          return hljs.highlight(code, { language }).value;
+        }
+      })
+    );
+    this.configureCustomRenderer();
+  }
+  configureCustomRenderer() {
+    const renderer = {
+      text: (text) => this.replaceAngleBracketsInText(text),
+      table: (header, body) => `<table class="table">
+${header}${body}</table>
+`
+    };
+    this.markedInstance.use({ renderer });
   }
   replaceAngleBracketsInText(text) {
-    return text.replace(/(?<=[^=])<|>(?=[^=])/g, function(match) {
-      return match === "<" ? "&lt;" : "&gt;";
-    }).replaceAll("&br;", "<br>");
+    return text.replace(/(?<=[^=])<|>(?=[^=])/g, (match) => match === "<" ? "&lt;" : "&gt;");
+  }
+  render(text) {
+    return this.markedInstance.parse(text);
   }
   sanitizeText(text) {
     text = this.replaceAngleBracketsInText(text);
@@ -100,78 +78,114 @@ class Parser {
       return map[match];
     });
   }
-  getSchemaValsFromPath(ref) {
-    const [type, path, name] = ref.replace("#/", "").split("/");
-    return { type, path, name };
+}
+
+class ReferenceResolver {
+  workDir;
+  refsCache = {};
+  fileHandler;
+  constructor(workDir, fileHandler) {
+    this.workDir = workDir;
+    this.fileHandler = fileHandler;
   }
-  refFileLoader(value) {
-    if (this.refs[value])
-      return this.refs[value];
-    const [filepath, refPath] = value.split("#");
-    let spec = {};
-    if (filepath.startsWith("http")) {
-      const yamlData = fetch(filepath).text();
-      spec = yaml.load(yamlData);
+  resolveRef(ref) {
+    if (this.refsCache[ref])
+      return this.refsCache[ref];
+    const [filePath, refPath] = ref.split("#");
+    let doc;
+    if (filePath.startsWith("http")) {
+      doc = this.loadRemoteRef(filePath);
     } else {
-      const dir = join(this.workDir, dirname(filepath));
-      const name = basename(filepath);
-      const spec2 = this.parseYamlFile(dir, name).openApiSpec;
-      if (!refPath)
-        return this.refs[value] = this.refReplace(spec2);
+      doc = this.loadLocalRef(filePath);
     }
-    const link = this.getSchemaValsFromPath(refPath);
-    if (spec && spec[link.path] && spec[link.path][link.name]) {
-      const item = spec[link.path][link.name];
-      item.title = link.path;
-      return this.refs[value] = this.refReplace(item);
-    }
-    return value;
+    const resolvedDoc = this.resolveInternalPath(doc, refPath);
+    this.refsCache[ref] = resolvedDoc;
+    return resolvedDoc;
   }
-  refReplace(obj) {
+  loadRemoteRef(filePath) {
+    const yamlData = fetch(filePath).text();
+    return yaml.load(yamlData);
+  }
+  loadLocalRef(filePath) {
+    return this.fileHandler.loadYamlFile(this.workDir, filePath);
+  }
+  resolveInternalPath(doc, refPath) {
+    if (!refPath)
+      return doc;
+    const pathSegments = refPath.startsWith("/") ? refPath.slice(1).split("/") : refPath.split("/");
+    return pathSegments.reduce((acc, segment) => {
+      if (!acc || !acc[segment]) {
+        throw new Error(`Reference path not found: ${refPath}`);
+      }
+      return acc[segment];
+    }, doc);
+  }
+}
+
+class OpenApiProcessor {
+  workDir;
+  fileName = "";
+  spec = {};
+  markdownRenderer;
+  referenceResolver;
+  fileHandler = new FileHandler();
+  locales = { "en": "English" };
+  localesReload = false;
+  constructor(workDir) {
+    this.workDir = workDir;
+    this.markdownRenderer = new MarkdownRenderer();
+    this.referenceResolver = new ReferenceResolver(workDir, this.fileHandler);
+  }
+  load(fileName) {
+    this.spec = this.fileHandler.loadYamlFile(this.workDir, fileName);
+    this.fileName = kebabCase(basename(fileName, extname(fileName)));
+    this.spec = this.processSpec(this.spec);
+    this.spec = this.replaceMarkdown(this.spec);
+    this.processLocales();
+    this.processTags();
+  }
+  processLocales() {
+    this.localesReload = !!this.spec?.info?.["x-locales-reload"];
+    this.locales = { en: "English", ...this.spec?.info?.["x-locales"] };
+  }
+  processTags() {
+    if (!this.spec.tags) {
+      this.spec.tags = [];
+    }
+    this.spec.tags = this.spec.tags.reduce((acc, tag) => {
+      acc[tag.name.toString().toLowerCase()] = tag;
+      return acc;
+    }, {});
+  }
+  processSpec(obj) {
     if (Array.isArray(obj)) {
       return obj.map((val) => val);
     } else if (typeof obj === "object" && obj !== null) {
       return Object.entries(obj).reduce((acc, [key, value]) => {
         if (key === "$ref" && typeof value === "string") {
           if (!value.startsWith("#")) {
-            return obj = this.refFileLoader(value);
+            return obj = this.referenceResolver.resolveRef(value);
           }
           return obj = value;
         } else {
-          acc[key] = this.refReplace(value);
+          acc[key] = this.processSpec(value);
         }
         return acc;
       }, {});
     }
     return obj;
   }
-  replaceMarkdown(obj) {
-    if (typeof obj === "string") {
-      if (obj.match(/\[.*?\]\(.*?\)|^>/) || obj.match(/```|\*\*|:--|<a |## |------|`..?`/)) {
-        return marked.parse(obj);
-      } else {
-        return this.sanitizeText(obj);
-      }
-    } else if (Array.isArray(obj)) {
-      return obj.map((val) => this.replaceMarkdown(val));
-    } else if (typeof obj === "object" && obj !== null) {
-      return Object.entries(obj).reduce((acc, [key, value]) => {
-        if (key === "$ref" && typeof value === "string") {
-          return value;
-        } else {
-          acc[key] = this.replaceMarkdown(value);
-        }
-        return acc;
-      }, {});
-    } else {
-      return obj;
-    }
+  getFilename() {
+    return this.fileName;
   }
-  getLocales() {
-    return this.locales;
+  getDoc() {
+    return this.spec;
   }
   getLocalesReload() {
     return this.localesReload;
+  }
+  getLocales() {
+    return this.locales;
   }
   getServers() {
     return this.spec.servers ?? [];
@@ -182,29 +196,6 @@ class Parser {
       ...this.processCustomPaths(this.spec["x-custom-path"] ?? {}),
       ...this.processOpenApiPaths(this.spec.paths)
     }));
-  }
-  getDoc() {
-    return this.spec;
-  }
-  getFilename() {
-    return this.fileName;
-  }
-  parseYamlFile(folder, fileName) {
-    let yamlData = "";
-    if (fileName.startsWith("http")) {
-      yamlData = fetch(fileName).text();
-    } else {
-      const extension2 = extname(fileName);
-      if (!extension2) {
-        fileName += ".yaml";
-      }
-      const filePath = join(folder, fileName);
-      yamlData = fs.readFileSync(filePath, "utf8");
-    }
-    const extension = extname(fileName);
-    const newFileName = basename(fileName, extension);
-    const openApiSpec = yaml.load(yamlData);
-    return { fileName: newFileName, openApiSpec };
   }
   processCustomPaths(custom) {
     const pathsByTags = {};
@@ -266,13 +257,13 @@ class Parser {
             const tagInfo = this.spec.tags[tag.toString().toLowerCase()] ?? {};
             const item2 = {
               name: tagInfo.name ?? tag,
-              description: marked.parse(tagInfo.description ?? ""),
+              description: this.markdownRenderer.render(tagInfo.description ?? ""),
               isOpen: tagInfo["x-tag-expanded"] ?? true,
               items: []
             };
             for (const locale in this.locales) {
               if (tagInfo[`x-description-${locale}`]) {
-                item2[`x-description-${locale}`] = marked.parse(tagInfo[`x-description-${locale}`]);
+                item2[`x-description-${locale}`] = this.markdownRenderer.render(tagInfo[`x-description-${locale}`]);
               }
               if (tagInfo[`x-name-${locale}`]) {
                 item2[`x-name-${locale}`] = tagInfo[`x-name-${locale}`];
@@ -301,6 +292,28 @@ class Parser {
     }
     return pathsByTags;
   }
+  replaceMarkdown(obj) {
+    if (typeof obj === "string") {
+      if (obj.match(/\[.*?\]\(.*?\)|^>/) || obj.match(/```|\*\*|:--|<a |## |------|`..?`/)) {
+        return this.markdownRenderer.render(obj);
+      } else {
+        return this.markdownRenderer.sanitizeText(obj);
+      }
+    } else if (Array.isArray(obj)) {
+      return obj.map((val) => this.replaceMarkdown(val));
+    } else if (typeof obj === "object" && obj !== null) {
+      return Object.entries(obj).reduce((acc, [key, value]) => {
+        if (key === "$ref" && typeof value === "string") {
+          return value;
+        } else {
+          acc[key] = this.replaceMarkdown(value);
+        }
+        return acc;
+      }, {});
+    } else {
+      return obj;
+    }
+  }
 }
 
 function filesCleanup(files) {
@@ -314,7 +327,7 @@ function filesCleanup(files) {
 }
 async function makeTemplate(templateName, fileName, options, resolver) {
   const srcContents = await promises.readFile(resolver.resolve(`./runtime/${templateName}`), "utf-8");
-  const template = lodashTemplate(srcContents, {})({ options });
+  const template = _.template(srcContents, {})({ options });
   if (!existsSync(join(__dirname, ".cache"))) {
     mkdirSync(join(__dirname, ".cache"));
   }
@@ -363,7 +376,7 @@ const module = defineNuxtModule({
     const workDir = resolve(nuxt.options.rootDir, options.folder);
     const docs = [];
     for (let filePath in files) {
-      const parser = new Parser(workDir);
+      const parser = new OpenApiProcessor(workDir);
       parser.load(filePath);
       docs.push({
         filename: parser.getFilename(),

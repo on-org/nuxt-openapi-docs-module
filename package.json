@@ -1,6 +1,6 @@
 {
   "name": "nuxt-openapi-docs-module",
-  "version": "5.2.2",
+  "version": "5.2.3",
   "description": "A module for Nuxt.js to generate pages from OpenAPI specifications",
   "homepage": "https://github.com/on-org/nuxt-openapi-docs-module#readme",
   "scripts": {
@@ -50,16 +50,17 @@
   "main": "./dist/module.cjs",
   "types": "./dist/types.d.ts",
   "dependencies": {
-    "@nuxt/kit": "^3.11.1",
+    "@nuxt/kit": "^3.11.2",
     "allof-merge": "^0.6.6",
     "chokidar": "^3.6.0",
     "h3": "^1.11.1",
     "highlight.js": "^11.9.0",
-    "isomorphic-dompurify": "^2.6.0",
+    "isomorphic-dompurify": "^2.7.0",
     "js-yaml": "^4.1.0",
     "json-crawl": "^0.5.3",
-    "lodash.template": "^4.5.0",
-    "marked": "^11.2.0",
+    "lodash": "^4.17.21",
+    "marked": "^12.0.1",
+    "marked-highlight": "^2.1.1",
     "mitt": "^3.0.1",
     "node-watch": "^0.7.4",
     "request-templater": "^1.3.2",
@@ -68,13 +69,12 @@
     "unstorage": "^1.10.2"
   },
   "devDependencies": {
-    "@nuxt/eslint-config": "^0.2.0",
+    "@nuxt/eslint-config": "^0.3.4",
     "@nuxt/module-builder": "^0.5.5",
-    "@nuxt/schema": "^3.11.1",
+    "@nuxt/schema": "^3.11.2",
     "@nuxt/test-utils": "^3.12.0",
     "@types/js-yaml": "^4.0.9",
     "@types/lodash.template": "^4.5.3",
-    "@types/marked": "^5.0.2",
     "@types/sync-fetch": "^0.4.3",
     "autoprefixer": "^10.4.19",
     "changelogen": "^0.5.5",
@@ -82,9 +82,9 @@
     "flowbite": "^2.3.0",
     "fs-extra": "^11.2.0",
     "nuxi": "^3.11.1",
-    "nuxt": "^3.11.1",
+    "nuxt": "^3.11.2",
     "postcss": "^8.4.38",
-    "sass": "^1.72.0"
+    "sass": "^1.74.1"
   },
   "peerDependenciesMeta": {
     "nuxt": {
