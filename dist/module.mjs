@@ -1,4 +1,3 @@
-import { template } from 'lodash-es'
 import { defineNuxtModule, createResolver, addComponentsDir, addTemplate, extendPages, addLayout, addPlugin } from '@nuxt/kit';
 import { extname, join, basename, resolve } from 'path';
 import { readFileSync, promises, existsSync, mkdirSync, writeFileSync } from 'node:fs';
@@ -438,7 +437,7 @@ const module = defineNuxtModule({
       addLayout({
         getContents({ options }) {
           const contents = readFileSync(resolver.resolve(`./runtime/layout/OpenApiLayoutNuxt3.vue`), 'utf-8')
-          return template(contents)({ options })
+          return _.template(contents)({ options })
         },
         filename: `openapi/apidocs.layout.${item.filename}.vue`,
         write: true,
