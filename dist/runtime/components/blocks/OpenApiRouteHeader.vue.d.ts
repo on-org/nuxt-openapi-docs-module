@@ -1,52 +1,73 @@
-declare namespace _default {
-    namespace props {
-        namespace path {
-            let type: StringConstructor;
-            let required: boolean;
-        }
-        namespace method {
-            let type_1: StringConstructor;
-            export { type_1 as type };
-            let required_1: boolean;
-            export { required_1 as required };
-        }
-        namespace tags {
-            let type_2: ArrayConstructor;
-            export { type_2 as type };
-            function _default(): never[];
-            export { _default as default };
-        }
-        namespace summary {
-            let type_3: StringConstructor;
-            export { type_3 as type };
-            let _default_1: null;
-            export { _default_1 as default };
-        }
-        namespace description {
-            let type_4: StringConstructor;
-            export { type_4 as type };
-            let _default_2: null;
-            export { _default_2 as default };
-        }
-        let deprecated: BooleanConstructor;
-        namespace currentLocale {
-            let type_5: StringConstructor;
-            export { type_5 as type };
-            let required_2: boolean;
-            export { required_2 as required };
-        }
-        namespace server {
-            let type_6: StringConstructor;
-            export { type_6 as type };
-            let required_3: boolean;
-            export { required_3 as required };
-            let _default_3: string;
-            export { _default_3 as default };
-        }
-    }
-    namespace computed {
-        function requestUrl(): string;
-        function title(): any;
-    }
-}
+declare const _default: import("vue").DefineComponent<{
+    path: {
+        type: StringConstructor;
+        required: true;
+    };
+    method: {
+        type: StringConstructor;
+        required: true;
+    };
+    tags: {
+        type: ArrayConstructor;
+        default: () => never[];
+    };
+    summary: {
+        type: StringConstructor;
+        default: null;
+    };
+    description: {
+        type: StringConstructor;
+        default: null;
+    };
+    deprecated: BooleanConstructor;
+    currentLocale: {
+        type: StringConstructor;
+        required: true;
+    };
+    server: {
+        type: StringConstructor;
+        required: false;
+        default: string;
+    };
+}, any, any, {
+    requestUrl(): string;
+    title(): any;
+}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    path: {
+        type: StringConstructor;
+        required: true;
+    };
+    method: {
+        type: StringConstructor;
+        required: true;
+    };
+    tags: {
+        type: ArrayConstructor;
+        default: () => never[];
+    };
+    summary: {
+        type: StringConstructor;
+        default: null;
+    };
+    description: {
+        type: StringConstructor;
+        default: null;
+    };
+    deprecated: BooleanConstructor;
+    currentLocale: {
+        type: StringConstructor;
+        required: true;
+    };
+    server: {
+        type: StringConstructor;
+        required: false;
+        default: string;
+    };
+}>>, {
+    summary: string;
+    description: string;
+    server: string;
+    tags: unknown[];
+    deprecated: boolean;
+}, {}>;
 export default _default;

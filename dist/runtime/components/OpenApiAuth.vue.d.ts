@@ -1,24 +1,22 @@
-declare namespace _default {
-    namespace components {
-        export { OpenApiParameter };
-        export { OpenApiResponse };
-        export { OpenApiSecurityScheme };
-        export { OpenApiMediaTypes };
-        export { OpenApiExampleObject };
-        export { OpenApiObjectModel };
-    }
-    namespace props {
-        export namespace components_1 {
-            export let type: ObjectConstructor;
-            function _default(): {};
-            export { _default as default };
-        }
-        export { components_1 as components };
-        export namespace currentLocale {
-            let type_1: StringConstructor;
-            export { type_1 as type };
-            export let required: boolean;
-        }
-    }
-}
+declare const _default: import("vue").DefineComponent<{
+    components: {
+        type: ObjectConstructor;
+        default: () => {};
+    };
+    currentLocale: {
+        type: StringConstructor;
+        required: true;
+    };
+}, any, any, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    components: {
+        type: ObjectConstructor;
+        default: () => {};
+    };
+    currentLocale: {
+        type: StringConstructor;
+        required: true;
+    };
+}>>, {
+    components: Record<string, any>;
+}, {}>;
 export default _default;

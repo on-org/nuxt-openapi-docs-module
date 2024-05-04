@@ -1,21 +1,18 @@
-declare namespace _default {
-    let name: string;
-    function data(): {
-        tableShow: boolean;
+declare const _default: import("vue").DefineComponent<{
+    open: {
+        type: BooleanConstructor;
+        default: boolean;
     };
-    namespace props {
-        namespace open {
-            export let type: BooleanConstructor;
-            let _default: boolean;
-            export { _default as default };
-        }
-    }
-    namespace watch {
-        function open(val: any): void;
-    }
-    namespace methods {
-        function onShowHide(): void;
-    }
-    function mounted(): void;
-}
+}, any, {
+    tableShow: boolean;
+}, {}, {
+    onShowHide(): void;
+}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    open: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+}>>, {
+    open: boolean;
+}, {}>;
 export default _default;

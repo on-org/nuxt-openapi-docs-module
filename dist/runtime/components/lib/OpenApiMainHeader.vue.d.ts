@@ -1,12 +1,14 @@
-declare namespace _default {
-    namespace props {
-        namespace isMenuOpen {
-            let type: BooleanConstructor;
-            let required: boolean;
-        }
-    }
-    namespace methods {
-        function toggleMenu(): void;
-    }
-}
+declare const _default: import("vue").DefineComponent<{
+    isMenuOpen: {
+        type: BooleanConstructor;
+        required: true;
+    };
+}, any, any, {}, {
+    toggleMenu(): void;
+}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    isMenuOpen: {
+        type: BooleanConstructor;
+        required: true;
+    };
+}>>, {}, {}>;
 export default _default;

@@ -1,21 +1,21 @@
-declare namespace _default {
-    namespace props {
-        namespace items {
-            let type: ObjectConstructor;
-            let required: boolean;
-        }
-    }
-    function data(): {
-        isOpen: boolean;
-        preSelectedSnippet: string;
-        selectedSnippet: string;
-        selectedLibrary: string;
+declare const _default: import("vue").DefineComponent<{
+    items: {
+        type: ObjectConstructor;
+        required: true;
     };
-    namespace computed {
-        function selectedText(): string;
-    }
-    namespace methods {
-        function handleItemClick(snippet: any, library?: null): void;
-    }
-}
+}, any, {
+    isOpen: boolean;
+    preSelectedSnippet: string;
+    selectedSnippet: string;
+    selectedLibrary: string;
+}, {
+    selectedText(): string;
+}, {
+    handleItemClick(snippet: any, library?: null): void;
+}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    items: {
+        type: ObjectConstructor;
+        required: true;
+    };
+}>>, {}, {}>;
 export default _default;

@@ -2,6 +2,7 @@
   "private": true,
   "name": "my-module-playground",
   "scripts": {
+    "postinstall": "nuxi prepare",
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",

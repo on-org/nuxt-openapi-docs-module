@@ -15,36 +15,6 @@ on:
       - main
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        node-version: [18]
-        os: [ubuntu-latest]
-    timeout-minutes: 10
-
-    name: Build on Node.js ${{ matrix.node-version }}
-    steps:
-      - name: Checkout codes
-        uses: actions/checkout@v4
-
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Building
-        run: npm run build
-
-      - name: Cache dist
-        uses: actions/cache@v4
-        with:
-          path: dist
-          key: ${{ matrix.os }}-node-v${{ matrix.node-version }}-${{ github.sha }}
-
   test:
     runs-on: ${{ matrix.os }}
     strategy:
@@ -62,6 +32,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm install

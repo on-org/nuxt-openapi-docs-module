@@ -1,15 +1,22 @@
-declare namespace _default {
-    namespace props {
-        namespace components {
-            export let type: ObjectConstructor;
-            function _default(): {};
-            export { _default as default };
-        }
-        namespace currentLocale {
-            let type_1: StringConstructor;
-            export { type_1 as type };
-            export let required: boolean;
-        }
-    }
-}
+declare const _default: import("vue").DefineComponent<{
+    components: {
+        type: ObjectConstructor;
+        default: () => {};
+    };
+    currentLocale: {
+        type: StringConstructor;
+        required: true;
+    };
+}, any, any, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    components: {
+        type: ObjectConstructor;
+        default: () => {};
+    };
+    currentLocale: {
+        type: StringConstructor;
+        required: true;
+    };
+}>>, {
+    components: Record<string, any>;
+}, {}>;
 export default _default;

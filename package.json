@@ -4,6 +4,7 @@
   "description": "A module for Nuxt.js to generate pages from OpenAPI specifications",
   "homepage": "https://github.com/on-org/nuxt-openapi-docs-module#readme",
   "scripts": {
+    "postinstall": "nuxi prepare",
     "prepack": "nuxt-module-build build",
     "dev": "nuxi dev playground --port 3003",
     "dev:build": "nuxi build playground",
@@ -87,7 +88,8 @@
     "playwright": "^1.38.1",
     "postcss": "^8.4.38",
     "sass": "^1.74.1",
-    "vitest": "^1.4.0"
+    "vitest": "^1.4.0",
+    "vue-tsc": "^2.0.16"
   },
   "peerDependenciesMeta": {
     "nuxt": {

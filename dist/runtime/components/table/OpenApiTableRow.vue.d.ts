@@ -1,17 +1,18 @@
-declare namespace _default {
-    let name: string;
-    namespace props {
-        namespace hasNestedTable {
-            export let type: BooleanConstructor;
-            let _default: boolean;
-            export { _default as default };
-        }
-    }
-    function data(): {
-        nestedTableShown: boolean;
+declare const _default: import("vue").DefineComponent<{
+    hasNestedTable: {
+        type: BooleanConstructor;
+        default: boolean;
     };
-    namespace methods {
-        function toggleNestedTable(): void;
-    }
-}
+}, any, {
+    nestedTableShown: boolean;
+}, {}, {
+    toggleNestedTable(): void;
+}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    hasNestedTable: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+}>>, {
+    hasNestedTable: boolean;
+}, {}>;
 export default _default;

@@ -2,6 +2,9 @@
   "private": true,
   "name": "basic",
   "type": "module",
+  "scripts": {
+    "postinstall": "nuxi prepare"
+  },
   "devDependencies": {
     "@nuxtjs/i18n": "^8.3.0"
   },

@@ -1,10 +1,6 @@
-declare namespace _default {
-    function data(): {
-        isDarkMode: boolean;
-    };
-    namespace methods {
-        function darkModeClick(): void;
-    }
-    function mounted(): void;
-}
+declare const _default: import("vue").DefineComponent<{}, {}, {
+    isDarkMode: boolean;
+}, {}, {
+    darkModeClick(): void;
+}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{}>>, {}, {}>;
 export default _default;

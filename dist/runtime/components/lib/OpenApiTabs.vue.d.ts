@@ -1,17 +1,18 @@
-declare namespace _default {
-    namespace props {
-        namespace tabNames {
-            export let type: ObjectConstructor;
-            let _default: null;
-            export { _default as default };
-        }
-    }
-    function data(): {
-        activeSlotName: null;
+declare const _default: import("vue").DefineComponent<{
+    tabNames: {
+        type: ObjectConstructor;
+        default: null;
     };
-    namespace computed {
-        function computedTabNames(): any;
-    }
-    function created(): void;
-}
+}, any, {
+    activeSlotName: null;
+}, {
+    computedTabNames(): any;
+}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    tabNames: {
+        type: ObjectConstructor;
+        default: null;
+    };
+}>>, {
+    tabNames: Record<string, any>;
+}, {}>;
 export default _default;

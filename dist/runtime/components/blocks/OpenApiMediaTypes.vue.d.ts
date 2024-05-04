@@ -1,33 +1,27 @@
-declare namespace _default {
-    let name: string;
-    namespace components {
-        export { OpenApiExampleObject };
-        export { OpenApiTabs };
-        export { OpenApiObjectModel };
-        export { OpenApiDropdown };
-    }
-    namespace props {
-        namespace data {
-            let type: ObjectConstructor;
-            let required: boolean;
-        }
-        namespace currentLocale {
-            let type_1: StringConstructor;
-            export { type_1 as type };
-            let required_1: boolean;
-            export { required_1 as required };
-        }
-    }
-    function data(): {
-        selectedMediaType: null;
+declare const _default: import("vue").DefineComponent<{
+    data: {
+        type: ObjectConstructor;
+        required: true;
     };
-    namespace computed {
-        function types(): {
-            value: string;
-        }[];
-        function medaTypeObject(): any;
-    }
-    function created(): void;
-    let methods: {};
-}
+    currentLocale: {
+        type: StringConstructor;
+        required: true;
+    };
+}, any, {
+    selectedMediaType: null;
+}, {
+    types(): {
+        value: string;
+    }[];
+    medaTypeObject(): any;
+}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    data: {
+        type: ObjectConstructor;
+        required: true;
+    };
+    currentLocale: {
+        type: StringConstructor;
+        required: true;
+    };
+}>>, {}, {}>;
 export default _default;

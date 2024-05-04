@@ -1,17 +1,23 @@
-declare namespace _default {
-    let name: string;
-    namespace props {
-        namespace flex {
-            export let type: NumberConstructor;
-            let _default: number;
-            export { _default as default };
-        }
-        namespace min {
-            let type_1: BooleanConstructor;
-            export { type_1 as type };
-            let _default_1: boolean;
-            export { _default_1 as default };
-        }
-    }
-}
+declare const _default: import("vue").DefineComponent<{
+    flex: {
+        type: NumberConstructor;
+        default: number;
+    };
+    min: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+}, any, any, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+    flex: {
+        type: NumberConstructor;
+        default: number;
+    };
+    min: {
+        type: BooleanConstructor;
+        default: boolean;
+    };
+}>>, {
+    min: boolean;
+    flex: number;
+}, {}>;
 export default _default;
