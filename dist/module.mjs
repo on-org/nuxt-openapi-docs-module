@@ -1,6 +1,6 @@
 import { defineNuxtModule, createResolver, addComponentsDir, addTemplate, extendPages, addLayout, addPlugin } from '@nuxt/kit';
 import { extname, join, basename, resolve } from 'path';
-import { promises, existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { readFileSync, promises, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import _ from 'lodash';
 import { kebabCase } from 'scule';
 import fs from 'fs';
@@ -435,7 +435,10 @@ const module = defineNuxtModule({
     }
     for (let item of docs) {
       addLayout({
-        src: resolver.resolve(`./runtime/layout/OpenApiLayoutNuxt3.vue`),
+        getContents({ options }) {
+          const contents = readFileSync(resolver.resolve(`./runtime/layout/OpenApiLayoutNuxt3.vue`), 'utf-8')
+          return _.template(contents)({ options })
+        },
         filename: `openapi/apidocs.layout.${item.filename}.vue`,
         write: true,
         options: {
