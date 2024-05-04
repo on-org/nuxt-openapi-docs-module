@@ -1,3 +1,5 @@
+import en from '../locales/en.json'
+
 interface Param {
   pos: string,
   name: string,
@@ -35,7 +37,7 @@ export default class OpenApiPlugin {
       }
     }
 
-    return path;
+    return en[path] ?? path;
   }
 
   hasI18n() {

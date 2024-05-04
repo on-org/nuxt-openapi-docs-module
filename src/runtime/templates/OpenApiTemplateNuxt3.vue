@@ -13,9 +13,13 @@
 </template>
 
 <script setup lang="ts">
-defineI18nRoute({
-  locales: <%= JSON.stringify(Object.keys(options.locales)).replace(/"/g, "'") %>
-})
+<% if (Object.keys(options.i18n).length > 0) { %>
+  import {defineI18nRoute} from "#imports";
+  defineI18nRoute({
+    locales: <%= JSON.stringify(Object.keys(options.locales)).replace(/"/g, "'") %>
+  })
+<% } %>
+
 import {
   computed,
   onMounted,
@@ -24,7 +28,8 @@ import {
   useNuxtApp,
   useRoute,
   useRouter,
-  definePageMeta, defineI18nRoute, useHead
+  definePageMeta,
+  useHead
 } from "#imports";
 
 import doc_data from '#build/openapi/docs.<%= options.filename %>.mjs';

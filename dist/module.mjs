@@ -433,6 +433,13 @@ const module = defineNuxtModule({
         });
       });
     }
+    const hasI18nModule = (nuxt.options?.modules ?? []).some((module) => {
+      if (Array.isArray(module) && module.length > 0) {
+        const moduleName = module[0];
+        return typeof moduleName === "string" && moduleName === "@nuxtjs/i18n";
+      }
+      return false;
+    });
     for (let item of docs) {
       addLayout({
         getContents({ options: options2 }) {
@@ -452,7 +459,9 @@ const module = defineNuxtModule({
         path: options.path ?? "docs",
         filename: item.filename,
         locales: item.locales,
-        localesReload: item.localesReload
+        localesReload: item.localesReload,
+        i18n: hasI18nModule,
+        i18n_text: resolver.resolve("./runtime/lang/en.json")
       }, resolver);
       extendPages((pages) => {
         pages.push({

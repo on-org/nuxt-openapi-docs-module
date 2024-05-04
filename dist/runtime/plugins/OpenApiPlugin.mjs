@@ -1,3 +1,4 @@
+import en from "../locales/en.json";
 export default class OpenApiPlugin {
   params = [];
   locale = "en";
@@ -23,7 +24,7 @@ export default class OpenApiPlugin {
         return this.i18n.t(path);
       }
     }
-    return path;
+    return en[path] ?? path;
   }
   hasI18n() {
     return !!this.i18n;
