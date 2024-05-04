@@ -435,9 +435,9 @@ const module = defineNuxtModule({
     }
     for (let item of docs) {
       addLayout({
-        getContents({ options }) {
-          const contents = readFileSync(resolver.resolve(`./runtime/layout/OpenApiLayoutNuxt3.vue`), 'utf-8')
-          return _.template(contents)({ options })
+        getContents({ options: options2 }) {
+          const contents = readFileSync(resolver.resolve(`./runtime/layout/OpenApiLayoutNuxt3.vue`), "utf-8");
+          return _.template(contents)({ options: options2 });
         },
         filename: `openapi/apidocs.layout.${item.filename}.vue`,
         write: true,

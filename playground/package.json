@@ -15,8 +15,7 @@
   },
   "dependencies": {
     "axios": "^1.6.8",
-    "chokidar": "^3.6.0",
-    "nuxt-openapi-docs-module": "^5.2.3"
+    "chokidar": "^3.6.0"
   },
   "overrides": {
     "@parcel/watcher": "2.1.0"
