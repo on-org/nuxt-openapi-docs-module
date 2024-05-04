@@ -38,7 +38,7 @@ jobs:
         run: npm install
 
       - name: Building
-        run: npm run build
+        run: npm run prepack
 
       # https://github.com/vitejs/vite/blob/main/.github/workflows/ci.yml#L91
       # Install playwright's binary under custom directory to cache
