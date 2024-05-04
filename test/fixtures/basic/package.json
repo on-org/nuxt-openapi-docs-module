@@ -1,5 +1,15 @@
 {
   "private": true,
   "name": "basic",
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@nuxtjs/i18n": "^8.3.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "chokidar": "^3.6.0"
+  },
+  "overrides": {
+    "@parcel/watcher": "2.1.0"
+  }
 }

@@ -1,0 +1,106 @@
+---
+name: CI
+
+env:
+  CI: true
+  # install playwright binary manually (because pnpm only runs install script once)
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node-version: [18]
+        os: [ubuntu-latest]
+    timeout-minutes: 10
+
+    name: Build on Node.js ${{ matrix.node-version }}
+    steps:
+      - name: Checkout codes
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Building
+        run: npm run build
+
+      - name: Cache dist
+        uses: actions/cache@v4
+        with:
+          path: dist
+          key: ${{ matrix.os }}-node-v${{ matrix.node-version }}-${{ github.sha }}
+
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node-version: [18]
+        os: [ubuntu-latest]
+    timeout-minutes: 25
+
+    name: Test on Node.js ${{ matrix.node-version }}
+    steps:
+      - name: Checkout codes
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Building
+        run: npm run build
+
+      # https://github.com/vitejs/vite/blob/main/.github/workflows/ci.yml#L91
+      # Install playwright's binary under custom directory to cache
+      - name: (non-windows) Set Playwright path and Get playwright version
+        if: runner.os != 'Windows'
+        run: |
+          echo "PLAYWRIGHT_BROWSERS_PATH=$HOME/.cache/playwright-bin" >> $GITHUB_ENV
+          PLAYWRIGHT_VERSION="$(npm ls --depth 0 --json | jq --raw-output '.dependencies.playwright.version')"
+          echo "PLAYWRIGHT_VERSION=$PLAYWRIGHT_VERSION" >> $GITHUB_ENV
+      - name: (windows) Set Playwright path and Get playwright version
+        if: runner.os == 'Windows'
+        run: |
+          echo "PLAYWRIGHT_BROWSERS_PATH=$HOME\.cache\playwright-bin" >> $env:GITHUB_ENV
+          $env:PLAYWRIGHT_VERSION="$(npm ls --depth 0 --json | jq --raw-output '.dependencies.playwright.version')"
+          echo "PLAYWRIGHT_VERSION=$env:PLAYWRIGHT_VERSION" >> $env:GITHUB_ENV
+
+      - name: Cache Playwright's binary
+        uses: actions/cache@v4
+        with:
+          key: ${{ runner.os }}-playwright-bin-v1-${{ env.PLAYWRIGHT_VERSION }}
+          path: ${{ env.PLAYWRIGHT_BROWSERS_PATH }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-bin-v1-
+
+      - name: Install Playwright
+        # does not need to explicitly set chromium after https://github.com/microsoft/playwright/issues/14862 is solved
+        run: npx playwright install chromium --yes
+
+      - name: Restore dist cache
+        uses: actions/cache@v4
+        with:
+          path: dist
+          key: ${{ matrix.os }}-node-v${{ matrix.node-version }}-${{ github.sha }}
+
+      - name: Testing
+        run: npm run test

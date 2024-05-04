@@ -13,7 +13,7 @@ declare namespace _default {
     }
     namespace props {
         export namespace route {
-            let type: (ArrayConstructor | ObjectConstructor)[];
+            let type: (ObjectConstructor | ArrayConstructor)[];
             let required: boolean;
         }
         export namespace subParams {

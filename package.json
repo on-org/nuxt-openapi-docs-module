@@ -14,7 +14,8 @@
     "lint": "eslint .",
     "sass:convert": "sass -w src/runtime/styles.scss src/runtime/styles.css",
     "cleanup": "rm -rf node_modules package-lock.json dist generate .nuxt playground/.nuxt playground/node_modules playground/package-lock.json playground2/.nuxt playground2/node_modules playground2/package-lock.json",
-    "prepublish": "npm run prepack"
+    "prepublish": "npm run prepack",
+    "test": "vitest run test"
   },
   "keywords": [
     "nuxt",
@@ -83,8 +84,10 @@
     "fs-extra": "^11.2.0",
     "nuxi": "^3.11.1",
     "nuxt": "^3.11.2",
+    "playwright": "^1.38.1",
     "postcss": "^8.4.38",
-    "sass": "^1.74.1"
+    "sass": "^1.74.1",
+    "vitest": "^1.4.0"
   },
   "peerDependenciesMeta": {
     "nuxt": {
@@ -98,5 +101,9 @@
     "nuxt": "^2.16.1 || ^3.0.1",
     "vue": "^2.6.1 || ^3.0.1"
   },
+  "workspaces": [
+    "playground",
+    "test/fixtures/*"
+  ],
   "packageManager": "yarn@3.7.0+sha256.7bf0c78a106332886ea4e59641fd819b1af953edcd72c4d93a32b1c71000ee67"
 }

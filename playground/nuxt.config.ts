@@ -37,7 +37,7 @@ export default defineNuxtConfig({
   // debug: true,
   modules: [
     [
-      '../src/module',
+      'nuxt-openapi-docs-module',
       {
         folder: './docs/openapi',
         name: 'Api Docs',
