@@ -65,7 +65,7 @@ jobs:
 
       - name: Install Playwright
         # does not need to explicitly set chromium after https://github.com/microsoft/playwright/issues/14862 is solved
-        run: npx playwright install chromium --yes
+        run: npx --yes playwright install chromium
 
       - name: Restore dist cache
         uses: actions/cache@v4
