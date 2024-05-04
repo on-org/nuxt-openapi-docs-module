@@ -42,7 +42,7 @@ export default defineConfig({
 
 - [✨ &nbsp;Release Notes](https://github.com/on-org/nuxt-openapi-docs-module/blob/main/changelog.md)
 - [🛠 Demo](https://on-org.github.io/nuxt-openapi-docs-module/)
-
+- [💡 Lite example](https://stackblitz.com/edit/github-j7idul?file=README.md)
 
 <img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/white1.jpeg"  width="400" alt="white image">
 <img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/white2.jpeg"  width="400" alt="white image 2">
