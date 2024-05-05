@@ -1,11 +1,23 @@
-<p class="links">
-[![npm version](https://badge.fury.io/js/nuxt-openapi-docs-module.svg)](https://badge.fury.io/js/nuxt-openapi-docs-module)
-[![npm downloads](https://img.shields.io/npm/dw/nuxt-openapi-docs-module)](https://badge.fury.io/js/nuxt-openapi-docs-module)
-[![NPM license](https://img.shields.io/npm/l/nuxt-openapi-docs-module)](https://github.com/on-org/nuxt-openapi-docs-module/blob/master/LICENSE)
-[![npm type definitions](https://img.shields.io/npm/types/nuxt-openapi-docs-module)](https://github.com/on-org/nuxt-openapi-docs-module)
-[![donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.me/s00d)
-[![GitHub Repo stars](https://img.shields.io/github/stars/on-org/nuxt-openapi-docs-module?style=social)](https://github.com/on-org/nuxt-openapi-docs-module)
-</p>
+<div class="links">
+    <a href="https://badge.fury.io/js/nuxt-openapi-docs-module" target="_blank">
+        <img src="https://badge.fury.io/js/nuxt-openapi-docs-module.svg" alt="npm version">
+    </a>
+    <a href="https://badge.fury.io/js/nuxt-openapi-docs-module" target="_blank">
+        <img src="https://img.shields.io/npm/dw/nuxt-openapi-docs-module" alt="npm downloads">
+    </a>
+    <a href="https://github.com/on-org/nuxt-openapi-docs-module/blob/master/LICENSE" target="_blank">
+        <img src="https://img.shields.io/npm/l/nuxt-openapi-docs-module" alt="NPM license">
+    </a>
+    <a href="https://github.com/on-org/nuxt-openapi-docs-module" target="_blank">
+        <img src="https://img.shields.io/npm/types/nuxt-openapi-docs-module" alt="npm type definitions">
+    </a>
+    <a href="https://www.paypal.me/s00d" target="_blank">
+        <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="donate">
+    </a>
+    <a href="https://github.com/on-org/nuxt-openapi-docs-module" target="_blank">
+        <img src="https://img.shields.io/github/stars/on-org/nuxt-openapi-docs-module?style=social" alt="GitHub Repo stars">
+    </a>
+</div>
 
 # OpenApiDocs Nuxt Module
 
