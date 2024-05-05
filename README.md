@@ -53,10 +53,14 @@ export default defineConfig({
 
 ```
 
+## Documentation and Support
 
-- [✨ &nbsp;Release Notes](https://github.com/on-org/nuxt-openapi-docs-module/blob/main/changelog.md)
-- [🛠 Demo](https://on-org.github.io/nuxt-openapi-docs-module/)
-- [💡 Lite example](https://stackblitz.com/edit/github-j7idul?file=README.md)
+- **Version Information:** The module is compatible with various Nuxt versions, supporting specific features based on the version.
+- **Release Notes:** [View Changes and Updates](https://github.com/on-org/nuxt-openapi-docs-module/blob/main/changelog.md)
+- **Demo and Examples:** [See it in Action](https://on-org.github.io/nuxt-openapi-docs-module/)
+- **Live Example:** [Lite example on StackBlitz](https://stackblitz.com/edit/github-j7idul?file=README.md)
+
+For detailed instructions, please refer to the official GitHub repository or the provided demo links.
 
 <img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/white1.jpeg"  width="400" alt="white image">
 <img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/white2.jpeg"  width="400" alt="white image 2">
@@ -119,7 +123,7 @@ modules: [
 - **'files'**: function with files list in OpenApiDocs folder, files: function() {return { 'News-API': 'News API'}}.
 - **'debug'**: print debug information to console, Default: false
 - **'list'**: Toggling the list of documents, Default: false
-- **'locales'**: array wit enabled locales, Default: **['en']** Support: `['en', 'fr', 'de', 'ru', 'ch', 'es', 'hi', 'ar', 'zh', 'pt']`
+- **'locales'**: array wit enabled locales, Default: **['en']** Support: `['en', 'fr', 'de', 'ru', 'ch', 'es', 'hi', 'ar', 'zh', 'pt''bn', 'it', 'ja', 'jv', 'ko', 'pa', 'ta', 'te', 'tr']`
 - **'logo'**: svg logo in string
 - **'footer'**: doc footer
 -
@@ -155,64 +159,6 @@ info:
       # ...
       summary: Add a new pet to the store
       x-summary-ru: Добавить нового питомца в магазин
-```
-3. add locale to i18n
-```js
-//...
-en: {
-  welcome: 'Welcome',
-  openapidoc: {
-    "api_documentation": "API documentation",
-    "select_route": "Select a route from the list below:",
-    "info": "Info",
-    "components": "Components",
-    "callbacks": "Callbacks",
-    "examples": "Examples",
-    "media_type": "Media Type",
-    "summary": "Summary",
-    "content": "Content",
-    "title": "Title",
-    "servers": "ServersServers",
-    "code_simple": "Code simple",
-    "type": "Type",
-    "enum": "Enum",
-    "pattern": "Pattern",
-    "items": "Items",
-    "properties": "Properties",
-    "name": "Name",
-    "security": "Security",
-    "security_schemes": "Security Schemes",
-    "one_of": "One Of",
-    "all_of": "All Of",
-    "additional_properties": "Additional Properties",
-    "default": "Default",
-    "format": "Format",
-    "deprecated": "Deprecated!",
-    "value": "Value",
-    "parameter_name": "Parameter Name",
-    "description": "Description",
-    "required": "Required",
-    "schema": "Schema",
-    "example": "Example",
-    "request_bodies": "Request Bodies",
-    "request_body": "Request Body",
-    "responses": "Responses",
-    "status": "Status",
-    "in": "In",
-    "minimum": "Minimum string length",
-    "maximum": "Maximum number of items",
-    "maximum_props": "Maximum number of properties",
-    "minimum_props": "Minimum number of properties",
-    "not": "Not",
-    "bearer_format": "Bearer format",
-    "authorization_url": "Authorization URL",
-    "token_url": "Token URL",
-    "refresh_url": "Refresh URL",
-    "scopes": "Scopes",
-    "content_type": "Content Type",
-    "variables": "Variables"
-  }
-},
 ```
 
 Example: ```playground2/docs/openapi/localization.yaml``` and ```playground2/nuxt.config.js```
