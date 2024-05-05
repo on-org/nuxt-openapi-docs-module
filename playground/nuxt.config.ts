@@ -1,3 +1,7 @@
+import path from "path";
+import { marked } from "marked";
+import fs from "fs";
+
 const isDev = process.env.NODE_ENV !== 'production';
 const currentDate = new Date();
 const timestamp = currentDate.getTime();
@@ -165,4 +169,11 @@ export default defineNuxtConfig({
       enabled: true,
     },
   },
+
+  runtimeConfig: {
+    public: {
+      readme: marked(fs.readFileSync(path.resolve(process.cwd(), './README.md'), 'utf-8')),
+      changelog: marked(fs.readFileSync(path.resolve(process.cwd(), './changelog.md'), 'utf-8'))
+    }
+  }
 })

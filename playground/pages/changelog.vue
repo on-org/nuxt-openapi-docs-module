@@ -1,25 +1,15 @@
 <template>
   <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 py-10 bg-white shadow-lg rounded-lg">
-    <div v-if="loading" class="text-gray-500 text-lg text-center">Loading...</div>
-    <div v-else v-html="formattedChangelog" class="changelog prose prose-lg mx-auto"></div>
+    <div v-html="formattedChangelog" class="changelog prose prose-lg mx-auto"></div>
   </div>
 </template>
 
 <script setup>
-import {useFetch, computed} from '#imports';
-import {Marked} from 'marked';
+import { useRuntimeConfig } from '#imports';
 
-const markedInstance = new Marked();
+const config = useRuntimeConfig();
 
-const {data: changelog, pending: loading} = useFetch(
-  'https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/changelog.md',
-  {transform: response => markedInstance.parse(response)}
-);
-
-const formattedChangelog = computed(() => {
-  if (!changelog.value) return '';
-  return changelog.value;
-});
+const formattedChangelog = config.public.changelog;
 </script>
 
 <style>

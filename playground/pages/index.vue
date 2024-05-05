@@ -4,24 +4,16 @@
       <a href="docs/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded pulse">Open Documentation Example</a>
     </div>
 
-    <div v-if="loading" class="text-gray-500 text-lg text-center">Loading...</div>
-    <div v-else v-html="formattedContent" class="content-info-doc prose prose-lg mx-auto"></div>
+    <div v-html="formattedContent" class="content-info-doc prose prose-lg mx-auto"></div>
   </div>
 </template>
 
 <script setup>
-import { useFetch, computed } from '#imports';
-import { marked } from 'marked';
+import { useRuntimeConfig } from '#imports';
 
-const { data: markdownContent, pending: loading } = useFetch(
-  'https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/README.md',
-  { transform: response => marked(response) }
-);
+const config = useRuntimeConfig();
 
-const formattedContent = computed(() => {
-  if (!markdownContent.value) return '';
-  return markdownContent.value;
-});
+const formattedContent = config.public.readme;
 </script>
 
 <style>
