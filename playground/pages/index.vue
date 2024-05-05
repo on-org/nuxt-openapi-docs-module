@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
     <div class="flex justify-center gap-4 my-4">
-      <a href="docs/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Open Documentation</a>
+      <a href="docs/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Open Documentation Example</a>
     </div>
 
     <div v-if="loading" class="text-gray-500 text-lg text-center">Loading...</div>
@@ -34,6 +34,10 @@ const formattedContent = computed(() => {
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.content-container {
+  background: #fff;
 }
 
 .content h1, .content h2, .content h3 {
