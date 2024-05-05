@@ -1,31 +1,30 @@
 <div class="links">
-    <a href="https://badge.fury.io/js/nuxt-openapi-docs-module" target="_blank">
-        <img src="https://badge.fury.io/js/nuxt-openapi-docs-module.svg" alt="npm version">
+    <a href="https://www.npmjs.com/package/nuxt-openapi-docs-module" target="_blank">
+        <img src="https://img.shields.io/npm/v/nuxt-openapi-docs-module/latest?style=for-the-badge" alt="npm version">
     </a>
-    <a href="https://badge.fury.io/js/nuxt-openapi-docs-module" target="_blank">
-        <img src="https://img.shields.io/npm/dw/nuxt-openapi-docs-module" alt="npm downloads">
+    <a href="https://www.npmjs.com/package/nuxt-openapi-docs-module" target="_blank">
+        <img src="https://img.shields.io/npm/dw/nuxt-openapi-docs-module?style=for-the-badge" alt="npm downloads">
     </a>
     <a href="https://github.com/on-org/nuxt-openapi-docs-module/blob/master/LICENSE" target="_blank">
-        <img src="https://img.shields.io/npm/l/nuxt-openapi-docs-module" alt="NPM license">
+        <img src="https://img.shields.io/npm/l/nuxt-openapi-docs-module?style=for-the-badge" alt="NPM license">
     </a>
     <a href="https://github.com/on-org/nuxt-openapi-docs-module" target="_blank">
-        <img src="https://img.shields.io/npm/types/nuxt-openapi-docs-module" alt="npm type definitions">
-    </a>
-    <a href="https://www.paypal.me/s00d" target="_blank">
-        <img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" alt="donate">
+        <img src="https://img.shields.io/npm/types/nuxt-openapi-docs-module?style=for-the-badge" alt="npm type definitions">
     </a>
     <a href="https://github.com/on-org/nuxt-openapi-docs-module" target="_blank">
-        <img src="https://img.shields.io/github/stars/on-org/nuxt-openapi-docs-module?style=social" alt="GitHub Repo stars">
+        <img src="https://img.shields.io/github/stars/on-org/nuxt-openapi-docs-module?style=for-the-badge" alt="GitHub Repo stars">
     </a>
 </div>
 
-# OpenApiDocs Nuxt Module
+# OpenApiDocs Nuxt Module Documentation
 
 <p align="center">
 <img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/logo_long.png" alt="logo">
 </p>
 
-This module provides a simple way to display OpenAPI documentation in a Nuxt.js 2 & 3 application. It allows you to define an OpenAPI specification file and renders it using a set of reusable Vue.js components.
+## Introduction
+
+The OpenApiDocs Nuxt Module is designed to seamlessly integrate OpenAPI documentation into Nuxt.js applications, supporting both Nuxt 2.x and 3.x. It utilizes Vue.js components to render the OpenAPI specifications dynamically. This module is ideal for developers looking to embed API documentation directly into their Nuxt.js projects.
 
 work with static and server target
 
@@ -40,19 +39,6 @@ work with static and server target
 
 for nuxt 3 need add vite.config.ts
 
-```js
-import { defineConfig } from "vite";
-
-export default defineConfig({
-  build: {
-    rollupOptions: {
-      external: ["vue/server-renderer"],
-    },
-  },
-});
-
-```
-
 ## Documentation and Support
 
 - **Version Information:** The module is compatible with various Nuxt versions, supporting specific features based on the version.
@@ -60,112 +46,112 @@ export default defineConfig({
 - **Demo and Examples:** [See it in Action](https://on-org.github.io/nuxt-openapi-docs-module/)
 - **Live Example:** [Lite example on StackBlitz](https://stackblitz.com/edit/github-j7idul?file=README.md)
 
-For detailed instructions, please refer to the official GitHub repository or the provided demo links.
+## Features
 
-<img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/white1.jpeg"  width="400" alt="white image">
-<img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/white2.jpeg"  width="400" alt="white image 2">
-<img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/mobile1.jpeg"  width="400" alt="black image">
-<img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/mobile2.jpeg"  width="400" alt="mobile image">
+- **Support for Nuxt 2.x and 3.x**: Works with both major versions of Nuxt.
+- **Dynamic Documentation Rendering**: Automatically renders OpenAPI specifications using Vue.js components.
+- **Customizable**: Offers several options to customize the documentation setup.
+- **Localization Support**: Integrates with the i18n plugin for multi-language support.
+- **Development Tools**: Includes tools and setups for development and customization of the module.
 
-## Quick Setup
+<p align="center">
+<img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/white1.jpeg"  width="100%" alt="white image">
+<img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/white2.jpeg"  width="100%" alt="white image 2">
+<img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/mobile1.jpeg"  width="50%" alt="black image">
+<img src="https://raw.githubusercontent.com/on-org/nuxt-openapi-docs-module/main/img/mobile2.jpeg"  width="50%" alt="mobile image">
+</p>
 
-1. Add **'nuxt-openapi-docs-module'** dependency to your project
+## Installation
 
+### Quick Setup
+
+1. **Add the module to your project**:
 ```bash
-npx nuxi@latest module add nuxt-openapi-docs-module
+  npx nuxi@latest module add nuxt-openapi-docs-module
 ```
 
-2. Add **'nuxt-openapi-docs-module'** to the **'modules'** section of **'nuxt.config.ts'**
+2. **Configure the module in your Nuxt configuration**:
 
-nuxt 3
-```js
+For Nuxt 3:
+```javascript
 export default defineNuxtConfig({
-  modules: [
-    'nuxt-openapi-docs-module'
-  ]
+ modules: [
+   'nuxt-openapi-docs-module'
+ ]
 })
 ```
 
-nuxt 2
-```js
+For Nuxt 2:
+```javascript
 module.exports = {
-  modules: [
-    'nuxt-openapi-docs-module',
-  ],
+ modules: [
+   'nuxt-openapi-docs-module',
+ ],
 }
 ```
 
-3. create **'docs/openapi;** folder in root project dir(not src) or change path - **'folder'** parameter
+3. **Create the OpenAPI documentation folder**:
+- Default folder: **'docs/openapi'**
+- Alternatively, specify a custom folder using the **'folder'** option in the module configuration.
 
-4. You can use [Vue Devtools](https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) "Routes" section to see new routes.
+### Configuration
 
-## Configuration
-You can customize the behavior of the module by providing options in the nuxt.config.js file.
+Customize the module by modifying the **'nuxt.config.js'** or **'nuxt.config.ts'** file:
 
 ```javascript
 module.exports = {
-modules: [
+  modules: [
     [
-        'nuxt-openapi-docs-module',
-        {
-            folder: './docs/openapi',
-            name: 'OpenApiDocs',
-            files: function() {return { 'News-API': 'News API'}},
-        }
+      'nuxt-openapi-docs-module',
+      {
+        folder: './docs/openapi',
+        name: 'OpenApiDocs',
+        files: function() { return { 'News-API': 'News API' } },
+      }
     ],
-],
-// ...
+  ],
+  // Additional configurations...
 }
 ```
-- **'folder'** (default: ./docs/openapi): the folder where your OpenAPI specification files are located.
-- **'name'** (default: OpenApiDocs): the name of the main component used to render the OpenAPI documentation.
-- **'path'**: the component url for docs.
-- **'files'**: function with files list in OpenApiDocs folder, files: function() {return { 'News-API': 'News API'}}.
-- **'debug'**: print debug information to console, Default: false
-- **'list'**: Toggling the list of documents, Default: false
-- **'locales'**: array wit enabled locales, Default: **['en']** Support: `['en', 'fr', 'de', 'ru', 'ch', 'es', 'hi', 'ar', 'zh', 'pt''bn', 'it', 'ja', 'jv', 'ko', 'pa', 'ta', 'te', 'tr']`
-- **'logo'**: svg logo in string
-- **'footer'**: doc footer
--
+
+### Options
+
+- **'folder'**: Path to the folder containing OpenAPI specification files.
+- **'name'**: Name of the main component.
+- **'files'**: Function returning an object mapping file names to display names.
+- **'debug'**: Enable debug mode to print information to the console.
+- **'list'**: Toggle the display of document listings.
+- **'locales'**: Define supported locales.
+- **'logo'**: Custom logo in SVG format.
+- **'footer'**: Custom footer content.
+
+## Usage
+
 ### Folder Structure
-The default folder structure for your OpenAPI specification files should look like this:
 
-```markdown
-docs/
-    openapi/
-        api1.yaml
-        api2.yaml
-```
-
+Place your OpenAPI specification files (e.g., **'api1.yaml'**', **'api2.yaml'**) in the specified **'folder'**.
 
 ### Localization
 
-Localization works together with the i18n plugin
+To enable localization, add the **'x-locales'** and locale-specific summaries in your OpenAPI specification files:
 
-1. Add info - x-locales
-2.
 ```yaml
 info:
-  #  ...
   x-locales:
     en: English
     ru: Русский
-```
 
-2. Add locale text
-```yaml
+paths:
   /pet:
     post:
-      # ...
       summary: Add a new pet to the store
       x-summary-ru: Добавить нового питомца в магазин
 ```
 
-Example: ```playground2/docs/openapi/localization.yaml``` and ```playground2/nuxt.config.js```
+Example: **'playground2/docs/openapi/localization.yaml'** and **'playground2/nuxt.config.js'**
 
 
 ### Plugin
-
 
 Here's a description of all the properties and methods of the OpenApiPlugin interface:
 
@@ -182,7 +168,6 @@ Here's a description of all the properties and methods of the OpenApiPlugin inte
 
 Example: example/plugins/auth.js
 
-
 ```js
  context.$openapidoc.setAccess((file) => {
     return file !== 'no-access';
@@ -191,23 +176,22 @@ Example: example/plugins/auth.js
   context.$openapidoc.setFooter('<div><b>Nuxt OpenApi doc panel</b> </div>')
 ```
 
+### Development and Customization
 
-
-### Development
+For developers looking to contribute or customize the module:
 
 ```bash
 # Install dependencies
 npm install
 
-# Generate type stubs
+# Generate type stubs and start development
 npm run dev:prepare
-
-# Develop with the playground with nuxt
 npm run dev
 
-# Build the playground
+# Build the playground for production
 npm run dev:build
 ```
+
 
 ### Custom pages
 
@@ -264,3 +248,16 @@ page1 - your file name
 
 Example `playground2/docs/openapi/page.yaml`
 
+### Plugin Interface
+
+The module provides a plugin interface to add parameters, clear them, handle localization, and set access controls dynamically:
+
+```javascript
+// Example of setting access control
+context.$openapidoc.setAccess((file) => {
+  return file !== 'no-access';
+});
+
+// Example of setting a custom footer
+context.$openapidoc.setFooter('<div><b>Nuxt OpenApi doc panel</b> </div>')
+```
