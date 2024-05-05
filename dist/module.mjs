@@ -361,7 +361,7 @@ const module = defineNuxtModule({
   },
   async setup(options, nuxt) {
     if (!options.locales || !options.locales.length) {
-      options.locales = ["en", "fr", "de", "ru", "ch", "es", "hi", "ar", "zh", "pt"];
+      options.locales = ["en", "fr", "de", "ru", "ch", "es", "hi", "ar", "zh", "pt", "bn", "it", "ja", "jv", "ko", "pa", "ta", "te", "tr"];
     }
     nuxt.options.dev === false;
     const resolver = createResolver(import.meta.url);
