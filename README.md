@@ -65,13 +65,13 @@ export default defineConfig({
 
 ## Quick Setup
 
-1. Add `nuxt-openapi-docs-module` dependency to your project
+1. Add **'nuxt-openapi-docs-module'** dependency to your project
 
 ```bash
 npx nuxi@latest module add nuxt-openapi-docs-module
 ```
 
-2. Add `nuxt-openapi-docs-module` to the `modules` section of `nuxt.config.ts`
+2. Add **'nuxt-openapi-docs-module'** to the **'modules'** section of **'nuxt.config.ts'**
 
 nuxt 3
 ```js
@@ -91,7 +91,7 @@ module.exports = {
 }
 ```
 
-3. create `docs/openapi` folder in root project dir(not src) or change path - `folder` parameter
+3. create **'docs/openapi;** folder in root project dir(not src) or change path - **'folder'** parameter
 
 4. You can use [Vue Devtools](https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) "Routes" section to see new routes.
 
@@ -113,15 +113,15 @@ modules: [
 // ...
 }
 ```
-- `folder` (default: ./docs/openapi): the folder where your OpenAPI specification files are located.
-- `name` (default: OpenApiDocs): the name of the main component used to render the OpenAPI documentation.
-- `path`: the component url for docs.
-- `files`: function with files list in OpenApiDocs folder, files: function() {return { 'News-API': 'News API'}}.
-- `debug`: print debug information to console, Default: false
-- `list`: Toggling the list of documents, Default: false
-- `locales`: array wit enabled locales, Default: `['en']` Support: `['en', 'fr', 'de', 'ru', 'ch', 'es', 'hi', 'ar', 'zh', 'pt']`
-- `logo`: svg logo in string
-- `footer`: doc footer
+- **'folder'** (default: ./docs/openapi): the folder where your OpenAPI specification files are located.
+- **'name'** (default: OpenApiDocs): the name of the main component used to render the OpenAPI documentation.
+- **'path'**: the component url for docs.
+- **'files'**: function with files list in OpenApiDocs folder, files: function() {return { 'News-API': 'News API'}}.
+- **'debug'**: print debug information to console, Default: false
+- **'list'**: Toggling the list of documents, Default: false
+- **'locales'**: array wit enabled locales, Default: **['en']** Support: `['en', 'fr', 'de', 'ru', 'ch', 'es', 'hi', 'ar', 'zh', 'pt']`
+- **'logo'**: svg logo in string
+- **'footer'**: doc footer
 -
 ### Folder Structure
 The default folder structure for your OpenAPI specification files should look like this:
@@ -267,11 +267,11 @@ npm run dev:build
 
 1. Create custom page, for example `pages/docs/petstore_extended/:locale/custom/page1.vue`
 
-- `docs` - path from config (docs default)
-- `petstore_extended` - doc name
-- `:locale` - locale (en default)
-- `custom` - static path
-- `page1` - page name
+- **'docs'** - path from config (docs default)
+- **'petstore_extended'** - doc name
+- **':locale'** - locale (en default)
+- **'custom'** - static path
+- **'page1'** - page name
 
 2. create vue component, for example `page1.vue`
 
