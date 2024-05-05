@@ -91,11 +91,11 @@ const formattedContent = computed(() => {
 
 .content code {
   background-color: #f3f4f6; /* Light grey background for visibility */
-  color: #d63384; /* Dark pink color for contrast and visibility */
+  color: #000000; /* Dark pink color for contrast and visibility */
   padding: 8px 12px; /* Adequate padding for readability */
   border-radius: 6px; /* Rounded corners for a smoother look */
   font-family: 'Courier New', Courier, monospace; /* Monospace font to differentiate code */
-  font-size: 0.9em; /* Slightly smaller font size to fit more code on the line */
+  font-size: 0.8em; /* Slightly smaller font size to fit more code on the line */
   display: block; /* Makes the code block-level for better handling of spacing */
   overflow-x: auto; /* Adds horizontal scrolling for longer lines of code */
   white-space: pre-wrap; /* Maintains whitespace formatting from the markdown */
@@ -103,6 +103,7 @@ const formattedContent = computed(() => {
   margin: 10px 0; /* Top and bottom margins for separation from other content */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
   border-left: 3px solid #3b82f6; /* Blue vertical line for stylistic emphasis */
+  font-weight: bold;
 }
 
 .links {
