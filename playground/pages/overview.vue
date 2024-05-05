@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
-    <div class="content prose prose-lg mx-auto">
+    <div class="content-info-doc prose prose-lg mx-auto">
       <!-- Title and Introduction -->
       <div class="text-center">
         <h2 class="text-base text-indigo-600 font-semibold tracking-wide uppercase">Nuxt OpenAPI Docs Module</h2>

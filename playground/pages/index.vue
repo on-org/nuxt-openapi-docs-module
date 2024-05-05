@@ -1,11 +1,11 @@
 <template>
   <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
-    <div class="flex justify-center gap-4 my-4">
-      <a href="docs/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Open Documentation Example</a>
+    <div class="flex justify-center gap-4 my-12">
+      <a href="docs/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded pulse">Open Documentation Example</a>
     </div>
 
     <div v-if="loading" class="text-gray-500 text-lg text-center">Loading...</div>
-    <div v-else v-html="formattedContent" class="content prose prose-lg mx-auto"></div>
+    <div v-else v-html="formattedContent" class="content-info-doc prose prose-lg mx-auto"></div>
   </div>
 </template>
 
@@ -25,7 +25,21 @@ const formattedContent = computed(() => {
 </script>
 
 <style>
-.content {
+@keyframes pulse-animation {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Применение анимации к кнопке */
+.pulse {
+  animation: pulse-animation 2s infinite;
+}
+
+.content-info-doc {
   font-family: 'Inter', sans-serif;
   color: #1f2937;
   line-height: 1.6;
@@ -36,11 +50,7 @@ const formattedContent = computed(() => {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.content-container {
-  background: #fff;
-}
-
-.content h1, .content h2, .content h3 {
+.content-info-doc h1, .content-info-doc h2, .content-info-doc h3 {
   color: #111827; /* Slightly darker than the text for emphasis */
   margin-top: 2rem; /* Space above headers */
   margin-bottom: 1rem; /* Space below headers */
@@ -48,32 +58,32 @@ const formattedContent = computed(() => {
   border-bottom: 2px solid #e5e7eb; /* A light border under headers for separation */
 }
 
-.content h1 {
+.content-info-doc h1 {
   font-size: 2.25rem; /* Larger font size for main headings */
 }
 
-.content h2 {
+.content-info-doc h2 {
   font-size: 1.75rem; /* Medium font size for secondary headings */
 }
 
-.content h3 {
+.content-info-doc h3 {
   font-size: 1.5rem; /* Smaller font size for tertiary headings */
 }
 
-.content a {
+.content-info-doc a {
   color: #3b82f6;
   text-decoration: none;
 }
 
-.content a:hover {
+.content-info-doc a:hover {
   text-decoration: underline;
 }
 
-.content ul, .content ol {
+.content-info-doc ul, .content-info-doc ol {
   padding-left: 20px; /* Standard indentation for lists */
 }
 
-.content img {
+.content-info-doc img {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
@@ -81,19 +91,19 @@ const formattedContent = computed(() => {
   margin: 10px auto; /* Center images and provide spacing */
 }
 
-.content table {
+.content-info-doc table {
   width: 100%; /* Full-width tables */
   border-collapse: collapse; /* No space between borders */
 }
-.content th, .content td {
+.content-info-doc th, .content-info-doc td {
   border: 1px solid #ddd; /* Light grey border for readability */
   padding: 12px; /* Padding for table cells */
 }
-.content th {
+.content-info-doc th {
   background-color: #f9fafb; /* Slightly off-white background for headers */
 }
 
-.content code {
+.content-info-doc code {
   background-color: #f3f4f6; /* Light grey background for visibility */
   color: #000000; /* Dark pink color for contrast and visibility */
   padding: 8px 12px; /* Adequate padding for readability */
