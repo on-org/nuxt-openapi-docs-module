@@ -174,6 +174,10 @@ export default defineNuxtModule<ModuleOptions>({
         files: filesClean,
       }, resolver)
 
+      nuxt.hook('prepare:types', ({ references }) => {
+        references.push({ path: dst })
+      })
+
       extendPages((pages) => {
         pages.push({
           name: `openapi-docs-list`,
@@ -216,6 +220,10 @@ export default defineNuxtModule<ModuleOptions>({
         i18n_text: resolver.resolve('./runtime/lang/en.json')
       }, resolver)
 
+      nuxt.hook('prepare:types', ({ references }) => {
+        references.push({ path: dst })
+      })
+
       extendPages((pages) => {
         pages.push({
           name: `openapi-${options.path}-${item.filename}`,
@@ -253,6 +261,18 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.hooks.hook('nitro:config', (nitroConfig) => {
       nitroConfig.publicAssets = nitroConfig.publicAssets || []
       nitroConfig.publicAssets.push({ dir: resolver.resolve('./runtime/public'), maxAge: 31536000 })
+    })
+
+    nuxt.hook('devtools:customTabs', (iframeTabs) => {
+      iframeTabs.push({
+        name: 'nuxt-openapi-docs-module',
+        title: 'OpenApi',
+        icon: 'carbon:doc',
+        view: {
+          type: 'iframe',
+          src: 'https://on-org.github.io/nuxt-openapi-docs-module/',
+        }
+      })
     })
   }
 })
