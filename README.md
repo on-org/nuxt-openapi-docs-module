@@ -30,12 +30,11 @@ work with static and server target
 
 # Package Version Information
 
-| Version | 	Supported Nuxt Version |
-|---------|-------------------------|
-| 3.0     | 	2.x and 3.x            |
-| 4.0     | 	2.x and 3.x            |
-| 5.0     | 	3.x                    |
-| 5.2     | 	> 3.7                  |
+| Version                                                                             | 	Supported Nuxt Version |
+|-------------------------------------------------------------------------------------|-------------------------|
+| [4.x](https://github.com/on-org/nuxt-openapi-docs-module/blob/v4/README.md)         | 	2.x and 3.x            |
+| [5.0,5.1](https://github.com/on-org/nuxt-openapi-docs-module/blob/v5.0.4/README.md) | 	3.x                    |
+| >=5.2                                                                               | 	>=3.7                  |
 
 for nuxt 3 need add vite.config.ts
 
