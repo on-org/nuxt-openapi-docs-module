@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 py-10 bg-white shadow-lg rounded-lg">
+  <div class="mx-auto sm:px-6 lg:px-8 py-10 bg-white shadow-lg rounded-lg">
     <div v-html="formattedChangelog" class="changelog prose prose-lg mx-auto"></div>
   </div>
 </template>

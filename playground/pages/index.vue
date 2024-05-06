@@ -1,7 +1,7 @@
 <template>
-  <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+  <div class="md:max-w-6xl mx-auto sm:px-6 lg:px-8">
     <div class="flex justify-center gap-4 my-12">
-      <a href="docs/" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded pulse">Open Documentation Example</a>
+      <NuxtLink class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded pulse" to="/docs">Open Documentation Example</NuxtLink>
     </div>
 
     <div v-html="formattedContent" class="content-info-doc prose prose-lg mx-auto"></div>
@@ -118,6 +118,38 @@ const formattedContent = config.public.readme;
   align-items: center;
   justify-content: center;
   gap: 10px; /* Расстояние между ссылками */
+}
+
+.content-container {
+  background-color: white;
+}
+
+@media (max-width: 640px) { /* Размеры для мобильных устройств */
+  .md:max-w-6xl, .sm:px-6, .lg:px-8 {
+    max-width: 100%; /* Разрешаем контенту занимать весь экран */
+    padding: 20px; /* Уменьшаем боковые отступы */
+  }
+
+  .content-info-doc {
+    padding: 15px; /* Уменьшаем отступы для мобильной версии */
+    font-size: 0.9rem; /* Меняем размер шрифта для лучшей читаемости */
+  }
+
+  .content-info-doc h1, .content-info-doc h2, .content-info-doc h3 {
+    font-size: 1.25rem; /* Уменьшаем размеры заголовков */
+    margin-top: 1.2rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .content-info-doc code {
+    font-size: 0.7em; /* Меньший размер шрифта для блоков кода */
+  }
+}
+
+@media (max-width: 640px) {
+  .content-info-doc img, .content-info-doc table {
+    width: 100%; /* Заставляет изображения и таблицы занимать всю ширину */
+  }
 }
 </style>
 
