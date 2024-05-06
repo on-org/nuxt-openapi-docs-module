@@ -28,7 +28,6 @@ definePageMeta({
   }
 }
 
-/* Применение анимации к кнопке */
 .pulse {
   animation: pulse-animation 2s infinite;
 }
@@ -119,7 +118,7 @@ definePageMeta({
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 10px; /* Расстояние между ссылками */
+  gap: 10px;
 }
 
 .content-container {
@@ -128,29 +127,31 @@ definePageMeta({
 
 @media (max-width: 640px) { /* Размеры для мобильных устройств */
   .md:max-w-6xl, .sm:px-6, .lg:px-8 {
-    max-width: 100%; /* Разрешаем контенту занимать весь экран */
-    padding: 20px; /* Уменьшаем боковые отступы */
+    max-width: 100%;
+    padding: 20px;
   }
 
   .content-info-doc {
-    padding: 15px; /* Уменьшаем отступы для мобильной версии */
-    font-size: 0.9rem; /* Меняем размер шрифта для лучшей читаемости */
+    padding: 15px;
+    font-size: 0.9rem;
   }
 
-  .content-info-doc h1, .content-info-doc h2, .content-info-doc h3 {
-    font-size: 1.25rem; /* Уменьшаем размеры заголовков */
+  .content-info-doc h1,
+  .content-info-doc h2,
+  .content-info-doc h3 {
+    font-size: 1.24rem;
     margin-top: 1.2rem;
     margin-bottom: 0.8rem;
   }
 
   .content-info-doc code {
-    font-size: 0.7em; /* Меньший размер шрифта для блоков кода */
+    font-size: 0.7em;
   }
 }
 
 @media (max-width: 640px) {
   .content-info-doc img, .content-info-doc table {
-    width: 100%; /* Заставляет изображения и таблицы занимать всю ширину */
+    width: 100%;
   }
 }
 </style>
