@@ -36,8 +36,6 @@ work with static and server target
 | [5.0,5.1](https://github.com/on-org/nuxt-openapi-docs-module/blob/v5.0.4/README.md) | 	3.x                    |
 | >=5.2                                                                               | 	>=3.7                  |
 
-for nuxt 3 need add vite.config.ts
-
 
 ## Documentation and Support
 

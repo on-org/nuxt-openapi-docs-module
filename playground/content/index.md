@@ -1,3 +1,21 @@
+<div class="links">
+    <a href="https://www.npmjs.com/package/nuxt-openapi-docs-module" target="_blank">
+        <img src="https://img.shields.io/npm/v/nuxt-openapi-docs-module/latest?style=for-the-badge" alt="npm version">
+    </a>
+    <a href="https://www.npmjs.com/package/nuxt-openapi-docs-module" target="_blank">
+        <img src="https://img.shields.io/npm/dw/nuxt-openapi-docs-module?style=for-the-badge" alt="npm downloads">
+    </a>
+    <a href="https://github.com/on-org/nuxt-openapi-docs-module/blob/master/LICENSE" target="_blank">
+        <img src="https://img.shields.io/npm/l/nuxt-openapi-docs-module?style=for-the-badge" alt="NPM license">
+    </a>
+    <a href="https://github.com/on-org/nuxt-openapi-docs-module" target="_blank">
+        <img src="https://img.shields.io/npm/types/nuxt-openapi-docs-module?style=for-the-badge" alt="npm type definitions">
+    </a>
+    <a href="https://github.com/on-org/nuxt-openapi-docs-module" target="_blank">
+        <img src="https://img.shields.io/github/stars/on-org/nuxt-openapi-docs-module?style=for-the-badge" alt="GitHub Repo stars">
+    </a>
+</div>
+
 # OpenApiDocs Nuxt Module Documentation
 
 <p align="center">
@@ -17,8 +35,6 @@ work with static and server target
 | [4.x](https://github.com/on-org/nuxt-openapi-docs-module/blob/v4/README.md)         | 	2.x and 3.x            |
 | [5.0,5.1](https://github.com/on-org/nuxt-openapi-docs-module/blob/v5.0.4/README.md) | 	3.x                    |
 | >=5.2                                                                               | 	>=3.7                  |
-
-for nuxt 3 need add vite.config.ts
 
 ## Documentation and Support
 
