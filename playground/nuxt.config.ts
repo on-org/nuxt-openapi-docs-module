@@ -172,8 +172,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      readme: marked(fs.readFileSync(path.resolve(process.cwd(), './README.md'), 'utf-8')),
-      changelog: marked(fs.readFileSync(path.resolve(process.cwd(), './changelog.md'), 'utf-8'))
+      readme: marked(fs.readFileSync(path.resolve(__dirname, '../README.md'), 'utf-8')),
+      changelog: marked(fs.readFileSync(path.resolve(__dirname, '../changelog.md'), 'utf-8'))
     }
   }
 })
