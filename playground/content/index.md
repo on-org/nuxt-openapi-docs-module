@@ -31,6 +31,7 @@ for nuxt 3 need add vite.config.ts
 - **Plugin:** [Learn About Plugins](/plugin)
 - **Custom Pages:** [Custom Pages Overview](/custom_pages)
 - **Development and Customization:** [Guide to Development and Customization](/development)
+- **Module Overview:** [Module Overview](/overview)
 
 ## Features
 

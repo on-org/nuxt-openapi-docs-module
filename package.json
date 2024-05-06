@@ -10,7 +10,7 @@
     "dev:build": "nuxi build playground",
     "dev:start": "nuxi start playground",
     "generate": "nuxi generate playground",
-    "docs": "rm -rf playground/.output && npm run generate && rm -rf docs && mv playground/.output/public docs && rm -rf playground/.output playground/dist && git add docs",
+    "docs": "rm -rf playground/.output && npm run generate && rm -rf docs && mv playground/.output/public docs && touch docs/.nojekyll && rm -rf playground/.output playground/dist && git add docs",
     "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
     "lint": "eslint .",
     "sass:convert": "sass -w src/runtime/styles.scss src/runtime/styles.css",

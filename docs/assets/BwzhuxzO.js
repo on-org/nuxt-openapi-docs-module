@@ -1,1 +1,0 @@
-import{c as o,a as n,u as s,f as a,o as t}from"./D5tEgHjp.js";const c={class:"mx-auto sm:px-6 lg:px-8 py-10 bg-white shadow-lg rounded-lg"},l=["innerHTML"],_={__name:"changelog",setup(r){const e=a().public.changelog;return(i,u)=>(t(),o("div",c,[n("div",{innerHTML:s(e),class:"changelog prose prose-lg mx-auto"},null,8,l)]))}};export{_ as default};
