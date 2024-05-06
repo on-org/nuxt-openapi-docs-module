@@ -10,6 +10,7 @@
           <NuxtLink :class="linkClass('/')" to="/">Home</NuxtLink>
           <NuxtLink :class="linkClass('/changelog')" to="/changelog">Changelog</NuxtLink>
           <NuxtLink :class="linkClass('/docs')" to="/docs">Demo</NuxtLink>
+          <NuxtLink :class="linkClass('/playground')" to="/playground">Playground</NuxtLink>
           <a href="https://github.com/on-org/nuxt-openapi-docs-module" target="_blank" class="nav-link px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-700 transition-colors duration-300 cursor-pointer">GitHub</a>
 
           <div class="relative">
@@ -32,6 +33,7 @@
         <NuxtLink :class="linkClass('/')" to="/">Home</NuxtLink>
         <NuxtLink :class="linkClass('/changelog')" to="/changelog">Changelog</NuxtLink>
         <NuxtLink :class="linkClass('/docs')" to="/docs">Demo</NuxtLink>
+        <NuxtLink :class="linkClass('/playground')" to="/playground">Playground</NuxtLink>
         <a href="https://github.com/on-org/nuxt-openapi-docs-module" target="_blank" class="nav-link">GitHub</a>
 
         <div class="relative">
