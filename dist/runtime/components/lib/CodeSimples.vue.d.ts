@@ -32,7 +32,7 @@ declare const _default: import("vue").DefineComponent<{
     onPopupIndex: null;
     vals: never[];
 }, {
-    config(): {};
+    config(): any;
 }, {
     copyToClipboard(e: any): void;
     onLangClick(snippet: any, library?: null): void;
@@ -64,9 +64,9 @@ declare const _default: import("vue").DefineComponent<{
         default: string;
     };
 }>>, {
+    params: unknown[];
     method: string;
     baseUrl: string;
-    params: unknown[];
     mimeType: string;
 }, {}>;
 export default _default;

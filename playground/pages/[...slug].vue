@@ -12,6 +12,11 @@
 
 <script setup>
 import { definePageMeta } from '#imports';
+import { defineI18nRoute } from "#i18n";
+
+defineI18nRoute({
+  locales: ['en']
+})
 
 definePageMeta({
   layout: 'default'

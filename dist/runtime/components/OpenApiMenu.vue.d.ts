@@ -119,4 +119,4 @@ declare const _default: import("vue").DefineComponent<{
     };
 }>>, {}, {}>;
 export default _default;
-import { getTagColor } from "./helpers";
+import { getTagColor } from "./helpers.js";

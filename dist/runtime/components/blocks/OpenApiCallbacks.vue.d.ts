@@ -25,8 +25,8 @@ declare const _default: import("vue").DefineComponent<{
         default: () => {};
     };
 }>>, {
-    components: Record<string, any>;
     currentLocale: string;
+    components: Record<string, any>;
     callbacks: Record<string, any>;
 }, {}>;
 export default _default;

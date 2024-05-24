@@ -1,6 +1,6 @@
 {
   "name": "nuxt-openapi-docs-module",
-  "version": "5.2.7",
+  "version": "5.2.8",
   "description": "A module for Nuxt.js to generate pages from OpenAPI specifications",
   "homepage": "https://github.com/on-org/nuxt-openapi-docs-module#readme",
   "scripts": {
@@ -61,7 +61,7 @@
     "js-yaml": "^4.1.0",
     "json-crawl": "^0.5.3",
     "lodash": "^4.17.21",
-    "marked": "^12.0.1",
+    "marked": "^12.0.2",
     "marked-highlight": "^2.1.1",
     "mitt": "^3.0.1",
     "node-watch": "^0.7.4",
@@ -71,10 +71,10 @@
     "unstorage": "^1.10.2"
   },
   "devDependencies": {
-    "@nuxt/eslint-config": "^0.3.4",
-    "@nuxt/module-builder": "^0.5.5",
+    "@nuxt/eslint-config": "^0.3.13",
+    "@nuxt/module-builder": "^0.7.0",
     "@nuxt/schema": "^3.11.2",
-    "@nuxt/test-utils": "^3.12.0",
+    "@nuxt/test-utils": "^3.13.1",
     "@types/js-yaml": "^4.0.9",
     "@types/lodash.template": "^4.5.3",
     "@types/sync-fetch": "^0.4.3",
@@ -85,11 +85,11 @@
     "fs-extra": "^11.2.0",
     "nuxi": "^3.11.1",
     "nuxt": "^3.11.2",
-    "playwright": "^1.38.1",
+    "playwright": "^1.44.1",
     "postcss": "^8.4.38",
-    "sass": "^1.74.1",
-    "vitest": "^1.4.0",
-    "vue-tsc": "^2.0.16"
+    "sass": "^1.77.2",
+    "vitest": "^1.6.0",
+    "vue-tsc": "^2.0.19"
   },
   "peerDependenciesMeta": {
     "nuxt": {

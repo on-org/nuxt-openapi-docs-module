@@ -1,4 +1,4 @@
-import type { FileHandler } from "./FileHandler";
+import type { FileHandler } from "./FileHandler.js";
 export declare class ReferenceResolver {
     workDir: string;
     refsCache: {

@@ -1,5 +1,5 @@
-export { sampleArray } from './array';
-export { sampleBoolean } from './boolean';
-export { sampleNumber } from './number';
-export { sampleObject } from './object';
-export { sampleString } from './string';
+export { sampleArray } from './array.js';
+export { sampleBoolean } from './boolean.js';
+export { sampleNumber } from './number.js';
+export { sampleObject } from './object.js';
+export { sampleString } from './string.js';

@@ -10,3 +10,10 @@
     </ClientOnly>
   </div>
 </template>
+<script setup>
+import { defineI18nRoute } from "#i18n";
+
+defineI18nRoute({
+  locales: ['en']
+})
+</script>

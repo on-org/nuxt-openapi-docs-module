@@ -67,7 +67,7 @@ declare const _default: import("vue").DefineComponent<{
     summary: string;
     description: string;
     server: string;
-    tags: unknown[];
     deprecated: boolean;
+    tags: unknown[];
 }, {}>;
 export default _default;

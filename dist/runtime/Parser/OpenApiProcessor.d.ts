@@ -1,6 +1,6 @@
-import { FileHandler } from './FileHandler';
-import { MarkdownRenderer } from './MarkdownRenderer';
-import { ReferenceResolver } from './ReferenceResolver';
+import { FileHandler } from './FileHandler.js';
+import { MarkdownRenderer } from './MarkdownRenderer.js';
+import { ReferenceResolver } from './ReferenceResolver.js';
 interface PathByTagItem {
     name: string;
     path: string;

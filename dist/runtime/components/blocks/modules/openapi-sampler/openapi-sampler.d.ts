@@ -12,4 +12,4 @@ export interface DefaultsOptions {
 export declare var _samplers: any;
 export declare function sample(schema: JSONSchema7, options?: Options, spec?: object): any;
 export declare function _registerSampler(type: string, sampler: any): void;
-export { inferType } from './infer';
+export { inferType } from './infer.js';

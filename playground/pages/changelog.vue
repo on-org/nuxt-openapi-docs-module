@@ -6,6 +6,11 @@
 
 <script setup>
 import { useRuntimeConfig } from '#imports';
+import { defineI18nRoute } from "#i18n";
+
+defineI18nRoute({
+  locales: ['en']
+})
 
 const config = useRuntimeConfig();
 

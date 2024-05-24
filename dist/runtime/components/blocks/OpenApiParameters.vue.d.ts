@@ -35,7 +35,7 @@ declare const _default: import("vue").DefineComponent<{
         default: () => {};
     };
 }>>, {
-    components: Record<string, any>;
     title: string;
+    components: Record<string, any>;
 }, {}>;
 export default _default;
