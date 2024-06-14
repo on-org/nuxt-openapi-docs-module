@@ -72,7 +72,7 @@ export default defineNuxtModule<ModuleOptions>({
     name: 'nuxt-openapi-docs-module',
     configKey: 'openApiDocs',
     compatibility: {
-      nuxt: '^3.0.0'
+      nuxt: '>=3.0.0'
     }
   },
   defaults: {
