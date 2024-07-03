@@ -1,4 +1,4 @@
-type Pointer = string | Array<string | number>;
+export type Pointer = string | string[] | number[];
 type DescendFunction = (value: any) => boolean;
 type IteratorFunction = (value: any, pointer: string) => void;
 type ObjectLiteral = { [key: string]: any };
@@ -104,7 +104,7 @@ api.remove = function (obj: ObjectLiteral, pointer: Pointer): void {
     throw new Error('Invalid JSON pointer for remove: "' + pointer + '"');
   }
 
-  const parent = api.get(obj, refTokens.slice(0, -1));
+  const parent = api.get(obj, refTokens.toString().slice(0, -1));
   if (Array.isArray(parent)) {
     const index = +finalToken;
     if (finalToken === '' && isNaN(index)) {

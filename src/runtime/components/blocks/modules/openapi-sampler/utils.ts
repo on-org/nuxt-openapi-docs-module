@@ -1,4 +1,3 @@
-
 function pad(number: number) {
   if (number < 10) {
     return '0' + number;
@@ -6,7 +5,7 @@ function pad(number: number) {
   return number;
 }
 
-export function toRFCDateTime(date: Date, omitTime: boolean, omitDate: boolean, milliseconds: boolean) {
+export function toRFCDateTime(date: any, omitTime: boolean, omitDate: boolean, milliseconds: boolean) {
   var res = omitDate ? '' : (date.getUTCFullYear() +
     '-' + pad(date.getUTCMonth() + 1) +
     '-' + pad(date.getUTCDate()));

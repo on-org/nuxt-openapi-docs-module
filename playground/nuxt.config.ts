@@ -14,23 +14,19 @@ export default defineNuxtConfig({
       link: [{ rel: 'icon', type: 'image/x-icon', href: isDev ? '/favicon.ico' : "/nuxt-openapi-docs-module/favicon.ico" }]
     },
   },
+
   experimental: {
     payloadExtraction: false
   },
+
   nitro: {
     inlineDynamicImports: true
   },
+
   plugins: [
     { src: '@/plugins/content' },
   ],
-  runtimeConfig: {
-    // The private keys which are only available within server-side
-    timestamp,
-    // Keys within public, will be also exposed to the client-side
-    public: {
-      timestamp
-    }
-  },
+
   vite: {
     resolve: {
       alias: {
@@ -38,6 +34,7 @@ export default defineNuxtConfig({
       },
     },
   },
+
   // debug: true,
   modules: [
     '@nuxt/content',
@@ -172,8 +169,11 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    timestamp,
+    // Keys within public, will be also exposed to the client-side
     public: {
+      timestamp,
       changelog: marked(fs.readFileSync(path.resolve(__dirname, '../changelog.md'), 'utf-8'))
     }
-  }
+  },
 })

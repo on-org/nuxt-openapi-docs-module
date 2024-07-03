@@ -262,6 +262,7 @@ export default {
         }
       }
 
+      console.log(1111, this.resolvedSchema.parameters)
       for (const i in this.resolvedSchema.parameters) {
         const param = this.resolvedSchema.parameters[i];
 
@@ -280,7 +281,18 @@ export default {
         }
 
         if (def === '' && param.schema && param.schema.type) {
-          def = this.convertStringFormatToMd(param.schema.type, p_name);
+          if (param.schema.type === 'array') {
+            const val = this.handleNestedArrayOrObject(param.schema.items, p_name);
+            if(!val || val === '') continue;
+            this.params.push({
+              in: p_in,
+              name: p_name + '[]',
+              value: val
+            });
+            continue;
+          } else {
+            def = this.convertStringFormatToMd(param.schema.type, p_name);
+          }
         }
 
         if (def === '' && param.enum) {
