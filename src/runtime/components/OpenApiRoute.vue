@@ -266,8 +266,12 @@ export default {
       for (const i in this.resolvedSchema.parameters) {
         const param = this.resolvedSchema.parameters[i];
 
-        const p_name = param.name ?? '';
+        let p_name = param.name ?? '';
         const p_in = param.in ?? '';
+
+        if (param.schema.type === 'array') {
+          p_name = p_name + '[]'
+        }
 
         let def = '';
         if (param.schema) {
@@ -276,20 +280,20 @@ export default {
           def = param.default ?? '';
         }
 
+        if (def === '' && param.schema && param.schema.example) {
+          def = param.schema.example;
+        }
+
         if (def === '' && param.type) {
           def = this.convertStringFormatToMd(param.type, p_name);
         }
 
         if (def === '' && param.schema && param.schema.type) {
           if (param.schema.type === 'array') {
-            const val = this.handleNestedArrayOrObject(param.schema.items, p_name);
-            if(!val || val === '') continue;
-            this.params.push({
-              in: p_in,
-              name: p_name + '[]',
-              value: val
-            });
-            continue;
+            def = this.handleNestedArrayOrObject(param.schema.items, p_name);
+            if(!def || def === '') continue;
+
+            p_name = p_name + '[]'
           } else {
             def = this.convertStringFormatToMd(param.schema.type, p_name);
           }
