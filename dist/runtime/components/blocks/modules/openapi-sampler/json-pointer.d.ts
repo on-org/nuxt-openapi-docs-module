@@ -1,4 +1,4 @@
-type Pointer = string | Array<string | number>;
+export type Pointer = string | string[] | number[];
 type DescendFunction = (value: any) => boolean;
 type IteratorFunction = (value: any, pointer: string) => void;
 type ObjectLiteral = {

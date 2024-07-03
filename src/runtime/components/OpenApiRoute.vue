@@ -382,6 +382,8 @@ export default {
           return 'https://example.com';
         case 'integer':
           return '1';
+        case 'boolean':
+          return 'true';
         case 'number':
           return '1';
         case 'string':

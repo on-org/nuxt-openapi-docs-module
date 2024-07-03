@@ -79,7 +79,7 @@ api.remove = function(obj, pointer) {
   if (finalToken === void 0) {
     throw new Error('Invalid JSON pointer for remove: "' + pointer + '"');
   }
-  const parent = api.get(obj, refTokens.slice(0, -1));
+  const parent = api.get(obj, refTokens.toString().slice(0, -1));
   if (Array.isArray(parent)) {
     const index = +finalToken;
     if (finalToken === "" && isNaN(index)) {

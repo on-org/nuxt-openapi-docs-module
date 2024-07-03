@@ -17,7 +17,7 @@
     "@nuxt/content": "^2.12.1",
     "axios": "^1.7.2",
     "chokidar": "^3.6.0",
-    "nuxt-openapi-docs-module": "^5.2.7"
+    "nuxt-openapi-docs-module": "^5.2.9"
   },
   "overrides": {
     "@parcel/watcher": "2.1.0"
