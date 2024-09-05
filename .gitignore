@@ -93,3 +93,5 @@ Homestead.json
 /playground2/.yarn/cache
 /playground2/.yarn/unplugged
 /playground2/.yarn/install-state.gz
+
+test-results
