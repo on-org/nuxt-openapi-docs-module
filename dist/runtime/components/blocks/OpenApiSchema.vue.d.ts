@@ -1,4 +1,4 @@
-declare const _default: import("vue").DefineComponent<{
+declare const _default: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     schema: {
         type: ObjectConstructor;
         required: true;
@@ -18,7 +18,7 @@ declare const _default: import("vue").DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}, any, any, {}, {
+}>, {}, {}, {}, {
     assignAllOf(allOf: any): {
         properties: any;
     };
@@ -45,9 +45,9 @@ declare const _default: import("vue").DefineComponent<{
         type: BooleanConstructor;
         default: boolean;
     };
-}>>, {
+}>> & Readonly<{}>, {
     title: null;
     components: Record<string, any>;
     open: boolean;
-}, {}>;
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _default;

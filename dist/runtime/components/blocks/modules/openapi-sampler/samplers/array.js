@@ -13,8 +13,7 @@ export function sampleArray(schema, options = {}, spec, context) {
     return items || {};
   };
   let res = [];
-  if (!items)
-    return res;
+  if (!items) return res;
   for (let i = 0; i < arrayLength; i++) {
     let itemSchema = itemSchemaGetter(i);
     let { value: sample } = traverse(itemSchema, options, spec, { depth: depth + 1 });

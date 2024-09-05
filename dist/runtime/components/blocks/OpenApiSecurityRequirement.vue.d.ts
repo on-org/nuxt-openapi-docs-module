@@ -1,4 +1,4 @@
-declare const _default: import("vue").DefineComponent<{
+declare const _default: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     securityRequirement: {
         type: ObjectConstructor;
         required: true;
@@ -15,7 +15,7 @@ declare const _default: import("vue").DefineComponent<{
         type: StringConstructor;
         required: true;
     };
-}, any, any, {}, {
+}>, {}, {}, {}, {
     getRoute(scheme: any): {
         name: string;
         params: {
@@ -40,5 +40,5 @@ declare const _default: import("vue").DefineComponent<{
         type: StringConstructor;
         required: true;
     };
-}>>, {}, {}>;
+}>> & Readonly<{}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _default;

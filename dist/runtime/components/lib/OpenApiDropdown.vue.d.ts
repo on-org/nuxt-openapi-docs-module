@@ -1,4 +1,4 @@
-declare const _default: import("vue").DefineComponent<{
+declare const _default: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     modelValue: {
         type: (StringConstructor | NumberConstructor)[];
         default: null;
@@ -19,14 +19,14 @@ declare const _default: import("vue").DefineComponent<{
         type: StringConstructor;
         default: null;
     };
-}, any, {
+}>, {}, {
     isOpen: boolean;
 }, {
     classes(): {
         'oapi-dd--is-open': boolean;
         'oapi-dd--empty': boolean;
     };
-    selectedOption(): any;
+    selectedOption(): {} | null;
 }, {
     toggle(): void;
     handleOutsideClick(e: any): void;
@@ -55,10 +55,12 @@ declare const _default: import("vue").DefineComponent<{
         type: StringConstructor;
         default: null;
     };
-}>>, {
+}>> & Readonly<{}>, {
     modelValue: string | number;
     valueProp: string;
     textProp: string;
     placeholder: string;
-}, {}>;
+}, {}, {
+    OpenApiExpandIcon: import("vue").DefineComponent<{}, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _default;

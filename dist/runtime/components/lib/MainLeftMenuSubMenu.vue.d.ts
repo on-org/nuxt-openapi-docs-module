@@ -1,4 +1,4 @@
-declare const _default: import("vue").DefineComponent<{
+declare const _default: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     title: {
         type: StringConstructor;
         default: string;
@@ -8,7 +8,7 @@ declare const _default: import("vue").DefineComponent<{
         default: string;
     };
     isOpen: BooleanConstructor;
-}, any, {
+}>, {}, {
     open: boolean;
 }, {}, {
     toggleOpen(): void;
@@ -22,9 +22,9 @@ declare const _default: import("vue").DefineComponent<{
         default: string;
     };
     isOpen: BooleanConstructor;
-}>>, {
+}>> & Readonly<{}>, {
     title: string;
     description: string;
     isOpen: boolean;
-}, {}>;
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _default;

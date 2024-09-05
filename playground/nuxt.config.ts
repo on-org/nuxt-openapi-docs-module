@@ -176,4 +176,6 @@ export default defineNuxtConfig({
       changelog: marked(fs.readFileSync(path.resolve(__dirname, '../changelog.md'), 'utf-8'))
     }
   },
+
+  compatibilityDate: "2024-09-05",
 })

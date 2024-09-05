@@ -1,4 +1,4 @@
-declare const _default: import("vue").DefineComponent<{
+declare const _default: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     path: {
         type: StringConstructor;
         required: true;
@@ -29,9 +29,9 @@ declare const _default: import("vue").DefineComponent<{
         required: false;
         default: string;
     };
-}, any, any, {
+}>, {}, {}, {
     requestUrl(): string;
-    title(): any;
+    title(): string;
 }, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     path: {
         type: StringConstructor;
@@ -63,11 +63,11 @@ declare const _default: import("vue").DefineComponent<{
         required: false;
         default: string;
     };
-}>>, {
+}>> & Readonly<{}>, {
     summary: string;
     description: string;
-    server: string;
     deprecated: boolean;
+    server: string;
     tags: unknown[];
-}, {}>;
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _default;

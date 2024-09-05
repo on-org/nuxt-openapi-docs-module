@@ -171,12 +171,18 @@ const module = defineNuxtModule({
         pages.push({
           name: `openapi-${options.path}-${item.filename}`,
           path: `/${options.path}/${item.filename}/:type`,
-          file: dst
+          file: dst,
+          meta: {
+            layout: `open-api-layout-${item.filename}`
+          }
         });
         pages.push({
           name: `openapi-${options.path}-${item.filename}/type-mathod`,
           path: `/${options.path}/${item.filename}/:type/:mathod`,
-          file: dst
+          file: dst,
+          meta: {
+            layout: `open-api-layout-${item.filename}`
+          }
         });
       });
     }

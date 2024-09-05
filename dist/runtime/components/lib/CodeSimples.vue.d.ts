@@ -1,4 +1,4 @@
-declare const _default: import("vue").DefineComponent<{
+declare const _default: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     baseUrl: {
         type: StringConstructor;
         required: false;
@@ -23,7 +23,7 @@ declare const _default: import("vue").DefineComponent<{
         required: false;
         default: string;
     };
-}, any, {
+}>, {}, {
     snippetIndex: string;
     snippetLibraryIndex: string;
     code: string;
@@ -36,7 +36,7 @@ declare const _default: import("vue").DefineComponent<{
 }, {
     copyToClipboard(e: any): void;
     onLangClick(snippet: any, library?: null): void;
-    getAbsoluteUrl(): any;
+    getAbsoluteUrl(): string;
     genCode(): void;
 }, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     baseUrl: {
@@ -63,10 +63,31 @@ declare const _default: import("vue").DefineComponent<{
         required: false;
         default: string;
     };
-}>>, {
+}>> & Readonly<{}>, {
     params: unknown[];
     method: string;
     baseUrl: string;
     mimeType: string;
-}, {}>;
+}, {}, {
+    CustomDropdownWithSubMenu: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
+        items: {
+            type: ObjectConstructor;
+            required: true;
+        };
+    }>, {}, {
+        isOpen: boolean;
+        preSelectedSnippet: string;
+        selectedSnippet: string;
+        selectedLibrary: string;
+    }, {
+        selectedText(): string;
+    }, {
+        handleItemClick(snippet: any, library?: null): void;
+    }, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+        items: {
+            type: ObjectConstructor;
+            required: true;
+        };
+    }>> & Readonly<{}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
+}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _default;

@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 <% if (Object.keys(options.i18n).length > 0) { %>
-  import {defineI18nRoute} from "#imports";
+  import { defineI18nRoute } from "#imports";
   defineI18nRoute({
     locales: <%= JSON.stringify(Object.keys(options.locales)).replace(/"/g, "'") %>
   })

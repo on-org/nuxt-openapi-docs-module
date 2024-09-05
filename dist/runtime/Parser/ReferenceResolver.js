@@ -9,8 +9,7 @@ export class ReferenceResolver {
     this.fileHandler = fileHandler;
   }
   resolveRef(ref) {
-    if (this.refsCache[ref])
-      return this.refsCache[ref];
+    if (this.refsCache[ref]) return this.refsCache[ref];
     const [filePath, refPath] = ref.split("#");
     let doc;
     if (filePath.startsWith("http")) {
@@ -30,8 +29,7 @@ export class ReferenceResolver {
     return this.fileHandler.loadYamlFile(this.workDir, filePath);
   }
   resolveInternalPath(doc, refPath) {
-    if (!refPath)
-      return doc;
+    if (!refPath) return doc;
     const pathSegments = refPath.startsWith("/") ? refPath.slice(1).split("/") : refPath.split("/");
     return pathSegments.reduce((acc, segment) => {
       if (!acc || !acc[segment]) {

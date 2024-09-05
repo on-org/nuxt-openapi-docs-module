@@ -55,8 +55,7 @@ export default class OpenApiPlugin {
     const originalText = btnEl.innerText;
     try {
       navigator.clipboard.writeText(data).then((r) => {
-        if (!repl)
-          return;
+        if (!repl) return;
         btnEl.innerText = "Copied";
         setTimeout(() => {
           btnEl.innerText = originalText;

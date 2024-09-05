@@ -36,8 +36,7 @@ function tryInferExample(schema) {
 }
 export function traverse(schema, options, spec, context) {
   if (context) {
-    if (seenSchemasStack.includes(schema))
-      return getResultForCircular(inferType(schema));
+    if (seenSchemasStack.includes(schema)) return getResultForCircular(inferType(schema));
     seenSchemasStack.push(schema);
   }
   if (context && context.depth > options.maxSampleDepth) {
@@ -86,8 +85,7 @@ export function traverse(schema, options, spec, context) {
   }
   if (schema.oneOf && schema.oneOf.length) {
     if (schema.anyOf) {
-      if (!options.quiet)
-        console.warn("oneOf and anyOf are not supported on the same level. Skipping anyOf");
+      if (!options.quiet) console.warn("oneOf and anyOf are not supported on the same level. Skipping anyOf");
     }
     popSchemaStack(seenSchemasStack, context);
     const firstOneOf = Object.assign({

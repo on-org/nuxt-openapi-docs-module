@@ -1,6 +1,6 @@
 {
   "name": "nuxt-openapi-docs-module",
-  "version": "5.2.11",
+  "version": "5.2.12",
   "description": "A module for Nuxt.js to generate pages from OpenAPI specifications",
   "homepage": "https://github.com/on-org/nuxt-openapi-docs-module#readme",
   "scripts": {
@@ -9,6 +9,7 @@
     "dev": "nuxi dev playground --port 3003",
     "dev:build": "nuxi build playground",
     "dev:start": "nuxi start playground",
+    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
     "generate": "nuxi generate playground",
     "docs": "rm -rf playground/.output && npm run generate && rm -rf docs && mv playground/.output/public docs && touch docs/.nojekyll && rm -rf playground/.output playground/dist && git add docs",
     "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
@@ -16,7 +17,7 @@
     "sass:convert": "sass -w src/runtime/styles.scss src/runtime/styles.css",
     "cleanup": "rm -rf node_modules package-lock.json dist generate .nuxt playground/.nuxt playground/node_modules playground/package-lock.json playground2/.nuxt playground2/node_modules playground2/package-lock.json",
     "prepublish": "npm run prepack",
-    "test": "vitest run test"
+    "test": "playwright test"
   },
   "keywords": [
     "nuxt",
@@ -52,7 +53,7 @@
   "main": "./dist/module.cjs",
   "types": "./dist/types.d.ts",
   "dependencies": {
-    "@nuxt/kit": "^3.11.2",
+    "@nuxt/kit": "^3.13.1",
     "allof-merge": "^0.6.6",
     "chokidar": "^3.6.0",
     "h3": "^1.11.1",
@@ -72,9 +73,10 @@
   },
   "devDependencies": {
     "@nuxt/eslint-config": "^0.3.13",
-    "@nuxt/module-builder": "^0.7.0",
-    "@nuxt/schema": "^3.11.2",
-    "@nuxt/test-utils": "^3.13.1",
+    "@nuxt/module-builder": "^0.8.3",
+    "@nuxt/schema": "^3.13.1",
+    "@nuxt/test-utils": "^3.14.1",
+    "@playwright/test": "^1.46.1",
     "@types/js-yaml": "^4.0.9",
     "@types/lodash.template": "^4.5.3",
     "@types/sync-fetch": "^0.4.3",
@@ -82,8 +84,8 @@
     "changelogen": "^0.5.5",
     "eslint": "^8.57.0",
     "flowbite": "^2.4.1",
-    "nuxi": "^3.11.1",
-    "nuxt": "^3.11.2",
+    "nuxi": "^3.13.1",
+    "nuxt": "^3.13.1",
     "playwright": "^1.45.1",
     "postcss": "^8.4.39",
     "sass": "^1.77.6",

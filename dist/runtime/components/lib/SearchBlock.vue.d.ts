@@ -1,4 +1,4 @@
-declare const _default: import("vue").DefineComponent<{
+declare const _default: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     currentLocale: {
         type: StringConstructor;
         required: true;
@@ -15,7 +15,7 @@ declare const _default: import("vue").DefineComponent<{
         type: StringConstructor;
         required: true;
     };
-}, any, {
+}>, {}, {
     isSearchOpen: boolean;
     search: string;
     list: never[];
@@ -40,5 +40,5 @@ declare const _default: import("vue").DefineComponent<{
         type: StringConstructor;
         required: true;
     };
-}>>, {}, {}>;
+}>> & Readonly<{}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _default;

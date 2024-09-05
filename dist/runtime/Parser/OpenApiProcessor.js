@@ -120,20 +120,15 @@ export default class OpenApiProcessor {
     const pathsByTags = {};
     for (const url in paths) {
       let routePath = url;
-      if (routePath.startsWith("/"))
-        routePath = routePath.substring(1);
-      if (routePath.endsWith("/"))
-        routePath = routePath.substring(-1);
+      if (routePath.startsWith("/")) routePath = routePath.substring(1);
+      if (routePath.endsWith("/")) routePath = routePath.substring(-1);
       routePath = routePath.replace(/[/\\.?+=&{}]/gumi, "_").replace(/__+/, "_");
       for (const method in paths[url]) {
         const openapi_item = paths[url][method];
-        if (!openapi_item.tags)
-          openapi_item.tags = [type];
+        if (!openapi_item.tags) openapi_item.tags = [type];
         openapi_item.tags.forEach((tag) => {
-          if (method === "parameters")
-            return;
-          if (method === "servers")
-            return;
+          if (method === "parameters") return;
+          if (method === "servers") return;
           if (!pathsByTags[tag]) {
             const tagInfo = this.spec.tags[tag.toString().toLowerCase()] ?? {};
             const item2 = {

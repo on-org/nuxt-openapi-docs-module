@@ -12,16 +12,14 @@ export function allOfSample(into, children, options, spec, context) {
     res.type = res.type || type;
     res.readOnly = res.readOnly || readOnly;
     res.writeOnly = res.writeOnly || writeOnly;
-    if (value != null)
-      subSamples.push(value);
+    if (value != null) subSamples.push(value);
   }
   if (res.type === "object") {
     res.value = mergeDeep(res.value || {}, ...subSamples.filter((sample) => typeof sample === "object"));
     return res;
   } else {
     if (res.type === "array") {
-      if (!options.quiet)
-        console.warn('OpenAPI Sampler: found allOf with "array" type. Result may be incorrect');
+      if (!options.quiet) console.warn('OpenAPI Sampler: found allOf with "array" type. Result may be incorrect');
     }
     const lastSample = subSamples[subSamples.length - 1];
     res.value = lastSample != null ? lastSample : res.value;

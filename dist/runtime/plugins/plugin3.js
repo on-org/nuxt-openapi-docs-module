@@ -23,10 +23,8 @@ export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.payload.openapidocRefDefinitions = openapidocRef.definitions;
     nuxtApp.payload.openapidocRefComponents = openapidocRef.components;
   } else if (nuxtApp.payload) {
-    if (nuxtApp.payload.openapidocRefDefinitions)
-      openapidocRef.definitions = nuxtApp.payload.openapidocRefDefinitions;
-    if (nuxtApp.payload.openapidocRefComponents)
-      openapidocRef.components = nuxtApp.payload.openapidocRefComponents;
+    if (nuxtApp.payload.openapidocRefDefinitions) openapidocRef.definitions = nuxtApp.payload.openapidocRefDefinitions;
+    if (nuxtApp.payload.openapidocRefComponents) openapidocRef.components = nuxtApp.payload.openapidocRefComponents;
   }
   return {
     provide: {

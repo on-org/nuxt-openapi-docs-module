@@ -159,10 +159,10 @@ $background-color_2: #ffeef0;
     color: $color_2;
   }
   &-meta {
+    color: $color_4;
     .hljs-keyword {
       color: $color_2;
     }
-    color: $color_4;
     .hljs-string {
       color: $color_5;
     }

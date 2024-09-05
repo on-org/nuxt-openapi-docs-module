@@ -1,4 +1,4 @@
-declare const _default: import("vue").DefineComponent<{
+declare const _default: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     lite: BooleanConstructor;
     name: {
         type: StringConstructor;
@@ -16,7 +16,7 @@ declare const _default: import("vue").DefineComponent<{
         type: StringConstructor;
         required: true;
     };
-}, any, {}, {
+}>, {}, {}, {
     valueFormatted(): string | null;
 }, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     lite: BooleanConstructor;
@@ -36,9 +36,9 @@ declare const _default: import("vue").DefineComponent<{
         type: StringConstructor;
         required: true;
     };
-}>>, {
+}>> & Readonly<{}>, {
     name: string;
     lite: boolean;
     nameTag: string;
-}, {}>;
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _default;

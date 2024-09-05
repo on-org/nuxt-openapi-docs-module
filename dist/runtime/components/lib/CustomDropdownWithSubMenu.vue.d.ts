@@ -1,9 +1,9 @@
-declare const _default: import("vue").DefineComponent<{
+declare const _default: import("vue").DefineComponent<import("vue").ExtractPropTypes<{
     items: {
         type: ObjectConstructor;
         required: true;
     };
-}, any, {
+}>, {}, {
     isOpen: boolean;
     preSelectedSnippet: string;
     selectedSnippet: string;
@@ -17,5 +17,5 @@ declare const _default: import("vue").DefineComponent<{
         type: ObjectConstructor;
         required: true;
     };
-}>>, {}, {}>;
+}>> & Readonly<{}>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, true, {}, any>;
 export default _default;

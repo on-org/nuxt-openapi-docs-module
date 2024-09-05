@@ -3,6 +3,9 @@
   "name": "basic",
   "type": "module",
   "scripts": {
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "generate": "nuxi generate",
     "postinstall": "nuxi prepare"
   },
   "devDependencies": {

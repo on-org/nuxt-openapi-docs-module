@@ -9,12 +9,12 @@ declare const _default: import("#app").Plugin<{
             (type: "*", handler: import("mitt").WildcardHandler<Record<import("mitt").EventType, unknown>>): void;
         };
         $off: {
-            <Key_1 extends import("mitt").EventType>(type: Key_1, handler?: import("mitt").Handler<Record<import("mitt").EventType, unknown>[Key_1]> | undefined): void;
+            <Key extends import("mitt").EventType>(type: Key, handler?: import("mitt").Handler<Record<import("mitt").EventType, unknown>[Key]> | undefined): void;
             (type: "*", handler: import("mitt").WildcardHandler<Record<import("mitt").EventType, unknown>>): void;
         };
         $emit: {
-            <Key_2 extends import("mitt").EventType>(type: Key_2, event: Record<import("mitt").EventType, unknown>[Key_2]): void;
-            <Key_3 extends import("mitt").EventType>(type: undefined extends Record<import("mitt").EventType, unknown>[Key_3] ? Key_3 : never): void;
+            <Key extends import("mitt").EventType>(type: Key, event: Record<import("mitt").EventType, unknown>[Key]): void;
+            <Key extends import("mitt").EventType>(type: undefined extends Record<import("mitt").EventType, unknown>[Key] ? Key : never): void;
         };
     };
 }> & import("#app").ObjectPlugin<{
@@ -26,12 +26,12 @@ declare const _default: import("#app").Plugin<{
             (type: "*", handler: import("mitt").WildcardHandler<Record<import("mitt").EventType, unknown>>): void;
         };
         $off: {
-            <Key_1 extends import("mitt").EventType>(type: Key_1, handler?: import("mitt").Handler<Record<import("mitt").EventType, unknown>[Key_1]> | undefined): void;
+            <Key extends import("mitt").EventType>(type: Key, handler?: import("mitt").Handler<Record<import("mitt").EventType, unknown>[Key]> | undefined): void;
             (type: "*", handler: import("mitt").WildcardHandler<Record<import("mitt").EventType, unknown>>): void;
         };
         $emit: {
-            <Key_2 extends import("mitt").EventType>(type: Key_2, event: Record<import("mitt").EventType, unknown>[Key_2]): void;
-            <Key_3 extends import("mitt").EventType>(type: undefined extends Record<import("mitt").EventType, unknown>[Key_3] ? Key_3 : never): void;
+            <Key extends import("mitt").EventType>(type: Key, event: Record<import("mitt").EventType, unknown>[Key]): void;
+            <Key extends import("mitt").EventType>(type: undefined extends Record<import("mitt").EventType, unknown>[Key] ? Key : never): void;
         };
     };
 }>;

@@ -1,8 +1,7 @@
 import { merge } from "allof-merge";
 const refs = {};
 export function resolveAllOf(schema) {
-  if (typeof schema !== "object" || !Array.isArray(schema.allOf))
-    return schema;
+  if (typeof schema !== "object" || !Array.isArray(schema.allOf)) return schema;
   const originalRef = schema.$ref;
   const result = merge(schema, { onMergeError: (err) => console.error(err) });
   if (originalRef) {
@@ -42,17 +41,13 @@ export function pefFix(ref, cache = [], definitions, components) {
     refSchema.title = name;
     cache.push(ref);
   }
-  if (!refSchema)
-    return null;
+  if (!refSchema) return null;
   return refs[ref] = repReplace(refSchema, cache, definitions, components);
 }
 export function repReplace(source, cache = [], definitions = {}, components = {}, setPath = true) {
-  if (typeof source === "string")
-    return pefFix(source, cache, definitions, components);
-  if (!source)
-    return source;
-  if (typeof source !== "object")
-    return source;
+  if (typeof source === "string") return pefFix(source, cache, definitions, components);
+  if (!source) return source;
+  if (typeof source !== "object") return source;
   if (Array.isArray(source)) {
     return source.map((item) => repReplace(item, cache, definitions, components, setPath));
   }
@@ -65,8 +60,7 @@ export function repReplace(source, cache = [], definitions = {}, components = {}
     if (refSchema.$ref) {
       return refSchema;
     }
-    if (!setPath)
-      return refSchema;
+    if (!setPath) return refSchema;
     return {
       ...refSchema,
       $path: ref
@@ -75,8 +69,7 @@ export function repReplace(source, cache = [], definitions = {}, components = {}
   let result = {};
   for (const [key, value] of Object.entries(source)) {
     let subVal = value;
-    if (typeof subVal === "string" && subVal.startsWith("#"))
-      subVal = { $ref: value };
+    if (typeof subVal === "string" && subVal.startsWith("#")) subVal = { $ref: value };
     result[key] = repReplace(subVal, cache, definitions, components, key !== "allOf");
   }
   if ("allOf" in result) {

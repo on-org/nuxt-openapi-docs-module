@@ -4,9 +4,9 @@
   "compatibility": {
     "nuxt": "^3.0.0"
   },
-  "version": "5.2.11",
+  "version": "5.2.12",
   "builder": {
-    "@nuxt/module-builder": "0.7.0",
+    "@nuxt/module-builder": "0.8.3",
     "unbuild": "2.0.0"
   }
 }

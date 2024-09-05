@@ -229,16 +229,21 @@ export default defineNuxtModule<ModuleOptions>({
           name: `openapi-${options.path}-${item.filename}`,
           path: `/${options.path}/${item.filename}/:type`,
           file: dst,
+          meta: {
+            layout: `open-api-layout-${item.filename}`,
+          }
         })
 
         pages.push({
           name: `openapi-${options.path}-${item.filename}/type-mathod`,
           path: `/${options.path}/${item.filename}/:type/:mathod`,
           file: dst,
+          meta: {
+            layout: `open-api-layout-${item.filename}`,
+          }
         })
       })
     }
-
 
     addPlugin({
       src: resolver.resolve('./runtime/plugins/plugin3'),

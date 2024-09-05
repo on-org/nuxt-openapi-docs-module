@@ -38,6 +38,7 @@ export default defineNuxtConfig({
       }
     ],
   ],
+
   openApiDocs: {
     folder: './docs',
     name: 'Api Docs',
@@ -57,5 +58,7 @@ export default defineNuxtConfig({
         "markdown": "markdown",
       }
     }
-  }
+  },
+
+  compatibilityDate: '2024-09-05'
 })
