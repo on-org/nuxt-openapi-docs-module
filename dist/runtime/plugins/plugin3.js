@@ -4,12 +4,18 @@ import { defineNuxtPlugin } from "#app";
 import OpenApiRefPlugin from "./OpenApiRefPlugin.js";
 class I18nLinker {
   i18n;
+  defaultLocale = "en";
   constructor(i18n) {
     this.i18n = i18n;
   }
   get locale() {
+    if (this.i18n.defaultLocale && typeof this.i18n.defaultLocale === "function") {
+      this.defaultLocale = this.i18n.defaultLocale();
+    } else if (this.i18n.defaultLocale) {
+      this.defaultLocale = this.i18n.defaultLocale;
+    }
     if (this.i18n.getLocale) {
-      return this.i18n.getLocale().value;
+      return this.i18n.getLocale();
     }
     return this.i18n.locale.value;
   }
