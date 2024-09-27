@@ -13,13 +13,6 @@
 </template>
 
 <script setup lang="ts">
-<% if (Object.keys(options.i18n).length > 0) { %>
-  import { defineI18nRoute } from "#imports";
-  defineI18nRoute({
-    locales: <%= JSON.stringify(Object.keys(options.locales)).replace(/"/g, "'") %>
-  })
-<% } %>
-
 import {
   computed,
   onMounted,
@@ -31,6 +24,19 @@ import {
   definePageMeta,
   useHead
 } from "#imports";
+
+<% if (Object.keys(options.i18n).length > 0) { %>
+  import { defineI18nRoute } from "#imports";
+  defineI18nRoute({
+    locales: <%= JSON.stringify(Object.keys(options.locales)).replace(/"/g, "'") %>
+  })
+<% } %>
+<% if (Object.keys(options.i18nMicro).length > 0) { %>
+  const { $defineI18nRoute } = useNuxtApp()
+  $defineI18nRoute({
+    locales: <%= JSON.stringify(Object.keys(options.locales)).replace(/"/g, "'") %>
+  })
+  <% } %>
 
 import doc_data from '#build/openapi/docs.<%= options.filename %>.mjs';
 import data from '#build/openapi/docs.<%= options.filename %>.config.mjs';

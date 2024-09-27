@@ -118,7 +118,7 @@ export default defineNuxtModule<ModuleOptions>({
     const workDir = resolve(nuxt.options.rootDir, options.folder!);
 
     const docs: DocItem[] = [];
-    for (let filePath in files) {
+    for (const filePath in files) {
       const parser = new OpenApiProcessor(workDir)
 
       parser.load(filePath)
@@ -149,7 +149,7 @@ export default defineNuxtModule<ModuleOptions>({
       })
     })
 
-    for (let item of docs) {
+    for (const item of docs) {
       addTemplate({
         filename: `openapi/docs.${item.filename}.config.mjs`,
         write: true,
@@ -187,15 +187,15 @@ export default defineNuxtModule<ModuleOptions>({
       });
     }
 
-    const hasI18nModule = (nuxt.options?.modules ?? []).some(module => {
-      if (Array.isArray(module) && module.length > 0) {
-        const moduleName = module[0];
-        return typeof moduleName === 'string' && moduleName === '@nuxtjs/i18n';
-      }
-      return false;
-    });
+    const hasModule = (moduleName: string) =>
+      (nuxt.options?.modules ?? []).some(module =>
+        Array.isArray(module) && module.length > 0 && module[0] === moduleName
+      );
 
-    for (let item of docs) {
+    const hasI18nModule = hasModule('@nuxtjs/i18n');
+    const hasI18nMicroModule = hasModule('nuxt-i18n-micro');
+
+    for (const item of docs) {
       addLayout({
         getContents({ options }) {
           const contents = readFileSync(resolver.resolve(`./runtime/layout/OpenApiLayoutNuxt3.vue`), 'utf-8')
@@ -217,6 +217,7 @@ export default defineNuxtModule<ModuleOptions>({
         locales: item.locales,
         localesReload: item.localesReload,
         i18n: hasI18nModule,
+        i18nMicro: hasI18nMicroModule,
         i18n_text: resolver.resolve('./runtime/lang/en.json')
       }, resolver)
 
@@ -247,20 +248,28 @@ export default defineNuxtModule<ModuleOptions>({
 
     addPlugin({
       src: resolver.resolve('./runtime/plugins/plugin3'),
+      order: 0
     })
 
     if (options.localize) {
-      // @ts-ignore
-      nuxt.hook('i18n:registerModule', (register: any) => {
-        register({
-          langDir: resolver.resolve('./runtime/lang'),
-          locales: options.locales?.map((code) => ({
-            code,
-            iso: code,
-            file: `${code}.json`,
-          })),
+      if(hasI18nModule) {
+        // @ts-ignore
+        nuxt.hook('i18n:registerModule', (register: any) => {
+          register({
+            langDir: resolver.resolve('./runtime/lang'),
+            locales: options.locales?.map((code) => ({
+              code,
+              iso: code,
+              file: `${code}.json`,
+            })),
+          })
         })
-      })
+      }
+      if (hasI18nMicroModule) {
+        addPlugin({
+          src: resolver.resolve('./runtime/plugins/localeLoader.ts'),
+        })
+      }
     }
 
     nuxt.hooks.hook('nitro:config', (nitroConfig) => {

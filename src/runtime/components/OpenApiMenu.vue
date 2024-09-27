@@ -211,25 +211,18 @@ export default {
       }
     },
     getRoute(path) {
-      return {
-        name: `openapi-${this.path}-${this.file}${this.$openapidoc.I18nLocaleSuffix()}`,
-        params: {
-          type: path
-        }
-
-      };
+      return this.$openapidoc.getLocalizedRoute(`openapi-${this.path}-${this.file}`, {
+        type: path
+      })
     },
     getSubRoute(route) {
       const path = this.genUrl(route.path);
       const type = route.type;
       if (route.type === 'custom') {
-        return {name: `${this.path}-${this.file}-${type}-${path}${this.$openapidoc.I18nLocaleSuffix()}`};
+        return this.$openapidoc.getLocalizedRoute(`${this.path}-${this.file}-${type}-${path}`)
       }
 
-      return {
-        name: `openapi-${this.path}-${this.file}/type-mathod${this.$openapidoc.I18nLocaleSuffix()}`,
-        params: { type: type, mathod: path }
-      };
+      return this.$openapidoc.getLocalizedRoute(`openapi-${this.path}-${this.file}/type-mathod`, { type: type, mathod: path })
     },
     changeRoute(route) {
       // setTimeout(() => {
@@ -237,24 +230,14 @@ export default {
       // }, 30);
     },
     changeDoc(option) {
-      return {
-        name: `openapi-${this.path}-${option}${this.$openapidoc.I18nLocaleSuffix('en')}`,
-        params: {
-          type: 'info'
-        }
-      };
+      return this.$openapidoc.getLocalizedRoute(`openapi-${this.path}-${option}`, { type: 'info' }, 'en')
     },
     changeServer(option) {
       this.currentServer = option
       this.$openapidocBus.$emit('changeServer', option);
     },
-    changeLocale(option) {
-      return {
-        name: `openapi-${this.path}-${this.file}${this.$openapidoc.I18nLocaleSuffix(option)}`,
-        params: {
-          type: 'info'
-        }
-      };
+    changeLocale(locale) {
+      return this.$openapidoc.getLocalizedRoute(`openapi-${this.path}-${this.file}`, { type: 'info' }, locale)
     },
   },
 };

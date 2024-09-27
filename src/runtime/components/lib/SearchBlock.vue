@@ -173,17 +173,14 @@ export default {
         const end = Math.min(index + query.length + 50, description.length);
         let result = '...' + description.substring(start, end) + '...';
         result = result.replace(query, "<b>" + query + "</b>");
+
         this.list.push({
           path: 'info',
           title: summary,
           description: result,
-          route: {
-            name: `openapi-${this.path}-${this.file}${this.$openapidoc.I18nLocaleSuffix()}`,
-            params: {
-              type: 'info'
-            },
-            query: {query}
-          }
+          route: this.$openapidoc.getLocalizedRoute(`openapi-${this.path}-${this.file}`, {
+            type: 'info'
+          }, undefined, undefined, query)
         });
       }
 
@@ -211,12 +208,12 @@ export default {
               path: path,
               title: summary.replace(query, "<b>" + query + "</b>"),
               description: result + '...',
-              route: {
-                name: `openapi-${this.path}-${this.file}/type-mathod${this.$openapidoc.I18nLocaleSuffix()}`,
-                params: { type: routePath, mathod: method },
-                query: {query}
-              }
+              route: this.$openapidoc.getLocalizedRoute(`openapi-${this.path}-${this.file}`, {
+                type: routePath, mathod: method
+              }, undefined, undefined, query)
             };
+
+
           }
 
           index = description.indexOf(query);
@@ -230,11 +227,9 @@ export default {
                 path: path,
                 title: summary,
                 description: result,
-                route: {
-                  name: `openapi-${this.path}-${this.file}/type-mathod${this.$openapidoc.I18nLocaleSuffix()}`,
-                  params: { type: routePath, mathod: method },
-                  query: {query}
-                }
+                route: this.$openapidoc.getLocalizedRoute(`openapi-${this.path}-${this.file}/type-mathod`, {
+                    type: routePath, mathod: method
+                  }, undefined, undefined, query)
               };
             } else {
               apper.description = result;

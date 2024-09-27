@@ -1,0 +1,234 @@
+openapi: 3.0.0
+servers:
+  - url: https://petstore.swagger.io/v2
+    description: Default server
+  - url: https://petstore.swagger.io/sandbox
+    description: Sandbox server
+info:
+  title: Pet Store
+  x-title-ru: Зоомагазин
+  x-title-de: Tierhandlung
+  version: 1.0.0
+  x-locales-reload: true
+  x-locales:
+    en: English
+    ru: Русский
+    de: Deutsch
+  description: >
+    # Introduction
+
+    Petstore illustrate the typical design decisions and tradeoffs a developer makes when building an enterprise application.
+    The demo shows how to document REST API services **OpenAPI format** and is based on
+    [Petstore sample](http://petstore.swagger.io/)
+
+    - [Auth](/docs/localization/auth)
+  x-description-ru: >
+    # Введение
+
+    Petstore иллюстрирует типичные дизайнерские решения и компромиссы, на которые разработчик идет при создании корпоративного приложения.
+    Демонстрация показывает, как документировать службы REST API в формате **OpenAPI**, и основана на
+    [Образец зоомагазина](http://petstore.swagger.io/)
+
+    - [Auth](/ru/docs/localization/auth)
+  x-description-de: >
+    # Einführung
+
+      Petstore veranschaulicht die typischen Designentscheidungen und Kompromisse, die ein Entwickler beim Erstellen einer Unternehmensanwendung trifft.
+      Die Demo zeigt, wie REST-API-Dienste im **OpenAPI-Format** dokumentiert werden und basiert auf
+      [Petstore-Beispiel](http://petstore.swagger.io/)
+externalDocs:
+  x-description-ru: Узнайте, как создать репозиторий Github для вашей спецификации OpenAPI.
+  x-description-de: Erfahren Sie, wie Sie ein Github-Repository für Ihre OpenAPI-Spezifikation erstellen.
+  description: Find out how to create Github repo for your OpenAPI spec.
+  url: 'https://github.com/Rebilly/generator-openapi-repo'
+tags:
+  - name: Pet
+    x-name-ru: Питомец
+    x-name-de: Haustier
+    description: Everything about your Pets
+    x-description-ru: Все о ваших питомцах
+    x-description-de: Alles rund um Ihre Haustiere
+paths:
+  /pet:
+    post:
+      tags:
+        - pet
+      summary: Add a new pet to the store
+      x-summary-ru: Добавить нового питомца в магазин
+      x-summary-de: Fügen Sie dem Geschäft ein neues Haustier hinzu
+      description: Add new pet to the store inventory.
+      x-description-ru: Добавьте нового питомца в инвентарь магазина.
+      x-description-de: Fügen Sie dem Ladeninventar ein neues Haustier hinzu.
+      operationId: addPet
+      responses:
+        '405':
+          description: Invalid input
+      security:
+        - petstore_auth:
+            - 'write:pets'
+            - 'read:pets'
+      requestBody:
+        $ref: '#/components/requestBodies/Pet'
+components:
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+    Cat:
+      description: A representation of a cat
+      x-description-ru: Представление о кошке
+      x-description-de: Eine Darstellung einer Katze
+      allOf:
+        - $ref: '#/components/schemas/Pet'
+        - type: object
+          properties:
+            huntingSkill:
+              type: string
+              description: The measured skill for hunting
+              x-description-ru: Измеренное умение для охоты
+              x-description-de: Die gemessene Fertigkeit für die Jagd
+              default: lazy
+              enum:
+                - clueless
+                - lazy
+                - adventurous
+                - aggressive
+          required:
+            - huntingSkill
+    Category:
+      type: object
+      properties:
+        id:
+          description: Category ID
+          x-description-ru: Идентификатор категории
+          x-description-de: Kategorie ID
+          allOf:
+            - $ref: '#/components/schemas/Id'
+        name:
+          description: Category name
+          x-description-ru: Название категории
+          x-description-de: Kategoriename
+          type: string
+          minLength: 1
+        sub:
+          description: Test Sub Category
+          x-description-ru: Тестовая подкатегория
+          x-description-de: Unterkategorie testen
+          type: object
+          properties:
+            prop1:
+              type: string
+              description: Dumb Property
+      xml:
+        name: Category
+    Pet:
+      type: object
+      required:
+        - name
+        - photoUrls
+      discriminator:
+        propertyName: petType
+        mapping:
+          cat: '#/components/schemas/Cat'
+      properties:
+        id:
+          externalDocs:
+            description: "Find more info here"
+            x-description-ru: "Узнайте больше здесь"
+            x-description-de: "Weitere Informationen finden Sie hier"
+            url: "https://example.com"
+          description: Pet ID
+        category:
+          description: Categories this pet belongs to
+          x-description-ru: Категории, к которым принадлежит этот питомец
+          x-description-de: Kategorien, zu denen dieses Haustier gehört
+          allOf:
+            - $ref: '#/components/schemas/Category'
+        name:
+          description: The name given to a pet
+          x-description-ru: Имя, данное питомцу
+          x-description-de: Der Name, der einem Haustier gegeben wird
+          type: string
+          example: Guru
+      xml:
+        name: Pet
+    Tag:
+      type: object
+      properties:
+        id:
+          description: Tag ID
+          allOf:
+            - $ref: '#/components/schemas/Id'
+        name:
+          description: Tag name
+          type: string
+          minLength: 1
+      xml:
+        name: Tag
+  requestBodies:
+    Pet:
+      content:
+        application/json:
+          schema:
+            allOf:
+              - description: My Pet
+                x-description-ru: Мой питомец
+                x-description-de: Mein Haustier
+                title: Pettie
+              - $ref: '#/components/schemas/Pet'
+        application/xml:
+          schema:
+            type: 'object'
+            properties:
+              name:
+                type: string
+                description: hooray
+      description: Pet object that needs to be added to the store
+      x-description-ru: Питомец, который нужно добавить в магазин
+      x-description-de: Pet-Objekt, das dem Store hinzugefügt werden muss
+      required: true
+    UserArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/User'
+      description: List of user object
+      required: true
+  securitySchemes:
+    basic:
+      type: http
+      scheme: basic
+    petstore_auth:
+      description: |
+        Get access to data while protecting your account credentials.
+        OAuth2 is also a safer and more secure way to give you access.
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: 'http://petstore.swagger.io/api/oauth/dialog'
+          scopes:
+            'write:pets': modify pets in your account
+            'read:pets': read your pets
+    api_key:
+      description: >
+        For this sample, you can use the api key `special-key` to test the
+        authorization filters.
+      type: apiKey
+      name: api_key
+      in: header
+  examples:
+    Order:
+      value:
+        quantity: 1,
+        shipDate: 2018-10-19T16:46:45Z,
+        status: placed,
+        complete: false

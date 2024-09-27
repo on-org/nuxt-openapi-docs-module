@@ -54,36 +54,12 @@ declare const _default: import("vue").DefineComponent<import("vue").ExtractPropT
     getTagColor: typeof getTagColor;
     genUrl(path: any): string;
     onLocalesReload(e: any): void;
-    getRoute(path: any): {
-        name: string;
-        params: {
-            type: any;
-        };
-    };
-    getSubRoute(route: any): {
-        name: string;
-        params?: undefined;
-    } | {
-        name: string;
-        params: {
-            type: any;
-            mathod: string;
-        };
-    };
+    getRoute(path: any): any;
+    getSubRoute(route: any): any;
     changeRoute(route: any): void;
-    changeDoc(option: any): {
-        name: string;
-        params: {
-            type: string;
-        };
-    };
+    changeDoc(option: any): any;
     changeServer(option: any): void;
-    changeLocale(option: any): {
-        name: string;
-        params: {
-            type: string;
-        };
-    };
+    changeLocale(locale: any): any;
 }, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     routes: {
         type: ObjectConstructor;

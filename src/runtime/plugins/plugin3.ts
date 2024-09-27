@@ -2,16 +2,25 @@ import mitt from 'mitt';
 import OpenApiPlugin from "./OpenApiPlugin";
 import {defineNuxtPlugin} from "#app";
 import OpenApiRefPlugin from "./OpenApiRefPlugin";
-// @ts-ignore
-import {RouteLocationNormalized, RouteLocationNormalizedLoaded} from "vue-router";
-import {addRouteMiddleware, ref, useFetch, useRoute, useRouter} from "#imports";
+
 class I18nLinker {
-  private i18n: any;
+  i18n: any;
+  defaultLocale: string = 'en';
+
   constructor(i18n: any) {
     this.i18n = i18n
   }
 
   get locale() {
+    if (this.i18n.defaultLocale && typeof this.i18n.defaultLocale === 'function') {
+      this.defaultLocale = this.i18n.defaultLocale()
+    } else if (this.i18n.defaultLocale) {
+      this.defaultLocale = this.i18n.defaultLocale
+    }
+    if (this.i18n.getLocale) {
+      return this.i18n.getLocale()
+    }
+
     return this.i18n.locale.value
   }
 

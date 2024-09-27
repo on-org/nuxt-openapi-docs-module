@@ -64,9 +64,9 @@ declare const _default: import("vue").DefineComponent<import("vue").ExtractPropT
         default: string;
     };
 }>> & Readonly<{}>, {
-    params: unknown[];
     method: string;
     baseUrl: string;
+    params: unknown[];
     mimeType: string;
 }, {}, {
     CustomDropdownWithSubMenu: import("vue").DefineComponent<import("vue").ExtractPropTypes<{

@@ -32,6 +32,7 @@ export default class OpenApiRefPlugin {
       locale = this.i18n.locale;
       defaultLocale = this.i18n.locale === this.i18n.defaultLocale
     }
+
     let result = (data[`x-${param}-${locale}`] || data[param] || '').toString();
     if(defaultLocale) {
       result = result.replaceAll('/:locale', '').replaceAll(':locale', '')

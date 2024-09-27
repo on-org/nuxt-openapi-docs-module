@@ -262,7 +262,6 @@ export default {
         }
       }
 
-      console.log(1111, this.resolvedSchema.parameters)
       for (const i in this.resolvedSchema.parameters) {
         const param = this.resolvedSchema.parameters[i];
 

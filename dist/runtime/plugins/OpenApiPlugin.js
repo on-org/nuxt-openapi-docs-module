@@ -30,6 +30,9 @@ export default class OpenApiPlugin {
     return !!this.i18n;
   }
   currentLocale() {
+    if (this.i18n && this.i18n.i18n && this.i18n.i18n.getLocale) {
+      return this.i18n.i18n.getLocale();
+    }
     return this.i18n ? this.i18n.locale : this.locale;
   }
   I18nLocaleSuffix(locale = null) {
@@ -37,6 +40,15 @@ export default class OpenApiPlugin {
       return `___${locale}`;
     }
     return this.i18n ? `___${this.i18n.locale}` : "";
+  }
+  getLocalizedRoute(name, params, locale, hash, query) {
+    if (this.i18n && this.i18n.i18n && this.i18n.i18n.localeRoute) {
+      return this.i18n.i18n.localeRoute({ name, params, hash, query }, locale);
+    }
+    return {
+      name: `${name}${this.I18nLocaleSuffix()}`,
+      params
+    };
   }
   hasAccess(file) {
     return this.access(file);

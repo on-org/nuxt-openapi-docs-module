@@ -73,7 +73,7 @@ const module = defineNuxtModule({
     const files = options.files();
     const workDir = resolve(nuxt.options.rootDir, options.folder);
     const docs = [];
-    for (let filePath in files) {
+    for (const filePath in files) {
       const parser = new OpenApiProcessor(workDir);
       parser.load(filePath);
       docs.push({
@@ -100,7 +100,7 @@ const module = defineNuxtModule({
         footer: options.footer
       })
     });
-    for (let item of docs) {
+    for (const item of docs) {
       addTemplate({
         filename: `openapi/docs.${item.filename}.config.mjs`,
         write: true,
@@ -134,14 +134,12 @@ const module = defineNuxtModule({
         });
       });
     }
-    const hasI18nModule = (nuxt.options?.modules ?? []).some((module) => {
-      if (Array.isArray(module) && module.length > 0) {
-        const moduleName = module[0];
-        return typeof moduleName === "string" && moduleName === "@nuxtjs/i18n";
-      }
-      return false;
-    });
-    for (let item of docs) {
+    const hasModule = (moduleName) => (nuxt.options?.modules ?? []).some(
+      (module) => Array.isArray(module) && module.length > 0 && module[0] === moduleName
+    );
+    const hasI18nModule = hasModule("@nuxtjs/i18n");
+    const hasI18nMicroModule = hasModule("nuxt-i18n-micro");
+    for (const item of docs) {
       addLayout({
         getContents({ options: options2 }) {
           const contents = readFileSync(resolver.resolve(`./runtime/layout/OpenApiLayoutNuxt3.vue`), "utf-8");
@@ -162,6 +160,7 @@ const module = defineNuxtModule({
         locales: item.locales,
         localesReload: item.localesReload,
         i18n: hasI18nModule,
+        i18nMicro: hasI18nMicroModule,
         i18n_text: resolver.resolve("./runtime/lang/en.json")
       }, resolver);
       nuxt.hook("prepare:types", ({ references }) => {
@@ -187,19 +186,27 @@ const module = defineNuxtModule({
       });
     }
     addPlugin({
-      src: resolver.resolve("./runtime/plugins/plugin3")
+      src: resolver.resolve("./runtime/plugins/plugin3"),
+      order: 0
     });
     if (options.localize) {
-      nuxt.hook("i18n:registerModule", (register) => {
-        register({
-          langDir: resolver.resolve("./runtime/lang"),
-          locales: options.locales?.map((code) => ({
-            code,
-            iso: code,
-            file: `${code}.json`
-          }))
+      if (hasI18nModule) {
+        nuxt.hook("i18n:registerModule", (register) => {
+          register({
+            langDir: resolver.resolve("./runtime/lang"),
+            locales: options.locales?.map((code) => ({
+              code,
+              iso: code,
+              file: `${code}.json`
+            }))
+          });
         });
-      });
+      }
+      if (hasI18nMicroModule) {
+        addPlugin({
+          src: resolver.resolve("./runtime/plugins/localeLoader.ts")
+        });
+      }
     }
     nuxt.hooks.hook("nitro:config", (nitroConfig) => {
       nitroConfig.publicAssets = nitroConfig.publicAssets || [];

@@ -8,6 +8,9 @@ class I18nLinker {
     this.i18n = i18n;
   }
   get locale() {
+    if (this.i18n.getLocale) {
+      return this.i18n.getLocale().value;
+    }
     return this.i18n.locale.value;
   }
   t(val) {

@@ -51,13 +51,7 @@ declare const _default: import("vue").DefineComponent<import("vue").ExtractPropT
             required: true;
         };
     }>, {}, {}, {}, {
-        getRoute(scheme: any): {
-            name: string;
-            params: {
-                type: string;
-            };
-            hash: string;
-        };
+        getRoute(scheme: any): any;
     }, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
         securityRequirement: {
             type: ObjectConstructor;
