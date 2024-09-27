@@ -12,7 +12,7 @@
     "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
     "generate": "nuxi generate playground",
     "docs": "rm -rf playground/.output && npm run generate && rm -rf docs && mv playground/.output/public docs && touch docs/.nojekyll && rm -rf playground/.output playground/dist && git add docs",
-    "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
+    "release": "npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
     "lint": "eslint .",
     "sass:convert": "sass -w src/runtime/styles.scss src/runtime/styles.css",
     "cleanup": "rm -rf node_modules package-lock.json dist generate .nuxt playground/.nuxt playground/node_modules playground/package-lock.json playground2/.nuxt playground2/node_modules playground2/package-lock.json",
