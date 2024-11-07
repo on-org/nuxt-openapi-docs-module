@@ -134,10 +134,15 @@ const description = computed(() => {
   return activeRoute.value[`x-description-`+locale.value] || activeRoute.value['description'] || ''
 });
 
+function stripHtml(html: string) {
+  return html.replace(/<\/?[^>]+(>|$)/g, "");  // Удаление HTML-тегов
+}
+
+
 useHead({
   title: title.value,
   meta: [
-    { name: 'description', content: description.value }
+    { name: 'description', content: stripHtml(description.value) }
   ],
   htmlAttrs: {
     lang: currentLocale.value,
