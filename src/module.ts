@@ -47,7 +47,9 @@ function filesCleanup(files: {[key: string]: string}) {
     const extension = extname(i);
     const fileName = basename(i, extension);
 
-    result[kebabCase(fileName)] = files[i]
+    if (files[i]) {
+      result[kebabCase(fileName)] = files[i]
+    }
   }
   return result
 }
@@ -115,7 +117,7 @@ export default defineNuxtModule<ModuleOptions>({
     const filesClean = filesCleanup(options.files());
     const files = options.files();
 
-    const workDir = resolve(nuxt.options.rootDir, options.folder!);
+    const workDir = resolve(nuxt.options.rootDir, options.folder ?? './docs/openapi');
 
     const docs: DocItem[] = [];
     for (const filePath in files) {
