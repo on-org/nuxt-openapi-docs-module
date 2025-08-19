@@ -37,6 +37,7 @@ export default defineNuxtConfig({
 
   // debug: true,
   modules: [
+    '@nuxt/image',
     '@nuxt/content',
     [
       '../src/module',
@@ -133,10 +134,8 @@ export default defineNuxtConfig({
         defaultLocale: 'en',
         lazy: true,
         debug: false,
-        langDir: 'lang',
-        // compilation: {
-        //   jit: false
-        // },
+        // langDir теперь по умолчанию 'locales' в v9
+        // restructureDir: false, // можно отключить для миграции
         bundle: {
           runtimeOnly: false,
         },
@@ -145,15 +144,15 @@ export default defineNuxtConfig({
         },
         locales: [
           {
-            code: 'en',
+            language: 'en', // изменено с 'code' на 'language' в v9
             file: 'en.json'
           },
           {
-            code: 'ru',
+            language: 'ru',
             file: 'ru.json'
           },
           {
-            code: 'de',
+            language: 'de',
             file: 'de.json'
           }
         ],
@@ -173,7 +172,7 @@ export default defineNuxtConfig({
     // Keys within public, will be also exposed to the client-side
     public: {
       timestamp,
-      changelog: marked(fs.readFileSync(path.resolve(__dirname, '../changelog.md'), 'utf-8'))
+      changelog: marked(fs.readFileSync(path.resolve(__dirname, '../changelog.md'), 'utf-8')) as string
     }
   },
 
