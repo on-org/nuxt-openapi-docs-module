@@ -1,6 +1,6 @@
 import OpenApiPlugin from "./OpenApiPlugin.js";
 import OpenApiRefPlugin from "./OpenApiRefPlugin.js";
-declare const _default: import("#app").Plugin<{
+declare const _default: import("nuxt/app").Plugin<{
     openapidoc: OpenApiPlugin;
     openapidocRef: OpenApiRefPlugin;
     openapidocBus: {
@@ -17,7 +17,7 @@ declare const _default: import("#app").Plugin<{
             <Key extends import("mitt").EventType>(type: undefined extends Record<import("mitt").EventType, unknown>[Key] ? Key : never): void;
         };
     };
-}> & import("#app").ObjectPlugin<{
+}> & import("nuxt/app").ObjectPlugin<{
     openapidoc: OpenApiPlugin;
     openapidocRef: OpenApiRefPlugin;
     openapidocBus: {
